@@ -1,0 +1,16 @@
+# Test Configuration for Alt Name Feature
+versions:
+  - "1.21.1"
+
+output:
+  data_dir: "data"
+
+cache:
+  cache_dir: ".cache"
+  metadata_dir: ".cache/metadata"
+  ttl_days: 7
+
+memory:
+  gc_percent: 50
+  memory_limit: "512MiB"
+  max_procs: 2

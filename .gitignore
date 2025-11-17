@@ -1,0 +1,16 @@
+/.cache
+/registry
+/versions
+/logs
+/libraries
+
+coverage.out
+gen.out
+packet-validation.json
+/bin
+.cache
+testing/1.21.*
+tmp
+internal/generator/generated
+internal/generator/testing
+
