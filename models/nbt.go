@@ -39,16 +39,22 @@ var longAsString = true // NOTE: CHANGED FROM DEFAULT IN nbt2json
 
 // NbtParseError is when the nbt data does not match an expected pattern. Pass it message string and downstream error
 type NbtParseError struct {
-	s string
-	e error
+	str     string
+	err     error
+	tagType byte   // Optional: actual tag type received (for debugging)
+	version string // Optional: protocol version (for debugging)
 }
 
 func (e NbtParseError) Error() string {
-	var s string
-	if e.e != nil {
-		s = fmt.Sprintf(": %s", e.e.Error())
+	var str string
+	if e.err != nil {
+		str = fmt.Sprintf(": %+v", e.err)
 	}
-	return fmt.Sprintf("Error parsing NBT: %s%s", e.s, s)
+	extra := ""
+	if e.tagType != 0 {
+		extra = fmt.Sprintf(" (received tag type: %d, version: %s)", e.tagType, e.version)
+	}
+	return fmt.Sprintf("Error parsing NBT: %s%s%s", e.str, str, extra)
 }
 
 // NbtJson is the top-level JSON document; it is exported for reflect, and client code shouldn't use it
@@ -118,7 +124,7 @@ func getTag(r *bytes.Reader) ([]byte, error) {
 	var data NbtTag
 	err := binary.Read(r, byteOrder, &data.TagType)
 	if err != nil {
-		return nil, NbtParseError{"Reading TagType", err}
+		return nil, NbtParseError{str: "Reading TagType", err: err}
 	}
 	// do not try to fetch name for TagType 0 which is compound end tag
 	if data.TagType != 0 {
@@ -126,12 +132,12 @@ func getTag(r *bytes.Reader) ([]byte, error) {
 		var nameLen int16
 		err = binary.Read(r, byteOrder, &nameLen)
 		if err != nil {
-			return nil, NbtParseError{"Reading Name length", err}
+			return nil, NbtParseError{str: "Reading Name length", err: err}
 		}
 		name := make([]byte, nameLen)
 		err = binary.Read(r, byteOrder, &name)
 		if err != nil {
-			return nil, NbtParseError{fmt.Sprintf("Reading Name - is UseJavaEncoding or UseBedrockEncoding set correctly? Name length decoded is %d", nameLen), err}
+			return nil, NbtParseError{str: fmt.Sprintf("Reading Name - is UseJavaEncoding or UseBedrockEncoding set correctly? Name length decoded is %d", nameLen), err: err}
 		}
 		data.Name = string(name[:])
 	}
@@ -154,28 +160,28 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var i int8
 		err = binary.Read(r, byteOrder, &i)
 		if err != nil {
-			return nil, NbtParseError{"Reading int8", err}
+			return nil, NbtParseError{str: "Reading int8", err: err}
 		}
 		output = i
 	case 2:
 		var i int16
 		err = binary.Read(r, byteOrder, &i)
 		if err != nil {
-			return nil, NbtParseError{"Reading int16", err}
+			return nil, NbtParseError{str: "Reading int16", err: err}
 		}
 		output = i
 	case 3:
 		var i int32
 		err = binary.Read(r, byteOrder, &i)
 		if err != nil {
-			return nil, NbtParseError{"Reading int32", err}
+			return nil, NbtParseError{str: "Reading int32", err: err}
 		}
 		output = i
 	case 4:
 		var i int64
 		err = binary.Read(r, byteOrder, &i)
 		if err != nil {
-			return nil, NbtParseError{"Reading int64", err}
+			return nil, NbtParseError{str: "Reading int64", err: err}
 		}
 		if longAsString {
 			output = fmt.Sprintf("%d", i)
@@ -186,14 +192,14 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var f float32
 		err = binary.Read(r, byteOrder, &f)
 		if err != nil {
-			return nil, NbtParseError{"Reading float32", err}
+			return nil, NbtParseError{str: "Reading float32", err: err}
 		}
 		output = f
 	case 6:
 		var f float64
 		err = binary.Read(r, byteOrder, &f)
 		if err != nil {
-			return nil, NbtParseError{"Reading float64", err}
+			return nil, NbtParseError{str: "Reading float64", err: err}
 		}
 		if math.IsNaN(f) {
 			output = "NaN"
@@ -206,12 +212,12 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var numRecords int32
 		err := binary.Read(r, byteOrder, &numRecords)
 		if err != nil {
-			return nil, NbtParseError{"Reading byte array tag length", err}
+			return nil, NbtParseError{str: "Reading byte array tag length", err: err}
 		}
 		for i := int32(1); i <= numRecords; i++ {
 			err = binary.Read(r, byteOrder, &oneByte)
 			if err != nil {
-				return nil, NbtParseError{"Reading byte in byte array tag", err}
+				return nil, NbtParseError{str: "Reading byte in byte array tag", err: err}
 			}
 			byteArray = append(byteArray, oneByte)
 		}
@@ -220,29 +226,29 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var strLen int16
 		err := binary.Read(r, byteOrder, &strLen)
 		if err != nil {
-			return nil, NbtParseError{"Reading string tag length", err}
+			return nil, NbtParseError{str: "Reading string tag length", err: err}
 		}
 		utf8String := make([]byte, strLen)
 		err = binary.Read(r, byteOrder, &utf8String)
 		if err != nil {
-			return nil, NbtParseError{"Reading string tag data", err}
+			return nil, NbtParseError{str: "Reading string tag data", err: err}
 		}
 		output = string(utf8String[:])
 	case 9:
 		var tagList NbtTagList
 		err = binary.Read(r, byteOrder, &tagList.TagListType)
 		if err != nil {
-			return nil, NbtParseError{"Reading TagType", err}
+			return nil, NbtParseError{str: "Reading TagType", err: err}
 		}
 		var numRecords int32
 		err := binary.Read(r, byteOrder, &numRecords)
 		if err != nil {
-			return nil, NbtParseError{"Reading list tag length", err}
+			return nil, NbtParseError{str: "Reading list tag length", err: err}
 		}
 		for i := int32(1); i <= numRecords; i++ {
 			payload, err := getPayload(r, tagList.TagListType)
 			if err != nil {
-				return nil, NbtParseError{"Reading list tag item", err}
+				return nil, NbtParseError{str: "Reading list tag item", err: err}
 			}
 			tagList.List = append(tagList.List, payload)
 		}
@@ -252,15 +258,15 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var tagType byte
 		for err = binary.Read(r, byteOrder, &tagType); tagType != 0; err = binary.Read(r, byteOrder, &tagType) {
 			if err != nil {
-				return nil, NbtParseError{"compound: reading next tag type", err}
+				return nil, NbtParseError{str: "compound: reading next tag type", err: err}
 			}
 			_, err = r.Seek(-1, 1)
 			if err != nil {
-				return nil, NbtParseError{"seeking back one", err}
+				return nil, NbtParseError{str: "seeking back one", err: err}
 			}
 			tag, err := getTag(r)
 			if err != nil {
-				return nil, NbtParseError{"compound: reading a child tag", err}
+				return nil, NbtParseError{str: "compound: reading a child tag", err: err}
 			}
 			compound = append(compound, json.RawMessage(string(tag)))
 		}
@@ -275,12 +281,12 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var numRecords, oneInt int32
 		err := binary.Read(r, byteOrder, &numRecords)
 		if err != nil {
-			return nil, NbtParseError{"Reading int array tag length", err}
+			return nil, NbtParseError{str: "Reading int array tag length", err: err}
 		}
 		for i := int32(1); i <= numRecords; i++ {
 			err := binary.Read(r, byteOrder, &oneInt)
 			if err != nil {
-				return nil, NbtParseError{"Reading int in int array tag", err}
+				return nil, NbtParseError{str: "Reading int in int array tag", err: err}
 			}
 			intArray = append(intArray, oneInt)
 		}
@@ -291,12 +297,12 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		var numRecords, oneInt int64
 		err := binary.Read(r, byteOrder, &numRecords)
 		if err != nil {
-			return nil, NbtParseError{"Reading long array tag length", err}
+			return nil, NbtParseError{str: "Reading long array tag length", err: err}
 		}
 		for i := int64(1); i <= numRecords; i++ {
 			err := binary.Read(r, byteOrder, &oneInt)
 			if err != nil {
-				return nil, NbtParseError{"Reading long in long array tag", err}
+				return nil, NbtParseError{str: "Reading long in long array tag", err: err}
 			}
 			longArray = append(longArray, longToIntPair(oneInt))
 			longStringArray = append(longStringArray, fmt.Sprintf("%d", oneInt))
@@ -308,7 +314,7 @@ func getPayload(r *bytes.Reader, tagType byte) (interface{}, error) {
 		}
 
 	default:
-		return nil, NbtParseError{fmt.Sprintf("TagType %d not recognized", tagType), nil}
+		return nil, NbtParseError{str: fmt.Sprintf("TagType %d not recognized", tagType), err: nil}
 	}
 	return output, nil
 }

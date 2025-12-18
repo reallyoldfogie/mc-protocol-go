@@ -41,7 +41,7 @@ func TestArrayReadWriteWithoutParentContext(t *testing.T) {
 
 	orig := Array[pk.VarInt, pk.VarInt]{}
 	origValues := []pk.VarInt{1, 2, 3}
-	orig.Ary = pk.Ary[pk.VarInt]{Ary: &origValues}
+	orig.Ary = Ary[pk.VarInt]{Ary: &origValues}
 
 	_, err := orig.WriteTo(buf)
 	require.NoError(t, err)
@@ -74,7 +74,7 @@ func TestArrayReadWithParentContextAwareElements(t *testing.T) {
 
 	values := []mockContextElement{{value: 5}, {value: 6}}
 	ary := Array[pk.VarInt, mockContextElement]{
-		Ary: pk.Ary[pk.VarInt]{Ary: &values},
+		Ary: Ary[pk.VarInt]{Ary: &values},
 	}
 	ary.SetParentContext(NewParentContext())
 	ary.parentContext.(*SimpleParentContext).SetField("test", true)

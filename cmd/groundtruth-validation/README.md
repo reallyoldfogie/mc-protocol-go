@@ -48,6 +48,30 @@ go run ./cmd/groundtruth-validation -test-file testing/packet-generator/test-pac
 
 # Show successful validations too
 go run ./cmd/groundtruth-validation -test-file test-packets.jsonl --show-success
+
+# Fail the process if any validations fail (useful for CI)
+go run ./cmd/groundtruth-validation -test-file test-packets.jsonl -fail-on-errors
+
+# Write machine-readable JSON and render reports in one go
+go run ./cmd/groundtruth-validation -test-file test-packets.jsonl \
+  -json tmp/groundtruth-results.json -html tmp/report.html -md tmp/report.md
+
+### Multiple Files, Globs, and Directories
+
+You can validate across many JSONL files:
+
+```bash
+# Glob expansion (shell expands *)
+go run ./cmd/groundtruth-validation -test-file "testing/generatedPackets/*.jsonl" -html validation.html
+
+# App-side glob and directories via -test-paths
+go run ./cmd/groundtruth-validation -test-paths testing/generatedPackets,/another/dir/*.jsonl -md validation.md
+
+# Combine with version filtering
+go run ./cmd/groundtruth-validation -test-paths testing/generatedPackets -version 1.21.5 -json gt-1.21.5.json
+```
+
+If both `-test-file` and `-test-paths` are set, files from both are merged (de-duplicated).
 ```
 
 ## Example Output
@@ -124,6 +148,41 @@ Currently supports simple Play state packets. Complex packets (player_info, chun
 - [ ] Generate packets for problematic types (DeclareCommands, PlayerInfo, etc.)
 - [ ] Automated test case generation from protocol definitions
 - [ ] Support for multiple Minecraft versions
+
+## JSON Output and Reports
+
+The validator can emit machine-readable JSON, which can be rendered into HTML or Markdown reports.
+
+### Emit JSON (and optional reports)
+
+```bash
+go run ./cmd/groundtruth-validation -test-file testing/packet-generator/test-packets.jsonl \
+  -json groundtruth-results.json -html report.html -md report.md
+```
+
+JSON shape:
+
+```json
+{
+  "versions": [
+    {
+      "version": "1.21.5",
+      "results": [
+        { "description": "...", "packetName": "ClientboundX", "packetID": 42, "success": true, "errors": [] }
+      ],
+      "summary": { "total": 5, "success": 3, "failed": 2 }
+    }
+  ],
+  "total": { "versions": 1, "tests": 5, "success": 3, "failed": 2 }
+}
+```
+
+The report shows a table per version with packet name, ID, status, and errors/notes.
+
+## Exit Codes
+
+- 0: Program executed successfully. This includes cases where validations failed (non-fatal) — unless `-fail-on-errors` is set.
+- 1: Fatal error running the tool (e.g., bad flags, unreadable test file, report write failure). Also returned if `-fail-on-errors` is set and any validations failed.
 
 ## See Also
 

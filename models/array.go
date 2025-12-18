@@ -9,13 +9,13 @@ import (
 )
 
 type Array[LENTYPE pk.VarInt | pk.VarLong | pk.Byte | pk.UnsignedByte | pk.Short | pk.UnsignedShort | pk.Int | pk.Long, VALTYPE any] struct {
-	Ary           pk.Ary[LENTYPE]
+	Ary           Ary[LENTYPE]
 	parentContext ParentContext
 }
 
 func (a *Array[LENTYPE, VALTYPE]) ReadFrom(r io.Reader) (int64, error) {
 	val := []VALTYPE{}
-	a.Ary = pk.Ary[LENTYPE]{Ary: &val}
+	a.Ary = Ary[LENTYPE]{Ary: &val}
 
 	if a.parentContext != nil {
 		var dummy VALTYPE
@@ -188,4 +188,16 @@ func (a Array[LENTYPE, VALTYPE]) writeToWithParentContext(w io.Writer, usePtr bo
 	}
 
 	return totalBytes, nil
+}
+
+func (a Array[LENTYPE, VALTYPE]) Length() LENTYPE {
+	return LENTYPE(len(a.Ary.Ary.([]VALTYPE)))
+}
+
+func (a Array[LENTYPE, VALTYPE]) Get() *[]VALTYPE {
+	return a.Ary.Ary.(*[]VALTYPE)
+}
+
+func (a *Array[LENTYPE, VALTYPE]) Set(v *[]VALTYPE) {
+	a.Ary.Ary = v
 }

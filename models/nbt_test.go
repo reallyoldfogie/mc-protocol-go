@@ -527,11 +527,13 @@ func TestNBTReaderReadTag(t *testing.T) {
 	buf.WriteByte(42)
 
 	reader := NewNBTReader(buf)
-	tag, err := reader.ReadTag()
+	tag, n, err := reader.ReadTag()
 	require.NoError(t, err)
 	assert.Equal(t, "test", tag.Name)
 	assert.Equal(t, TypeInt, tag.Value.Type())
 	assert.Equal(t, int32(42), tag.Value.(*NBTInt).Value)
+	// 1 byte type + 2 bytes name length + 4 bytes name + 4 bytes int value = 11
+	assert.Equal(t, int64(11), n)
 }
 
 func TestNBTReaderComplexStructure(t *testing.T) {
@@ -616,6 +618,74 @@ func TestNBTErrorHandling(t *testing.T) {
 		_, err := nbtString.ReadFrom(buf)
 		assert.Error(t, err)
 	})
+}
+
+func TestNBTField_NameHandling_Pre1_20_5(t *testing.T) {
+	// Version < 1.20.5 must include an empty name (2 bytes)
+	nf := NBTField{Version: "1.20.4", Value: &NBTCompound{Tags: []NBTTag{}}}
+	buf := &bytes.Buffer{}
+	n, err := nf.WriteTo(buf)
+	require.NoError(t, err)
+	// Expect: 1 (type=Compound) + 2 (name length=0) + 1 (TAG_End) = 4
+	assert.Equal(t, int64(4), n)
+	out := buf.Bytes()
+	require.Equal(t, 4, len(out))
+	assert.Equal(t, byte(TypeCompound), out[0])
+	assert.Equal(t, byte(0), out[1]) // name length hi
+	assert.Equal(t, byte(0), out[2]) // name length lo
+	assert.Equal(t, byte(TypeEnd), out[3])
+
+	// Now read back and validate bytes read
+	var read NBTField
+	read.Version = "1.20.4"
+	rn, err := read.ReadFrom(bytes.NewReader(out))
+	require.NoError(t, err)
+	assert.Equal(t, int64(4), rn)
+	require.NotNil(t, read.Value)
+	assert.Len(t, read.Value.Tags, 0)
+}
+
+func TestNBTField_NameHandling_Post1_20_5(t *testing.T) {
+	// Version >= 1.20.5 must omit the name entirely
+	nf := NBTField{Version: "1.20.5", Value: &NBTCompound{Tags: []NBTTag{}}}
+	buf := &bytes.Buffer{}
+	n, err := nf.WriteTo(buf)
+	require.NoError(t, err)
+	// Expect: 1 (type=Compound) + 1 (TAG_End) = 2
+	assert.Equal(t, int64(2), n)
+	out := buf.Bytes()
+	require.Equal(t, 2, len(out))
+	assert.Equal(t, byte(TypeCompound), out[0])
+	assert.Equal(t, byte(TypeEnd), out[1])
+
+	var read NBTField
+	read.Version = "1.20.5"
+	rn, err := read.ReadFrom(bytes.NewReader(out))
+	require.NoError(t, err)
+	assert.Equal(t, int64(2), rn)
+	require.NotNil(t, read.Value)
+	assert.Len(t, read.Value.Tags, 0)
+}
+
+func TestNBTField_NameHandling_UsesGlobalVersionFallback(t *testing.T) {
+	// When Version field is empty, NBTField should use the global version context
+	// Set to a pre-1.20.5 version first
+	prev := currentNBTVersion
+	defer func() { SetCurrentNBTVersion(prev) }()
+
+	SetCurrentNBTVersion("1.20.4")
+	nf := NBTField{Value: &NBTCompound{Tags: []NBTTag{}}}
+	buf := &bytes.Buffer{}
+	n, err := nf.WriteTo(buf)
+	require.NoError(t, err)
+	assert.Equal(t, int64(4), n)
+
+	// Switch to >= 1.20.5 and verify omission of name
+	SetCurrentNBTVersion("1.20.5")
+	buf.Reset()
+	n2, err := nf.WriteTo(buf)
+	require.NoError(t, err)
+	assert.Equal(t, int64(2), n2)
 }
 
 func TestNBTField(t *testing.T) {

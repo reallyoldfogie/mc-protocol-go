@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go/format"
 	"os"
 	"path/filepath"
 	"slices"
@@ -24,6 +25,9 @@ import (
 // names (already identifier-ized), values are context keys like "action" or
 // "action/add_player".
 var parentContextRequirements = map[string][]string{}
+
+// Tracks explicit count arrays: maps "ContainerName.FieldName" to count field name
+var explicitCountArrayFields = map[string]string{}
 
 func generatePacketIDs(baseDir, version string, packetsData inversePacketParse) inversePacketParse {
 	fmt.Println("generating", version, "packetid.go")
@@ -54,13 +58,20 @@ func generatePacketIDs(baseDir, version string, packetsData inversePacketParse) 
 }
 
 type inversePacketParse struct {
-	Configuration        inversePacketMap
-	Login                inversePacketMap
-	Play                 inversePacketMap
-	Handshake            inversePacketMap
-	Status               inversePacketMap
-	MaxPlayClientboundID models.ProtocolID
-	MaxPlayServerboundID models.ProtocolID
+	Configuration             inversePacketMap
+	Login                     inversePacketMap
+	Play                      inversePacketMap
+	Handshake                 inversePacketMap
+	Status                    inversePacketMap
+	MaxPlayClientboundID      models.ProtocolID
+	MaxPlayServerboundID      models.ProtocolID
+	MaxLoginClientboundID     models.ProtocolID
+	MaxLoginServerboundID     models.ProtocolID
+	MaxConfigClientboundID    models.ProtocolID
+	MaxConfigServerboundID    models.ProtocolID
+	MaxStatusClientboundID    models.ProtocolID
+	MaxHandshakeClientboundID models.ProtocolID
+	MaxHandshakeServerboundID models.ProtocolID
 }
 type packetData struct {
 	Name          string // Name derived from packet_* proto type (matches generated struct names)
@@ -113,6 +124,14 @@ func getPacketInfoFromProtocol(protocolDefinitions *protocol.Protocol) inversePa
 	buildFor := func(nsName string, inverseMap *inversePacketMap) {
 		ns, ok := protocolDefinitions.Namespaces[nsName]
 		if !ok || ns == nil {
+			fmt.Printf("DEBUG [getPacketInfoFromProtocol]: Namespace '%s' not found or nil\n", nsName)
+			fmt.Printf("DEBUG [getPacketInfoFromProtocol]: Available namespaces: %v\n", func() []string {
+				keys := make([]string, 0, len(protocolDefinitions.Namespaces))
+				for k := range protocolDefinitions.Namespaces {
+					keys = append(keys, k)
+				}
+				return keys
+			}())
 			return
 		}
 		// Helper to process one direction
@@ -197,10 +216,15 @@ func getPacketInfoFromProtocol(protocolDefinitions *protocol.Protocol) inversePa
 	buildFor("configuration", &rval.Configuration)
 	buildFor("login", &rval.Login)
 	buildFor("play", &rval.Play)
-	buildFor("handshake", &rval.Handshake)
+	buildFor("handshaking", &rval.Handshake)
+	fmt.Printf("DEBUG [getPacketInfoFromProtocol]: After buildFor handshaking: Clientbound=%d, Serverbound=%d\n",
+		len(rval.Handshake.Clientbound), len(rval.Handshake.Serverbound))
 	buildFor("status", &rval.Status)
+	fmt.Printf("DEBUG [getPacketInfoFromProtocol]: After buildFor status: Clientbound=%d, Serverbound=%d\n",
+		len(rval.Status.Clientbound), len(rval.Status.Serverbound))
 
-	// Compute guards for play namespace
+	// Compute guards for all namespaces
+	// Play
 	rval.MaxPlayClientboundID = models.ProtocolID{ID: -1}
 	for id := range rval.Play.Clientbound {
 		if id.ID > rval.MaxPlayClientboundID.ID {
@@ -216,6 +240,65 @@ func getPacketInfoFromProtocol(protocolDefinitions *protocol.Protocol) inversePa
 	// Guard is max+1
 	rval.MaxPlayClientboundID.ID++
 	rval.MaxPlayServerboundID.ID++
+
+	// Login
+	rval.MaxLoginClientboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Login.Clientbound {
+		if id.ID > rval.MaxLoginClientboundID.ID {
+			rval.MaxLoginClientboundID = id
+		}
+	}
+	rval.MaxLoginServerboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Login.Serverbound {
+		if id.ID > rval.MaxLoginServerboundID.ID {
+			rval.MaxLoginServerboundID = id
+		}
+	}
+	rval.MaxLoginClientboundID.ID++
+	rval.MaxLoginServerboundID.ID++
+
+	// Configuration
+	rval.MaxConfigClientboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Configuration.Clientbound {
+		if id.ID > rval.MaxConfigClientboundID.ID {
+			rval.MaxConfigClientboundID = id
+		}
+	}
+	rval.MaxConfigServerboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Configuration.Serverbound {
+		if id.ID > rval.MaxConfigServerboundID.ID {
+			rval.MaxConfigServerboundID = id
+		}
+	}
+	rval.MaxConfigClientboundID.ID++
+	rval.MaxConfigServerboundID.ID++
+
+	// Status
+	rval.MaxStatusClientboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Status.Clientbound {
+		if id.ID > rval.MaxStatusClientboundID.ID {
+			rval.MaxStatusClientboundID = id
+		}
+	}
+	// Status serverbound doesn't typically have guards needed, but compute for consistency
+	rval.MaxStatusClientboundID.ID++
+
+	// Handshake
+	rval.MaxHandshakeClientboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Handshake.Clientbound {
+		if id.ID > rval.MaxHandshakeClientboundID.ID {
+			rval.MaxHandshakeClientboundID = id
+		}
+	}
+	rval.MaxHandshakeServerboundID = models.ProtocolID{ID: -1}
+	for id := range rval.Handshake.Serverbound {
+		if id.ID > rval.MaxHandshakeServerboundID.ID {
+			rval.MaxHandshakeServerboundID = id
+		}
+	}
+	rval.MaxHandshakeClientboundID.ID++
+	rval.MaxHandshakeServerboundID.ID++
+
 	return rval
 }
 
@@ -430,6 +513,8 @@ func generateProtocolStructs(version string, protocolDefinitions *protocol.Proto
 		Namespace string
 		Direction string
 	})
+	parentContextRequirements = make(map[string][]string)
+	explicitCountArrayFields = make(map[string]string)
 	// typeRegistry = make(map[string]*datatypes.Type)
 
 	// Note: packet IDs will be extracted directly from protocol.json
@@ -520,7 +605,7 @@ func generateProtocolStructs(version string, protocolDefinitions *protocol.Proto
 		}
 	}
 
-	err := generateTypesFile(filepath.Join("data", version, "basetypes"), version, "basetypes", types, true)
+	err := generateMultipleTypesFiles(filepath.Join("data", version, "basetypes"), version, "basetypes", types, true)
 	if err != nil {
 		errs = append(errs, err)
 	}
@@ -542,7 +627,631 @@ func generateProtocolStructs(version string, protocolDefinitions *protocol.Proto
 	return updatedPacketsData, packetMetadata, nil
 }
 
+// typeGroup represents a group of related types (e.g., a packet and its helpers)
+type typeGroup struct {
+	packetType   *datatypes.Type   // Main packet type (nil for shared types)
+	relatedTypes []*datatypes.Type // Helper types used by this packet
+}
+
+// analyzeBasetypeDependencies categorizes basetypes by naming patterns and functionality
+func analyzeBasetypeDependencies(types []*datatypes.Type) map[string]*typeGroup {
+	// Build a map of type name -> type for quick lookup
+	typeMap := make(map[string]*datatypes.Type)
+	for _, t := range types {
+		typeMap[t.Name] = t
+	}
+
+	// Category assignments: category name -> list of types
+	categories := make(map[string][]*datatypes.Type)
+
+	// Categorize each type based on naming patterns
+	for _, t := range types {
+		var category string
+
+		// Check type name prefixes for categorization
+		switch {
+		case strings.HasPrefix(t.Name, "Common"):
+			category = "common_types"
+		case strings.HasPrefix(t.Name, "EntityMetadata"):
+			category = "entity_metadata"
+		case strings.HasPrefix(t.Name, "CommandNode"):
+			category = "command_node"
+		case strings.HasPrefix(t.Name, "Item") && !strings.HasPrefix(t.Name, "ItemStack"):
+			// ItemStack is handled separately as it may be in models package
+			category = "item_types"
+		case strings.HasPrefix(t.Name, "ArmorTrim"):
+			category = "armor_types"
+		case t.Name == "Tags" || t.Name == "TagsTagsElement":
+			category = "tags"
+		case t.TypeName == "mapper":
+			category = "mappers"
+		case isSimpleAlias(t):
+			category = "aliases"
+		default:
+			// Everything else goes to misc
+			category = "misc_types"
+		}
+
+		categories[category] = append(categories[category], t)
+	}
+
+	// Track which types have been assigned to avoid duplicates
+	assignedTypes := make(map[string]bool)
+
+	// For each category, add only types that were directly categorized
+	// (no dependency collection to avoid duplicates)
+	groups := make(map[string]*typeGroup)
+	for categoryName, categoryTypes := range categories {
+		// Only include types that haven't been assigned yet
+		typeList := make([]*datatypes.Type, 0, len(categoryTypes))
+		for _, t := range categoryTypes {
+			if !assignedTypes[t.Name] {
+				typeList = append(typeList, t)
+				assignedTypes[t.Name] = true
+			}
+		}
+
+		// Skip empty groups
+		if len(typeList) == 0 {
+			continue
+		}
+
+		groups[categoryName] = &typeGroup{
+			packetType:   nil,
+			relatedTypes: typeList,
+		}
+	}
+
+	return groups
+}
+
+// isSimpleAlias checks if a type is a simple type alias
+func isSimpleAlias(t *datatypes.Type) bool {
+	// Simple aliases are types that are just wrappers around another type
+	// without complex logic (e.g., type Foo models.Option[Bar])
+	if t.Extras != nil {
+		return false // Has complex structure
+	}
+	// Check if it's a simple type reference
+	if strings.Contains(t.TypeName, "models.") || strings.Contains(t.TypeName, "pk.") {
+		return true
+	}
+	return false
+}
+
+// shouldIncludeInCategory determines if a dependent type should be included in the same file
+func shouldIncludeInCategory(t *datatypes.Type, category string) bool {
+	// Don't cross-pollinate major categories
+	switch category {
+	case "common_types":
+		return strings.HasPrefix(t.Name, "Common")
+	case "entity_metadata":
+		return strings.HasPrefix(t.Name, "EntityMetadata")
+	case "command_node":
+		return strings.HasPrefix(t.Name, "CommandNode")
+	case "item_types":
+		return strings.HasPrefix(t.Name, "Item") && !strings.HasPrefix(t.Name, "ItemStack")
+	case "armor_types":
+		return strings.HasPrefix(t.Name, "ArmorTrim")
+	case "tags":
+		return t.Name == "Tags" || strings.Contains(t.Name, "Tags")
+	case "mappers":
+		return t.TypeName == "mapper"
+	case "aliases":
+		return isSimpleAlias(t)
+	default:
+		// For misc, be more permissive
+		return true
+	}
+}
+
+// analyzeDependencies analyzes type dependencies and groups them by packet
+func analyzeDependencies(types []*datatypes.Type) map[string]*typeGroup {
+	// Build a map of type name -> type for quick lookup
+	typeMap := make(map[string]*datatypes.Type)
+	for _, t := range types {
+		typeMap[t.Name] = t
+	}
+
+	// Track which types are referenced by which packets
+	typeUsage := make(map[string]map[string]bool)   // typeName -> set of packet names that use it
+	packetTypes := make(map[string]*datatypes.Type) // packet name -> packet type
+
+	// Identify packet types and build usage map
+	for _, t := range types {
+		if meta, exists := packetMetadata[t.Name]; exists && meta.IsPacket {
+			packetTypes[t.Name] = t
+			typeUsage[t.Name] = make(map[string]bool)
+			typeUsage[t.Name][t.Name] = true // Packet uses itself
+
+			// Find all types referenced by this packet
+			collectTypeReferences(t, typeMap, typeUsage[t.Name])
+		}
+	}
+
+	// Build groups: one per packet, plus one for shared types
+	groups := make(map[string]*typeGroup)
+
+	// Create a group for each packet
+	for packetName, packetType := range packetTypes {
+		group := &typeGroup{
+			packetType:   packetType,
+			relatedTypes: []*datatypes.Type{},
+		}
+
+		// Add referenced types to this group
+		for typeName := range typeUsage[packetName] {
+			if typeName != packetName { // Don't add packet itself as a related type
+				if refType, ok := typeMap[typeName]; ok {
+					group.relatedTypes = append(group.relatedTypes, refType)
+				}
+			}
+		}
+
+		groups[packetName] = group
+	}
+
+	// Identify shared types (used by multiple packets or not used by any packet)
+	// First, count how many packets use each type
+	typeToPackets := make(map[string][]string) // typeName -> list of packets that use it
+	for packetName, usages := range typeUsage {
+		for typeName := range usages {
+			if typeName != packetName { // Don't count packet using itself
+				typeToPackets[typeName] = append(typeToPackets[typeName], packetName)
+			}
+		}
+	}
+
+	// Determine which types are shared
+	sharedTypeNames := make(map[string]bool)
+	for typeName, packets := range typeToPackets {
+		// Types used by 2+ packets are shared
+		if len(packets) > 1 {
+			sharedTypeNames[typeName] = true
+		}
+	}
+
+	// Also mark mapper types and the main Packet struct as shared
+	for _, t := range types {
+		if t.TypeName == "mapper" || t.Name == "Packet" || t.Name == "PacketName" {
+			sharedTypeNames[t.Name] = true
+		}
+	}
+
+	// Remove shared types from packet groups
+	for packetName, group := range groups {
+		if packetName == "shared" {
+			continue
+		}
+
+		// Filter out shared types from related types
+		filteredRelated := []*datatypes.Type{}
+		for _, t := range group.relatedTypes {
+			if !sharedTypeNames[t.Name] {
+				filteredRelated = append(filteredRelated, t)
+			}
+		}
+		group.relatedTypes = filteredRelated
+	}
+
+	// Collect shared types
+	sharedTypes := []*datatypes.Type{}
+	for _, t := range types {
+		// Skip packet types themselves
+		if _, isPacket := packetTypes[t.Name]; isPacket {
+			continue
+		}
+
+		if sharedTypeNames[t.Name] {
+			sharedTypes = append(sharedTypes, t)
+		}
+	}
+
+	// Also include types not used by any packet (orphaned types)
+	for _, t := range types {
+		// Skip packet types themselves
+		if _, isPacket := packetTypes[t.Name]; isPacket {
+			continue
+		}
+
+		// Skip if already marked as shared
+		if sharedTypeNames[t.Name] {
+			continue
+		}
+
+		// Check if type is used by any packet
+		isUsed := false
+		for _, usages := range typeUsage {
+			if usages[t.Name] {
+				isUsed = true
+				break
+			}
+		}
+
+		// If not used by any packet, add to shared types
+		if !isUsed {
+			sharedTypes = append(sharedTypes, t)
+		}
+	}
+
+	// Create shared group
+	if len(sharedTypes) > 0 {
+		groups["shared"] = &typeGroup{
+			packetType:   nil,
+			relatedTypes: sharedTypes,
+		}
+	}
+
+	return groups
+}
+
+// collectTypeReferences recursively collects all type names referenced by a type
+func collectTypeReferences(t *datatypes.Type, typeMap map[string]*datatypes.Type, refs map[string]bool) {
+	if t == nil || t.Extras == nil {
+		return
+	}
+
+	switch extras := t.Extras.(type) {
+	case *datatypes.Container:
+		for _, field := range extras.Fields {
+			if field.Type != nil {
+				collectTypeReferencesFromTypeName(field.Type.TypeName, typeMap, refs)
+				collectTypeReferences(field.Type, typeMap, refs)
+			}
+		}
+	case *datatypes.Array:
+		if extras.Type != nil {
+			collectTypeReferencesFromTypeName(extras.Type.TypeName, typeMap, refs)
+			collectTypeReferences(extras.Type, typeMap, refs)
+		}
+	case *datatypes.Switch:
+		for _, field := range extras.Fields {
+			if field != nil {
+				collectTypeReferencesFromTypeName(field.TypeName, typeMap, refs)
+			}
+		}
+	case *datatypes.Option:
+		if extras.Type != nil {
+			collectTypeReferencesFromTypeName(extras.Type.TypeName, typeMap, refs)
+			collectTypeReferences(extras.Type, typeMap, refs)
+		}
+	}
+}
+
+// collectTypeReferencesFromTypeName extracts type names from a typename string
+func collectTypeReferencesFromTypeName(typeName string, typeMap map[string]*datatypes.Type, refs map[string]bool) {
+	// Handle generic types like "Array[Foo]" or "pk.Option[Bar]"
+	if idx := strings.Index(typeName, "["); idx > 0 {
+		// Extract type parameter
+		if endIdx := strings.LastIndex(typeName, "]"); endIdx > idx {
+			inner := typeName[idx+1 : endIdx]
+			// Remove package prefixes
+			inner = strings.TrimPrefix(inner, "basetypes.")
+			inner = strings.TrimPrefix(inner, "models.")
+			inner = strings.TrimPrefix(inner, "pk.")
+			if _, ok := typeMap[inner]; ok {
+				refs[inner] = true
+			}
+		}
+		return
+	}
+
+	// Handle simple type references
+	typeName = strings.TrimPrefix(typeName, "basetypes.")
+	typeName = strings.TrimPrefix(typeName, "models.")
+	typeName = strings.TrimPrefix(typeName, "pk.")
+	if _, ok := typeMap[typeName]; ok {
+		refs[typeName] = true
+	}
+}
+
+// generateMultipleTypesFiles generates split types files for a namespace
+func generateMultipleTypesFiles(basePath, version, packageName string, inTypes []*datatypes.Type, areBaseTypes bool) error {
+	// Analyze dependencies and group types based on whether this is basetypes or packets
+	var groups map[string]*typeGroup
+	if areBaseTypes {
+		groups = analyzeBasetypeDependencies(inTypes)
+	} else {
+		groups = analyzeDependencies(inTypes)
+	}
+
+	// Generate individual files for each group
+	for groupName, group := range groups {
+		// Skip empty groups
+		if len(group.relatedTypes) == 0 && group.packetType == nil {
+			continue
+		}
+
+		// Combine packet type with its related types
+		types := []*datatypes.Type{}
+		if group.packetType != nil {
+			types = append(types, group.packetType)
+		}
+		types = append(types, group.relatedTypes...)
+
+		// Generate file with appropriate naming
+		var fileName string
+		if areBaseTypes {
+			// For basetypes, use the category name directly
+			fileName = fmt.Sprintf("%s.go", groupName)
+		} else {
+			// For packets, use packet_ prefix or special names for shared types
+			if groupName == "shared" {
+				// Handle shared packet types separately below
+				continue
+			}
+			fileName = fmt.Sprintf("packet_%s.go", strings.ToLower(groupName))
+		}
+
+		if err := generateSingleTypesFile(basePath, version, packageName, fileName, types, areBaseTypes); err != nil {
+			return fmt.Errorf("failed to generate %s: %w", fileName, err)
+		}
+	}
+
+	// Generate shared types file (only for packets, not basetypes)
+	if !areBaseTypes {
+		if sharedGroup, ok := groups["shared"]; ok {
+		// Separate mapper types and packet struct from other shared types
+		mapperTypes := []*datatypes.Type{}
+		packetTypes := []*datatypes.Type{}
+		otherShared := []*datatypes.Type{}
+
+		for _, t := range sharedGroup.relatedTypes {
+			if t.TypeName == "mapper" || strings.Contains(t.Name, "Mapper") || strings.Contains(t.Name, "Mappings") {
+				mapperTypes = append(mapperTypes, t)
+			} else if t.Name == "Packet" || t.Name == "PacketName" {
+				packetTypes = append(packetTypes, t)
+			} else {
+				otherShared = append(otherShared, t)
+			}
+		}
+
+		// Generate shared_types.go for common types
+		if len(otherShared) > 0 {
+			if err := generateSingleTypesFile(basePath, version, packageName, "shared_types.go", otherShared, false); err != nil {
+				return fmt.Errorf("failed to generate shared_types.go: %w", err)
+			}
+		}
+
+		// Generate packet_mapper.go for mapper types
+		if len(mapperTypes) > 0 {
+			if err := generateSingleTypesFile(basePath, version, packageName, "packet_mapper.go", mapperTypes, false); err != nil {
+				return fmt.Errorf("failed to generate packet_mapper.go: %w", err)
+			}
+		}
+
+		// Generate packet.go for main Packet struct
+		if len(packetTypes) > 0 {
+			if err := generateSingleTypesFile(basePath, version, packageName, "packet.go", packetTypes, false); err != nil {
+				return fmt.Errorf("failed to generate packet.go: %w", err)
+			}
+		}
+		}
+	}
+
+	return nil
+}
+
+// generateSingleTypesFile generates a single types file with the given types
+func generateSingleTypesFile(basePath, version, packageName, fileName string, inTypes []*datatypes.Type, areBaseTypes bool) error {
+	packageName = strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return r
+		}
+		return '_'
+	}, packageName)
+
+	basePath = strings.ToLower(basePath)
+	err := os.MkdirAll(basePath, 0750)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to create type package folder (basePath:%s) (package: %s) [%v]\n", basePath, packageName, err)
+		return err
+	}
+
+	typesFile, err := os.Create(filepath.Join(basePath, fileName))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error creating %s: %v\n", fileName, err)
+		return err
+	}
+	defer typesFile.Close()
+
+	// Build header
+	var header string
+	if areBaseTypes {
+		header = strings.ReplaceAll(baseTypesHeader, "{{PACKAGE_NAME}}", packageName)
+	} else {
+		header = strings.ReplaceAll(typesHeader, "{{PACKAGE_NAME}}", packageName)
+	}
+
+	// Deduplicate types
+	seenTypes := map[*datatypes.Type]int{}
+	seenTypeNames := map[string]*datatypes.Type{}
+	tmpTypes := []*datatypes.Type{}
+
+	for _, t := range inTypes {
+		if strings.Contains(t.Name, ".") {
+			continue
+		}
+
+		if _, ok := seenTypes[t]; ok {
+			continue
+		}
+
+		if existingType, ok := seenTypeNames[t.Name]; ok {
+			if typesAreEquivalent(existingType, t) {
+				continue
+			}
+			suffix := 1
+			newName := fmt.Sprintf("%s_%d", t.Name, suffix)
+			for _, exists := seenTypeNames[newName]; exists; _, exists = seenTypeNames[newName] {
+				suffix++
+				newName = fmt.Sprintf("%s_%d", t.Name, suffix)
+			}
+			fmt.Fprintf(os.Stderr, "Warning: duplicate type name '%s' detected. Renaming to '%s'\n", t.Name, newName)
+			t.Name = newName
+			if t.Extras != nil {
+				t.Extras.SetName(newName)
+			}
+		}
+
+		seenTypes[t] = 1
+		seenTypeNames[t.Name] = t
+		tmpTypes = append(tmpTypes, t)
+	}
+
+	inTypes = tmpTypes
+
+	// Generate type definitions
+	var buf strings.Builder
+	if err := template.Must(template.New("").Funcs(template.FuncMap{
+		"toContainer":                  toContainer,
+		"toArray":                      toArray,
+		"toBitfield":                   toBitfield,
+		"toSwitch":                     toSwitch,
+		"toOption":                     toOption,
+		"toMapper":                     toMapper,
+		"toRegistryEntryHolder":        toRegistryEntryHolder,
+		"toRegistryEntryHolderSet":     toRegistryEntryHolderSet,
+		"toEntityMetadataLoop":         toEntityMetadataLoop,
+		"toNative":                     toNative,
+		"toIdentifier":                 toIdentifier,
+		"toUpper":                      strings.ToUpper,
+		"add":                          add,
+		"hasFieldMethods":              hasFieldMethods,
+		"containerHasParentReferences": containerHasParentReferences,
+		"isSwitch":                     isTemplateSwitch,
+		"getSwitchInfo":                getSwitchInfo,
+		"getCompareToFieldName":        getCompareToFieldName,
+		"getCompareToExpression":       getCompareToExpression,
+		"isCompareToFieldMapper":       isCompareToFieldMapper,
+		"isBitflagMemberAccess":        isBitflagMemberAccess,
+		"getBitflagMemberName":         getBitflagMemberName,
+		"getBitflagCheckCode":          getBitflagCheckCode,
+		"isArrayWithContextElements":   isArrayWithContextElements,
+		"getParentRefsForArrayContext": getParentRefsForArrayContext,
+		"isExplicitCountArray":         isExplicitCountArray,
+		"explicitCountArrayFieldName":  explicitCountArrayFieldName,
+		"exprForCtxKey":                exprForCtxKey,
+		"exprForCtxKeyWithPrefix":      exprForCtxKeyWithPrefix,
+		"isParentCompareTo":            isParentCompareTo,
+		"ctxKeyForSwitch":              ctxKeyForSwitch,
+		"typeRequiresParentContext":    typeRequiresParentContext,
+		"getParentRefsForType":         getParentRefsForType,
+		"sanitizeIdentifier":           sanitizeIdentifier,
+		"isBitflagsField":              isBitflagsField,
+		"bitflags":                     getBitflagsForField,
+		"wrapperName":                  bitflagsWrapperName,
+		"resolveFieldType":             resolveFieldTypeForBitflags,
+		"switchHasValidCases":          switchHasValidCases,
+		"countNonSwitchFields":         countNonSwitchFields,
+		"countSwitchFields":            countSwitchFields,
+		"not":                          notFunc,
+		"isNestedSwitch":               isNestedSwitch,
+		"getNestedSwitchInfo":          getNestedSwitchInfo,
+		"dict":                         dict,
+		"isPacketType":                 isPacketType,
+		"getPacketID":                  getPacketID,
+		"isNBTFieldType":               isNBTFieldType,
+		"formatRawDef":                 formatRawDefinition,
+	}).Parse(structsTmpl+bitflagWrapperTmpl+bitflagWrapperTypeTmpl)).ExecuteTemplate(&buf, "structsTmpl", inTypes); err != nil {
+		panic(err)
+	}
+
+	// Post-process and add imports
+	typeDefsOutput := buf.String()
+	if !areBaseTypes {
+		typeDefsOutput = fixUnprefixedBaseTypes(typeDefsOutput)
+
+		var imports []string
+		// Only add imports that are actually used
+		if strings.Contains(typeDefsOutput, "fmt.") {
+			imports = append(imports, `"fmt"`)
+		}
+		if strings.Contains(typeDefsOutput, "io.") {
+			imports = append(imports, `"io"`)
+		}
+		if strings.Contains(typeDefsOutput, "log.") {
+			imports = append(imports, `"log"`)
+		}
+		if strings.Contains(typeDefsOutput, "bytes.") {
+			imports = append(imports, `"bytes"`)
+		}
+		if strings.Contains(typeDefsOutput, "basetypes.") {
+			imports = append(imports, `"github.com/reallyoldfogie/mc-protocol-go/data/`+version+`/basetypes"`)
+		}
+		if strings.Contains(typeDefsOutput, "models.") {
+			imports = append(imports, `"github.com/reallyoldfogie/mc-protocol-go/models"`)
+		}
+		if strings.Contains(typeDefsOutput, "pk.") {
+			imports = append(imports, `pk "github.com/Tnze/go-mc/net/packet"`)
+		}
+		if strings.Contains(typeDefsOutput, "errors.") {
+			imports = append(imports, `"github.com/pkg/errors"`)
+		}
+
+		// Build custom header with only necessary imports
+		header = "// Generated by gen_protocol. DO NOT EDIT\npackage " + packageName + "\n"
+		if len(imports) > 0 {
+			header += "\nimport (\n\t" + strings.Join(imports, "\n\t") + "\n)\n"
+		}
+		header += "\n"
+	} else {
+		// For basetypes, use the same dynamic import detection
+		var imports []string
+		if strings.Contains(typeDefsOutput, "fmt.") {
+			imports = append(imports, `"fmt"`)
+		}
+		if strings.Contains(typeDefsOutput, "io.") {
+			imports = append(imports, `"io"`)
+		}
+		if strings.Contains(typeDefsOutput, "log.") {
+			imports = append(imports, `"log"`)
+		}
+		if strings.Contains(typeDefsOutput, "bytes.") {
+			imports = append(imports, `"bytes"`)
+		}
+		if strings.Contains(typeDefsOutput, "models.") {
+			imports = append(imports, `"github.com/reallyoldfogie/mc-protocol-go/models"`)
+		}
+		if strings.Contains(typeDefsOutput, "pk.") {
+			imports = append(imports, `pk "github.com/Tnze/go-mc/net/packet"`)
+		}
+		if strings.Contains(typeDefsOutput, "errors.") {
+			imports = append(imports, `"github.com/pkg/errors"`)
+		}
+
+		// Build custom header with only necessary imports
+		header = "// Generated by gen_protocol (baseTypesHeader). DO NOT EDIT\npackage " + packageName + "\n"
+		if len(imports) > 0 {
+			header += "\nimport (\n\t" + strings.Join(imports, "\n\t") + "\n)\n"
+		}
+		header += "\n"
+	}
+
+	// Combine header and type definitions
+	fullContent := header + typeDefsOutput
+	
+	// Format the generated code
+	formatted, err := format.Source([]byte(fullContent))
+	if err != nil {
+		// If formatting fails, write unformatted code and log the error
+		fmt.Fprintf(os.Stderr, "Warning: failed to format %s: %v\n", filepath.Join(basePath, fileName), err)
+		_, writeErr := typesFile.WriteString(fullContent)
+		return writeErr
+	}
+	
+	// Write formatted code
+	_, err = typesFile.Write(formatted)
+	return err
+}
+
 func generateTypesFile(basePath, version, packageName string, inTypes []*datatypes.Type, areBaseTypes bool) error {
+	packageName = strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return r
+		}
+		return '_'
+	}, packageName)
 
 	basePath = strings.ToLower(basePath)
 	err := os.MkdirAll(basePath, 0750)
@@ -644,15 +1353,22 @@ func generateTypesFile(basePath, version, packageName string, inTypes []*datatyp
 		"isSwitch":                     isTemplateSwitch,
 		"getSwitchInfo":                getSwitchInfo,
 		"getCompareToFieldName":        getCompareToFieldName,
+		"getCompareToExpression":       getCompareToExpression,
+		"isCompareToFieldMapper":       isCompareToFieldMapper,
 		"isBitflagMemberAccess":        isBitflagMemberAccess,
 		"getBitflagMemberName":         getBitflagMemberName,
 		"getBitflagCheckCode":          getBitflagCheckCode,
 		"isArrayWithContextElements":   isArrayWithContextElements,
 		"getParentRefsForArrayContext": getParentRefsForArrayContext,
+		"isExplicitCountArray":         isExplicitCountArray,
+		"explicitCountArrayFieldName":  explicitCountArrayFieldName,
 		"exprForCtxKey":                exprForCtxKey,
 		"exprForCtxKeyWithPrefix":      exprForCtxKeyWithPrefix,
 		"isParentCompareTo":            isParentCompareTo,
 		"ctxKeyForSwitch":              ctxKeyForSwitch,
+		"typeRequiresParentContext":    typeRequiresParentContext,
+		"getParentRefsForType":         getParentRefsForType,
+		"sanitizeIdentifier":           sanitizeIdentifier,
 		"isBitflagsField":              isBitflagsField,
 		"bitflags":                     getBitflagsForField,
 		"wrapperName":                  bitflagsWrapperName,
@@ -667,6 +1383,7 @@ func generateTypesFile(basePath, version, packageName string, inTypes []*datatyp
 		"isPacketType":                 isPacketType,
 		"getPacketID":                  getPacketID,
 		"isNBTFieldType":               isNBTFieldType,
+		"formatRawDef":                 formatRawDefinition,
 	}).Parse(structsTmpl+bitflagWrapperTmpl+bitflagWrapperTypeTmpl)).ExecuteTemplate(&buf, "structsTmpl", inTypes); err != nil {
 		panic(err)
 	}
@@ -701,16 +1418,41 @@ func generateTypesFile(basePath, version, packageName string, inTypes []*datatyp
 			header = strings.ReplaceAll(header, `pk "github.com/Tnze/go-mc/net/packet"`, `// pk "github.com/Tnze/go-mc/net/packet" // unused`)
 		}
 	} else {
-		// For basetypes package, remove imports placeholder
-		header = strings.ReplaceAll(header, "// IMPORTS_PLACEHOLDER\n\t\t", "")
+		// For basetypes package, add imports based on usage
+		// Note: baseTypesHeader already includes "fmt", "io", "log", "models", and "pk"
+		var imports []string
+		if strings.Contains(typeDefsOutput, "bytes.") {
+			imports = append(imports, `"bytes"`)
+		}
+		// Don't add models - it's already in the base header
+
+		// Build import block
+		importBlock := ""
+		if len(imports) > 0 {
+			importBlock = strings.Join(imports, "\n\t\t") + "\n\t\t"
+		}
+		header = strings.ReplaceAll(header, "// IMPORTS_PLACEHOLDER", importBlock)
+
 		// Remove pk import if not used
 		if !strings.Contains(typeDefsOutput, "pk.") {
 			header = strings.ReplaceAll(header, `pk "github.com/Tnze/go-mc/net/packet"`, `// pk "github.com/Tnze/go-mc/net/packet" // unused`)
 		}
 	}
 
-	// Write header and type definitions
-	_, err = typesFile.WriteString(header + typeDefsOutput)
+	// Combine header and type definitions
+	fullContent := header + typeDefsOutput
+
+	// Format the generated code
+	formatted, err := format.Source([]byte(fullContent))
+	if err != nil {
+		// If formatting fails, write unformatted code and log the error
+		fmt.Fprintf(os.Stderr, "Warning: failed to format %s: %v\n", filepath.Join(basePath, "types.go"), err)
+		_, writeErr := typesFile.WriteString(fullContent)
+		return writeErr
+	}
+
+	// Write formatted code
+	_, err = typesFile.Write(formatted)
 	return err
 }
 
@@ -718,7 +1460,6 @@ const (
 	structsTmpl = `
 {{define "structsTmpl"}}
 {{- range .}}
-// {{.}}
 {{if eq .TypeName "container"}}
   {{/* Emit bitflag wrappers for any bitflag fields in this container */}}
   {{- $c := toContainer .}}
@@ -779,11 +1520,17 @@ func (t {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 {{- $type := .type}}
 {{- $isPacket := isPacketType $type}}
 {{- $packetID := getPacketID $type}}
+{{- if $type.RawDefinition}}
+// Protodef: {{formatRawDef $type.RawDefinition}}
+{{- end}}
 type {{$container.Name}} struct {
 {{- if $isPacket}}
 	packetID int32
 {{- end}}
 {{- range $container.Fields}}
+	{{- if .Type.RawDefinition}}
+	// {{formatRawDef .Type.RawDefinition}}
+	{{- end}}
 	{{.Name}} {{resolveFieldType $container .}}
 {{- end}}
 }
@@ -798,6 +1545,12 @@ func New{{$container.Name}}() *{{$container.Name}} {
 // PacketID returns the protocol ID for this packet type.
 func (p *{{$container.Name}}) PacketID() int32 {
 	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *{{$container.Name}}) SetPacketID(id int32) {
+	p.packetID = id
 }
 
 // Marshal serializes the packet into wire format.
@@ -839,9 +1592,18 @@ func (p *{{$container.Name}}) Scan(packet pk.Packet) error {
 	{{- $hasArraysWithContext = true}}
 	{{- end}}
 	{{- end}}
-	{{- if $hasArraysWithContext}}
-	// This packet has arrays that need parent context, so we read fields individually
+	{{- $hasSwitchFields := false}}
+	{{- range $container.Fields}}
+	{{- if isSwitch .}}
+	{{- $hasSwitchFields = true}}
+	{{- end}}
+	{{- end}}
+	{{- if or $hasArraysWithContext $hasSwitchFields}}
+	// This packet has {{if $hasArraysWithContext}}arrays that need parent context{{end}}{{if and $hasArraysWithContext $hasSwitchFields}} and {{end}}{{if $hasSwitchFields}}switch fields{{end}}, so we read fields individually
 	r := bytes.NewReader(packet.Data)
+	var totalBytes int64
+	var bytesRead int64
+	var err error
 	{{- range $container.Fields}}
 	{{- if isArrayWithContextElements .}}
 	// Prepare parent context for array '{{.Name}}'
@@ -851,16 +1613,17 @@ func (p *{{$container.Name}}) Scan(packet pk.Packet) error {
 	{{- end}}
 	p.{{.Name}}.SetParentContext(ctx)
 	{{- end}}
-	{{- if eq .Type.TypeName "pk.Field"}}
-	if _, err := (*pk.Field)(p.{{.Name}}).ReadFrom(r); err != nil {
-		return fmt.Errorf("scanning packet field[{{.Name}}] error: %w", err)
-	}
+	{{- if isSwitch .}}
+	{{- template "switchScanTmpl" dict "field" . "container" $container "prefix" "p."}}
 	{{- else}}
-	if _, err := p.{{.Name}}.ReadFrom(r); err != nil {
+	bytesRead, err = p.{{.Name}}.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
 		return fmt.Errorf("scanning packet field[{{.Name}}] error: %w", err)
 	}
 	{{- end}}
 	{{- end}}
+	_ = totalBytes // Unused in Scan()
 	return nil
 	{{- else}}
 	return packet.Scan(
@@ -874,6 +1637,12 @@ func (p *{{$container.Name}}) Scan(packet pk.Packet) error {
 	{{- end}}
 }
 
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *{{$container.Name}}) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
 	{{- range $container.Fields}}
@@ -882,6 +1651,12 @@ func (p *{{$container.Name}}) GetFields() map[string]pk.FieldEncoder {
 	return fields
 }
 
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *{{$container.Name}}) SetFields(fields map[string]pk.FieldEncoder) {
 	fmt.Printf("{{.Name}}\n")
 	{{- range $container.Fields}}
@@ -890,6 +1665,23 @@ func (p *{{$container.Name}}) SetFields(fields map[string]pk.FieldEncoder) {
 	}
 	{{- end}}
 }
+
+// Typed field accessor methods for version-specific type-safe access
+{{- range $container.Fields}}
+// Get{{.Name}} returns the {{.Name}} field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *{{$container.Name}}) Get{{.Name}}() {{resolveFieldType $container .}} {
+	return p.{{.Name}}
+}
+
+// Set{{.Name}} sets the {{.Name}} field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *{{$container.Name}}) Set{{.Name}}(val {{resolveFieldType $container .}}) {
+	p.{{.Name}} = val
+}
+{{end}}
 {{- end}}
 		
 
@@ -899,22 +1691,29 @@ func (t *{{$container.Name}}) ReadFrom(r io.Reader) (totalBytes int64, err error
 	{{- if hasFieldMethods $container}}
 	var bytesRead int64
 
-	{{- range $container.Fields}}
-	{{- if isSwitch .}}
-	{{- template "switchReadTmpl" dict "field" . "prefix" "t."}}
-	{{- else if and (ne .Type.TypeName "[]byte") (ne .Type.TypeName "basetypes.Tags") (ne .Type.TypeName "Tags")}}
-	{{- if isArrayWithContextElements .}}
-	// Prepare parent context for array '{{.Name}}'
-	ctx := models.NewParentContext()
-	{{- range getParentRefsForArrayContext .}}
-	ctx.SetField("{{.}}", {{exprForCtxKey $container .}})
+	{{- range $field := $container.Fields}}
+	{{- if isSwitch $field}}
+	{{- template "switchReadTmpl" dict "field" $field "container" $container "prefix" "t."}}
+	{{- else if ne $field.Type.TypeName "[]byte"}}
+	{{- if isExplicitCountArray $field}}
+	// Initialize ExplicitCountArray with count field name
+	t.{{$field.Name}}.CountFieldName = "{{explicitCountArrayFieldName $container $field.Name}}"
+	// Prepare parent context for explicit count array '{{$field.Name}}'
+	{{$field.Name}}_ctx := models.NewParentContext()
+	{{$field.Name}}_ctx.SetField("{{explicitCountArrayFieldName $container $field.Name}}", t.{{explicitCountArrayFieldName $container $field.Name}})
+	t.{{$field.Name}}.SetParentContext({{$field.Name}}_ctx)
+	{{- else if isArrayWithContextElements $field}}
+	// Prepare parent context for array '{{$field.Name}}'
+	{{$field.Name}}_ctx := models.NewParentContext()
+	{{- range getParentRefsForArrayContext $field}}
+	{{$field.Name}}_ctx.SetField("{{.}}", {{exprForCtxKey $container .}})
 	{{- end}}
-	t.{{.Name}}.SetParentContext(ctx)
+	t.{{$field.Name}}.SetParentContext({{$field.Name}}_ctx)
 	{{- end}}
-	bytesRead, err = t.{{.Name}}.ReadFrom(r)
+	bytesRead, err = t.{{$field.Name}}.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, err
+		return totalBytes, errors.Wrap(err, "failed to read field {{$field.Name}}")
 	}
 	{{- end}}
 	{{- end}}
@@ -936,7 +1735,7 @@ func (t {{$container.Name}}) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ChatMessage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[{{$container.Name}}.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 
 	{{- range $container.Fields}}
@@ -957,7 +1756,7 @@ func (t {{$container.Name}}) WriteTo(w io.Writer) (totalBytes int64, err error) 
 			return totalBytes, fmt.Errorf("switch field {{$fieldName}} value does not implement WriteTo: %T", t.{{$fieldName}})
 		}
 	}
-	{{- else if and (ne .Type.TypeName "[]byte") (ne .Type.TypeName "basetypes.Tags") (ne .Type.TypeName "Tags")}}
+	{{- else if ne .Type.TypeName "[]byte"}}
 	bytesWritten, err = t.{{.Name}}.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
@@ -991,12 +1790,12 @@ func (t *{{$container.Name}}) ReadFromWithParentContext(r io.Reader, ctx models.
 	var bytesRead int64
 	{{- range $container.Fields}}
 	{{- if isSwitch .}}
-	{{- template "switchReadWithParentCtxTmpl" dict "field" . "prefix" "t."}}
-	{{- else if and (ne .Type.TypeName "[]byte") (ne .Type.TypeName "basetypes.Tags") (ne .Type.TypeName "Tags")}}
+	{{- template "switchReadWithParentCtxTmpl" dict "field" . "container" $container "prefix" "t."}}
+	{{- else if ne .Type.TypeName "[]byte"}}
 	bytesRead, err = t.{{.Name}}.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, err
+		return totalBytes, errors.Wrap(err, "failed to read field {{.Name}} with parent context")
 	}
 	{{- end}}
 	{{- end}}
@@ -1030,7 +1829,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return totalBytes, fmt.Errorf("switch field {{$fieldName}} value does not implement WriteTo: %T", t.{{$fieldName}})
 		}
 	}
-	{{- else if and (ne .Type.TypeName "[]byte") (ne .Type.TypeName "basetypes.Tags") (ne .Type.TypeName "Tags")}}
+	{{- else if ne .Type.TypeName "[]byte"}}
 	bytesWritten, err = t.{{.Name}}.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
@@ -1053,6 +1852,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 {{define "switchReadTmpl"}}
 {{- $sw := getSwitchInfo .field}}
 {{- $fieldName := .field.Name}}
+{{- $container := .container}}
 {{- $prefix := .prefix}}
 	// Switch field {{$fieldName}} based on {{if $sw.CompareTo}}{{$sw.CompareTo}}{{else}}static value{{end}}
 	{{- $length := len $sw.Fields}}
@@ -1063,7 +1863,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{getBitflagCheckCode $sw $prefix}})
 	{{- else}}
 	// Convert compareTo value to string for matching
-	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{$prefix}}{{getCompareToFieldName $sw}})
+	compareValue{{$fieldName}} := {{getCompareToExpression $sw $container $prefix}}
 	{{- end}}
 	{{- else}}
 	// Use static compareToValue for matching
@@ -1081,7 +1881,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		{{- if isBitflagMemberAccess $nestedSw}}
 		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{getBitflagCheckCode $nestedSw $prefix}})
 		{{- else}}
-		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{$prefix}}{{getCompareToFieldName $nestedSw}})
+		compareValueNested{{$fieldName}}{{$key}} := {{getCompareToExpression $nestedSw $container $prefix}}
 		{{- end}}
 		{{- else}}
 		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{printf "%#v" $nestedSw.CompareToValue}})
@@ -1095,7 +1895,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			bytesRead, err = val.ReadFrom(r)
 			totalBytes += bytesRead
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrap(err, "failed to read nested switch field {{$fieldName}} case {{$key}} -> {{$nestedKey}}")
 			}
 			{{$prefix}}{{$fieldName}} = &val
 		{{- end}}
@@ -1108,7 +1908,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			bytesRead, err = val.ReadFrom(r)
 			totalBytes += bytesRead
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrap(err, "failed to read nested switch field {{$fieldName}} default case for parent case {{$key}}")
 			}
 			{{$prefix}}{{$fieldName}} = &val
 		{{- else}}
@@ -1124,10 +1924,19 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	{{- else if ne $type.TypeName "[]byte"}}
 	case "{{$key}}":
 		var val {{$type.TypeName}}
+		{{- if typeRequiresParentContext $type}}
+		// Type requires parent context - build context from current container fields
+		ctx_{{$fieldName}}_{{sanitizeIdentifier $key}} := models.NewParentContext()
+		{{- range getParentRefsForType $type}}
+		ctx_{{$fieldName}}_{{sanitizeIdentifier $key}}.SetField("{{.}}", {{exprForCtxKey $container .}})
+		{{- end}}
+		bytesRead, err = val.ReadFromWithParentContext(r, ctx_{{$fieldName}}_{{sanitizeIdentifier $key}})
+		{{- else}}
 		bytesRead, err = val.ReadFrom(r)
+		{{- end}}
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} case {{$key}}")
 		}
 		{{$prefix}}{{$fieldName}} = &val
 	{{- end}}
@@ -1140,7 +1949,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} default case")
 		}
 		{{$prefix}}{{$fieldName}} = &val
 	{{- else}}
@@ -1148,19 +1957,163 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		// Void case - no data to read
 		{{$prefix}}{{$fieldName}} = struct{}{}
 	{{- end}}
-	{{- else}}
-	default:
-		return totalBytes, fmt.Errorf("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
-	{{- end}}
+    {{- else}}
+    default:
+        {{- if isCompareToFieldMapper $sw $container }}
+        // Mapper-backed discriminator with no explicit data for this value: treat as void
+        var __void models.Void
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else if eq .field.Type.TypeName "pk.Field" }}
+        // No explicit default; treat as void (no data)
+        // Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+        // Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+        var __void models.Void
+        bytesRead, err = __void.ReadFrom(r)
+        totalBytes += bytesRead
+        if err != nil {
+            return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} default void case")
+        }
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else }}
+        return totalBytes, fmt.Errorf("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
+        {{- end }}
+    {{- end}}
 	}
 	{{- else}}
 	_ = t.{{$fieldName}} // No switch cases to handle
 	{{- end}}
 {{end}}
 
+{{define "switchScanTmpl"}}
+{{- $sw := getSwitchInfo .field}}
+{{- $fieldName := .field.Name}}
+{{- $container := .container}}
+{{- $prefix := .prefix}}
+	// Switch field {{$fieldName}} based on {{if $sw.CompareTo}}{{$sw.CompareTo}}{{else}}static value{{end}}
+	{{- $length := len $sw.Fields}}
+	{{- if ne $length 0}}
+	{{- if $sw.CompareTo}}
+	{{- if isBitflagMemberAccess $sw}}
+	// Check bitflag member
+	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{getBitflagCheckCode $sw $prefix}})
+	{{- else}}
+	// Convert compareTo value to string for matching
+	compareValue{{$fieldName}} := {{getCompareToExpression $sw $container $prefix}}
+	{{- end}}
+	{{- else}}
+	// Use static compareToValue for matching
+	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{printf "%#v" $sw.CompareToValue}})
+	{{- end}}
+
+	switch compareValue{{$fieldName}} {
+	{{- range $key, $type := $sw.Fields}}
+	{{- if $type}}
+	{{- if isNestedSwitch $type}}
+	{{- $nestedSw := getNestedSwitchInfo $type}}
+	case "{{$key}}":
+		// Nested switch based on {{if $nestedSw.CompareTo}}{{$nestedSw.CompareTo}}{{else}}static value{{end}}
+		{{- if $nestedSw.CompareTo}}
+		{{- if isBitflagMemberAccess $nestedSw}}
+		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{getBitflagCheckCode $nestedSw $prefix}})
+		{{- else}}
+		compareValueNested{{$fieldName}}{{$key}} := {{getCompareToExpression $nestedSw $container $prefix}}
+		{{- end}}
+		{{- else}}
+		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{printf "%#v" $nestedSw.CompareToValue}})
+		{{- end}}
+		switch compareValueNested{{$fieldName}}{{$key}} {
+		{{- range $nestedKey, $nestedType := $nestedSw.Fields}}
+		{{- if $nestedType}}
+		{{- if ne $nestedType.TypeName "[]byte"}}
+		case "{{$nestedKey}}":
+			var val {{$nestedType.TypeName}}
+			bytesRead, err = val.ReadFrom(r)
+			totalBytes += bytesRead
+			if err != nil {
+				return errors.Wrap(err,"scanning packet field[{{$fieldName}}] case {{$key}} -> {{$nestedKey}}")
+			}
+			{{$prefix}}{{$fieldName}} = &val
+		{{- end}}
+		{{- end}}
+		{{- end}}
+		{{- if $nestedSw.Default}}
+		{{- if ne $nestedSw.Default.TypeName "[]byte"}}
+		default:
+			var val {{$nestedSw.Default.TypeName}}
+			bytesRead, err = val.ReadFrom(r)
+			totalBytes += bytesRead
+			if err != nil {
+				return errors.Wrap(err,"scanning packet field[{{$fieldName}}] default case for parent case {{$key}}")
+			}
+			{{$prefix}}{{$fieldName}} = &val
+		{{- else}}
+		default:
+			// Void case - no data to read
+			{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
+		{{- else}}
+		default:
+			return errors.New("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
+		{{- end}}
+		}
+	{{- else if ne $type.TypeName "[]byte"}}
+	case "{{$key}}":
+		var val {{$type.TypeName}}
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return errors.Wrap(err,"scanning packet field[{{$fieldName}}] case {{$key}}")
+		}
+		{{$prefix}}{{$fieldName}} = &val
+	{{- end}}
+	{{- end}}
+	{{- end}}
+	{{- if $sw.Default}}
+	{{- if ne $sw.Default.TypeName "[]byte"}}
+	default:
+		var val {{$sw.Default.TypeName}}
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return errors.Wrap(err,"scanning packet field[{{$fieldName}}] default case")
+		}
+		{{$prefix}}{{$fieldName}} = &val
+	{{- else}}
+	default:
+		// Void case - no data to read
+		{{$prefix}}{{$fieldName}} = struct{}{}
+	{{- end}}
+    {{- else}}
+    default:
+        {{- if isCompareToFieldMapper $sw $container }}
+        // Mapper-backed discriminator with no explicit data for this value: treat as void
+        var __void models.Void
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else if eq .field.Type.TypeName "pk.Field" }}
+        // No explicit default; treat as void (no data)
+        // Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+        // Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+        var __void models.Void
+        bytesRead, err = __void.ReadFrom(r)
+        totalBytes += bytesRead
+        if err != nil {
+            return errors.Wrap(err,"failed to read switch field {{$fieldName}} default void case")
+        }
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else }}
+        return totalBytes, errors.New("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
+        {{- end }}
+    {{- end}}
+	}
+	{{- else}}
+	_ = p.{{$fieldName}} // No switch cases to handle
+	{{- end}}
+{{end}}
+
 {{define "switchReadWithParentCtxTmpl"}}
 {{- $sw := getSwitchInfo .field}}
 {{- $fieldName := .field.Name}}
+{{- $container := .container}}
 {{- $prefix := .prefix}}
 	// Switch field {{$fieldName}} using parent context based on {{if $sw.CompareTo}}{{$sw.CompareTo}}{{else}}static value{{end}}
 	{{- $length := len $sw.Fields}}
@@ -1172,7 +2125,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	// Local bitflag member access (not parent) - use field
 	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{getBitflagCheckCode $sw $prefix}})
 	{{- else}}
-	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{$prefix}}{{getCompareToFieldName $sw}})
+	compareValue{{$fieldName}} := {{getCompareToExpression $sw $container $prefix}}
 	{{- end}}
 	{{- else}}
 	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{printf "%#v" $sw.CompareToValue}})
@@ -1190,7 +2143,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		{{- else if isBitflagMemberAccess $nestedSw}}
 		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{getBitflagCheckCode $nestedSw $prefix}})
 		{{- else}}
-		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{$prefix}}{{getCompareToFieldName $nestedSw}})
+		compareValueNested{{$fieldName}}{{$key}} := {{getCompareToExpression $nestedSw $container $prefix}}
 		{{- end}}
 		{{- else}}
 		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{printf "%#v" $nestedSw.CompareToValue}})
@@ -1204,7 +2157,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			bytesRead, err = val.ReadFrom(r)
 			totalBytes += bytesRead
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrap(err, "failed to read nested switch field {{$fieldName}} case {{$key}} -> {{$nestedKey}} with parent context")
 			}
 			{{$prefix}}{{$fieldName}} = &val
 		{{- end}}
@@ -1217,7 +2170,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			bytesRead, err = val.ReadFrom(r)
 			totalBytes += bytesRead
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrap(err, "failed to read nested switch field {{$fieldName}} default case for parent case {{$key}} with parent context")
 			}
 			{{$prefix}}{{$fieldName}} = &val
 		{{- else}}
@@ -1226,16 +2179,20 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		{{- end}}
 		{{- else}}
 		default:
-			return totalBytes, fmt.Errorf("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
+			return totalBytes, errors.New("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
 		{{- end}}
 		}
 	{{- else if ne $type.TypeName "[]byte"}}
 	case "{{$key}}":
 		var val {{$type.TypeName}}
+		{{- if typeRequiresParentContext $type}}
+		bytesRead, err = val.ReadFromWithParentContext(r, ctx)
+		{{- else}}
 		bytesRead, err = val.ReadFrom(r)
+		{{- end}}
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} case {{$key}} with parent context")
 		}
 		{{$prefix}}{{$fieldName}} = &val
 	{{- end}}
@@ -1248,17 +2205,34 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} default case with parent context")
 		}
 		{{$prefix}}{{$fieldName}} = &val
 	{{- else}}
 	default:
 		{{$prefix}}{{$fieldName}} = struct{}{}
 	{{- end}}
-	{{- else}}
-	default:
-		return totalBytes, fmt.Errorf("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
-	{{- end}}
+    {{- else}}
+    default:
+        {{- if isCompareToFieldMapper $sw $container }}
+        // Mapper-backed discriminator with no explicit data for this value: treat as void
+        var __void models.Void
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else if eq .field.Type.TypeName "pk.Field" }}
+        // No explicit default; treat as void (no data)
+        // Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+        // Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+        var __void models.Void
+        bytesRead, err = __void.ReadFrom(r)
+        totalBytes += bytesRead
+        if err != nil {
+            return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} default void case")
+        }
+        {{$prefix}}{{$fieldName}} = &__void
+        {{- else }}
+        return totalBytes, fmt.Errorf("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
+        {{- end }}
+    {{- end}}
 	}
 	{{- else}}
 	_ = t.{{$fieldName}}
@@ -1282,7 +2256,7 @@ func (b *{{.Name}}) ReadFrom(r io.Reader) (int64, error) {
 	
 	nn, err := io.ReadFull(r, data)
 	if err != nil {
-		return int64(nn), err
+		return int64(nn), errors.Wrap(err, "failed to read bitfield {{.Name}}")
 	}
 	
 	// Convert bytes to uint64 (big-endian)
@@ -1345,13 +2319,13 @@ func (b {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 func (s *{{.Name}}) ReadFrom(r io.Reader) (int64, error) {
 	// TODO: Switch types require context from parent container for compareTo field
 	// This is a placeholder implementation
-	return 0, fmt.Errorf("switch type {{.Name}} requires parent context for field '{{$switch.CompareTo}}'")
+	return 0, errors.New("switch type {{.Name}} requires parent context for field '{{$switch.CompareTo}}'")
 }
 
 func (s {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 	// TODO: Switch types require context from parent container for compareTo field  
 	// This is a placeholder implementation
-	return 0, fmt.Errorf("switch type {{.Name}} requires parent context for field '{{$switch.CompareTo}}'")
+	return 0, errors.New("switch type {{.Name}} requires parent context for field '{{$switch.CompareTo}}'")
 }
 {{end}}
 
@@ -1367,12 +2341,14 @@ func (m *{{.Name}}) ReadFrom(r io.Reader) (int64, error) {
 	var key {{if $mapper.Type}}{{toNative $mapper.Type.TypeName $mapper.Type nil false}}{{else}}pk.VarInt{{end}}
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, err
+		return n, errors.Wrap(err, "failed to read {{.Name}} key")
 	}
 	
 	value, ok := {{.Name}}Mappings[int64(key)]
 	if !ok {
-		return n, fmt.Errorf("unknown {{.Name}} key: %d", key)
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
 	}
 	m.Value = value
 	return n, nil
@@ -1385,7 +2361,7 @@ func (m {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, fmt.Errorf("unknown {{.Name}} value: %s", m.Value)
+	return 0, errors.Errorf("unknown {{.Name}} value: %s", m.Value)
 }
 {{end}}
 
@@ -1403,7 +2379,7 @@ func (r *{{.Name}}) ReadFrom(reader io.Reader) (int64, error) {
 	n, err := id.ReadFrom(reader)
 	totalBytes += n
 	if err != nil {
-		return totalBytes, err
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
 	}
 	
 	if id != 0 {
@@ -1416,7 +2392,7 @@ func (r *{{.Name}}) ReadFrom(reader io.Reader) (int64, error) {
 		{{if $reh.Otherwise.Type}}n, err = r.Data.ReadFrom(reader)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
 		}{{end}}
 	}
 	
@@ -1430,19 +2406,19 @@ func (r {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 		// Write registry ID + 1
 		id := r.RegistryID + 1
 		n, err := id.WriteTo(w)
-		return totalBytes + n, err
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
 	} else {
 		// Write 0 followed by data
 		var zero pk.VarInt = 0
 		n, err := zero.WriteTo(w)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
 		}
 		{{if $reh.Otherwise.Type}}n, err = r.Data.WriteTo(w)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
 		}{{end}}
 	}
 	
@@ -1451,48 +2427,48 @@ func (r {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 {{end}}
 
 {{define "registryEntryHolderSetTmpl"}}{{$rehs := toRegistryEntryHolderSet .}}type {{.Name}} struct {
-	// RegistryEntryHolderSet can hold either named tags or numeric IDs
+	// RegistryEntryHolderSet can hold either a single named tag or a list of numeric IDs
 	IsTagList bool
-	Tags      models.Array[pk.VarInt,{{if $rehs.Base.Type}}{{$rehs.Base.Type.TypeName}}{{else}}pk.String{{end}}]
-	IDs       models.Array[pk.VarInt,{{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}}]
+	Tag       {{if $rehs.Base.Type}}{{toNative $rehs.Base.Type.TypeName $rehs.Base.Type nil false}}{{else}}pk.String{{end}}
+	IDs       models.Array[pk.VarInt,{{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}}]
 }
 
 func (r *{{.Name}}) ReadFrom(reader io.Reader) (int64, error) {
 	var totalBytes int64
-	
-	// Read the varint count - if 0, tag list follows; otherwise IDs follow
+
+	// Read the varint count - if 0, a single tag follows; otherwise IDs follow
 	var count pk.VarInt
 	n, err := count.ReadFrom(reader)
 	totalBytes += n
 	if err != nil {
-		return totalBytes, err
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder set count")
 	}
-	
+
 	if count == 0 {
-		// Tag list representation
+		// Tag representation - read a single tag
 		r.IsTagList = true
-		n, err = r.Tags.ReadFrom(reader)
+		n, err = r.Tag.ReadFrom(reader)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder set tag")
 		}
 	} else {
 		// IDs list representation - count already read, now read count-1 more IDs
 		r.IsTagList = false
-		ary := make([]{{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}}, count)
-		ary[0] = {{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}}(count - 1)
+		ary := make([]{{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}}, count)
+		ary[0] = {{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}}(count - 1)
 		for i := 1; i < int(count); i++ {
-			var id {{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}}
+			var id {{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}}
 			n, err := id.ReadFrom(reader)
 			totalBytes += n
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrapf(err, "failed to read registry entry holder set ID at index %d", i)
 			}
 			ary[i] = id
 		}
 		r.IDs.Ary.Ary = any(ary)
 	}
-	
+
 	return totalBytes, nil
 }
 
@@ -1500,35 +2476,35 @@ func (r {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 	var totalBytes int64
 	
 	if r.IsTagList {
-		// Write 0 followed by tag list
+		// Write 0 followed by single tag
 		var zero pk.VarInt = 0
 		n, err := zero.WriteTo(w)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set zero count for tag")
 		}
-		n, err = r.Tags.WriteTo(w)
+		n, err = r.Tag.WriteTo(w)
 		totalBytes += n
 		return totalBytes, err
 	} else {
 		// Write IDs (with first ID + 1 as the "count")
-		idsAry, ok := r.IDs.Ary.Ary.([]{{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}})
+		idsAry, ok := r.IDs.Ary.Ary.([]{{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}})
 		if !ok || len(idsAry) == 0 {
 			return totalBytes, nil
 		}
 		// Write first ID + 1
-		firstPlusOne := {{if $rehs.Otherwise.Type}}{{$rehs.Otherwise.Type.TypeName}}{{else}}pk.VarInt{{end}}(idsAry[0]) + 1
+		firstPlusOne := {{if $rehs.Otherwise.Type}}{{toNative $rehs.Otherwise.Type.TypeName $rehs.Otherwise.Type nil false}}{{else}}pk.VarInt{{end}}(idsAry[0]) + 1
 		n, err := firstPlusOne.WriteTo(w)
 		totalBytes += n
 		if err != nil {
-			return totalBytes, err
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set first ID + 1")
 		}
 		// Write remaining IDs
 		for i := 1; i < len(idsAry); i++ {
 			n, err := idsAry[i].WriteTo(w)
 			totalBytes += n
 			if err != nil {
-				return totalBytes, err
+				return totalBytes, errors.Wrapf(err, "failed to write registry entry holder set ID at index %d", i)
 			}
 		}
 	}
@@ -1547,33 +2523,33 @@ func (t *{{.Name}}) ReadFrom(r io.Reader) (totalRead int64, err error) {
 	
 	// Read entries in a loop until we encounter the terminator (endVal)
 	for {
-		// Peek at the next byte to check if it's the terminator
+		// Read the next byte to check if it's the terminator
 		var marker pk.UnsignedByte
 		bytesRead, err = marker.ReadFrom(r)
 		totalRead += bytesRead
 		if err != nil {
-			return totalRead, err
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
 		}
-		
+
 		// Check if this is the terminator
 		if marker == {{$eml.EndVal}} {
 			t.EndVal = marker
 			break
 		}
-		
-		// Not a terminator - need to read the rest of the entry
-		// Create a new entry and populate its first field with the marker we just read
+
+		// Not a terminator - this byte is the Key field of an entry
+		// Prepend the marker byte back to the reader so ReadFrom can read it
 		var entry {{if $eml.Type}}{{toNative $eml.Type.TypeName $eml.Type nil false}}{{else}}pk.UnsignedByte{{end}}
 		{{if $eml.Type}}
-		// TODO: This assumes the entry type has a Key field as its first byte
-		// We need to properly handle the marker byte that was already read
-		// For now, we'll need to create a custom implementation
-		// The entry type should handle reading remaining data after the key byte
-		{{end}}
+		markerBuf := []byte{byte(marker)}
+		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
+		bytesRead, err = entry.ReadFrom(combinedReader)
+		{{else}}
 		bytesRead, err = entry.ReadFrom(r)
+		{{end}}
 		totalRead += bytesRead
 		if err != nil {
-			return totalRead, err
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry" )
 		}
 		t.Entries = append(t.Entries, entry)
 	}
@@ -1588,7 +2564,7 @@ func (t {{.Name}}) WriteTo(w io.Writer) (totalWritten int64, err error) {
 	for _, entry := range t.Entries {
 		bytesWritten, err = entry.WriteTo(w)
 		if err != nil {
-			return totalWritten + bytesWritten, err
+			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
 		}
 		totalWritten += bytesWritten
 	}
@@ -1598,7 +2574,7 @@ func (t {{.Name}}) WriteTo(w io.Writer) (totalWritten int64, err error) {
 	bytesWritten, err = t.EndVal.WriteTo(w)
 	totalWritten += bytesWritten
 	
-	return totalWritten, err
+	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
 }
 {{end}}
 `
@@ -1619,6 +2595,7 @@ func isNBTFieldType(field *datatypes.ContainerField) bool {
 	if strings.Contains(field.Type.TypeName, "models.Option[models.NBTField]") || strings.Contains(field.Type.TypeName, "models.Option[pk.NBTField]") {
 		return true
 	}
+	// AnonymousNBT does not need initialization - it reads the tag type from the wire
 	return false
 }
 
@@ -1707,6 +2684,76 @@ func getCompareToFieldName(sw *datatypes.Switch) string {
 
 	// Convert to identifier (capitalizes and handles special cases)
 	return toIdentifier(path)
+}
+
+// isMapperExtras checks if a type has Mapper extras (indicating it's a mapper type)
+func isMapperExtras(t *datatypes.Type) (bool, bool) {
+	if t == nil || t.Extras == nil {
+		return false, false
+	}
+	_, ok := t.Extras.(*datatypes.Mapper)
+	return ok, ok
+}
+
+// isCompareToFieldMapper checks if the field referenced by a switch's compareTo is a mapper type
+// It looks up the field in the container and checks its type
+func isCompareToFieldMapper(sw *datatypes.Switch, container *datatypes.Container) bool {
+	if sw == nil || sw.CompareTo == "" || container == nil {
+		return false
+	}
+
+	// Get the field name (without parent references or sub-paths)
+	fieldName := getCompareToFieldName(sw)
+	if fieldName == "" {
+		return false
+	}
+
+	// Find the field in the container
+	for _, field := range container.Fields {
+		if field == nil || field.Type == nil {
+			continue
+		}
+		// Convert field name to identifier format for comparison
+		if toIdentifier(field.Name) == fieldName {
+			// Check if this field's type is a mapper based on its Extras
+			if mapper, ok := isMapperExtras(field.Type); ok {
+				return mapper
+			}
+
+			// Fallback: Check based on naming pattern
+			// Mapper types typically have "Type" suffix and come from mappers in the protocol
+			// (EntityMetadataEntryType, ParticleType, etc.)
+			typeName := field.Type.TypeName
+			if strings.HasSuffix(typeName, "Type") && typeName != "RestrictedKeyType" {
+				// Additional check: mapper types are usually short names ending in Type
+				// Exclude things like "HasKnownType" (boolean) or "FilterType" (VarInt)
+				if !strings.Contains(typeName, "Has") && !strings.Contains(typeName, "Filter") {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
+
+// getCompareToExpression generates the correct expression for comparing a field value
+// For mapper types, it accesses the .Value field; for others, it uses fmt.Sprintf
+func getCompareToExpression(sw *datatypes.Switch, container *datatypes.Container, prefix string) string {
+	fieldName := getCompareToFieldName(sw)
+	if fieldName == "" {
+		return ""
+	}
+
+	fieldRef := prefix + fieldName
+
+	// Check if the field is actually a mapper type by looking it up in the container
+	if isCompareToFieldMapper(sw, container) {
+		return fieldRef + ".Value"
+	}
+
+	// For non-mapper types, use fmt.Sprintf
+	return fmt.Sprintf("fmt.Sprintf(\"%%v\", %s)", fieldRef)
 }
 
 // switchHasValidCases checks if a switch has any valid case statements
@@ -2002,6 +3049,10 @@ func toMapper(t *datatypes.Type) *datatypes.Mapper {
 	return t.Extras.(*datatypes.Mapper)
 }
 
+func toBuffer(t *datatypes.Type) *datatypes.Buffer {
+	return t.Extras.(*datatypes.Buffer)
+}
+
 func isContainer(t *datatypes.Type) (*datatypes.Container, bool) {
 	if strings.ToLower(t.TypeName) == "container" {
 		if container, ok := t.Extras.(*datatypes.Container); ok {
@@ -2092,6 +3143,25 @@ func isArrayWithContextElements(field *datatypes.ContainerField) bool {
 	return ok
 }
 
+// isExplicitCountArray returns true if the field is an ExplicitCountArray
+func isExplicitCountArray(field *datatypes.ContainerField) bool {
+	if field == nil || field.Type == nil {
+		return false
+	}
+	return strings.HasPrefix(field.Type.TypeName, "models.ExplicitCountArray[")
+}
+
+// explicitCountArrayFieldName extracts the count field name for an ExplicitCountArray field.
+// Returns empty string if not found.
+func explicitCountArrayFieldName(container *datatypes.Container, fieldName string) string {
+	if container == nil {
+		return ""
+	}
+	// Look up in explicitCountArrayFields map
+	mappingKey := fmt.Sprintf("%s.%s", container.GetName(), fieldName)
+	return explicitCountArrayFields[mappingKey]
+}
+
 // getParentRefsForArrayContext returns the recorded context keys required by the
 // array's element type.
 func getParentRefsForArrayContext(field *datatypes.ContainerField) []string {
@@ -2113,7 +3183,11 @@ func exprForCtxKey(container *datatypes.Container, key string) string {
 	parentField := toIdentifier(parts[0])
 	if len(parts) > 1 {
 		member := toIdentifier(parts[1])
-		return fmt.Sprintf("t.%s.%s()", parentField, member)
+		// For bitfield/bitflags members: always use direct field access since bitfields have int64 fields
+		// The bitfield struct fields are accessed directly (e.g., t.Flags.HasCustomSuggestions)
+		// while bitflags use methods (e.g., t.Action.AddPlayer())
+		// Since context keys are typically used for bitfield members, default to direct access
+		return fmt.Sprintf("t.%s.%s", parentField, member)
 	}
 	return fmt.Sprintf("t.%s", parentField)
 }
@@ -2128,14 +3202,74 @@ func exprForCtxKeyWithPrefix(container *datatypes.Container, key string, prefix 
 	parentField := toIdentifier(parts[0])
 	if len(parts) > 1 {
 		member := toIdentifier(parts[1])
-		return fmt.Sprintf("%s.%s.%s()", prefix, parentField, member)
+		// For bitfield/bitflags members: always use direct field access since bitfields have int64 fields
+		// The bitfield struct fields are accessed directly (e.g., t.Flags.HasCustomSuggestions)
+		// while bitflags use methods (e.g., t.Action.AddPlayer())
+		// Since context keys are typically used for bitfield members, default to direct access
+		return fmt.Sprintf("%s.%s.%s", prefix, parentField, member)
 	}
 	return fmt.Sprintf("%s.%s", prefix, parentField)
 }
 
-// isParentCompareTo reports if a switch compares to a parent reference (../...).
+// isParentCompareTo reports if a switch compares to a parent reference (../..).
 func isParentCompareTo(sw *datatypes.Switch) bool {
 	return sw != nil && strings.HasPrefix(sw.CompareTo, "../")
+}
+
+// typeRequiresParentContext returns true if the type requires parent context for (de)serialization
+func typeRequiresParentContext(t *datatypes.Type) bool {
+	if t == nil {
+		return false
+	}
+	// Check if the type's name is in the parentContextRequirements map
+	_, requiresContext := parentContextRequirements[t.TypeName]
+	return requiresContext
+}
+
+// getParentRefsForType returns the context keys required by a type
+func getParentRefsForType(t *datatypes.Type) []string {
+	if t == nil {
+		return nil
+	}
+	return parentContextRequirements[t.TypeName]
+}
+
+// sanitizeIdentifier removes characters that are not valid in Go identifiers
+func sanitizeIdentifier(s string) string {
+	// Replace common invalid characters with underscores
+	s = strings.ReplaceAll(s, ":", "_")
+	s = strings.ReplaceAll(s, "-", "_")
+	s = strings.ReplaceAll(s, ".", "_")
+	s = strings.ReplaceAll(s, "/", "_")
+	s = strings.ReplaceAll(s, " ", "_")
+	return s
+}
+
+// formatRawDefinition formats a RawDefinition string for use in Go comments.
+// It preserves multi-line JSON structure by prefixing each line with "// ".
+func formatRawDefinition(raw string) string {
+	if raw == "" {
+		return ""
+	}
+
+	// Split into lines
+	lines := strings.Split(raw, "\n")
+
+	// If it's a single-line definition, return it as-is
+	if len(lines) == 1 {
+		return strings.TrimSpace(raw)
+	}
+
+	// For multi-line definitions, format each line with proper comment prefix
+	var result strings.Builder
+	for i, line := range lines {
+		if i > 0 {
+			result.WriteString("\n// ")
+		}
+		result.WriteString(strings.TrimRight(line, " \t"))
+	}
+
+	return result.String()
 }
 
 // ctxKeyForSwitch returns the context key to lookup for a parent-referenced compareTo.
@@ -2644,8 +3778,21 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 				parentName := t.Name
 				switch strings.ToLower(field.Type.TypeName) {
 				case "buffer":
-					// Buffer types are just byte arrays with a length prefix - use pk.ByteArray
-					field.Type.TypeName = "pk.ByteArray"
+					// Buffer types can be fixed-size or variable-length
+					buffer := toBuffer(field.Type)
+					if buffer.Count > 0 {
+						// Fixed-size buffer - use predefined FixedBufferN type if available
+						if fixedType, err := models.GetFixedBufferTypeName(buffer.Count); err == nil {
+							field.Type.TypeName = fixedType
+						} else {
+							// No predefined type for this size - fall back to pk.ByteArray
+							fmt.Printf("WARNING: No FixedBuffer type for size %d, using pk.ByteArray instead\n", buffer.Count)
+							field.Type.TypeName = "pk.ByteArray"
+						}
+					} else {
+						// Variable-length buffer (with countType) - use pk.ByteArray
+						field.Type.TypeName = "pk.ByteArray"
+					}
 					field.Type.Extras = nil // Clear extras since we've converted to a simple type
 					continue
 				case "container":
@@ -2671,6 +3818,12 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 					// Try to get the element type from TypeName if Name is empty
 					if childName == "" {
 						childName = array.Type.TypeName
+					}
+					// Ensure uniqueness per struct field: if no name derived, use field name; otherwise prepend it
+					if childName == "" {
+						childName = field.Name
+					} else {
+						childName = field.Name + "_" + childName
 					}
 
 					// Check if this is a native type that doesn't need a child type
@@ -2703,13 +3856,51 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 						}
 					}
 
-					countTypeName := "pk.VarInt"
-					if array.CountType != nil {
-						countTypeName = toNative(array.CountType.Name, array.CountType, baseTypes, isGeneratingBaseTypes)
+					// Check if this array has an explicit count field (e.g., "count": "addedComponentCount")
+					if array.CountFieldName != "" {
+						// Explicit count array - uses ExplicitCountArray type
+						fmt.Printf("DEBUG [gen_packet.go]: Array field '%s.%s' has explicit count field '%s'\n",
+							t.Name, field.Name, array.CountFieldName)
+						// Check if the count field exists in the current container
+						countFieldExists := false
+						if container != nil {
+							for _, f := range container.Fields {
+								if strings.EqualFold(f.Name, array.CountFieldName) {
+									countFieldExists = true
+									break
+								}
+							}
+						}
+						// Only mark as requiring parent context if count field is NOT in this container
+						// (i.e., it requires the parent to provide it)
+						if !countFieldExists {
+							fmt.Printf("DEBUG [gen_packet.go]: Count field '%s' NOT found in container '%s', marking as requiring parent context\n",
+								array.CountFieldName, t.Name)
+							if parentContextRequirements[t.Name] == nil {
+								parentContextRequirements[t.Name] = []string{}
+							}
+							// Add the count field as a dependency
+							parentContextRequirements[t.Name] = append(parentContextRequirements[t.Name], array.CountFieldName)
+						} else {
+							fmt.Printf("DEBUG [gen_packet.go]: Count field '%s' FOUND in container '%s', no parent context needed\n",
+								array.CountFieldName, t.Name)
+						}
+						// Store the array field -> count field mapping
+						mappingKey := fmt.Sprintf("%s.%s", t.Name, field.Name)
+						explicitCountArrayFields[mappingKey] = toIdentifier(array.CountFieldName)
+						// Generate ExplicitCountArray type
+						field.Type.TypeName = fmt.Sprintf("models.ExplicitCountArray[%s]", elementTypeName)
+						field.Type.Extras = nil
+					} else {
+						// Implicit count array - uses regular Array type
+						countTypeName := "pk.VarInt"
+						if array.CountType != nil {
+							countTypeName = toNative(array.CountType.Name, array.CountType, baseTypes, isGeneratingBaseTypes)
+						}
+						// Array is now in models package
+						field.Type.TypeName = "models.Array[" + countTypeName + "," + elementTypeName + "]"
+						field.Type.Extras = nil
 					}
-					// Array is now in models package
-					field.Type.TypeName = "models.Array[" + countTypeName + "," + elementTypeName + "]"
-					field.Type.Extras = nil
 				case "bitfield":
 					// Bitfield types within fields - generate specialized struct with custom ReadFrom/WriteTo
 					childType := createChildType(parentName, field.Name, field.Type, baseTypes, isGeneratingBaseTypes)
@@ -2777,17 +3968,28 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 					}
 					continue // Skip toNative call below since we've already formatted
 				case "switch":
+					// DEBUG: Log all switch field processing
+					fmt.Printf("DEBUG [processType switch]: parentName='%s', field.Name='%s'\n", parentName, field.Name)
 					// Switch types are handled inline - use pk.Field for the field type
 					// Keep Extras with switch metadata for inline generation in container methods
 					field.Type.TypeName = "pk.Field"
 					// Keep field.Type.Extras for template to access switch info
 					// Resolve switch case types using baseTypes
 					if switchType, ok := field.Type.Extras.(*datatypes.Switch); ok {
+						// DEBUG: Log CommandNode ExtraNodeData processing
+						if parentName == "CommandNode" && field.Name == "extraNodeData" {
+							fmt.Printf("DEBUG [CommandNode.ExtraNodeData]: Processing switch with %d cases\n", len(switchType.Fields))
+						}
 						// Resolve each case type
 						for caseName, caseType := range switchType.Fields {
 							if caseType != nil {
 								// Check if this is a complex type that needs child type generation
 								caseTypeLower := strings.ToLower(caseType.TypeName)
+								// DEBUG: Log CommandNode ExtraNodeData cases
+								if parentName == "CommandNode" && field.Name == "extraNodeData" {
+									fmt.Printf("DEBUG [CommandNode.ExtraNodeData]: Case '%s': TypeName='%s', caseTypeLower='%s', Extras=%v\n",
+										caseName, caseType.TypeName, caseTypeLower, caseType.Extras != nil)
+								}
 								// Handle nested switch specially - switches should be inline with any type
 								// TODO: Support nested switches by generating inline handling code
 								if caseType.Extras != nil && caseTypeLower == "switch" {
@@ -2868,7 +4070,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 									}
 									// Keep Extras for recursive switch generation in template
 									fmt.Printf("DEBUG: Keeping nested switch as 'any' for field '%s' case '%s' - Extras preserved for inline generation\n", field.Name, caseName)
-								} else if caseType.Extras != nil && (caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper") {
+								} else if caseType.Extras != nil && (caseTypeLower == "" || caseTypeLower == "container" || caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper") {
 									// Generate a child type for this complex case
 									childTypeName := toIdentifier(parentName + "_" + field.Name + "_" + caseName)
 									childType := *caseType
@@ -2882,7 +4084,12 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 									// Update the case to reference the new type
 									caseType.Name = childTypeName
 									caseType.TypeName = childTypeName
-									caseType.Extras = nil
+									// Keep Extras for mapper types so isCompareToFieldMapper() can detect them
+									// For other types (containers, bitfields, etc.), we clear Extras since the fields
+									// have been extracted into the generated child struct
+									if caseTypeLower != "mapper" {
+										caseType.Extras = nil
+									}
 								} else {
 									// Simple type - resolve via baseTypes or toNative
 									lookupKey := caseType.TypeName
@@ -2946,45 +4153,67 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 						}
 						// Resolve default type if present
 						if switchType.Default != nil {
-							lookupKey := switchType.Default.TypeName
-							if lookupKey == "" {
-								lookupKey = switchType.Default.Name
-							}
-							// First try to convert to native type
-							nativeTypeName := toNative(lookupKey, switchType.Default, baseTypes, isGeneratingBaseTypes)
-							// Check if toNative actually converted it
-							if nativeTypeName != lookupKey {
-								// toNative converted it - check if it needs basetypes prefix
-								// Void is a native type defined in baseTypeDefs, don't add prefix
-								if !isGeneratingBaseTypes && !strings.Contains(nativeTypeName, ".") && !strings.HasPrefix(nativeTypeName, "pk.") && nativeTypeName != "struct{}" && nativeTypeName != "models.Void" {
-									// Check if this type is in baseTypes (meaning it's defined in basetypes package)
-									if _, ok := baseTypes[strings.ToLower(nativeTypeName)]; ok {
-										nativeTypeName = "basetypes." + nativeTypeName
-									} else if needsBaseTypesPrefix(nativeTypeName) {
-										nativeTypeName = "basetypes." + nativeTypeName
-									}
+							// Check if default is a container or other complex type that needs child type generation
+							// If Extras is present, the default contains fields and needs a child type
+							fmt.Printf("[DEBUG][switch default] switchType.Default.Extrass: %#v\ns", switchType.Default.Extras)
+							defaultTypeLower := strings.ToLower(switchType.Default.TypeName)
+							if switchType.Default.Extras != nil && (defaultTypeLower == "" || defaultTypeLower == "container" || defaultTypeLower == "registryentryholder" || defaultTypeLower == "registryentryholderset" || defaultTypeLower == "option" || defaultTypeLower == "mapper" || defaultTypeLower == "array") {
+								// Generate a child type for this complex default case
+								childTypeName := toIdentifier(parentName + "_" + field.Name + "_default")
+								childType := *switchType.Default
+								childType.Name = childTypeName
+								if childType.Extras != nil {
+									childType.Extras.SetName(childTypeName)
 								}
-								switchType.Default.Name = nativeTypeName
-								switchType.Default.TypeName = nativeTypeName
-							} else if typeName, ok := baseTypes[strings.ToLower(lookupKey)]; ok {
-								// Found in baseTypes - check if it needs native conversion
-								nativeCheck := toNative(typeName, nil, baseTypes, isGeneratingBaseTypes)
-								if nativeCheck != typeName && (strings.HasPrefix(nativeCheck, "pk.") || strings.Contains(nativeCheck, "[")) {
-									switchType.Default.Name = nativeCheck
-									switchType.Default.TypeName = nativeCheck
-								} else {
-									typeName = toIdentifier(typeName)
-									// Don't add basetypes prefix to native types like struct{} and Void
-									if !isGeneratingBaseTypes && !strings.Contains(typeName, ".") && typeName != "struct{}" && typeName != "models.Void" {
-										typeName = "basetypes." + typeName
-									}
-									switchType.Default.Name = typeName
-									switchType.Default.TypeName = typeName
-								}
+								// Process and add the child type
+								childTypes := processType(&childType, baseTypes, false, isGeneratingBaseTypes, nil)
+								types = append(types, childTypes...)
+								// Update the default to reference the new type
+								switchType.Default.Name = childTypeName
+								switchType.Default.TypeName = childTypeName
+								switchType.Default.Extras = nil
 							} else {
-								// Not found anywhere, use the native conversion
-								switchType.Default.TypeName = nativeTypeName
-								switchType.Default.Name = nativeTypeName
+								// Simple type or already processed - use standard resolution
+								lookupKey := switchType.Default.TypeName
+								if lookupKey == "" {
+									lookupKey = switchType.Default.Name
+								}
+								// First try to convert to native type
+								nativeTypeName := toNative(lookupKey, switchType.Default, baseTypes, isGeneratingBaseTypes)
+								// Check if toNative actually converted it
+								if nativeTypeName != lookupKey {
+									// toNative converted it - check if it needs basetypes prefix
+									// Void is a native type defined in baseTypeDefs, don't add prefix
+									if !isGeneratingBaseTypes && !strings.Contains(nativeTypeName, ".") && !strings.HasPrefix(nativeTypeName, "pk.") && nativeTypeName != "struct{}" && nativeTypeName != "models.Void" {
+										// Check if this type is in baseTypes (meaning it's defined in basetypes package)
+										if _, ok := baseTypes[strings.ToLower(nativeTypeName)]; ok {
+											nativeTypeName = "basetypes." + nativeTypeName
+										} else if needsBaseTypesPrefix(nativeTypeName) {
+											nativeTypeName = "basetypes." + nativeTypeName
+										}
+									}
+									switchType.Default.Name = nativeTypeName
+									switchType.Default.TypeName = nativeTypeName
+								} else if typeName, ok := baseTypes[strings.ToLower(lookupKey)]; ok {
+									// Found in baseTypes - check if it needs native conversion
+									nativeCheck := toNative(typeName, nil, baseTypes, isGeneratingBaseTypes)
+									if nativeCheck != typeName && (strings.HasPrefix(nativeCheck, "pk.") || strings.Contains(nativeCheck, "[")) {
+										switchType.Default.Name = nativeCheck
+										switchType.Default.TypeName = nativeCheck
+									} else {
+										typeName = toIdentifier(typeName)
+										// Don't add basetypes prefix to native types like struct{} and Void
+										if !isGeneratingBaseTypes && !strings.Contains(typeName, ".") && typeName != "struct{}" && typeName != "models.Void" {
+											typeName = "basetypes." + typeName
+										}
+										switchType.Default.Name = typeName
+										switchType.Default.TypeName = typeName
+									}
+								} else {
+									// Not found anywhere, use the native conversion
+									switchType.Default.TypeName = nativeTypeName
+									switchType.Default.Name = nativeTypeName
+								}
 							}
 						}
 					}
@@ -3174,6 +4403,8 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			if lookupKey == "" {
 				lookupKey = reh.Otherwise.Type.Name
 			}
+			// Lowercase the lookup key for baseTypes map lookup
+			lookupKey = strings.ToLower(lookupKey)
 
 			if fieldName, ok := baseTypes[lookupKey]; ok {
 				fmt.Printf("DEBUG [processType]: registryEntryHolder '%s' otherwise type '%s' FOUND in baseTypes as '%s'\n",
@@ -3223,6 +4454,8 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			if lookupKey == "" {
 				lookupKey = rehs.Base.Type.Name
 			}
+			// Lowercase the lookup key for baseTypes map lookup
+			lookupKey = strings.ToLower(lookupKey)
 
 			if fieldName, ok := baseTypes[lookupKey]; ok {
 				fmt.Printf("DEBUG [processType]: registryEntryHolderSet '%s' base type '%s' FOUND in baseTypes as '%s'\n",
@@ -3262,7 +4495,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 				// It's a native/primitive type, use the converted name
 				rehs.Otherwise.Type.Name = nativeTypeName
 				rehs.Otherwise.Type.TypeName = nativeTypeName
-			} else if fieldName, ok := baseTypes[lookupKey]; ok {
+			} else if fieldName, ok := baseTypes[strings.ToLower(lookupKey)]; ok {
 				// Found in baseTypes - check if it needs native conversion too
 				fmt.Printf("DEBUG [processType]: registryEntryHolderSet '%s' otherwise type '%s' FOUND in baseTypes as '%s'\n",
 					t.Name, lookupKey, fieldName)
@@ -3486,7 +4719,11 @@ func createChildType(parentName, childName string, parentType *datatypes.Type, b
 	}
 
 	parentType.TypeName = childType.Name
-	parentType.Extras = nil
+	// Keep Extras for mapper types so isCompareToFieldMapper() can detect them
+	// For other types, we clear Extras since the fields have been extracted into the child type
+	if _, isMapper := parentType.Extras.(*datatypes.Mapper); !isMapper {
+		parentType.Extras = nil
+	}
 	return childType
 }
 
@@ -3574,7 +4811,8 @@ func processNamespace(version, nsName string, namespace *namespace.Namespace, ba
 				t.Extras.UpdateContainedNames(updatedNames) // this isn't working!!!! i.e. element struct was renamed to LoginClientBound_, but element wasn't :<
 			}
 		}
-		generateTypesFile(filepath.Join("data", version, orgNSName, boundName), version, strings.ToLower(boundName), types, false)
+		// Use multi-file generation for namespaces (splits into packet_*.go files)
+		generateMultipleTypesFiles(filepath.Join("data", version, orgNSName, boundName), version, strings.ToLower(boundName), types, false)
 	}
 
 	return nil
@@ -3692,10 +4930,11 @@ func toIdentifier(in string) string {
 	}
 
 	out := strings.TrimPrefix(in, "packet_")
-	// Replace dots and slashes with underscores to create valid Go identifiers
+	// Replace dots, slashes, and colons with underscores to create valid Go identifiers
 	// Do this BEFORE camelOrSnakeToSpace so they get converted to camelCase properly
 	out = strings.ReplaceAll(out, ".", "_")
 	out = strings.ReplaceAll(out, "/", "_")
+	out = strings.ReplaceAll(out, ":", "_")
 	out = camelOrSnakeToSpace(out)
 	//out = caser.String(out)
 	out = strings.ReplaceAll(out, " ", "")
@@ -3778,9 +5017,9 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 	case "restBuffer":
 		return "models.Void" // TODO: fix properly
 	case "AnonymousNbt", "anonymousNbt":
-		return "models.NBTField"
+		return "models.AnonymousNBT"
 	case "anonOptionalNbt", "AnonOptionalNbt":
-		return "models.Option[models.NBTField]"
+		return "models.AnonymousNBT" // Supports all NBT tag types polymorphically (No Option wrapper, tag type indicates presence)
 	case "registryEntryHolder", "RegistryEntryHolder":
 		// registryEntryHolder should have been processed into a named type
 		// If we reach here, it's an error in the processing pipeline
@@ -3875,7 +5114,20 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 		// Fallback for arrays without proper type information
 		return "[]byte"
 	case "buffer":
-		// Buffer types are byte arrays with length prefix
+		// Buffer types can be fixed-size or variable-length
+		if in != nil && in.Extras != nil {
+			if buffer, ok := in.Extras.(*datatypes.Buffer); ok {
+				if buffer.Count > 0 {
+					// Fixed-size buffer - use predefined FixedBufferN type if available
+					if fixedType, err := models.GetFixedBufferTypeName(buffer.Count); err == nil {
+						return fixedType
+					}
+					// No predefined type for this size - fall back to pk.ByteArray
+					fmt.Printf("WARNING: No FixedBuffer type for size %d in toNative, using pk.ByteArray instead\n", buffer.Count)
+				}
+			}
+		}
+		// Variable-length buffer (with countType) - use pk.ByteArray
 		return "pk.ByteArray"
 	case "bitflags":
 		// Bitflags can have different underlying types (u8, u16, u32, u64)

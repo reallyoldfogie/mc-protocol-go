@@ -44,74 +44,102 @@ func NewNBTReader(reader io.Reader) *NBTReader {
 }
 
 // ReadTag reads a complete NBT tag (type + name + value)
-func (nr *NBTReader) ReadTag() (*NBTTag, error) {
+func (nr *NBTReader) ReadTag() (*NBTTag, int64, error) {
 	var tagType NBTType
 	if err := binary.Read(nr.reader, nr.byteOrder, &tagType); err != nil {
-		return nil, NbtParseError{s: "Reading tag type", e: err}
+		return nil, 0, NbtParseError{str: "Reading tag type", err: err}
 	}
+	bytesRead := int64(1)
 
 	if tagType == TypeEnd {
-		return nil, NbtParseError{s: "Unexpected TAG_End", e: nil}
+		return nil, bytesRead, NbtParseError{str: "Unexpected TAG_End", err: nil}
 	}
 
 	// Read tag name
 	var nameLen int16
 	if err := binary.Read(nr.reader, nr.byteOrder, &nameLen); err != nil {
-		return nil, NbtParseError{s: "Reading tag name length", e: err}
+		return nil, bytesRead, NbtParseError{str: "Reading tag name length", err: err}
 	}
+	bytesRead += 2
 
 	nameBytes := make([]byte, nameLen)
 	if err := binary.Read(nr.reader, nr.byteOrder, &nameBytes); err != nil {
-		return nil, NbtParseError{s: fmt.Sprintf("Reading tag name (length=%d)", nameLen), e: err}
+		return nil, bytesRead, NbtParseError{str: fmt.Sprintf("Reading tag name (length=%d)", nameLen), err: err}
 	}
+	bytesRead += int64(nameLen)
 
-	value, err := nr.ReadValue(tagType)
+	value, n, err := nr.ReadValue(tagType)
 	if err != nil {
-		return nil, err
+		return nil, bytesRead, err
 	}
+	bytesRead += n
 
 	return &NBTTag{
 		Name:  string(nameBytes),
 		Value: value,
-	}, nil
+	}, bytesRead, nil
 }
 
 // ReadValue reads an NBT value of the specified type
-func (nr *NBTReader) ReadValue(tagType NBTType) (NBTValue, error) {
+func (nr *NBTReader) ReadValue(tagType NBTType) (NBTValue, int64, error) {
 	switch tagType {
 	case TypeByte:
-		return nr.readByte()
+		v, err := nr.readByte()
+		return v, 1, err
 	case TypeShort:
-		return nr.readShort()
+		v, err := nr.readShort()
+		return v, 2, err
 	case TypeInt:
-		return nr.readInt()
+		v, err := nr.readInt()
+		return v, 4, err
 	case TypeLong:
-		return nr.readLong()
+		v, err := nr.readLong()
+		return v, 8, err
 	case TypeFloat:
-		return nr.readFloat()
+		v, err := nr.readFloat()
+		return v, 4, err
 	case TypeDouble:
-		return nr.readDouble()
+		v, err := nr.readDouble()
+		return v, 8, err
 	case TypeByteArray:
-		return nr.readByteArray()
+		ba, err := nr.readByteArray()
+		if err != nil {
+			return nil, 0, err
+		}
+		return ba, int64(4 + len(ba.Value)), nil
 	case TypeString:
-		return nr.readString()
+		s, err := nr.readString()
+		if err != nil {
+			return nil, 0, err
+		}
+		return s, int64(2 + len(s.Value)), nil
 	case TypeList:
-		return nr.readList()
+		l, n, err := nr.readList()
+		return l, n, err
 	case TypeCompound:
-		return nr.readCompound()
+		c, n, err := nr.readCompound()
+		return c, n, err
 	case TypeIntArray:
-		return nr.readIntArray()
+		ia, err := nr.readIntArray()
+		if err != nil {
+			return nil, 0, err
+		}
+		return ia, int64(4 + len(ia.Value)*4), nil
 	case TypeLongArray:
-		return nr.readLongArray()
+		la, err := nr.readLongArray()
+		if err != nil {
+			return nil, 0, err
+		}
+		return la, int64(4 + len(la.Value)*8), nil
 	default:
-		return nil, NbtParseError{s: fmt.Sprintf("Unknown tag type: %d", tagType), e: nil}
+		return nil, 0, NbtParseError{str: fmt.Sprintf("Unknown tag type: %d", tagType), err: nil}
 	}
 }
 
 func (nr *NBTReader) readByte() (*NBTByte, error) {
 	var value int8
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading byte", e: err}
+		return nil, NbtParseError{str: "Reading byte", err: err}
 	}
 	return &NBTByte{Value: value}, nil
 }
@@ -119,7 +147,7 @@ func (nr *NBTReader) readByte() (*NBTByte, error) {
 func (nr *NBTReader) readShort() (*NBTShort, error) {
 	var value int16
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading short", e: err}
+		return nil, NbtParseError{str: "Reading short", err: err}
 	}
 	return &NBTShort{Value: value}, nil
 }
@@ -127,7 +155,7 @@ func (nr *NBTReader) readShort() (*NBTShort, error) {
 func (nr *NBTReader) readInt() (*NBTInt, error) {
 	var value int32
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading int", e: err}
+		return nil, NbtParseError{str: "Reading int", err: err}
 	}
 	return &NBTInt{Value: value}, nil
 }
@@ -135,7 +163,7 @@ func (nr *NBTReader) readInt() (*NBTInt, error) {
 func (nr *NBTReader) readLong() (*NBTLong, error) {
 	var value int64
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading long", e: err}
+		return nil, NbtParseError{str: "Reading long", err: err}
 	}
 	return &NBTLong{Value: value}, nil
 }
@@ -143,7 +171,7 @@ func (nr *NBTReader) readLong() (*NBTLong, error) {
 func (nr *NBTReader) readFloat() (*NBTFloat, error) {
 	var value float32
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading float", e: err}
+		return nil, NbtParseError{str: "Reading float", err: err}
 	}
 	return &NBTFloat{Value: value}, nil
 }
@@ -151,7 +179,7 @@ func (nr *NBTReader) readFloat() (*NBTFloat, error) {
 func (nr *NBTReader) readDouble() (*NBTDouble, error) {
 	var value float64
 	if err := binary.Read(nr.reader, nr.byteOrder, &value); err != nil {
-		return nil, NbtParseError{s: "Reading double", e: err}
+		return nil, NbtParseError{str: "Reading double", err: err}
 	}
 	return &NBTDouble{Value: value}, nil
 }
@@ -159,12 +187,12 @@ func (nr *NBTReader) readDouble() (*NBTDouble, error) {
 func (nr *NBTReader) readByteArray() (*NBTByteArray, error) {
 	var length int32
 	if err := binary.Read(nr.reader, nr.byteOrder, &length); err != nil {
-		return nil, NbtParseError{s: "Reading byte array length", e: err}
+		return nil, NbtParseError{str: "Reading byte array length", err: err}
 	}
 
 	bytes := make([]int8, length)
 	if err := binary.Read(nr.reader, nr.byteOrder, &bytes); err != nil {
-		return nil, NbtParseError{s: "Reading byte array data", e: err}
+		return nil, NbtParseError{str: "Reading byte array data", err: err}
 	}
 
 	return &NBTByteArray{Value: bytes}, nil
@@ -173,51 +201,56 @@ func (nr *NBTReader) readByteArray() (*NBTByteArray, error) {
 func (nr *NBTReader) readString() (*NBTString, error) {
 	var length int16
 	if err := binary.Read(nr.reader, nr.byteOrder, &length); err != nil {
-		return nil, NbtParseError{s: "Reading string length", e: err}
+		return nil, NbtParseError{str: "Reading string length", err: err}
 	}
 
 	strBytes := make([]byte, length)
 	if err := binary.Read(nr.reader, nr.byteOrder, &strBytes); err != nil {
-		return nil, NbtParseError{s: "Reading string data", e: err}
+		return nil, NbtParseError{str: "Reading string data", err: err}
 	}
 
 	return &NBTString{Value: string(strBytes)}, nil
 }
 
-func (nr *NBTReader) readList() (*NBTList, error) {
+func (nr *NBTReader) readList() (*NBTList, int64, error) {
 	var listType NBTType
 	if err := binary.Read(nr.reader, nr.byteOrder, &listType); err != nil {
-		return nil, NbtParseError{s: "Reading list type", e: err}
+		return nil, 0, NbtParseError{str: "Reading list type", err: err}
 	}
+	bytesRead := int64(1)
 
 	var length int32
 	if err := binary.Read(nr.reader, nr.byteOrder, &length); err != nil {
-		return nil, NbtParseError{s: "Reading list length", e: err}
+		return nil, bytesRead, NbtParseError{str: "Reading list length", err: err}
 	}
+	bytesRead += 4
 
 	values := make([]NBTValue, 0, length)
 	for range length {
-		value, err := nr.ReadValue(listType)
+		value, n, err := nr.ReadValue(listType)
 		if err != nil {
-			return nil, NbtParseError{s: "Reading list item", e: err}
+			return nil, bytesRead, NbtParseError{str: "Reading list item", err: err}
 		}
+		bytesRead += n
 		values = append(values, value)
 	}
 
 	return &NBTList{
 		ListType: listType,
 		Values:   values,
-	}, nil
+	}, bytesRead, nil
 }
 
-func (nr *NBTReader) readCompound() (*NBTCompound, error) {
+func (nr *NBTReader) readCompound() (*NBTCompound, int64, error) {
 	tags := make([]NBTTag, 0)
+	total := int64(0)
 
 	for {
 		var tagType NBTType
 		if err := binary.Read(nr.reader, nr.byteOrder, &tagType); err != nil {
-			return nil, NbtParseError{s: "Reading compound tag type", e: err}
+			return nil, total, NbtParseError{str: "Reading compound tag type", err: err}
 		}
+		total += 1
 
 		if tagType == TypeEnd {
 			break
@@ -226,18 +259,21 @@ func (nr *NBTReader) readCompound() (*NBTCompound, error) {
 		// Read tag name
 		var nameLen int16
 		if err := binary.Read(nr.reader, nr.byteOrder, &nameLen); err != nil {
-			return nil, NbtParseError{s: "Reading compound tag name length", e: err}
+			return nil, total, NbtParseError{str: "Reading compound tag name length", err: err}
 		}
+		total += 2
 
 		nameBytes := make([]byte, nameLen)
 		if err := binary.Read(nr.reader, nr.byteOrder, &nameBytes); err != nil {
-			return nil, NbtParseError{s: "Reading compound tag name", e: err}
+			return nil, total, NbtParseError{str: "Reading compound tag name", err: err}
 		}
+		total += int64(nameLen)
 
-		value, err := nr.ReadValue(tagType)
+		value, n, err := nr.ReadValue(tagType)
 		if err != nil {
-			return nil, NbtParseError{s: "Reading compound tag value", e: err}
+			return nil, total, NbtParseError{str: "Reading compound tag value", err: err}
 		}
+		total += n
 
 		tags = append(tags, NBTTag{
 			Name:  string(nameBytes),
@@ -245,18 +281,18 @@ func (nr *NBTReader) readCompound() (*NBTCompound, error) {
 		})
 	}
 
-	return &NBTCompound{Tags: tags}, nil
+	return &NBTCompound{Tags: tags}, total, nil
 }
 
 func (nr *NBTReader) readIntArray() (*NBTIntArray, error) {
 	var length int32
 	if err := binary.Read(nr.reader, nr.byteOrder, &length); err != nil {
-		return nil, NbtParseError{s: "Reading int array length", e: err}
+		return nil, NbtParseError{str: "Reading int array length", err: err}
 	}
 
 	ints := make([]int32, length)
 	if err := binary.Read(nr.reader, nr.byteOrder, &ints); err != nil {
-		return nil, NbtParseError{s: "Reading int array data", e: err}
+		return nil, NbtParseError{str: "Reading int array data", err: err}
 	}
 
 	return &NBTIntArray{Value: ints}, nil
@@ -265,12 +301,12 @@ func (nr *NBTReader) readIntArray() (*NBTIntArray, error) {
 func (nr *NBTReader) readLongArray() (*NBTLongArray, error) {
 	var length int32
 	if err := binary.Read(nr.reader, nr.byteOrder, &length); err != nil {
-		return nil, NbtParseError{s: "Reading long array length", e: err}
+		return nil, NbtParseError{str: "Reading long array length", err: err}
 	}
 
 	longs := make([]int64, length)
 	if err := binary.Read(nr.reader, nr.byteOrder, &longs); err != nil {
-		return nil, NbtParseError{s: "Reading long array data", e: err}
+		return nil, NbtParseError{str: "Reading long array data", err: err}
 	}
 
 	return &NBTLongArray{Value: longs}, nil
@@ -360,23 +396,22 @@ func (s *NBTString) ReadFrom(reader io.Reader) (int64, error) {
 
 func (l *NBTList) ReadFrom(reader io.Reader) (int64, error) {
 	nr := NewNBTReader(reader)
-	value, err := nr.readList()
+	value, n, err := nr.readList()
 	if err != nil {
 		return 0, err
 	}
 	*l = *value
-	// Approximate byte count (type + length + items)
-	return int64(1 + 4), nil
+	return n, nil
 }
 
 func (c *NBTCompound) ReadFrom(reader io.Reader) (int64, error) {
 	nr := NewNBTReader(reader)
-	value, err := nr.readCompound()
+	value, n, err := nr.readCompound()
 	if err != nil {
 		return 0, err
 	}
 	*c = *value
-	return 0, nil
+	return n, nil
 }
 
 func (ia *NBTIntArray) ReadFrom(reader io.Reader) (int64, error) {

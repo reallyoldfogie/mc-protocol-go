@@ -1,0 +1,39 @@
+{
+  "files": [
+    {
+      "path": "/home/reallyoldfogie/src/github.com/reallyoldfogie/mc-protocol-go/testing/packetlogs/1.21.5/chat-only/chat_packets.log",
+      "summary": {
+        "Total": 1,
+        "Skipped": 0,
+        "Succeeded": 1,
+        "Failed": 0,
+        "ByVersion": {
+          "1.21.5": 1
+        },
+        "ByDirection": {
+          "clientbound": 1
+        },
+        "ByName": {
+          "ClientboundPlayerChat": 1
+        },
+        "errors": []
+      }
+    }
+  ],
+  "total": {
+    "Total": 1,
+    "Skipped": 0,
+    "Succeeded": 1,
+    "Failed": 0,
+    "ByVersion": {
+      "1.21.5": 1
+    },
+    "ByDirection": {
+      "clientbound": 1
+    },
+    "ByName": {
+      "ClientboundPlayerChat": 1
+    },
+    "errors": null
+  }
+}

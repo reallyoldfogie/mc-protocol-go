@@ -78,7 +78,7 @@ import (
 	"testing"
 
 	"github.com/reallyoldfogie/mc-protocol-go/data/{{.Version}}/basetypes"
-	Clientbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Version}}/play/clientbound"
+	//Clientbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Version}}/play/clientbound"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 
 	pk "github.com/Tnze/go-mc/net/packet"

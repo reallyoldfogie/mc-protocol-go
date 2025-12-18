@@ -25,14 +25,33 @@ package models
 import (
 	"encoding/binary"
 	"io"
+
+	"github.com/pkg/errors"
+
+	go_version "github.com/aquasecurity/go-version/pkg/version"
 )
 
 // NBTField represents an NBT field in a packet, similar to pk.NBTField.
 // It wraps an NBTCompound for compatibility with the rest of the packet system.
 type NBTField struct {
+	Version string
 	// Value is the NBT compound value. Can be nil to represent an empty NBT.
 	Value *NBTCompound
 }
+
+// currentNBTVersion holds the process-wide default version used for NBT name handling when
+// an NBTField instance does not have Version explicitly set. This lets callers (or generated
+// code) set the active protocol version just before (de)serialization.
+//
+// WARNING: This is a global, process-wide setting and is NOT thread-safe across versions.
+// If multiple protocol versions are being parsed/serialized concurrently, callers must
+// avoid interleaving different version contexts or must set NBTField.Version explicitly
+// on each instance to override this global.
+var currentNBTVersion string
+
+// SetCurrentNBTVersion sets the default protocol version used by NBTField ReadFrom/WriteTo
+// when the instance's Version field is empty.
+func SetCurrentNBTVersion(v string) { currentNBTVersion = v }
 
 // WriteTo writes the NBT field to a writer.
 // If Value is nil, it writes a TAG_End byte (0x00).
@@ -51,13 +70,23 @@ func (nf NBTField) WriteTo(writer io.Writer) (int64, error) {
 		return bytesWritten, err
 	}
 	bytesWritten++
-
-	// Write empty name (NBT fields in packets typically have empty names)
-	if err := binary.Write(writer, binary.BigEndian, int16(0)); err != nil {
-		return bytesWritten, err
+	// Name presence changed in 1.20.5: versions before 1.20.5 include name; 1.20.5+ omit it.
+	effVersion := nf.Version
+	if effVersion == "" {
+		effVersion = currentNBTVersion
 	}
-	bytesWritten += 2
+	if effVersion != "" {
+		var version, _ = go_version.Parse("1.20.5")
+		var nfVersion, _ = go_version.Parse(effVersion)
+		if nfVersion.Compare(version) < 0 {
 
+			// Write empty name (NBT fields in packets typically have empty names)
+			if err := binary.Write(writer, binary.BigEndian, int16(0)); err != nil {
+				return bytesWritten, err
+			}
+			bytesWritten += 2
+		}
+	}
 	// Write the compound value
 	nn, err := nf.Value.WriteTo(writer)
 	if err != nil {
@@ -86,33 +115,45 @@ func (nf *NBTField) ReadFrom(reader io.Reader) (int64, error) {
 		return bytesRead, nil
 	}
 
-	// Read tag name length
-	var nameLen int16
-	if err := binary.Read(reader, binary.BigEndian, &nameLen); err != nil {
-		return bytesRead, err
+	// In version 1.20.5 the name element was removed
+	effVersion := nf.Version
+	if effVersion == "" {
+		effVersion = currentNBTVersion
 	}
-	bytesRead += 2
+	if effVersion != "" {
+		var version, _ = go_version.Parse("1.20.5")
+		var nfVersion, _ = go_version.Parse(effVersion)
+		if nfVersion.Compare(version) < 0 {
+			// Read tag name length
+			var nameLen int16
+			if err := binary.Read(reader, binary.BigEndian, &nameLen); err != nil {
+				return bytesRead, err
+			}
+			bytesRead += 2
 
-	// Read and discard name (we don't use it)
-	if nameLen > 0 {
-		nameBytes := make([]byte, nameLen)
-		if err := binary.Read(reader, binary.BigEndian, &nameBytes); err != nil {
-			return bytesRead, err
+			// Read and discard name (we don't use it)
+			if nameLen > 0 {
+				nameBytes := make([]byte, nameLen)
+				if err := binary.Read(reader, binary.BigEndian, &nameBytes); err != nil {
+					return bytesRead, err
+				}
+				bytesRead += int64(nameLen)
+			}
 		}
-		bytesRead += int64(nameLen)
 	}
 
 	// Only support compound tags for NBTField
 	if tagType != TypeCompound {
-		return bytesRead, NbtParseError{s: "NBTField expected compound tag", e: nil}
+		return bytesRead, NbtParseError{str: "NBTField expected compound tag", err: errors.New("invalid tag type"), tagType: byte(tagType), version: effVersion}
 	}
 
-	// Read the compound value
+	// Read the compound value (with byte count)
 	nbtReader := NewNBTReader(reader)
-	compound, err := nbtReader.readCompound()
+	compound, n, err := nbtReader.readCompound()
 	if err != nil {
 		return bytesRead, err
 	}
+	bytesRead += n
 
 	nf.Value = compound
 	return bytesRead, nil

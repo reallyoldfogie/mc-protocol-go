@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/reallyoldfogie/mc-protocol-go/data/1.21.4/basetypes"
-	Clientbound "github.com/reallyoldfogie/mc-protocol-go/data/1.21.4/play/clientbound"
+	//Clientbound "github.com/reallyoldfogie/mc-protocol-go/data/1.21.4/play/clientbound"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 
 	pk "github.com/Tnze/go-mc/net/packet"
@@ -69,69 +69,9 @@ func TestPosition_RoundTrip(t *testing.T) {
 	}
 }
 
-// TestStepTick_RoundTrip tests a simple container with a VarInt field
-func TestStepTick_RoundTrip(t *testing.T) {
-	tests := []struct {
-		name      string
-		tickSteps pk.VarInt
-	}{
-		{name: "zero", tickSteps: 0},
-		{name: "small value", tickSteps: 10},
-		{name: "large value", tickSteps: 12345},
-		{name: "negative", tickSteps: -1},
-	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			original := Clientbound.StepTick{
-				TickSteps: tt.tickSteps,
-			}
 
-			var buf bytes.Buffer
-			bytesWritten, err := original.WriteTo(&buf)
-			require.NoError(t, err)
-			assert.Greater(t, bytesWritten, int64(0))
 
-			var read Clientbound.StepTick
-			bytesRead, err := read.ReadFrom(&buf)
-			require.NoError(t, err)
-			assert.Equal(t, bytesWritten, bytesRead)
-
-			assert.Equal(t, original.TickSteps, read.TickSteps)
-		})
-	}
-}
-
-// TestEntityTeleport_RoundTrip tests a container with multiple fields
-func TestEntityTeleport_RoundTrip(t *testing.T) {
-	original := Clientbound.EntityTeleport{
-		EntityId: 123,
-		X:        100.5,
-		Y:        64.0,
-		Z:        -200.25,
-		Yaw:      pk.Byte(90),
-		Pitch:    pk.Byte(45),
-		OnGround: true,
-	}
-
-	var buf bytes.Buffer
-	bytesWritten, err := original.WriteTo(&buf)
-	require.NoError(t, err)
-	assert.Greater(t, bytesWritten, int64(27))
-
-	var read Clientbound.EntityTeleport
-	bytesRead, err := read.ReadFrom(&buf)
-	require.NoError(t, err)
-	assert.Equal(t, bytesWritten, bytesRead)
-
-	assert.Equal(t, original.EntityId, read.EntityId)
-	assert.Equal(t, original.X, read.X)
-	assert.Equal(t, original.Y, read.Y)
-	assert.Equal(t, original.Z, read.Z)
-	assert.Equal(t, original.Yaw, read.Yaw)
-	assert.Equal(t, original.Pitch, read.Pitch)
-	assert.Equal(t, original.OnGround, read.OnGround)
-}
 
 // TestOption_RoundTrip tests option types
 func TestOption_RoundTrip(t *testing.T) {

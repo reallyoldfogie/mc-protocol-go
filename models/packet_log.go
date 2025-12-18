@@ -9,4 +9,6 @@ type PacketLog struct {
 	Data            []byte    `json:"data"`
 	Version         string    `json:"version"`
 	ProtocolVersion uint      `json:"protocol_version"`
+	Direction       string    `json:"direction"` // "clientbound" or "serverbound"
+	State           string    `json:"state"`     // "handshaking", "status", "login", "play"
 }

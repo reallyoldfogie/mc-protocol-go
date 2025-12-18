@@ -16,11 +16,13 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"unicode"
 
 	go_version "github.com/aquasecurity/go-version/pkg/version"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
+	"github.com/protodef-go/protodef-go/protocol"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
@@ -52,6 +54,7 @@ type versionTemplateData struct {
 	VarName          string
 	ProtocolVersion  uint64
 	PacketData       inversePacketParse
+	EntityTypeIDs    map[string]int32 // entity name -> protocol ID (e.g., "minecraft:player" -> 148)
 }
 
 // Run executes the generator with the provided configuration
@@ -76,12 +79,15 @@ func Run(cfg *Config) error {
 	versionProtocolMap := map[string]uint64{}
 	protocolMaxVersionMap := map[uint64]string{}
 	packetInfo := map[string]inversePacketParse{}
+	entityTypeIDsMap := map[string]map[string]int32{} // version -> entity name -> ID
 	packetMetadataByVersion := make(map[string]map[string]struct {
 		IsPacket  bool
 		PacketID  int32
 		Namespace string
 		Direction string
 	})
+	// Store protocol definitions for field discovery
+	versionProtocols := make(map[string]*protocol.Protocol)
 
 	sortedVersions := []go_version.Version{}
 	errs := []error{}
@@ -103,6 +109,14 @@ func Run(cfg *Config) error {
 		// Packet IDs are generated after protocol structs are parsed (second phase)
 		generateBlocks(versionDir, version, files)
 		generateSounds(versionDir, version, files)
+
+		// Extract entity type IDs for this version
+		entityTypeIDs, err := getEntityTypeIDs(files)
+		if err != nil {
+			fmt.Printf("Warning: failed to load entity types for version %s: %v\n", version, err)
+			entityTypeIDs = make(map[string]int32) // Use empty map if extraction fails
+		}
+		entityTypeIDsMap[version] = entityTypeIDs
 		// Generate go.mod for this version package
 		// if err := generateVersionGoMod(versionDir, version); err != nil {
 		// 	errs = append(errs, fmt.Errorf("failed to generate go.mod for version %s: %w", version, err))
@@ -156,11 +170,21 @@ func Run(cfg *Config) error {
 			errs = append(errs, fmt.Errorf("getData failed for version %s: %#v", version2Use, err))
 			continue
 		}
+
+		// Check if protocol.json exists before attempting generation
+		protocolJSONPath := filepath.Join(cfg.Cache.MetadataDir, version, "downloads", "protocol.json")
+		if _, err := os.Stat(protocolJSONPath); os.IsNotExist(err) {
+			fmt.Printf("Warning: protocol.json not found for version %s, skipping protocol generation\n", version)
+			continue
+		}
+
 		protocolDefinitions, err := GetProtocolData(cfg.Cache.MetadataDir, version2Use, version)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to get protocol data for version (%s): %s", version, err.Error()))
 			continue
 		}
+		// Store protocol definition for field discovery later
+		versionProtocols[version] = protocolDefinitions
 		updatedPacketData, versionMetadata, err := generateProtocolStructs(version, protocolDefinitions, files)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to generate protocol structs for version (%s): %s", version, err.Error()))
@@ -188,11 +212,28 @@ func Run(cfg *Config) error {
 			fmt.Printf("Warning: failed to generate tests for %s: %v\n", version2Use, err)
 		}
 
-		// Release protocol data and force GC
-		protocolDefinitions = nil
+		// Don't nil out protocolDefinitions yet - we need it for field discovery
 		runtime.GC()
 		debug.FreeOSMemory()
 	}
+
+	// Phase 1: Field Discovery - Scan all versions to find unique fields
+	fmt.Println("\n=== Field Discovery ===")
+	fields, err := DiscoverFields(versionProtocols)
+	if err != nil {
+		errs = append(errs, fmt.Errorf("field discovery failed: %w", err))
+	} else {
+		// Generate models/field_accessors.go
+		if err := GenerateFieldAccessors(fields, "."); err != nil {
+			errs = append(errs, fmt.Errorf("failed to generate field accessors: %w", err))
+		}
+	}
+
+	// Now we can release protocol data
+	versionProtocols = nil
+	runtime.GC()
+	debug.FreeOSMemory()
+
 	for _, dir := range []string{"logs", "libraries"} {
 		os.RemoveAll(dir)
 	}
@@ -231,6 +272,13 @@ func Run(cfg *Config) error {
 	caser := cases.Title(language.AmericanEnglish)
 
 	for _, version := range cfg.Versions {
+		// Only process versions that have packet data (i.e., had protocol.json)
+		packetData, hasPacketData := packetInfo[version]
+		if !hasPacketData {
+			fmt.Printf("Skipping version %s - no protocol data available\n", version)
+			continue
+		}
+
 		versionData := versionTemplateData{
 			Name:             version,
 			BlockStructName:  caser.String(versionToPkg(version)) + "Block",
@@ -239,7 +287,8 @@ func Run(cfg *Config) error {
 			TargetName:       versionToPkg(version),
 			VarName:          versionToPkg(version),
 			ProtocolVersion:  versionProtocolMap[version],
-			PacketData:       packetInfo[version],
+			PacketData:       packetData,
+			EntityTypeIDs:    entityTypeIDsMap[version],
 		}
 		versions = append(versions, versionData)
 
@@ -252,16 +301,23 @@ func Run(cfg *Config) error {
 	}
 
 	fmt.Printf("generating blockMgr.go\n")
-	if err := template.Must(template.New("").Parse(versionsBlockMgrTmpl)).Execute(blockIdFile, versions); err != nil {
+	// Collect all versions that have blockid.go files
+	allVersionsWithBlocks := collectVersionsWithFile(cfg.Output.DataDir, "blockid.go", versionProtocolMap)
+	if err := template.Must(template.New("").Parse(versionsBlockMgrTmpl)).Execute(blockIdFile, allVersionsWithBlocks); err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("generating soundMgr.go\n")
-	if err := template.Must(template.New("").Parse(versionsSoundMgrTmpl)).Execute(soundIdFile, versions); err != nil {
+	// Collect all versions that have soundid.go files
+	allVersionsWithSounds := collectVersionsWithFile(cfg.Output.DataDir, "soundid.go", versionProtocolMap)
+	if err := template.Must(template.New("").Parse(versionsSoundMgrTmpl)).Execute(soundIdFile, allVersionsWithSounds); err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("generating packetMgr.go\n")
+	// Collect all versions that have packetMgr.go files (not just the ones we just generated)
+	allVersionsWithPacketMgr := collectVersionsWithFile(cfg.Output.DataDir, "packetMgr.go", versionProtocolMap)
+
 	// DEBUG: Check packet data before template rendering
 	for _, v := range versions {
 		for id, data := range v.PacketData.Login.Clientbound {
@@ -271,7 +327,7 @@ func Run(cfg *Config) error {
 			}
 		}
 	}
-	if err := template.Must(template.New("").Parse(versionsPacketMgrTmpl)).Execute(versionPacketFile, versions); err != nil {
+	if err := template.Must(template.New("").Parse(versionsPacketMgrTmpl)).Execute(versionPacketFile, allVersionsWithPacketMgr); err != nil {
 		panic(err)
 	}
 
@@ -285,6 +341,59 @@ func Run(cfg *Config) error {
 	}
 
 	return nil
+}
+
+// collectVersionsWithFile scans the data directory for all versions that have the specified file
+// and returns a slice of versionTemplateData containing just the minimal info needed for the versions manager templates
+func collectVersionsWithFile(dataDir string, fileName string, versionProtocolMap map[string]uint64) []versionTemplateData {
+	caser := cases.Title(language.AmericanEnglish)
+	allVersions := []versionTemplateData{}
+
+	// Read all subdirectories in the data directory
+	entries, err := os.ReadDir(dataDir)
+	if err != nil {
+		fmt.Printf("Warning: failed to read data directory: %v\n", err)
+		return allVersions
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() || entry.Name() == "versions" {
+			continue
+		}
+
+		// Check if this version directory has the specified file
+		filePath := filepath.Join(dataDir, entry.Name(), fileName)
+		if _, err := os.Stat(filePath); os.IsNotExist(err) {
+			continue
+		}
+
+		// This version has the file, add it to the list
+		versionName := entry.Name()
+		versionData := versionTemplateData{
+			Name:       versionName,
+			TargetName: versionToPkg(versionName),
+			VarName:    versionToPkg(versionName),
+		}
+
+		// Add protocol version if available
+		if protoVer, ok := versionProtocolMap[versionName]; ok {
+			versionData.ProtocolVersion = protoVer
+		}
+
+		versionData.BlockStructName = caser.String(versionData.TargetName) + "Block"
+		versionData.SoundStructName = caser.String(versionData.TargetName) + "Sound"
+		versionData.PacketStructName = caser.String(versionData.TargetName) + "Packet"
+
+		allVersions = append(allVersions, versionData)
+	}
+
+	// Sort versions for consistent output
+	sort.Slice(allVersions, func(i, j int) bool {
+		return allVersions[i].Name < allVersions[j].Name
+	})
+
+	fmt.Printf("Found %d versions with %s files\n", len(allVersions), fileName)
+	return allVersions
 }
 
 func generatePackageMgr(templateData versionTemplateData, cfg *Config) {
@@ -489,7 +598,15 @@ func getData(cfg *Config, version string) (map[string]string, error) {
 }
 
 func versionToPkg(version string) string {
-	return "v" + strings.ReplaceAll(version, ".", "_")
+	version = strings.Map(func(r rune) rune {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			return r
+		}
+		return '_'
+	}, version)
+
+	// return "v" + strings.ReplaceAll(version, ".", "_")
+	return "v" + version
 }
 
 const (
@@ -863,6 +980,39 @@ func cacheFiles(cfg *Config, version string, files map[string]string) {
 	defer outFile.Close()
 
 	outFile.Write(b)
+}
+
+// getEntityTypeIDs extracts entity type name->ID mappings from registries.json
+// Returns a map like {"minecraft:player": 148, "minecraft:zombie": 129, ...}
+func getEntityTypeIDs(files map[string]string) (map[string]int32, error) {
+	const entityTypeRegistryName = "minecraft:entity_type"
+
+	registryFilePath := filepath.Join(files["reportsBase"], "reports", "registries.json")
+	registryFile, err := os.Open(registryFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open registries.json: %w", err)
+	}
+	defer registryFile.Close()
+
+	registries := models.Registries{}
+	if _, err := registries.ReadFrom(registryFile); err != nil {
+		return nil, fmt.Errorf("failed to parse registries.json: %w", err)
+	}
+
+	entityTypeIDs := make(map[string]int32)
+
+	if entityTypeRegistry, ok := registries[entityTypeRegistryName]; ok {
+		for name, protocolID := range entityTypeRegistry.Entries {
+			// protocolID.ID is int64, convert to int32
+			entityTypeIDs[name] = int32(protocolID.ID)
+		}
+	} else {
+		// If entity_type registry doesn't exist in this version, return empty map
+		// (older versions may not have it)
+		return entityTypeIDs, nil
+	}
+
+	return entityTypeIDs, nil
 }
 
 func getCacheFileName(cfg *Config, version string) string {

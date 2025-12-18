@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Packet Validation",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "cmd/packet-validation/main.go",
+            "args": ["-paths", "/home/reallyoldfogie/src/github.com/reallyoldfogie/mc-protocol-go/testing/packetlogs/1.21.5/chat-only","-verbose","-json","pkt-validation.json"]
+        }
+    ]
+}

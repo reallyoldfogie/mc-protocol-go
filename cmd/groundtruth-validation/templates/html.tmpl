@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ground Truth Report</title>
+  <style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; }
+  header { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; }
+  header h1 { margin: 0; font-size: 20px; }
+  header .meta { color: #555; margin-top: 4px; }
+  .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+  nav.sidebar { border-right: 1px solid #e5e7eb; padding: 16px; position: sticky; top: 0; align-self: start; height: 100vh; overflow: auto; }
+  nav.sidebar h2 { margin: 0 0 8px 0; font-size: 16px; }
+  nav.sidebar ul { list-style: none; padding-left: 0; margin: 0; }
+  nav.sidebar li { margin: 4px 0; }
+  nav.sidebar label { text-decoration: none; color: #2563eb; cursor: pointer; display: block; }
+  main.content { padding: 16px 24px 32px; }
+  .version { display: none; }
+  input.ver-sel { display: none; }
+  .section-header { margin: 0 0 8px 0; }
+  .section-meta { color: #555; margin: 0 0 16px 0; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 24px; }
+  th, td { border: 1px solid #ddd; padding: 8px; }
+  th { background: #f7f7f7; text-align: left; }
+  .ok { color: #0a7a31; font-weight: 600; }
+  .fail { color: #c62828; font-weight: 600; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+  .badge-ok { background: #e6f4ea; color: #0a7a31; }
+  .badge-fail { background: #fdecea; color: #c62828; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } nav.sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid #e5e7eb; } }
+  </style>
+  <style>
+  {{.CSSRules}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ground Truth Validation Report</h1>
+    <div class="meta">Versions: {{.Total.Versions}} &nbsp;&nbsp; Tests: {{.Total.Tests}} &nbsp;&nbsp; <span class="badge badge-ok">Success: {{.Total.Success}}</span> &nbsp;&nbsp; <span class="badge badge-fail">Failed: {{.Total.Failed}}</span></div>
+  </header>
+
+  <input type="radio" name="ver" id="sel-all" class="ver-sel">
+  {{range .Versions}}
+  <input type="radio" name="ver" id="sel-{{.ID}}" class="ver-sel" {{if eq (index $.Versions 0).ID .ID}}checked{{end}}>
+  {{end}}
+
+  <div class="layout">
+    <nav class="sidebar">
+      <h2>Versions</h2>
+      <ul>
+        <li><label for="sel-all">All Versions</label></li>
+        {{range .Versions}}
+        <li><label for="sel-{{.ID}}">{{.Name}}</label></li>
+        {{end}}
+      </ul>
+    </nav>
+
+    <main class="content">
+      {{range .Versions}}
+      <section id="{{.ID}}" class="version">
+        <h2 class="section-header">Version {{.Name}}</h2>
+        <div class="section-meta">Total: {{.Summary.Total}} &nbsp;&nbsp; <span class="badge badge-ok">Success: {{.Summary.Success}}</span> &nbsp;&nbsp; <span class="badge badge-fail">Failed: {{.Summary.Failed}}</span></div>
+
+        {{range .Groups}}
+        <h3>{{.State}} / {{.Direction}}</h3>
+        <table>
+          <thead>
+            <tr><th>State</th><th>Direction</th><th>Packet Name</th><th>ID</th><th>Status</th><th>Notes / Errors</th></tr>
+          </thead>
+          <tbody>
+          {{range .Rows}}
+            <tr>
+              <td>{{.State}}</td>
+              <td>{{.Direction}}</td>
+              <td>{{.PacketName}}</td>
+              <td>{{.PacketID}}</td>
+              <td>{{if .Success}}<span class="ok">OK</span>{{else}}<span class="fail">FAILED</span>{{end}}</td>
+              <td><pre style="white-space:pre-wrap; margin:0">{{.Notes}}</pre></td>
+            </tr>
+          {{end}}
+          </tbody>
+        </table>
+        {{end}}
+      </section>
+      {{end}}
+
+      <section id="all-versions" class="version">
+        <h2 class="section-header">All Versions</h2>
+        <div class="section-meta">Versions: {{$.Total.Versions}} &nbsp;&nbsp; Tests: {{$.Total.Tests}} &nbsp;&nbsp; <span class="badge badge-ok">Success: {{$.Total.Success}}</span> &nbsp;&nbsp; <span class="badge badge-fail">Failed: {{$.Total.Failed}}</span></div>
+        {{range .Versions}}
+        <h3>Version {{.Name}}</h3>
+        <div class="section-meta">Total: {{.Summary.Total}} &nbsp;&nbsp; <span class="badge badge-ok">Success: {{.Summary.Success}}</span> &nbsp;&nbsp; <span class="badge badge-fail">Failed: {{.Summary.Failed}}</span></div>
+        {{range .Groups}}
+        <h4>{{.State}} / {{.Direction}}</h4>
+        <table>
+          <thead>
+            <tr><th>State</th><th>Direction</th><th>Packet Name</th><th>ID</th><th>Status</th><th>Notes / Errors</th></tr>
+          </thead>
+          <tbody>
+          {{range .Rows}}
+            <tr>
+              <td>{{.State}}</td>
+              <td>{{.Direction}}</td>
+              <td>{{.PacketName}}</td>
+              <td>{{.PacketID}}</td>
+              <td>{{if .Success}}<span class="ok">OK</span>{{else}}<span class="fail">FAILED</span>{{end}}</td>
+              <td><pre style="white-space:pre-wrap; margin:0">{{.Notes}}</pre></td>
+            </tr>
+          {{end}}
+          </tbody>
+        </table>
+        {{end}}
+        {{end}}
+      </section>
+    </main>
+  </div>
+</body>
+</html>

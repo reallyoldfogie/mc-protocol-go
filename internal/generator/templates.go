@@ -176,6 +176,10 @@ const (
 
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 	{{range .}}
+	_ "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/handshaking/clientbound"
+	handshaking_serverbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/handshaking/serverbound"
+	status_clientbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/status/clientbound"
+	status_serverbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/status/serverbound"
 	login_clientbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/login/clientbound"
 	login_serverbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/login/serverbound"
 	config_clientbound "github.com/reallyoldfogie/mc-protocol-go/data/{{.Name}}/configuration/clientbound"
@@ -237,9 +241,13 @@ const (
 	func (p Packets) GetClientboundLoginPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
 		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Login.Clientbound}}
 		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}} 
-				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				pkt := basetypes.New{{$value.StructName}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return login_clientbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}} 
-				return basetypes.New{{$value.Name}}(), nil {{else}}
+				pkt := basetypes.New{{$value.Name}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return login_clientbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown clientbound login packet ID: %d", id)
@@ -249,9 +257,13 @@ const (
 	func (p Packets) GetClientboundConfigPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
 		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Configuration.Clientbound}}
 		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}} 
-				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				pkt := basetypes.New{{$value.StructName}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return config_clientbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}} 
-				return basetypes.New{{$value.Name}}(), nil {{else}}
+				pkt := basetypes.New{{$value.Name}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return config_clientbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown clientbound config packet ID: %d", id)
@@ -278,7 +290,9 @@ const (
 				{{- $useModels = true}}
 			{{- end}}
 			{{- if or (contains $short "Common") $useBasetype}}
-				return basetypes.New{{$short}}(), nil
+				pkt := basetypes.New{{$short}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil
 			{{- else}}
 			{{- if $useModels }}
 				return models.New{{$short}}(), nil
@@ -296,9 +310,13 @@ const (
 	func (p Packets) GetServerboundLoginPacketByID(id models.ServerboundPacketID) (models.PacketMarshaller, error) {
 		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Login.Serverbound}}
 		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}} 
-				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				pkt := basetypes.New{{$value.StructName}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return login_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}} 
-				return basetypes.New{{$value.Name}}(), nil {{else}}
+				pkt := basetypes.New{{$value.Name}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return login_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown serverbound login packet ID: %d", id)
@@ -308,9 +326,13 @@ const (
 	func (p Packets) GetServerboundConfigPacketByID(id models.ServerboundPacketID) (models.PacketMarshaller, error) {
 		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Configuration.Serverbound}}
 		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}} 
-				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				pkt := basetypes.New{{$value.StructName}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return config_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}} 
-				return basetypes.New{{$value.Name}}(), nil {{else}}
+				pkt := basetypes.New{{$value.Name}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return config_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown serverbound config packet ID: %d", id)
@@ -319,14 +341,81 @@ const (
 
 	func (p Packets) GetServerboundPacketByID(id models.ServerboundPacketID) (models.PacketMarshaller, error) {
 		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Play.Serverbound}}
-		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}} 
-				return basetypes.New{{$value.StructName}}(), nil {{else}}
-				return play_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}} 
-				return basetypes.New{{$value.Name}}(), nil {{else}}
+		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}}
+				pkt := basetypes.New{{$value.StructName}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
+				return play_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				pkt := basetypes.New{{$value.Name}}()
+				pkt.SetPacketID({{$key.ID}})
+				return pkt, nil {{else}}
 				return play_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown serverbound play packet ID: %d", id)
 		}
+	}
+
+	// Handshaking packet methods
+	func (p Packets) GetClientboundHandshakingPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
+		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Handshake.Clientbound}}
+		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}}
+				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				return handshaking_clientbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				return basetypes.New{{$value.Name}}(), nil {{else}}
+				return handshaking_clientbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
+		default:
+			return nil, fmt.Errorf("unknown clientbound handshaking packet ID: %d", id)
+		}
+	}
+
+	func (p Packets) GetServerboundHandshakingPacketByID(id models.ServerboundPacketID) (models.PacketMarshaller, error) {
+		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Handshake.Serverbound}}
+		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}}
+				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				return handshaking_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				return basetypes.New{{$value.Name}}(), nil {{else}}
+				return handshaking_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
+		default:
+			return nil, fmt.Errorf("unknown serverbound handshaking packet ID: %d", id)
+		}
+	}
+
+	// Status packet methods
+	func (p Packets) GetClientboundStatusPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
+		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Status.Clientbound}}
+		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}}
+				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				return status_clientbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				return basetypes.New{{$value.Name}}(), nil {{else}}
+				return status_clientbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
+		default:
+			return nil, fmt.Errorf("unknown clientbound status packet ID: %d", id)
+		}
+	}
+
+	func (p Packets) GetServerboundStatusPacketByID(id models.ServerboundPacketID) (models.PacketMarshaller, error) {
+		switch id { {{$targetName := .TargetName}}{{range $key, $value := .PacketData.Status.Serverbound}}
+		case {{$key.ID}}:{{if $value.StructName}}{{if contains $value.StructName "Common"}}
+				return basetypes.New{{$value.StructName}}(), nil {{else}}
+				return status_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				return basetypes.New{{$value.Name}}(), nil {{else}}
+				return status_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
+		default:
+			return nil, fmt.Errorf("unknown serverbound status packet ID: %d", id)
+		}
+	}
+
+	// GetEntityTypeID returns the protocol ID for an entity type name
+	// Returns -1 if the entity type is not found
+	func (p Packets) GetEntityTypeID(name string) int32 {
+		entityTypeIDs := map[string]int32{
+			{{range $name, $id := .EntityTypeIDs}}"{{$name}}": {{$id}},
+			{{end}}
+		}
+		if id, ok := entityTypeIDs[name]; ok {
+			return id
+		}
+		return -1
 	}
 	{{end}}
 	`
@@ -348,8 +437,10 @@ func (p Packets) GetClientboundLoginPacketID(name string) models.ClientboundPack
 	switch name { {{range $key, $value := .Login.Clientbound}}
 	case "LoginClientbound{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return LoginClientbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	case "LoginClientboundPacketIDGuard": return {{.MaxLoginClientboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Serverbound Login name packet name: %s", name))
+		fmt.Printf("GetClientboundLoginPacketID => unknown packet name: %s\n", name)
+		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -359,8 +450,10 @@ func (p Packets) GetServerboundLoginPacketID(name string) models.ServerboundPack
 	switch name { {{range $key, $value := .Login.Serverbound}}
 	case "LoginServerbound{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return LoginServerbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	case "LoginServerboundPacketIDGuard": return {{.MaxLoginServerboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound Login name packet name: %s", name))
+		fmt.Printf("GetServerboundLoginPacketID => unknown packet name: %s\n", name)
+		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -369,8 +462,9 @@ func (p Packets) ClientboundLoginToString(id models.ClientboundPacketID) string 
 	{{range $key, $value := .Login.Clientbound}}
 	case LoginClientbound{{$value.Name}}:   
 		return "LoginClientbound{{$value.Name}}" // {{$value.ID}} {{$value.Hex}} {{end}}
+	case {{.MaxLoginClientboundID.ID}}: return "LoginClientboundPacketIDGuard"
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound Login packet ID: %d", id))
+		return fmt.Sprintf("Unknown Clientbound Login packet ID: %d", id)
 	}
 }
 
@@ -380,8 +474,10 @@ func (p Packets) GetClientboundConfigPacketID(name string) models.ClientboundPac
 	switch name { {{range $key, $value := .Configuration.Clientbound}}
 	case "ClientboundConfig{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return ClientboundConfig{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	case "ClientboundConfigPacketIDGuard": return {{.MaxConfigClientboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound Configuration name packet name: %s", name))
+		fmt.Printf("GetClientboundConfigPacketID => unknown packet name: %s\n", name)
+		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -390,8 +486,9 @@ func (p Packets) ClientboundConfigToString(id models.ClientboundPacketID) string
 	{{range $key, $value := .Configuration.Clientbound}}
 	case ClientboundConfig{{$value.Name}}:   
 		return "ClientboundConfig{{$value.Name}}" // {{$value.ID}} {{$value.Hex}} {{end}}
+	case {{.MaxConfigClientboundID.ID}}: return "ClientboundConfigPacketIDGuard"
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound Configuration packet ID: %d", id))
+		return fmt.Sprintf("Unknown Clientbound Configuration packet ID: %d", id)
 	}
 }
 
@@ -401,8 +498,10 @@ func (p Packets) GetServerboundConfigPacketID(name string) models.ServerboundPac
 	switch name { {{range $key, $value := .Configuration.Serverbound}}
 	case "ServerboundConfig{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return ServerboundConfig{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	case "ServerboundConfigPacketIDGuard": return {{.MaxConfigServerboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Serverbound Configuration name packet name: %s", name))
+		fmt.Printf("GetServerboundConfigPacketID => unknown packet name: %s\n", name)
+		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -411,8 +510,9 @@ func (p Packets) ServerboundConfigToString(id models.ServerboundPacketID) string
 	{{range $key, $value := .Configuration.Serverbound}}
 	case ServerboundConfig{{$value.Name}}:   
 		return "ServerboundConfig{{$value.Name}}" // {{$value.ID}} {{$value.Hex}} {{end}}
+	case {{.MaxConfigServerboundID.ID}}: return "ServerboundConfigPacketIDGuard"
 	default:
-		panic(fmt.Sprintf("Unknown Serverbound Configuration packet ID: %d", id))
+		return fmt.Sprintf("Unknown Serverbound Configuration packet ID: %d", id)
 	}
 }
 
@@ -428,7 +528,8 @@ func (p Packets) GetClientboundPacketID(name string) models.ClientboundPacketID 
 		return Clientbound{{$short}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ClientboundPacketIDGuard": return {{.MaxPlayClientboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound name packet name: %s", name))
+		fmt.Printf("GetClientboundPacketID => unknown packet name: %s\n", name)
+		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -444,7 +545,7 @@ func (p Packets) ClientboundToString(id models.ClientboundPacketID) string {
 		return "Clientbound{{$short}}" // {{$value.ID}} {{$value.Hex}} {{end}}
 	case {{.MaxPlayClientboundID.ID}}: return "ClientboundPacketIDGuard"
 	default:
-		panic(fmt.Sprintf("Unknown Clientbound packet ID: %d", id))
+		return fmt.Sprintf("Unknown Clientbound packet ID: %d", id)
 	}
 }
 
@@ -455,7 +556,8 @@ func (p Packets) GetServerboundPacketID(name string) models.ServerboundPacketID 
 		return Serverbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ServerboundPacketIDGuard": return {{.MaxPlayServerboundID.ID}}
 	default:
-		panic(fmt.Sprintf("Unknown Serverbound packet name: %s", name))
+		fmt.Printf("GetServerboundPacketID => unknown packet name: %s\n", name)
+		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }
 
@@ -466,7 +568,7 @@ func (p Packets) ServerboundToString(id models.ServerboundPacketID) string {
 		return "Serverbound{{$value.Name}}" // {{$value.ID}} {{$value.Hex}} {{end}}
 	case {{.MaxPlayServerboundID.ID}}: return "ServerboundPacketIDGuard"
 	default:
-		panic(fmt.Sprintf("Unknown Serverbound packet ID: %d", id))
+		return fmt.Sprintf("Unknown Serverbound packet ID: %d", id)
 	}
 }
 
@@ -477,26 +579,31 @@ func NewPackets() Packets {
 // Login ClientBound
 const ({{range $key, $value := .Login.Clientbound}}
 	LoginClientbound{{$value.Name}} models.ClientboundPacketID = {{$key.ID}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	LoginClientboundPacketIDGuard models.ClientboundPacketID = {{.MaxLoginClientboundID.ID}}
 )
 
 // Login Serverbound
 const ({{range $key, $value := .Login.Serverbound}}
 	LoginServerbound{{$value.Name}} models.ServerboundPacketID = {{$key.ID}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	LoginServerboundPacketIDGuard models.ServerboundPacketID = {{.MaxLoginServerboundID.ID}}
 )
 
 // Status Clientbound
 const ({{range $key, $value := .Status.Clientbound}}
 	ClientboundStatus{{$value.Name}} models.ClientboundPacketID = {{$key.ID}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	ClientboundStatusPacketIDGuard models.ClientboundPacketID = {{.MaxStatusClientboundID.ID}}
 )
 
 // Configuration Clientbound
 const ({{range $key, $value := .Configuration.Clientbound}}
 	ClientboundConfig{{$value.Name}} models.ClientboundPacketID = {{$key.ID}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	ClientboundConfigPacketIDGuard models.ClientboundPacketID = {{.MaxConfigClientboundID.ID}}
 )
 
 // Configuration Serverbound
 const ({{range $key, $value := .Configuration.Serverbound}}
 	ServerboundConfig{{$value.Name}} models.ServerboundPacketID = {{$key.ID}} // {{$value.ID}} {{$value.Hex}} {{end}}
+	ServerboundConfigPacketIDGuard models.ServerboundPacketID = {{.MaxConfigServerboundID.ID}}
 )
 
 // Game Play Clientbound
@@ -685,6 +792,7 @@ const ({{range $key, $value := .Play.Serverbound}}
 
 		// IMPORTS_PLACEHOLDER
 		pk "github.com/Tnze/go-mc/net/packet"
+		"github.com/pkg/errors"
 	)	
 	`
 
@@ -700,6 +808,8 @@ const ({{range $key, $value := .Play.Serverbound}}
 
 		// IMPORTS_PLACEHOLDER
 		pk "github.com/Tnze/go-mc/net/packet"
+		"github.com/pkg/errors"
+
 	)
 `
 )

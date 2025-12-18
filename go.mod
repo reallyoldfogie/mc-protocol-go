@@ -5,6 +5,8 @@ go 1.24.5
 require (
 	github.com/Tnze/go-mc v1.20.3-0.20240907175330-9a1f5431370e
 	github.com/aquasecurity/go-version v0.0.1
+	github.com/google/uuid v1.6.0
+	github.com/pkg/errors v0.9.1
 	github.com/protodef-go/protodef-go v0.0.0-20240725133419-61fafc74fc50
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/text v0.30.0
@@ -13,7 +15,6 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect

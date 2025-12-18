@@ -290,44 +290,50 @@ func RunRoundTripChecks(ctx context.Context, src PacketLogSource, opts RoundTrip
 			return summary, err
 		}
 
-		summary.Total++
+		// Only process play-state packets for now
+		if pl.State == "" || pl.State == "play" {
+			summary.Total++
 
-		if !matchesFilter(pl) {
-			summary.Skipped++
-			continue
-		}
-
-		direction := directionFromName(pl.Name)
-		if direction == "" {
-			recordError(&summary, opts, PacketError{Log: pl, Stage: "direction", Err: fmt.Errorf("unknown direction for name %q", pl.Name)}, errorMap)
-			if opts.StopOnFirstError {
-				return summary, fmt.Errorf("packetlogtest: direction resolution failed")
+			if !matchesFilter(pl) {
+				summary.Skipped++
+				continue
 			}
-			continue
-		}
 
-		mgr, err := getPacketMgr(pl)
-		if err != nil {
-			recordError(&summary, opts, PacketError{Log: pl, Stage: "packetmgr", Err: err}, errorMap)
-			if opts.StopOnFirstError {
-				return summary, err
+			direction := pl.Direction
+			if direction == "" {
+				direction = directionFromName(pl.Name)
 			}
-			continue
-		}
 
-		if err := processPacket(pl, mgr, direction); err != nil {
-			recordError(&summary, opts, PacketError{Log: pl, Stage: "roundtrip", Err: err}, errorMap)
-			if opts.StopOnFirstError {
-				return summary, err
+			if direction == "" {
+				recordError(&summary, opts, PacketError{Log: pl, Stage: "direction", Err: fmt.Errorf("unknown direction for name %q", pl.Name)}, errorMap)
+				if opts.StopOnFirstError {
+					return summary, fmt.Errorf("packetlogtest: direction resolution failed")
+				}
+				continue
 			}
-			continue
-		}
+			mgr, err := getPacketMgr(pl)
+			if err != nil {
+				recordError(&summary, opts, PacketError{Log: pl, Stage: "packetmgr", Err: err}, errorMap)
+				if opts.StopOnFirstError {
+					return summary, err
+				}
+				continue
+			}
 
-		// Success
-		summary.Succeeded++
-		summary.ByVersion[pl.Version]++
-		summary.ByDirection[direction]++
-		summary.ByName[pl.Name]++
+			if err := processPacket(pl, mgr, direction); err != nil {
+				recordError(&summary, opts, PacketError{Log: pl, Stage: "roundtrip", Err: err}, errorMap)
+				if opts.StopOnFirstError {
+					return summary, err
+				}
+				continue
+			}
+
+			// Success
+			summary.Succeeded++
+			summary.ByVersion[pl.Version]++
+			summary.ByDirection[direction]++
+			summary.ByName[pl.Name]++
+		}
 	}
 }
 

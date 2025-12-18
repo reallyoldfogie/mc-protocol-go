@@ -123,7 +123,6 @@ func parseFlags() Config {
 	}
 
 	// path inputs
-
 	inputDir := flag.String("paths", "", "Comma-separated list of paths to import packet log files from")
 
 	// Filtering options

@@ -47,7 +47,11 @@ func (o *Option[T]) ReadFrom(r io.Reader) (n int64, err error) {
 		}
 		// Special handling for models.NBTField: initialize Value field
 		if nbtField, ok := any(o.Val).(*NBTField); ok {
+			// Initialize empty compound and inherit current default NBT version
 			nbtField.Value = &NBTCompound{Tags: []NBTTag{}}
+			if nbtField.Version == "" {
+				nbtField.Version = currentNBTVersion
+			}
 		}
 	}
 	if rf, ok := any(o.Val).(io.ReaderFrom); ok {
