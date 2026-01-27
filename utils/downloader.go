@@ -1,4 +1,4 @@
-package generator
+package utils
 
 import (
 	"bytes"
@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/reallyoldfogie/mc-protocol-go/models"
@@ -19,11 +20,30 @@ const (
 )
 
 func GetVersionMetadata(mcVersion string, outDirName string) (*models.VersionMetaData, *os.File, error) {
-	// Pseudo code for get versionURL:
-	// $manifest = {https://piston-meta.mojang.com/mc/game/version_manifest_v2.json}
-	// $latest = $manifest.latest.release
-	// $versionURL = {$manifest.versions[where .id == $latest ].url}
-	// $assetIndexURL = $version.assetIndex.url
+	metadataPath := outDirName + string(os.PathSeparator) + "metadata.json"
+
+	// Check if metadata file already exists
+	if _, err := os.Stat(metadataPath); err == nil {
+		// File exists, read and parse it
+		metadataFile, err := os.Open(metadataPath)
+		if err != nil {
+			return nil, nil, fmt.Errorf("failed to open existing metadata.json: %s", err.Error())
+		}
+		var versionMetadata models.VersionMetaData
+		if err := json.NewDecoder(metadataFile).Decode(&versionMetadata); err != nil {
+			metadataFile.Close()
+			return nil, nil, fmt.Errorf("failed to decode existing metadata.json: %w", err)
+		}
+		// Reopen for consistency with creation path
+		metadataFile.Close()
+		metadataFile, err = os.Open(metadataPath)
+		if err != nil {
+			return nil, nil, fmt.Errorf("failed to reopen metadata.json: %s", err.Error())
+		}
+		fmt.Printf("Metadata file %s already exists, skipping download\n", metadataPath)
+		return &versionMetadata, metadataFile, nil
+	}
+
 	var manifest struct {
 		Latest struct {
 			Release string `json:"release"`
@@ -72,12 +92,11 @@ func GetVersionMetadata(mcVersion string, outDirName string) (*models.VersionMet
 		return nil, nil, fmt.Errorf("failed to read response body: %s", err.Error())
 	}
 
-	metadataFile, err := os.Create(outDirName + string(os.PathSeparator) + "metadata.json")
+	metadataFile, err := os.Create(metadataPath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create metadata.json file: %s", err.Error())
 	}
 
-	//reset the response body to the original unread state
 	versionRes.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	if err := json.NewDecoder(versionRes.Body).Decode(&versionMetadata); err != nil {
@@ -129,6 +148,17 @@ func GetVersionFiles(mcVersion, outDirName string) (files map[string]string, err
 }
 
 func downloadFile(uri string, targetName string) (outFile *os.File, err error) {
+	// Check if file already exists
+	if _, err := os.Stat(targetName); err == nil {
+		// File exists, open and return it
+		outFile, err = os.Open(targetName)
+		if err != nil {
+			return nil, fmt.Errorf("failed to open existing file %s: %s", targetName, err.Error())
+		}
+		fmt.Printf("File %s already exists, skipping download\n", targetName)
+		return outFile, nil
+	}
+
 	serverResp, err := http.Get(uri)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get url (%s): %s", uri, err.Error())
@@ -164,7 +194,7 @@ func GenerateReports(outDirName, serverFileName string) (baseDir string, err err
 		return "", fmt.Errorf("failed to create directory structure (%s): %s", outDirName, err.Error())
 	}
 
-	baseDir = outDirName + string(os.PathSeparator) + "data_generator"
+	baseDir = filepath.Join(outDirName, "data_generator")
 	cmd := exec.Command(javaExe, "-DbundlerMainClass=net.minecraft.data.Main", "-jar", serverFileName, "--reports", "--server", "--output", baseDir)
 
 	var out strings.Builder

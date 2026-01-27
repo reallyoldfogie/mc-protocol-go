@@ -6,6 +6,7 @@
 		
 		v1_21_1 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.1"
 		v1_21_10 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.10"
+		v1_21_11 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.11"
 		v1_21_2 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.2"
 		v1_21_3 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.3"
 		v1_21_4 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.4"
@@ -18,20 +19,20 @@
 	)
 	
 	type BlockMgr interface {
-		GetByID(id models.BlockID) models.Block
-		BlockIDByStateID(blockState uint32) models.BlockID
+		GetByID(id models.BlockID) (models.Block, bool)
+		BlockIDByStateID(blockState uint32) (models.BlockID, bool)
 		BitsPerBlock() int
 	}
 	
 	// defaultBlockMgr describes information about a type of block.
 	type defaultBlockMgr struct {}
 	
-	func (b defaultBlockMgr) GetByID(id models.BlockID) models.Block {
-		return models.Block{}
+	func (b defaultBlockMgr) GetByID(id models.BlockID) (models.Block, bool) {
+		return models.Block{}, false
 	}
 	
-	func (b defaultBlockMgr)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return models.BlockID(0)
+	func (b defaultBlockMgr)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		return models.BlockID(0), false
 	}
 		
 	func (b defaultBlockMgr)	BitsPerBlock() int{return 0}
@@ -40,6 +41,7 @@
 		switch version { 
 		case "1.21.1": return v1_21_1Blocks 
 		case "1.21.10": return v1_21_10Blocks 
+		case "1.21.11": return v1_21_11Blocks 
 		case "1.21.2": return v1_21_2Blocks 
 		case "1.21.3": return v1_21_3Blocks 
 		case "1.21.4": return v1_21_4Blocks 
@@ -60,12 +62,14 @@
 	
 	var v1_21_1Blocks = V1_21_1Block{holder: v1_21_1.NewBlocks()}
 	
-	func (b V1_21_1Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_1Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_1Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_1Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_1Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -78,15 +82,37 @@
 	
 	var v1_21_10Blocks = V1_21_10Block{holder: v1_21_10.NewBlocks()}
 	
-	func (b V1_21_10Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_10Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_10Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_10Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_10Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
+	
+	
+	
+	type V1_21_11Block struct{
+	holder v1_21_11.Blocks
+	} 
+	
+	var v1_21_11Blocks = V1_21_11Block{holder: v1_21_11.NewBlocks()}
+	
+	func (b V1_21_11Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
+	}
+	
+	func (b V1_21_11Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
+	}
+		
+	func (b V1_21_11Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
 	
 	
 	
@@ -96,12 +122,14 @@
 	
 	var v1_21_2Blocks = V1_21_2Block{holder: v1_21_2.NewBlocks()}
 	
-	func (b V1_21_2Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_2Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_2Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_2Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_2Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -114,12 +142,14 @@
 	
 	var v1_21_3Blocks = V1_21_3Block{holder: v1_21_3.NewBlocks()}
 	
-	func (b V1_21_3Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_3Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_3Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_3Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_3Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -132,12 +162,14 @@
 	
 	var v1_21_4Blocks = V1_21_4Block{holder: v1_21_4.NewBlocks()}
 	
-	func (b V1_21_4Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_4Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_4Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_4Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_4Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -150,12 +182,14 @@
 	
 	var v1_21_5Blocks = V1_21_5Block{holder: v1_21_5.NewBlocks()}
 	
-	func (b V1_21_5Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_5Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_5Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_5Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_5Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -168,12 +202,14 @@
 	
 	var v1_21_6Blocks = V1_21_6Block{holder: v1_21_6.NewBlocks()}
 	
-	func (b V1_21_6Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_6Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_6Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_6Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_6Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -186,12 +222,14 @@
 	
 	var v1_21_7Blocks = V1_21_7Block{holder: v1_21_7.NewBlocks()}
 	
-	func (b V1_21_7Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_7Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_7Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_7Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_7Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -204,12 +242,14 @@
 	
 	var v1_21_8Blocks = V1_21_8Block{holder: v1_21_8.NewBlocks()}
 	
-	func (b V1_21_8Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_8Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_8Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_8Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_8Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -222,12 +262,14 @@
 	
 	var v1_21_9Blocks = V1_21_9Block{holder: v1_21_9.NewBlocks()}
 	
-	func (b V1_21_9Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V1_21_9Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V1_21_9Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V1_21_9Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V1_21_9Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}
@@ -240,12 +282,14 @@
 	
 	var v26_1_snapshot_1Blocks = V26_1_snapshot_1Block{holder: v26_1_snapshot_1.NewBlocks()}
 	
-	func (b V26_1_snapshot_1Block) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b V26_1_snapshot_1Block) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b V26_1_snapshot_1Block)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b V26_1_snapshot_1Block)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b V26_1_snapshot_1Block)	BitsPerBlock() int{return b.holder.BitsPerBlock}

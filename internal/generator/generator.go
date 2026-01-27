@@ -24,6 +24,7 @@ import (
 
 	"github.com/protodef-go/protodef-go/protocol"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
+	"github.com/reallyoldfogie/mc-protocol-go/utils"
 )
 
 type packVersion struct {
@@ -514,7 +515,7 @@ func getData(cfg *Config, version string) (map[string]string, error) {
 
 	os.RemoveAll(filepath.Join(cfg.Cache.MetadataDir, version))
 
-	files, err = GetVersionFiles(version, cfg.Cache.MetadataDir)
+	files, err = utils.GetVersionFiles(version, cfg.Cache.MetadataDir)
 	if err != nil {
 		return nil, err
 	}
@@ -564,7 +565,7 @@ func getData(cfg *Config, version string) (map[string]string, error) {
 
 	reportsBaseDir := ""
 	if serverJar, ok := files["server.jar"]; ok {
-		reportsBaseDir, err = GenerateReports(filepath.Join(cfg.Cache.MetadataDir, version), serverJar)
+		reportsBaseDir, err = utils.GenerateReports(filepath.Join(cfg.Cache.MetadataDir, version), serverJar)
 		if err != nil {
 			return nil, err
 		}

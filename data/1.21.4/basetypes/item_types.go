@@ -10,28 +10,396 @@ import (
 	"log"
 )
 
+type ItemEffectDetailHiddenEffect models.Option[ItemEffectDetail]
+
+func (t *ItemEffectDetailHiddenEffect) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[ItemEffectDetail])(t).ReadFrom(r)
+}
+
+func (t ItemEffectDetailHiddenEffect) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[ItemEffectDetail])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "amplifier",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "duration",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "ambient",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "showParticles",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "showIcon",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "hiddenEffect",
+//	      "type": [
+//	        "option",
+//	        "ItemEffectDetail"
+//	      ]
+//	    }
+//	  ]
+//	]
+type ItemEffectDetail struct {
+	// "varint"
+	Amplifier pk.VarInt
+	// "varint"
+	Duration pk.VarInt
+	// "bool"
+	Ambient pk.Boolean
+	// "bool"
+	ShowParticles pk.Boolean
+	// "bool"
+	ShowIcon pk.Boolean
+	// [
+	//             "option",
+	//             "ItemEffectDetail"
+	//           ]
+	HiddenEffect models.Option[ItemEffectDetail]
+}
+
+func (t *ItemEffectDetail) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Amplifier.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Amplifier")
+	}
+	bytesRead, err = t.Duration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Duration")
+	}
+	bytesRead, err = t.Ambient.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Ambient")
+	}
+	bytesRead, err = t.ShowParticles.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ShowParticles")
+	}
+	bytesRead, err = t.ShowIcon.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ShowIcon")
+	}
+	bytesRead, err = t.HiddenEffect.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HiddenEffect")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemEffectDetail) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemEffectDetail.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Amplifier.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Duration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Ambient.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ShowParticles.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ShowIcon.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.HiddenEffect.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ItemBlockPredicateBlockSet struct {
+	// RegistryEntryHolderSet can hold either a single named tag or a list of numeric IDs
+	IsTagList bool
+	Tag       pk.String
+	IDs       models.Array[pk.VarInt, pk.VarInt]
+}
+
+func (r *ItemBlockPredicateBlockSet) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint count - if 0, a single tag follows; otherwise IDs follow
+	var count pk.VarInt
+	n, err := count.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder set count")
+	}
+
+	if count == 0 {
+		// Tag representation - read a single tag
+		r.IsTagList = true
+		n, err = r.Tag.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder set tag")
+		}
+	} else {
+		// IDs list representation - count already read, now read count-1 more IDs
+		r.IsTagList = false
+		ary := make([]pk.VarInt, count)
+		ary[0] = pk.VarInt(count - 1)
+		for i := 1; i < int(count); i++ {
+			var id pk.VarInt
+			n, err := id.ReadFrom(reader)
+			totalBytes += n
+			if err != nil {
+				return totalBytes, errors.Wrapf(err, "failed to read registry entry holder set ID at index %d", i)
+			}
+			ary[i] = id
+		}
+		r.IDs.Ary.Ary = any(ary)
+	}
+
+	return totalBytes, nil
+}
+
+func (r ItemBlockPredicateBlockSet) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsTagList {
+		// Write 0 followed by single tag
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set zero count for tag")
+		}
+		n, err = r.Tag.WriteTo(w)
+		totalBytes += n
+		return totalBytes, err
+	} else {
+		// Write IDs (with first ID + 1 as the "count")
+		idsAry, ok := r.IDs.Ary.Ary.([]pk.VarInt)
+		if !ok || len(idsAry) == 0 {
+			return totalBytes, nil
+		}
+		// Write first ID + 1
+		firstPlusOne := pk.VarInt(idsAry[0]) + 1
+		n, err := firstPlusOne.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set first ID + 1")
+		}
+		// Write remaining IDs
+		for i := 1; i < len(idsAry); i++ {
+			n, err := idsAry[i].WriteTo(w)
+			totalBytes += n
+			if err != nil {
+				return totalBytes, errors.Wrapf(err, "failed to write registry entry holder set ID at index %d", i)
+			}
+		}
+	}
+
+	return totalBytes, nil
+}
+
+type ItemBlockPredicateProperties models.Array[pk.VarInt, ItemBlockProperty]
+
+func (t *ItemBlockPredicateProperties) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, ItemBlockProperty])(t).ReadFrom(r)
+}
+
+func (t ItemBlockPredicateProperties) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, ItemBlockProperty])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "blockSet",
+//	      "type": [
+//	        "option",
+//	        [
+//	          "registryEntryHolderSet",
+//	          {
+//	            "base": {
+//	              "name": "name",
+//	              "type": "string"
+//	            },
+//	            "otherwise": {
+//	              "name": "blockIds",
+//	              "type": "varint"
+//	            }
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "properties",
+//	      "type": [
+//	        "option",
+//	        [
+//	          "array",
+//	          {
+//	            "countType": "varint",
+//	            "type": "ItemBlockProperty"
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "nbt",
+//	      "type": "anonOptionalNbt"
+//	    }
+//	  ]
+//	]
+type ItemBlockPredicate struct {
+	// [
+	//             "option",
+	//             [
+	//               "registryEntryHolderSet",
+	//               {
+	//                 "base": {
+	//                   "name": "name",
+	//                   "type": "string"
+	//                 },
+	//                 "otherwise": {
+	//                   "name": "blockIds",
+	//                   "type": "varint"
+	//                 }
+	//               }
+	//             ]
+	//           ]
+	BlockSet models.Option[ItemBlockPredicateBlockSet]
+	// [
+	//             "option",
+	//             [
+	//               "array",
+	//               {
+	//                 "countType": "varint",
+	//                 "type": "ItemBlockProperty"
+	//               }
+	//             ]
+	//           ]
+	Properties models.Option[ItemBlockPredicateProperties]
+	// "anonOptionalNbt"
+	Nbt models.AnonymousNBT
+}
+
+func (t *ItemBlockPredicate) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.BlockSet.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BlockSet")
+	}
+	bytesRead, err = t.Properties.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Properties")
+	}
+	bytesRead, err = t.Nbt.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Nbt")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemBlockPredicate) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemBlockPredicate.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.BlockSet.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Properties.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Nbt.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ItemBookPageFilteredContent models.Option[pk.String]
+
+func (t *ItemBookPageFilteredContent) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t ItemBookPageFilteredContent) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
 // Protodef: [
 //
 //	  "container",
 //	  [
 //	    {
 //	      "name": "content",
-//	      "type": "anonymousNbt"
+//	      "type": "string"
 //	    },
 //	    {
 //	      "name": "filteredContent",
-//	      "type": "anonOptionalNbt"
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
 //	    }
 //	  ]
 //	]
-type ItemWrittenBookPage struct {
-	// "anonymousNbt"
-	Content models.AnonymousNBT
-	// "anonOptionalNbt"
-	FilteredContent models.AnonymousNBT
+type ItemBookPage struct {
+	// "string"
+	Content pk.String
+	// [
+	//             "option",
+	//             "string"
+	//           ]
+	FilteredContent models.Option[pk.String]
 }
 
-func (t *ItemWrittenBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ItemBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Content.ReadFrom(r)
 	totalBytes += bytesRead
@@ -47,11 +415,11 @@ func (t *ItemWrittenBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error
 	return totalBytes, nil
 }
 
-func (t ItemWrittenBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ItemBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ItemWrittenBookPage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ItemBookPage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Content.WriteTo(w)
 	totalBytes += bytesWritten
@@ -59,6 +427,533 @@ func (t ItemWrittenBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) 
 		return totalBytes, err
 	}
 	bytesWritten, err = t.FilteredContent.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ItemConsumeEffectType struct {
+	Value string
+}
+
+var ItemConsumeEffectTypeMappings = map[int64]string{
+	0: "apply_effects",
+	1: "remove_effects",
+	2: "clear_all_effects",
+	3: "teleport_randomly",
+	4: "play_sound",
+}
+
+func (m *ItemConsumeEffectType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ItemConsumeEffectType key")
+	}
+
+	value, ok := ItemConsumeEffectTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ItemConsumeEffectType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ItemConsumeEffectTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ItemConsumeEffectType value: %s", m.Value)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "effects",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemPotionEffect"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "probability",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0001ApplyEffects struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemPotionEffect"
+	//                         }
+	//                       ]
+	Effects models.Array[pk.VarInt, ItemPotionEffect]
+	// "f32"
+	Probability pk.Float
+}
+
+func (t *ItemConsumeEffectUnnamedType0001ApplyEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effects")
+	}
+	bytesRead, err = t.Probability.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Probability")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0001ApplyEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0001ApplyEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effects.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Probability.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "effects",
+//	      "type": "IDSet"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0001RemoveEffects struct {
+	// "IDSet"
+	Effects IDSet
+}
+
+func (t *ItemConsumeEffectUnnamedType0001RemoveEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effects")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0001RemoveEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0001RemoveEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effects.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "diameter",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0001TeleportRandomly struct {
+	// "f32"
+	Diameter pk.Float
+}
+
+func (t *ItemConsumeEffectUnnamedType0001TeleportRandomly) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Diameter.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Diameter")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0001TeleportRandomly) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0001TeleportRandomly.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Diameter.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "sound",
+//	      "type": "ItemSoundHolder"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0001PlaySound struct {
+	// "ItemSoundHolder"
+	Sound ItemSoundHolder
+}
+
+func (t *ItemConsumeEffectUnnamedType0001PlaySound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Sound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sound")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0001PlaySound) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0001PlaySound.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Sound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "apply_effects",
+//	            "1": "remove_effects",
+//	            "2": "clear_all_effects",
+//	            "3": "teleport_randomly",
+//	            "4": "play_sound"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "type",
+//	          "fields": {
+//	            "apply_effects": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "effects",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "ItemPotionEffect"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "probability",
+//	                  "type": "f32"
+//	                }
+//	              ]
+//	            ],
+//	            "remove_effects": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "effects",
+//	                  "type": "IDSet"
+//	                }
+//	              ]
+//	            ],
+//	            "clear_all_effects": "void",
+//	            "teleport_randomly": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "diameter",
+//	                  "type": "f32"
+//	                }
+//	              ]
+//	            ],
+//	            "play_sound": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "sound",
+//	                  "type": "ItemSoundHolder"
+//	                }
+//	              ]
+//	            ]
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffect struct {
+	// [
+	//             "mapper",
+	//             {
+	//               "type": "varint",
+	//               "mappings": {
+	//                 "0": "apply_effects",
+	//                 "1": "remove_effects",
+	//                 "2": "clear_all_effects",
+	//                 "3": "teleport_randomly",
+	//                 "4": "play_sound"
+	//               }
+	//             }
+	//           ]
+	Type ItemConsumeEffectType
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "type",
+	//               "fields": {
+	//                 "apply_effects": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "effects",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemPotionEffect"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "probability",
+	//                       "type": "f32"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "remove_effects": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "effects",
+	//                       "type": "IDSet"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "clear_all_effects": "void",
+	//                 "teleport_randomly": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "diameter",
+	//                       "type": "f32"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "play_sound": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "sound",
+	//                       "type": "ItemSoundHolder"
+	//                     }
+	//                   ]
+	//                 ]
+	//               }
+	//             }
+	//           ]
+	UnnamedType0001 pk.Field
+}
+
+func (t *ItemConsumeEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	// Switch field UnnamedType0001 based on type
+	// Convert compareTo value to string for matching
+	compareValueUnnamedType0001 := t.Type.Value
+
+	switch compareValueUnnamedType0001 {
+	case "apply_effects":
+		var val ItemConsumeEffectUnnamedType0001ApplyEffects
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case apply_effects")
+		}
+		t.UnnamedType0001 = &val
+	case "clear_all_effects":
+		var val models.Void
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case clear_all_effects")
+		}
+		t.UnnamedType0001 = &val
+	case "play_sound":
+		var val ItemConsumeEffectUnnamedType0001PlaySound
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case play_sound")
+		}
+		t.UnnamedType0001 = &val
+	case "remove_effects":
+		var val ItemConsumeEffectUnnamedType0001RemoveEffects
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case remove_effects")
+		}
+		t.UnnamedType0001 = &val
+	case "teleport_randomly":
+		var val ItemConsumeEffectUnnamedType0001TeleportRandomly
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case teleport_randomly")
+		}
+		t.UnnamedType0001 = &val
+	default:
+		// Mapper-backed discriminator with no explicit data for this value: treat as void
+		var __void models.Void
+		t.UnnamedType0001 = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field UnnamedType0001 based on type
+	if t.UnnamedType0001 != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.UnnamedType0001.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field UnnamedType0001 value does not implement WriteTo: %T", t.UnnamedType0001)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "details",
+//	      "type": "ItemEffectDetail"
+//	    }
+//	  ]
+//	]
+type ItemPotionEffect struct {
+	// "varint"
+	Id pk.VarInt
+	// "ItemEffectDetail"
+	Details ItemEffectDetail
+}
+
+func (t *ItemPotionEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+	bytesRead, err = t.Details.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Details")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemPotionEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemPotionEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Details.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -522,260 +1417,28 @@ func (t ItemFireworkExplosion) WriteTo(w io.Writer) (totalBytes int64, err error
 	return totalBytes, nil
 }
 
-type ItemBlockPredicateBlockSet struct {
-	// RegistryEntryHolderSet can hold either a single named tag or a list of numeric IDs
-	IsTagList bool
-	Tag       pk.String
-	IDs       models.Array[pk.VarInt, pk.VarInt]
-}
-
-func (r *ItemBlockPredicateBlockSet) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint count - if 0, a single tag follows; otherwise IDs follow
-	var count pk.VarInt
-	n, err := count.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder set count")
-	}
-
-	if count == 0 {
-		// Tag representation - read a single tag
-		r.IsTagList = true
-		n, err = r.Tag.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder set tag")
-		}
-	} else {
-		// IDs list representation - count already read, now read count-1 more IDs
-		r.IsTagList = false
-		ary := make([]pk.VarInt, count)
-		ary[0] = pk.VarInt(count - 1)
-		for i := 1; i < int(count); i++ {
-			var id pk.VarInt
-			n, err := id.ReadFrom(reader)
-			totalBytes += n
-			if err != nil {
-				return totalBytes, errors.Wrapf(err, "failed to read registry entry holder set ID at index %d", i)
-			}
-			ary[i] = id
-		}
-		r.IDs.Ary.Ary = any(ary)
-	}
-
-	return totalBytes, nil
-}
-
-func (r ItemBlockPredicateBlockSet) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsTagList {
-		// Write 0 followed by single tag
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set zero count for tag")
-		}
-		n, err = r.Tag.WriteTo(w)
-		totalBytes += n
-		return totalBytes, err
-	} else {
-		// Write IDs (with first ID + 1 as the "count")
-		idsAry, ok := r.IDs.Ary.Ary.([]pk.VarInt)
-		if !ok || len(idsAry) == 0 {
-			return totalBytes, nil
-		}
-		// Write first ID + 1
-		firstPlusOne := pk.VarInt(idsAry[0]) + 1
-		n, err := firstPlusOne.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set first ID + 1")
-		}
-		// Write remaining IDs
-		for i := 1; i < len(idsAry); i++ {
-			n, err := idsAry[i].WriteTo(w)
-			totalBytes += n
-			if err != nil {
-				return totalBytes, errors.Wrapf(err, "failed to write registry entry holder set ID at index %d", i)
-			}
-		}
-	}
-
-	return totalBytes, nil
-}
-
-type ItemBlockPredicateProperties models.Array[pk.VarInt, ItemBlockProperty]
-
-func (t *ItemBlockPredicateProperties) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, ItemBlockProperty])(t).ReadFrom(r)
-}
-
-func (t ItemBlockPredicateProperties) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, ItemBlockProperty])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "blockSet",
-//	      "type": [
-//	        "option",
-//	        [
-//	          "registryEntryHolderSet",
-//	          {
-//	            "base": {
-//	              "name": "name",
-//	              "type": "string"
-//	            },
-//	            "otherwise": {
-//	              "name": "blockIds",
-//	              "type": "varint"
-//	            }
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "properties",
-//	      "type": [
-//	        "option",
-//	        [
-//	          "array",
-//	          {
-//	            "countType": "varint",
-//	            "type": "ItemBlockProperty"
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "nbt",
-//	      "type": "anonOptionalNbt"
-//	    }
-//	  ]
-//	]
-type ItemBlockPredicate struct {
-	// [
-	//             "option",
-	//             [
-	//               "registryEntryHolderSet",
-	//               {
-	//                 "base": {
-	//                   "name": "name",
-	//                   "type": "string"
-	//                 },
-	//                 "otherwise": {
-	//                   "name": "blockIds",
-	//                   "type": "varint"
-	//                 }
-	//               }
-	//             ]
-	//           ]
-	BlockSet models.Option[ItemBlockPredicateBlockSet]
-	// [
-	//             "option",
-	//             [
-	//               "array",
-	//               {
-	//                 "countType": "varint",
-	//                 "type": "ItemBlockProperty"
-	//               }
-	//             ]
-	//           ]
-	Properties models.Option[ItemBlockPredicateProperties]
-	// "anonOptionalNbt"
-	Nbt models.AnonymousNBT
-}
-
-func (t *ItemBlockPredicate) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.BlockSet.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BlockSet")
-	}
-	bytesRead, err = t.Properties.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Properties")
-	}
-	bytesRead, err = t.Nbt.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Nbt")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemBlockPredicate) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemBlockPredicate.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.BlockSet.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Properties.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Nbt.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ItemBookPageFilteredContent models.Option[pk.String]
-
-func (t *ItemBookPageFilteredContent) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t ItemBookPageFilteredContent) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
 // Protodef: [
 //
 //	  "container",
 //	  [
 //	    {
 //	      "name": "content",
-//	      "type": "string"
+//	      "type": "anonymousNbt"
 //	    },
 //	    {
 //	      "name": "filteredContent",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
+//	      "type": "anonOptionalNbt"
 //	    }
 //	  ]
 //	]
-type ItemBookPage struct {
-	// "string"
-	Content pk.String
-	// [
-	//             "option",
-	//             "string"
-	//           ]
-	FilteredContent models.Option[pk.String]
+type ItemWrittenBookPage struct {
+	// "anonymousNbt"
+	Content models.AnonymousNBT
+	// "anonOptionalNbt"
+	FilteredContent models.AnonymousNBT
 }
 
-func (t *ItemBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ItemWrittenBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Content.ReadFrom(r)
 	totalBytes += bytesRead
@@ -791,11 +1454,11 @@ func (t *ItemBookPage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-func (t ItemBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ItemWrittenBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ItemBookPage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ItemWrittenBookPage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Content.WriteTo(w)
 	totalBytes += bytesWritten
@@ -807,673 +1470,6 @@ func (t ItemBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	return totalBytes, nil
-}
-
-type ItemEffectDetailHiddenEffect models.Option[ItemEffectDetail]
-
-func (t *ItemEffectDetailHiddenEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[ItemEffectDetail])(t).ReadFrom(r)
-}
-
-func (t ItemEffectDetailHiddenEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[ItemEffectDetail])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "amplifier",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "duration",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "ambient",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "showParticles",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "showIcon",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "hiddenEffect",
-//	      "type": [
-//	        "option",
-//	        "ItemEffectDetail"
-//	      ]
-//	    }
-//	  ]
-//	]
-type ItemEffectDetail struct {
-	// "varint"
-	Amplifier pk.VarInt
-	// "varint"
-	Duration pk.VarInt
-	// "bool"
-	Ambient pk.Boolean
-	// "bool"
-	ShowParticles pk.Boolean
-	// "bool"
-	ShowIcon pk.Boolean
-	// [
-	//             "option",
-	//             "ItemEffectDetail"
-	//           ]
-	HiddenEffect models.Option[ItemEffectDetail]
-}
-
-func (t *ItemEffectDetail) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Amplifier.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Amplifier")
-	}
-	bytesRead, err = t.Duration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Duration")
-	}
-	bytesRead, err = t.Ambient.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Ambient")
-	}
-	bytesRead, err = t.ShowParticles.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ShowParticles")
-	}
-	bytesRead, err = t.ShowIcon.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ShowIcon")
-	}
-	bytesRead, err = t.HiddenEffect.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HiddenEffect")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemEffectDetail) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemEffectDetail.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Amplifier.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Duration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Ambient.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ShowParticles.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ShowIcon.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.HiddenEffect.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ItemConsumeEffectType struct {
-	Value string
-}
-
-var ItemConsumeEffectTypeMappings = map[int64]string{
-	0: "apply_effects",
-	1: "remove_effects",
-	2: "clear_all_effects",
-	3: "teleport_randomly",
-	4: "play_sound",
-}
-
-func (m *ItemConsumeEffectType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ItemConsumeEffectType key")
-	}
-
-	value, ok := ItemConsumeEffectTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ItemConsumeEffectType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ItemConsumeEffectTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ItemConsumeEffectType value: %s", m.Value)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "effects",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemPotionEffect"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "probability",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0002ApplyEffects struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemPotionEffect"
-	//                         }
-	//                       ]
-	Effects models.Array[pk.VarInt, ItemPotionEffect]
-	// "f32"
-	Probability pk.Float
-}
-
-func (t *ItemConsumeEffectUnnamedType0002ApplyEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Effects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effects")
-	}
-	bytesRead, err = t.Probability.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Probability")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0002ApplyEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0002ApplyEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Effects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Probability.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "effects",
-//	      "type": "IDSet"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0002RemoveEffects struct {
-	// "IDSet"
-	Effects IDSet
-}
-
-func (t *ItemConsumeEffectUnnamedType0002RemoveEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Effects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effects")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0002RemoveEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0002RemoveEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Effects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "diameter",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0002TeleportRandomly struct {
-	// "f32"
-	Diameter pk.Float
-}
-
-func (t *ItemConsumeEffectUnnamedType0002TeleportRandomly) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Diameter.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Diameter")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0002TeleportRandomly) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0002TeleportRandomly.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Diameter.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "sound",
-//	      "type": "ItemSoundHolder"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0002PlaySound struct {
-	// "ItemSoundHolder"
-	Sound ItemSoundHolder
-}
-
-func (t *ItemConsumeEffectUnnamedType0002PlaySound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Sound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Sound")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0002PlaySound) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0002PlaySound.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Sound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "apply_effects",
-//	            "1": "remove_effects",
-//	            "2": "clear_all_effects",
-//	            "3": "teleport_randomly",
-//	            "4": "play_sound"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "anon": true,
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "type",
-//	          "fields": {
-//	            "apply_effects": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "effects",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "ItemPotionEffect"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "probability",
-//	                  "type": "f32"
-//	                }
-//	              ]
-//	            ],
-//	            "remove_effects": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "effects",
-//	                  "type": "IDSet"
-//	                }
-//	              ]
-//	            ],
-//	            "clear_all_effects": "void",
-//	            "teleport_randomly": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "diameter",
-//	                  "type": "f32"
-//	                }
-//	              ]
-//	            ],
-//	            "play_sound": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "sound",
-//	                  "type": "ItemSoundHolder"
-//	                }
-//	              ]
-//	            ]
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffect struct {
-	// [
-	//             "mapper",
-	//             {
-	//               "type": "varint",
-	//               "mappings": {
-	//                 "0": "apply_effects",
-	//                 "1": "remove_effects",
-	//                 "2": "clear_all_effects",
-	//                 "3": "teleport_randomly",
-	//                 "4": "play_sound"
-	//               }
-	//             }
-	//           ]
-	Type ItemConsumeEffectType
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "type",
-	//               "fields": {
-	//                 "apply_effects": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "effects",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemPotionEffect"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "probability",
-	//                       "type": "f32"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "remove_effects": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "effects",
-	//                       "type": "IDSet"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "clear_all_effects": "void",
-	//                 "teleport_randomly": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "diameter",
-	//                       "type": "f32"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "play_sound": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "sound",
-	//                       "type": "ItemSoundHolder"
-	//                     }
-	//                   ]
-	//                 ]
-	//               }
-	//             }
-	//           ]
-	UnnamedType0002 pk.Field
-}
-
-func (t *ItemConsumeEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	// Switch field UnnamedType0002 based on type
-	// Convert compareTo value to string for matching
-	compareValueUnnamedType0002 := t.Type.Value
-
-	switch compareValueUnnamedType0002 {
-	case "apply_effects":
-		var val ItemConsumeEffectUnnamedType0002ApplyEffects
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case apply_effects")
-		}
-		t.UnnamedType0002 = &val
-	case "clear_all_effects":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case clear_all_effects")
-		}
-		t.UnnamedType0002 = &val
-	case "play_sound":
-		var val ItemConsumeEffectUnnamedType0002PlaySound
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case play_sound")
-		}
-		t.UnnamedType0002 = &val
-	case "remove_effects":
-		var val ItemConsumeEffectUnnamedType0002RemoveEffects
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case remove_effects")
-		}
-		t.UnnamedType0002 = &val
-	case "teleport_randomly":
-		var val ItemConsumeEffectUnnamedType0002TeleportRandomly
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case teleport_randomly")
-		}
-		t.UnnamedType0002 = &val
-	default:
-		// Mapper-backed discriminator with no explicit data for this value: treat as void
-		var __void models.Void
-		t.UnnamedType0002 = &__void
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field UnnamedType0002 based on type
-	if t.UnnamedType0002 != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0002.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0002 value does not implement WriteTo: %T", t.UnnamedType0002)
-		}
-	}
-	return totalBytes, nil
-}
-
-type ItemSoundHolder struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         ItemSoundEvent
-}
-
-func (r *ItemSoundHolder) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r ItemSoundHolder) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
 	return totalBytes, nil
 }
 
@@ -1549,58 +1545,62 @@ func (t ItemSoundEvent) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "details",
-//	      "type": "ItemEffectDetail"
-//	    }
-//	  ]
-//	]
-type ItemPotionEffect struct {
-	// "varint"
-	Id pk.VarInt
-	// "ItemEffectDetail"
-	Details ItemEffectDetail
+type ItemSoundHolder struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         ItemSoundEvent
 }
 
-func (t *ItemPotionEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
+func (r *ItemSoundHolder) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
 	}
-	bytesRead, err = t.Details.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Details")
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
 	}
 
 	return totalBytes, nil
 }
 
-func (t ItemPotionEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
+func (r ItemSoundHolder) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
 
-	defer func() {
-		log.Printf("[ItemPotionEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
 	}
-	bytesWritten, err = t.Details.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
+
 	return totalBytes, nil
 }

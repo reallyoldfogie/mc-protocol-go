@@ -10,62 +10,6 @@ import (
 	"log"
 )
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "tagType",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "tags",
-//	      "type": "tags"
-//	    }
-//	  ]
-//	]
-type TagsTagsArrayType struct {
-	// "string"
-	TagType pk.String
-	// "tags"
-	Tags basetypes.Tags
-}
-
-func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.TagType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TagType")
-	}
-	bytesRead, err = t.Tags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tags")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.TagType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
 type RegistryDataEntriesArrayTypeValue models.Option[models.AnonymousNBT]
 
 func (t *RegistryDataEntriesArrayTypeValue) ReadFrom(r io.Reader) (int64, error) {
@@ -131,6 +75,62 @@ func (t RegistryDataEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, er
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Value.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "tagType",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tags",
+//	      "type": "tags"
+//	    }
+//	  ]
+//	]
+type TagsTagsArrayType struct {
+	// "string"
+	TagType pk.String
+	// "tags"
+	Tags basetypes.Tags
+}
+
+func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.TagType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TagType")
+	}
+	bytesRead, err = t.Tags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Tags")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.TagType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Tags.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

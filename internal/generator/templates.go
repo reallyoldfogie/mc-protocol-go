@@ -55,20 +55,20 @@ const (
 	)
 	
 	type BlockMgr interface {
-		GetByID(id models.BlockID) models.Block
-		BlockIDByStateID(blockState uint32) models.BlockID
+		GetByID(id models.BlockID) (models.Block, bool)
+		BlockIDByStateID(blockState uint32) (models.BlockID, bool)
 		BitsPerBlock() int
 	}
 	
 	// defaultBlockMgr describes information about a type of block.
 	type defaultBlockMgr struct {}
 	
-	func (b defaultBlockMgr) GetByID(id models.BlockID) models.Block {
-		return models.Block{}
+	func (b defaultBlockMgr) GetByID(id models.BlockID) (models.Block, bool) {
+		return models.Block{}, false
 	}
 	
-	func (b defaultBlockMgr)	BlockIDByStateID(blockState uint32) models.BlockID {
-		return models.BlockID(0)
+	func (b defaultBlockMgr)	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		return models.BlockID(0), false
 	}
 		
 	func (b defaultBlockMgr)	BitsPerBlock() int{return 0}
@@ -87,12 +87,14 @@ const (
 	
 	var {{.VarName}}Blocks = {{.BlockStructName}}{holder: {{.TargetName}}.NewBlocks()}
 	
-	func (b {{.BlockStructName}}) GetByID(id models.BlockID) models.Block{
-	return b.holder.BlockByID[id]
+	func (b {{.BlockStructName}}) GetByID(id models.BlockID) (models.Block, bool){
+		bID, ok := b.holder.BlockByID[id]
+		return bID, ok
 	}
 	
-	func (b {{.BlockStructName}})	BlockIDByStateID(blockState uint32) models.BlockID {
-		return b.holder.BlockIDByStateID[blockState]
+	func (b {{.BlockStructName}})	BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+		id, ok := b.holder.BlockIDByStateID[blockState]
+		return id, ok
 	}
 		
 	func (b {{.BlockStructName}})	BitsPerBlock() int{return b.holder.BitsPerBlock}

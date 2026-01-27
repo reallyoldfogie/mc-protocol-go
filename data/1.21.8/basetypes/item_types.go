@@ -10,327 +10,6 @@ import (
 	"log"
 )
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "details",
-//	      "type": "ItemEffectDetail"
-//	    }
-//	  ]
-//	]
-type ItemPotionEffect struct {
-	// "varint"
-	Id pk.VarInt
-	// "ItemEffectDetail"
-	Details ItemEffectDetail
-}
-
-func (t *ItemPotionEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
-	}
-	bytesRead, err = t.Details.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Details")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemPotionEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemPotionEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Details.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "minValue",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "maxValue",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type ItemBlockPropertyValueFalse struct {
-	// "string"
-	MinValue pk.String
-	// "string"
-	MaxValue pk.String
-}
-
-func (t *ItemBlockPropertyValueFalse) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.MinValue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MinValue")
-	}
-	bytesRead, err = t.MaxValue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MaxValue")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemBlockPropertyValueFalse) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemBlockPropertyValueFalse.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.MinValue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MaxValue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "exactValue",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type ItemBlockPropertyValueTrue struct {
-	// "string"
-	ExactValue pk.String
-}
-
-func (t *ItemBlockPropertyValueTrue) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ExactValue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ExactValue")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemBlockPropertyValueTrue) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemBlockPropertyValueTrue.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ExactValue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "isExactMatch",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "value",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "isExactMatch",
-//	          "fields": {
-//	            "true": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "exactValue",
-//	                  "type": "string"
-//	                }
-//	              ]
-//	            ],
-//	            "false": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "minValue",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "maxValue",
-//	                  "type": "string"
-//	                }
-//	              ]
-//	            ]
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type ItemBlockProperty struct {
-	// "string"
-	Name pk.String
-	// "bool"
-	IsExactMatch pk.Boolean
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "isExactMatch",
-	//               "fields": {
-	//                 "true": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "exactValue",
-	//                       "type": "string"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "false": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "minValue",
-	//                       "type": "string"
-	//                     },
-	//                     {
-	//                       "name": "maxValue",
-	//                       "type": "string"
-	//                     }
-	//                   ]
-	//                 ]
-	//               }
-	//             }
-	//           ]
-	Value pk.Field
-}
-
-func (t *ItemBlockProperty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.IsExactMatch.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field IsExactMatch")
-	}
-	// Switch field Value based on isExactMatch
-	// Convert compareTo value to string for matching
-	compareValueValue := fmt.Sprintf("%v", t.IsExactMatch)
-
-	switch compareValueValue {
-	case "false":
-		var val ItemBlockPropertyValueFalse
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case false")
-		}
-		t.Value = &val
-	case "true":
-		var val ItemBlockPropertyValueTrue
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case true")
-		}
-		t.Value = &val
-	default:
-		// No explicit default; treat as void (no data)
-		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
-		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value default void case")
-		}
-		t.Value = &__void
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemBlockProperty) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemBlockProperty.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.IsExactMatch.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field Value based on isExactMatch
-	if t.Value != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Value.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Value value does not implement WriteTo: %T", t.Value)
-		}
-	}
-	return totalBytes, nil
-}
-
 type ItemEffectDetailHiddenEffect models.Option[ItemEffectDetail]
 
 func (t *ItemEffectDetailHiddenEffect) ReadFrom(r io.Reader) (int64, error) {
@@ -467,78 +146,6 @@ func (t ItemEffectDetail) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-type ItemSoundEventFixedRange models.Option[pk.Float]
-
-func (t *ItemSoundEventFixedRange) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Float])(t).ReadFrom(r)
-}
-
-func (t ItemSoundEventFixedRange) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Float])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "soundName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "fixedRange",
-//	      "type": [
-//	        "option",
-//	        "f32"
-//	      ]
-//	    }
-//	  ]
-//	]
-type ItemSoundEvent struct {
-	// "string"
-	SoundName pk.String
-	// [
-	//             "option",
-	//             "f32"
-	//           ]
-	FixedRange models.Option[pk.Float]
-}
-
-func (t *ItemSoundEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.SoundName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field SoundName")
-	}
-	bytesRead, err = t.FixedRange.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FixedRange")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemSoundEvent) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemSoundEvent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.SoundName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.FixedRange.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
 type ItemBookPageFilteredContent models.Option[pk.String]
 
 func (t *ItemBookPageFilteredContent) ReadFrom(r io.Reader) (int64, error) {
@@ -611,26 +218,26 @@ func (t ItemBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-type ItemFireworkExplosionShape struct {
+type ItemConsumeEffectType struct {
 	Value string
 }
 
-var ItemFireworkExplosionShapeMappings = map[int64]string{
-	0: "small_ball",
-	1: "large_ball",
-	2: "star",
-	3: "creeper",
-	4: "burst",
+var ItemConsumeEffectTypeMappings = map[int64]string{
+	0: "apply_effects",
+	1: "remove_effects",
+	2: "clear_all_effects",
+	3: "teleport_randomly",
+	4: "play_sound",
 }
 
-func (m *ItemFireworkExplosionShape) ReadFrom(r io.Reader) (int64, error) {
+func (m *ItemConsumeEffectType) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read ItemFireworkExplosionShape key")
+		return n, errors.Wrap(err, "failed to read ItemConsumeEffectType key")
 	}
 
-	value, ok := ItemFireworkExplosionShapeMappings[int64(key)]
+	value, ok := ItemConsumeEffectTypeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -640,14 +247,14 @@ func (m *ItemFireworkExplosionShape) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m ItemFireworkExplosionShape) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ItemFireworkExplosionShapeMappings {
+func (m ItemConsumeEffectType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ItemConsumeEffectTypeMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ItemFireworkExplosionShape value: %s", m.Value)
+	return 0, errors.Errorf("unknown ItemConsumeEffectType value: %s", m.Value)
 }
 
 // Protodef: [
@@ -655,146 +262,554 @@ func (m ItemFireworkExplosionShape) WriteTo(w io.Writer) (int64, error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "shape",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "small_ball",
-//	            "1": "large_ball",
-//	            "2": "star",
-//	            "3": "creeper",
-//	            "4": "burst"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "colors",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "i32"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "fadeColors",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "i32"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "hasTrail",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "hasTwinkle",
-//	      "type": "bool"
+//	      "name": "diameter",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type ItemFireworkExplosion struct {
-	// [
-	//             "mapper",
-	//             {
-	//               "type": "varint",
-	//               "mappings": {
-	//                 "0": "small_ball",
-	//                 "1": "large_ball",
-	//                 "2": "star",
-	//                 "3": "creeper",
-	//                 "4": "burst"
-	//               }
-	//             }
-	//           ]
-	Shape ItemFireworkExplosionShape
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "i32"
-	//             }
-	//           ]
-	Colors models.Array[pk.VarInt, pk.Int]
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "i32"
-	//             }
-	//           ]
-	FadeColors models.Array[pk.VarInt, pk.Int]
-	// "bool"
-	HasTrail pk.Boolean
-	// "bool"
-	HasTwinkle pk.Boolean
+type ItemConsumeEffectUnnamedType0002TeleportRandomly struct {
+	// "f32"
+	Diameter pk.Float
 }
 
-func (t *ItemFireworkExplosion) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ItemConsumeEffectUnnamedType0002TeleportRandomly) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Shape.ReadFrom(r)
+	bytesRead, err = t.Diameter.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Shape")
-	}
-	bytesRead, err = t.Colors.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Colors")
-	}
-	bytesRead, err = t.FadeColors.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FadeColors")
-	}
-	bytesRead, err = t.HasTrail.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HasTrail")
-	}
-	bytesRead, err = t.HasTwinkle.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HasTwinkle")
+		return totalBytes, errors.Wrap(err, "failed to read field Diameter")
 	}
 
 	return totalBytes, nil
 }
 
-func (t ItemFireworkExplosion) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ItemConsumeEffectUnnamedType0002TeleportRandomly) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ItemFireworkExplosion.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ItemConsumeEffectUnnamedType0002TeleportRandomly.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Shape.WriteTo(w)
+	bytesWritten, err = t.Diameter.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Colors.WriteTo(w)
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "sound",
+//	      "type": "ItemSoundHolder"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0002PlaySound struct {
+	// "ItemSoundHolder"
+	Sound ItemSoundHolder
+}
+
+func (t *ItemConsumeEffectUnnamedType0002PlaySound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Sound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sound")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0002PlaySound) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0002PlaySound.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Sound.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.FadeColors.WriteTo(w)
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "effects",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemPotionEffect"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "probability",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0002ApplyEffects struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemPotionEffect"
+	//                         }
+	//                       ]
+	Effects models.Array[pk.VarInt, ItemPotionEffect]
+	// "f32"
+	Probability pk.Float
+}
+
+func (t *ItemConsumeEffectUnnamedType0002ApplyEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effects")
+	}
+	bytesRead, err = t.Probability.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Probability")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0002ApplyEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0002ApplyEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effects.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.HasTrail.WriteTo(w)
+	bytesWritten, err = t.Probability.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.HasTwinkle.WriteTo(w)
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "effects",
+//	      "type": "IDSet"
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffectUnnamedType0002RemoveEffects struct {
+	// "IDSet"
+	Effects IDSet
+}
+
+func (t *ItemConsumeEffectUnnamedType0002RemoveEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effects")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffectUnnamedType0002RemoveEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffectUnnamedType0002RemoveEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effects.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "apply_effects",
+//	            "1": "remove_effects",
+//	            "2": "clear_all_effects",
+//	            "3": "teleport_randomly",
+//	            "4": "play_sound"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "type",
+//	          "fields": {
+//	            "apply_effects": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "effects",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "ItemPotionEffect"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "probability",
+//	                  "type": "f32"
+//	                }
+//	              ]
+//	            ],
+//	            "remove_effects": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "effects",
+//	                  "type": "IDSet"
+//	                }
+//	              ]
+//	            ],
+//	            "clear_all_effects": "void",
+//	            "teleport_randomly": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "diameter",
+//	                  "type": "f32"
+//	                }
+//	              ]
+//	            ],
+//	            "play_sound": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "sound",
+//	                  "type": "ItemSoundHolder"
+//	                }
+//	              ]
+//	            ]
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type ItemConsumeEffect struct {
+	// [
+	//             "mapper",
+	//             {
+	//               "type": "varint",
+	//               "mappings": {
+	//                 "0": "apply_effects",
+	//                 "1": "remove_effects",
+	//                 "2": "clear_all_effects",
+	//                 "3": "teleport_randomly",
+	//                 "4": "play_sound"
+	//               }
+	//             }
+	//           ]
+	Type ItemConsumeEffectType
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "type",
+	//               "fields": {
+	//                 "apply_effects": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "effects",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemPotionEffect"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "probability",
+	//                       "type": "f32"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "remove_effects": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "effects",
+	//                       "type": "IDSet"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "clear_all_effects": "void",
+	//                 "teleport_randomly": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "diameter",
+	//                       "type": "f32"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "play_sound": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "sound",
+	//                       "type": "ItemSoundHolder"
+	//                     }
+	//                   ]
+	//                 ]
+	//               }
+	//             }
+	//           ]
+	UnnamedType0002 pk.Field
+}
+
+func (t *ItemConsumeEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	// Switch field UnnamedType0002 based on type
+	// Convert compareTo value to string for matching
+	compareValueUnnamedType0002 := t.Type.Value
+
+	switch compareValueUnnamedType0002 {
+	case "apply_effects":
+		var val ItemConsumeEffectUnnamedType0002ApplyEffects
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case apply_effects")
+		}
+		t.UnnamedType0002 = &val
+	case "clear_all_effects":
+		var val models.Void
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case clear_all_effects")
+		}
+		t.UnnamedType0002 = &val
+	case "play_sound":
+		var val ItemConsumeEffectUnnamedType0002PlaySound
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case play_sound")
+		}
+		t.UnnamedType0002 = &val
+	case "remove_effects":
+		var val ItemConsumeEffectUnnamedType0002RemoveEffects
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case remove_effects")
+		}
+		t.UnnamedType0002 = &val
+	case "teleport_randomly":
+		var val ItemConsumeEffectUnnamedType0002TeleportRandomly
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case teleport_randomly")
+		}
+		t.UnnamedType0002 = &val
+	default:
+		// Mapper-backed discriminator with no explicit data for this value: treat as void
+		var __void models.Void
+		t.UnnamedType0002 = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemConsumeEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemConsumeEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field UnnamedType0002 based on type
+	if t.UnnamedType0002 != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.UnnamedType0002.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field UnnamedType0002 value does not implement WriteTo: %T", t.UnnamedType0002)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "details",
+//	      "type": "ItemEffectDetail"
+//	    }
+//	  ]
+//	]
+type ItemPotionEffect struct {
+	// "varint"
+	Id pk.VarInt
+	// "ItemEffectDetail"
+	Details ItemEffectDetail
+}
+
+func (t *ItemPotionEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+	bytesRead, err = t.Details.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Details")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemPotionEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemPotionEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Details.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ItemSoundEventFixedRange models.Option[pk.Float]
+
+func (t *ItemSoundEventFixedRange) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.Float])(t).ReadFrom(r)
+}
+
+func (t ItemSoundEventFixedRange) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.Float])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "soundName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "fixedRange",
+//	      "type": [
+//	        "option",
+//	        "f32"
+//	      ]
+//	    }
+//	  ]
+//	]
+type ItemSoundEvent struct {
+	// "string"
+	SoundName pk.String
+	// [
+	//             "option",
+	//             "f32"
+	//           ]
+	FixedRange models.Option[pk.Float]
+}
+
+func (t *ItemSoundEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.SoundName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field SoundName")
+	}
+	bytesRead, err = t.FixedRange.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FixedRange")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemSoundEvent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemSoundEvent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.SoundName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FixedRange.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -1090,26 +1105,26 @@ func (t ItemWrittenBookPage) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	return totalBytes, nil
 }
 
-type ItemConsumeEffectType struct {
+type ItemFireworkExplosionShape struct {
 	Value string
 }
 
-var ItemConsumeEffectTypeMappings = map[int64]string{
-	0: "apply_effects",
-	1: "remove_effects",
-	2: "clear_all_effects",
-	3: "teleport_randomly",
-	4: "play_sound",
+var ItemFireworkExplosionShapeMappings = map[int64]string{
+	0: "small_ball",
+	1: "large_ball",
+	2: "star",
+	3: "creeper",
+	4: "burst",
 }
 
-func (m *ItemConsumeEffectType) ReadFrom(r io.Reader) (int64, error) {
+func (m *ItemFireworkExplosionShape) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read ItemConsumeEffectType key")
+		return n, errors.Wrap(err, "failed to read ItemFireworkExplosionShape key")
 	}
 
-	value, ok := ItemConsumeEffectTypeMappings[int64(key)]
+	value, ok := ItemFireworkExplosionShapeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -1119,14 +1134,14 @@ func (m *ItemConsumeEffectType) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m ItemConsumeEffectType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ItemConsumeEffectTypeMappings {
+func (m ItemFireworkExplosionShape) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ItemFireworkExplosionShapeMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ItemConsumeEffectType value: %s", m.Value)
+	return 0, errors.Errorf("unknown ItemFireworkExplosionShape value: %s", m.Value)
 }
 
 // Protodef: [
@@ -1134,429 +1149,149 @@ func (m ItemConsumeEffectType) WriteTo(w io.Writer) (int64, error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "diameter",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0004TeleportRandomly struct {
-	// "f32"
-	Diameter pk.Float
-}
-
-func (t *ItemConsumeEffectUnnamedType0004TeleportRandomly) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Diameter.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Diameter")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0004TeleportRandomly) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0004TeleportRandomly.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Diameter.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "sound",
-//	      "type": "ItemSoundHolder"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0004PlaySound struct {
-	// "ItemSoundHolder"
-	Sound ItemSoundHolder
-}
-
-func (t *ItemConsumeEffectUnnamedType0004PlaySound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Sound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Sound")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0004PlaySound) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0004PlaySound.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Sound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "effects",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemPotionEffect"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "probability",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0004ApplyEffects struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemPotionEffect"
-	//                         }
-	//                       ]
-	Effects models.Array[pk.VarInt, ItemPotionEffect]
-	// "f32"
-	Probability pk.Float
-}
-
-func (t *ItemConsumeEffectUnnamedType0004ApplyEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Effects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effects")
-	}
-	bytesRead, err = t.Probability.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Probability")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0004ApplyEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0004ApplyEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Effects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Probability.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "effects",
-//	      "type": "IDSet"
-//	    }
-//	  ]
-//	]
-type ItemConsumeEffectUnnamedType0004RemoveEffects struct {
-	// "IDSet"
-	Effects IDSet
-}
-
-func (t *ItemConsumeEffectUnnamedType0004RemoveEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Effects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effects")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ItemConsumeEffectUnnamedType0004RemoveEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ItemConsumeEffectUnnamedType0004RemoveEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Effects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
+//	      "name": "shape",
 //	      "type": [
 //	        "mapper",
 //	        {
 //	          "type": "varint",
 //	          "mappings": {
-//	            "0": "apply_effects",
-//	            "1": "remove_effects",
-//	            "2": "clear_all_effects",
-//	            "3": "teleport_randomly",
-//	            "4": "play_sound"
+//	            "0": "small_ball",
+//	            "1": "large_ball",
+//	            "2": "star",
+//	            "3": "creeper",
+//	            "4": "burst"
 //	          }
 //	        }
 //	      ]
 //	    },
 //	    {
-//	      "anon": true,
+//	      "name": "colors",
 //	      "type": [
-//	        "switch",
+//	        "array",
 //	        {
-//	          "compareTo": "type",
-//	          "fields": {
-//	            "apply_effects": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "effects",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "ItemPotionEffect"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "probability",
-//	                  "type": "f32"
-//	                }
-//	              ]
-//	            ],
-//	            "remove_effects": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "effects",
-//	                  "type": "IDSet"
-//	                }
-//	              ]
-//	            ],
-//	            "clear_all_effects": "void",
-//	            "teleport_randomly": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "diameter",
-//	                  "type": "f32"
-//	                }
-//	              ]
-//	            ],
-//	            "play_sound": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "sound",
-//	                  "type": "ItemSoundHolder"
-//	                }
-//	              ]
-//	            ]
-//	          }
+//	          "countType": "varint",
+//	          "type": "i32"
 //	        }
 //	      ]
+//	    },
+//	    {
+//	      "name": "fadeColors",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "i32"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "hasTrail",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "hasTwinkle",
+//	      "type": "bool"
 //	    }
 //	  ]
 //	]
-type ItemConsumeEffect struct {
+type ItemFireworkExplosion struct {
 	// [
 	//             "mapper",
 	//             {
 	//               "type": "varint",
 	//               "mappings": {
-	//                 "0": "apply_effects",
-	//                 "1": "remove_effects",
-	//                 "2": "clear_all_effects",
-	//                 "3": "teleport_randomly",
-	//                 "4": "play_sound"
+	//                 "0": "small_ball",
+	//                 "1": "large_ball",
+	//                 "2": "star",
+	//                 "3": "creeper",
+	//                 "4": "burst"
 	//               }
 	//             }
 	//           ]
-	Type ItemConsumeEffectType
+	Shape ItemFireworkExplosionShape
 	// [
-	//             "switch",
+	//             "array",
 	//             {
-	//               "compareTo": "type",
-	//               "fields": {
-	//                 "apply_effects": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "effects",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemPotionEffect"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "probability",
-	//                       "type": "f32"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "remove_effects": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "effects",
-	//                       "type": "IDSet"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "clear_all_effects": "void",
-	//                 "teleport_randomly": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "diameter",
-	//                       "type": "f32"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "play_sound": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "sound",
-	//                       "type": "ItemSoundHolder"
-	//                     }
-	//                   ]
-	//                 ]
-	//               }
+	//               "countType": "varint",
+	//               "type": "i32"
 	//             }
 	//           ]
-	UnnamedType0004 pk.Field
+	Colors models.Array[pk.VarInt, pk.Int]
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "i32"
+	//             }
+	//           ]
+	FadeColors models.Array[pk.VarInt, pk.Int]
+	// "bool"
+	HasTrail pk.Boolean
+	// "bool"
+	HasTwinkle pk.Boolean
 }
 
-func (t *ItemConsumeEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ItemFireworkExplosion) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
+	bytesRead, err = t.Shape.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
+		return totalBytes, errors.Wrap(err, "failed to read field Shape")
 	}
-	// Switch field UnnamedType0004 based on type
-	// Convert compareTo value to string for matching
-	compareValueUnnamedType0004 := t.Type.Value
-
-	switch compareValueUnnamedType0004 {
-	case "apply_effects":
-		var val ItemConsumeEffectUnnamedType0004ApplyEffects
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 case apply_effects")
-		}
-		t.UnnamedType0004 = &val
-	case "clear_all_effects":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 case clear_all_effects")
-		}
-		t.UnnamedType0004 = &val
-	case "play_sound":
-		var val ItemConsumeEffectUnnamedType0004PlaySound
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 case play_sound")
-		}
-		t.UnnamedType0004 = &val
-	case "remove_effects":
-		var val ItemConsumeEffectUnnamedType0004RemoveEffects
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 case remove_effects")
-		}
-		t.UnnamedType0004 = &val
-	case "teleport_randomly":
-		var val ItemConsumeEffectUnnamedType0004TeleportRandomly
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 case teleport_randomly")
-		}
-		t.UnnamedType0004 = &val
-	default:
-		// Mapper-backed discriminator with no explicit data for this value: treat as void
-		var __void models.Void
-		t.UnnamedType0004 = &__void
+	bytesRead, err = t.Colors.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Colors")
+	}
+	bytesRead, err = t.FadeColors.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FadeColors")
+	}
+	bytesRead, err = t.HasTrail.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HasTrail")
+	}
+	bytesRead, err = t.HasTwinkle.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HasTwinkle")
 	}
 
 	return totalBytes, nil
 }
 
-func (t ItemConsumeEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ItemFireworkExplosion) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ItemConsumeEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ItemFireworkExplosion.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Type.WriteTo(w)
+	bytesWritten, err = t.Shape.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0004 based on type
-	if t.UnnamedType0004 != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0004.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0004 value does not implement WriteTo: %T", t.UnnamedType0004)
-		}
+	bytesWritten, err = t.Colors.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FadeColors.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.HasTrail.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.HasTwinkle.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -1618,5 +1353,270 @@ func (r ItemSoundHolder) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "exactValue",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type ItemBlockPropertyValueTrue struct {
+	// "string"
+	ExactValue pk.String
+}
+
+func (t *ItemBlockPropertyValueTrue) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ExactValue.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ExactValue")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemBlockPropertyValueTrue) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemBlockPropertyValueTrue.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ExactValue.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "minValue",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "maxValue",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type ItemBlockPropertyValueFalse struct {
+	// "string"
+	MinValue pk.String
+	// "string"
+	MaxValue pk.String
+}
+
+func (t *ItemBlockPropertyValueFalse) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.MinValue.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MinValue")
+	}
+	bytesRead, err = t.MaxValue.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MaxValue")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemBlockPropertyValueFalse) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemBlockPropertyValueFalse.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.MinValue.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MaxValue.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "isExactMatch",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "value",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "isExactMatch",
+//	          "fields": {
+//	            "true": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "exactValue",
+//	                  "type": "string"
+//	                }
+//	              ]
+//	            ],
+//	            "false": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "minValue",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "maxValue",
+//	                  "type": "string"
+//	                }
+//	              ]
+//	            ]
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type ItemBlockProperty struct {
+	// "string"
+	Name pk.String
+	// "bool"
+	IsExactMatch pk.Boolean
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "isExactMatch",
+	//               "fields": {
+	//                 "true": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "exactValue",
+	//                       "type": "string"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "false": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "minValue",
+	//                       "type": "string"
+	//                     },
+	//                     {
+	//                       "name": "maxValue",
+	//                       "type": "string"
+	//                     }
+	//                   ]
+	//                 ]
+	//               }
+	//             }
+	//           ]
+	Value pk.Field
+}
+
+func (t *ItemBlockProperty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.IsExactMatch.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field IsExactMatch")
+	}
+	// Switch field Value based on isExactMatch
+	// Convert compareTo value to string for matching
+	compareValueValue := fmt.Sprintf("%v", t.IsExactMatch)
+
+	switch compareValueValue {
+	case "false":
+		var val ItemBlockPropertyValueFalse
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case false")
+		}
+		t.Value = &val
+	case "true":
+		var val ItemBlockPropertyValueTrue
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case true")
+		}
+		t.Value = &val
+	default:
+		// No explicit default; treat as void (no data)
+		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value default void case")
+		}
+		t.Value = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t ItemBlockProperty) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ItemBlockProperty.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.IsExactMatch.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Value based on isExactMatch
+	if t.Value != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Value.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Value value does not implement WriteTo: %T", t.Value)
+		}
+	}
 	return totalBytes, nil
 }

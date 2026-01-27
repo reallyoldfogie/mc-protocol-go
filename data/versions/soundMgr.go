@@ -6,6 +6,7 @@
 		
 		v1_21_1 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.1"
 		v1_21_10 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.10"
+		v1_21_11 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.11"
 		v1_21_2 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.2"
 		v1_21_3 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.3"
 		v1_21_4 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.4"
@@ -42,6 +43,7 @@
 		switch version { 
 		case "1.21.1": return v1_21_1Sounds 
 		case "1.21.10": return v1_21_10Sounds 
+		case "1.21.11": return v1_21_11Sounds 
 		case "1.21.2": return v1_21_2Sounds 
 		case "1.21.3": return v1_21_3Sounds 
 		case "1.21.4": return v1_21_4Sounds 
@@ -91,6 +93,26 @@
 	}
 		
 	func (b V1_21_10Sound)	GetSubtitleKeyByID(id models.SoundID) string {
+		return b.holder.SoundSubtitleKeysByID[id]
+	}
+	
+	
+	
+	type V1_21_11Sound struct{
+	holder v1_21_11.Sounds
+	} 
+	
+	var v1_21_11Sounds = V1_21_11Sound{holder: v1_21_11.NewSounds()}
+	
+	func (b V1_21_11Sound) GetSoundNameByID(id models.SoundID) string{
+	return b.holder.SoundNamesByID[id]
+	}
+	
+	func (b V1_21_11Sound)	GetSubtitleByID(id models.SoundID) string  {
+		return b.holder.SoundSubtitlesByID[id]
+	}
+		
+	func (b V1_21_11Sound)	GetSubtitleKeyByID(id models.SoundID) string {
 		return b.holder.SoundSubtitleKeysByID[id]
 	}
 	

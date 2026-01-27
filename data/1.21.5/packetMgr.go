@@ -148,8 +148,6 @@
 
 	func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
 	switch id {
-		case 0: // Play.Clientbound[{0}] = generator.packetData{Name:"models.Void", ID:0, Hex:"0X00", StructName:"", ProtoTypeName:"models.Void", AltName:"ClientboundBundleDelimiter"}
-				return models.NewVoid(), nil
 		case 1: // Play.Clientbound[{1}] = generator.packetData{Name:"SpawnEntity", ID:1, Hex:"0X01", StructName:"SpawnEntity", ProtoTypeName:"packet_spawn_entity", AltName:"ClientboundAddEntity"}
 				return play_clientbound.NewSpawnEntity(), nil
 		case 2: // Play.Clientbound[{2}] = generator.packetData{Name:"Animation", ID:2, Hex:"0X02", StructName:"Animation", ProtoTypeName:"packet_animation", AltName:"ClientboundAnimate"}

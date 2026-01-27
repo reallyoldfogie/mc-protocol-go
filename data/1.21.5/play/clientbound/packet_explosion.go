@@ -31,7 +31,7 @@ import (
 //	      "name": "playerKnockback",
 //	      "type": [
 //	        "option",
-//	        "vec3f"
+//	        "vec3f64"
 //	      ]
 //	    },
 //	    {
@@ -54,9 +54,9 @@ type Explosion struct {
 	Z pk.Double
 	// [
 	//                 "option",
-	//                 "vec3f"
+	//                 "vec3f64"
 	//               ]
-	PlayerKnockback models.Option[basetypes.Vec3f]
+	PlayerKnockback models.Option[basetypes.Vec3f64]
 	// "Particle"
 	ExplosionParticle basetypes.Particle
 	// "ItemSoundHolder"
@@ -140,7 +140,7 @@ func (p *Explosion) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Z = val.(pk.Double)
 	}
 	if val, ok := fields["PlayerKnockback"]; ok {
-		p.PlayerKnockback = val.(models.Option[basetypes.Vec3f])
+		p.PlayerKnockback = val.(models.Option[basetypes.Vec3f64])
 	}
 	if val, ok := fields["ExplosionParticle"]; ok {
 		p.ExplosionParticle = val.(basetypes.Particle)
@@ -196,14 +196,14 @@ func (p *Explosion) SetZ(val pk.Double) {
 // GetPlayerKnockback returns the PlayerKnockback field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *Explosion) GetPlayerKnockback() models.Option[basetypes.Vec3f] {
+func (p *Explosion) GetPlayerKnockback() models.Option[basetypes.Vec3f64] {
 	return p.PlayerKnockback
 }
 
 // SetPlayerKnockback sets the PlayerKnockback field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *Explosion) SetPlayerKnockback(val models.Option[basetypes.Vec3f]) {
+func (p *Explosion) SetPlayerKnockback(val models.Option[basetypes.Vec3f64]) {
 	p.PlayerKnockback = val
 }
 

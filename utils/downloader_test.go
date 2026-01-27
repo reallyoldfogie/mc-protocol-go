@@ -1,8 +1,9 @@
-package generator
+package utils
 
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -72,7 +73,10 @@ func TestGenerateReports(t *testing.T) {
 
 			fmt.Println("serverFile Name: ", serverFile)
 			fmt.Println("PATH=", os.Getenv("PATH"))
-			_, err = GenerateReports("generated"+string(os.PathSeparator)+tt.version, serverFile)
+			outputDir := filepath.Join("generated", tt.version)
+			_, err = GenerateReports(outputDir, serverFile)
+			defer os.RemoveAll(outputDir)
+
 			if !tt.wantErr {
 				assert.NoError(t, err, "GenerateReports() error = %v, wantErr %v", err, tt.wantErr)
 			} else {

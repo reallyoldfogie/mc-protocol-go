@@ -44,6 +44,26 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
+type TestInstanceBlockActionDataTest models.Option[pk.String]
+
+func (t *TestInstanceBlockActionDataTest) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t TestInstanceBlockActionDataTest) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
+type TestInstanceBlockActionDataErrorMessage models.Option[models.AnonymousNBT]
+
+func (t *TestInstanceBlockActionDataErrorMessage) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+}
+
+func (t TestInstanceBlockActionDataErrorMessage) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+}
+
 type SetBeaconEffectPrimaryEffect models.Option[pk.VarInt]
 
 func (t *SetBeaconEffectPrimaryEffect) ReadFrom(r io.Reader) (int64, error) {
@@ -62,82 +82,6 @@ func (t *SetBeaconEffectSecondaryEffect) ReadFrom(r io.Reader) (int64, error) {
 
 func (t SetBeaconEffectSecondaryEffect) WriteTo(w io.Writer) (int64, error) {
 	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type EditBookTitle models.Option[pk.String]
-
-func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "argumentName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "signature",
-//	      "type": [
-//	        "buffer",
-//	        {
-//	          "count": 256
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type ChatCommandSignedArgumentSignaturesArrayType struct {
-	// "string"
-	ArgumentName pk.String
-	// [
-	//                           "buffer",
-	//                           {
-	//                             "count": 256
-	//                           }
-	//                         ]
-	Signature models.FixedBuffer256
-}
-
-func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ArgumentName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
-	}
-	bytesRead, err = t.Signature.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Signature")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChatCommandSignedArgumentSignaturesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ArgumentName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Signature.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
 }
 
 type WindowClickChangedSlotsArrayTypeItem models.Option[basetypes.HashedSlot]
@@ -222,24 +166,80 @@ func (t WindowClickCursorItem) WriteTo(w io.Writer) (int64, error) {
 	return (models.Option[basetypes.HashedSlot])(t).WriteTo(w)
 }
 
-type TestInstanceBlockActionDataTest models.Option[pk.String]
+type EditBookTitle models.Option[pk.String]
 
-func (t *TestInstanceBlockActionDataTest) ReadFrom(r io.Reader) (int64, error) {
+func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
 	return (*models.Option[pk.String])(t).ReadFrom(r)
 }
 
-func (t TestInstanceBlockActionDataTest) WriteTo(w io.Writer) (int64, error) {
+func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
 	return (models.Option[pk.String])(t).WriteTo(w)
 }
 
-type TestInstanceBlockActionDataErrorMessage models.Option[models.AnonymousNBT]
-
-func (t *TestInstanceBlockActionDataErrorMessage) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "argumentName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "signature",
+//	      "type": [
+//	        "buffer",
+//	        {
+//	          "count": 256
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type ChatCommandSignedArgumentSignaturesArrayType struct {
+	// "string"
+	ArgumentName pk.String
+	// [
+	//                           "buffer",
+	//                           {
+	//                             "count": 256
+	//                           }
+	//                         ]
+	Signature models.FixedBuffer256
 }
 
-func (t TestInstanceBlockActionDataErrorMessage) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ArgumentName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
+	}
+	bytesRead, err = t.Signature.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Signature")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatCommandSignedArgumentSignaturesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ArgumentName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Signature.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
 }
 
 type ChatMessageSignature models.Option[models.FixedBuffer256]

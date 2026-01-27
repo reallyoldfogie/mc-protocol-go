@@ -3183,10 +3183,17 @@ func exprForCtxKey(container *datatypes.Container, key string) string {
 	parentField := toIdentifier(parts[0])
 	if len(parts) > 1 {
 		member := toIdentifier(parts[1])
-		// For bitfield/bitflags members: always use direct field access since bitfields have int64 fields
-		// The bitfield struct fields are accessed directly (e.g., t.Flags.HasCustomSuggestions)
-		// while bitflags use methods (e.g., t.Action.AddPlayer())
-		// Since context keys are typically used for bitfield members, default to direct access
+		// Check if the parent field is a bitflags type
+		if container != nil {
+			for _, field := range container.Fields {
+				if toIdentifier(field.Name) == parentField && isBitflagsField(field) {
+					// Bitflags use methods that return bool, so call the method
+					return fmt.Sprintf("t.%s.%s()", parentField, member)
+				}
+			}
+		}
+		// For bitfield members: use direct field access since bitfields have int64 fields
+		// (e.g., t.Flags.HasCustomSuggestions)
 		return fmt.Sprintf("t.%s.%s", parentField, member)
 	}
 	return fmt.Sprintf("t.%s", parentField)
@@ -3202,10 +3209,17 @@ func exprForCtxKeyWithPrefix(container *datatypes.Container, key string, prefix 
 	parentField := toIdentifier(parts[0])
 	if len(parts) > 1 {
 		member := toIdentifier(parts[1])
-		// For bitfield/bitflags members: always use direct field access since bitfields have int64 fields
-		// The bitfield struct fields are accessed directly (e.g., t.Flags.HasCustomSuggestions)
-		// while bitflags use methods (e.g., t.Action.AddPlayer())
-		// Since context keys are typically used for bitfield members, default to direct access
+		// Check if the parent field is a bitflags type
+		if container != nil {
+			for _, field := range container.Fields {
+				if toIdentifier(field.Name) == parentField && isBitflagsField(field) {
+					// Bitflags use methods that return bool, so call the method
+					return fmt.Sprintf("%s.%s.%s()", prefix, parentField, member)
+				}
+			}
+		}
+		// For bitfield members: use direct field access since bitfields have int64 fields
+		// (e.g., t.Flags.HasCustomSuggestions)
 		return fmt.Sprintf("%s.%s.%s", prefix, parentField, member)
 	}
 	return fmt.Sprintf("%s.%s", prefix, parentField)

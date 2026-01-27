@@ -749,238 +749,6 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-// TeamsUnnamedType0005ChangeFlagsBitflags provides named accessors over a bitflag field.
-type TeamsUnnamedType0005ChangeFlagsBitflags struct {
-	pk.UnsignedByte
-}
-
-func (bf TeamsUnnamedType0005ChangeFlagsBitflags) FriendlyFire() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 0)) != 0
-}
-
-func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetFriendlyFire(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 0)
-	} else {
-		v &^= (1 << 0)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
-}
-func (bf TeamsUnnamedType0005ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 1)) != 0
-}
-
-func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 1)
-	} else {
-		v &^= (1 << 1)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitflags",
-//	        {
-//	          "type": "u8",
-//	          "flags": [
-//	            "friendly_fire",
-//	            "see_friendly_invisible"
-//	          ]
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "nameTagVisibility",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "always",
-//	            "1": "never",
-//	            "2": "hide_for_other_teams",
-//	            "3": "hide_for_own_team"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "collisionRule",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "always",
-//	            "1": "never",
-//	            "2": "push_other_teams",
-//	            "3": "push_own_team"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "formatting",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "prefix",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "suffix",
-//	      "type": "anonymousNbt"
-//	    }
-//	  ]
-//	]
-type TeamsUnnamedType0005Change struct {
-	// "anonymousNbt"
-	Name models.AnonymousNBT
-	// [
-	//                             "bitflags",
-	//                             {
-	//                               "type": "u8",
-	//                               "flags": [
-	//                                 "friendly_fire",
-	//                                 "see_friendly_invisible"
-	//                               ]
-	//                             }
-	//                           ]
-	Flags TeamsUnnamedType0005ChangeFlagsBitflags
-	// [
-	//                             "mapper",
-	//                             {
-	//                               "type": "varint",
-	//                               "mappings": {
-	//                                 "0": "always",
-	//                                 "1": "never",
-	//                                 "2": "hide_for_other_teams",
-	//                                 "3": "hide_for_own_team"
-	//                               }
-	//                             }
-	//                           ]
-	NameTagVisibility TeamsUnnamedType0005ChangeNameTagVisibility
-	// [
-	//                             "mapper",
-	//                             {
-	//                               "type": "varint",
-	//                               "mappings": {
-	//                                 "0": "always",
-	//                                 "1": "never",
-	//                                 "2": "push_other_teams",
-	//                                 "3": "push_own_team"
-	//                               }
-	//                             }
-	//                           ]
-	CollisionRule TeamsUnnamedType0005ChangeCollisionRule
-	// "varint"
-	Formatting pk.VarInt
-	// "anonymousNbt"
-	Prefix models.AnonymousNBT
-	// "anonymousNbt"
-	Suffix models.AnonymousNBT
-}
-
-func (t *TeamsUnnamedType0005Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Flags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-	bytesRead, err = t.NameTagVisibility.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field NameTagVisibility")
-	}
-	bytesRead, err = t.CollisionRule.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CollisionRule")
-	}
-	bytesRead, err = t.Formatting.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Formatting")
-	}
-	bytesRead, err = t.Prefix.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Prefix")
-	}
-	bytesRead, err = t.Suffix.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Suffix")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TeamsUnnamedType0005Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TeamsUnnamedType0005Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Flags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.NameTagVisibility.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CollisionRule.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Formatting.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Prefix.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Suffix.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
 // TeamsUnnamedType0005AddFlagsBitflags provides named accessors over a bitflag field.
 type TeamsUnnamedType0005AddFlagsBitflags struct {
 	pk.UnsignedByte
@@ -1174,6 +942,238 @@ func (t TeamsUnnamedType0005Add) WriteTo(w io.Writer) (totalBytes int64, err err
 
 	defer func() {
 		log.Printf("[TeamsUnnamedType0005Add.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Flags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.NameTagVisibility.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CollisionRule.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Formatting.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Prefix.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Suffix.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// TeamsUnnamedType0005ChangeFlagsBitflags provides named accessors over a bitflag field.
+type TeamsUnnamedType0005ChangeFlagsBitflags struct {
+	pk.UnsignedByte
+}
+
+func (bf TeamsUnnamedType0005ChangeFlagsBitflags) FriendlyFire() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 0)) != 0
+}
+
+func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetFriendlyFire(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 0)
+	} else {
+		v &^= (1 << 0)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+func (bf TeamsUnnamedType0005ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 1)) != 0
+}
+
+func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 1)
+	} else {
+		v &^= (1 << 1)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "flags",
+//	      "type": [
+//	        "bitflags",
+//	        {
+//	          "type": "u8",
+//	          "flags": [
+//	            "friendly_fire",
+//	            "see_friendly_invisible"
+//	          ]
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "nameTagVisibility",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "always",
+//	            "1": "never",
+//	            "2": "hide_for_other_teams",
+//	            "3": "hide_for_own_team"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "collisionRule",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "always",
+//	            "1": "never",
+//	            "2": "push_other_teams",
+//	            "3": "push_own_team"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "formatting",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "prefix",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "suffix",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type TeamsUnnamedType0005Change struct {
+	// "anonymousNbt"
+	Name models.AnonymousNBT
+	// [
+	//                             "bitflags",
+	//                             {
+	//                               "type": "u8",
+	//                               "flags": [
+	//                                 "friendly_fire",
+	//                                 "see_friendly_invisible"
+	//                               ]
+	//                             }
+	//                           ]
+	Flags TeamsUnnamedType0005ChangeFlagsBitflags
+	// [
+	//                             "mapper",
+	//                             {
+	//                               "type": "varint",
+	//                               "mappings": {
+	//                                 "0": "always",
+	//                                 "1": "never",
+	//                                 "2": "hide_for_other_teams",
+	//                                 "3": "hide_for_own_team"
+	//                               }
+	//                             }
+	//                           ]
+	NameTagVisibility TeamsUnnamedType0005ChangeNameTagVisibility
+	// [
+	//                             "mapper",
+	//                             {
+	//                               "type": "varint",
+	//                               "mappings": {
+	//                                 "0": "always",
+	//                                 "1": "never",
+	//                                 "2": "push_other_teams",
+	//                                 "3": "push_own_team"
+	//                               }
+	//                             }
+	//                           ]
+	CollisionRule TeamsUnnamedType0005ChangeCollisionRule
+	// "varint"
+	Formatting pk.VarInt
+	// "anonymousNbt"
+	Prefix models.AnonymousNBT
+	// "anonymousNbt"
+	Suffix models.AnonymousNBT
+}
+
+func (t *TeamsUnnamedType0005Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Flags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+	bytesRead, err = t.NameTagVisibility.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field NameTagVisibility")
+	}
+	bytesRead, err = t.CollisionRule.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CollisionRule")
+	}
+	bytesRead, err = t.Formatting.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Formatting")
+	}
+	bytesRead, err = t.Prefix.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Prefix")
+	}
+	bytesRead, err = t.Suffix.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Suffix")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TeamsUnnamedType0005Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TeamsUnnamedType0005Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten

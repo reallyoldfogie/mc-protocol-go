@@ -44,14 +44,14 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type EditBookTitle models.Option[pk.String]
+type ChatMessageSignature models.Option[models.FixedBuffer256]
 
-func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
+func (t *ChatMessageSignature) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
 }
 
-func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
+func (t ChatMessageSignature) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
 }
 
 type SetBeaconEffectPrimaryEffect models.Option[pk.VarInt]
@@ -140,14 +140,14 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type ChatMessageSignature models.Option[models.FixedBuffer256]
+type EditBookTitle models.Option[pk.String]
 
-func (t *ChatMessageSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
+func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
 }
 
-func (t ChatMessageSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
+func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
 }
 
 type TestInstanceBlockActionDataTest models.Option[pk.String]

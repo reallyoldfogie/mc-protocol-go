@@ -7,84 +7,34 @@ import (
 	"io"
 )
 
-type U32 models.UInt32
+type Varint pk.VarInt
 
-func (t *U32) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.UInt32)(t).ReadFrom(r)
+func (t *Varint) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.VarInt)(t).ReadFrom(r)
 }
 
-func (t U32) WriteTo(w io.Writer) (int64, error) {
-	return (models.UInt32)(t).WriteTo(w)
+func (t Varint) WriteTo(w io.Writer) (int64, error) {
+	return (pk.VarInt)(t).WriteTo(w)
 }
 
-type U64 models.UInt64
+type SlotComponentDataToolRulesArrayTypeSpeed models.Option[pk.Float]
 
-func (t *U64) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.UInt64)(t).ReadFrom(r)
+func (t *SlotComponentDataToolRulesArrayTypeSpeed) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.Float])(t).ReadFrom(r)
 }
 
-func (t U64) WriteTo(w io.Writer) (int64, error) {
-	return (models.UInt64)(t).WriteTo(w)
+func (t SlotComponentDataToolRulesArrayTypeSpeed) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.Float])(t).WriteTo(w)
 }
 
-type I32 pk.Int
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks models.Option[pk.Boolean]
 
-func (t *I32) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.Int)(t).ReadFrom(r)
+func (t *SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.Boolean])(t).ReadFrom(r)
 }
 
-func (t I32) WriteTo(w io.Writer) (int64, error) {
-	return (pk.Int)(t).WriteTo(w)
-}
-
-type F32 pk.Float
-
-func (t *F32) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.Float)(t).ReadFrom(r)
-}
-
-func (t F32) WriteTo(w io.Writer) (int64, error) {
-	return (pk.Float)(t).WriteTo(w)
-}
-
-type SlotComponentDataUseCooldownCooldownGroup models.Option[pk.String]
-
-func (t *SlotComponentDataUseCooldownCooldownGroup) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataUseCooldownCooldownGroup) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataProfileName models.Option[pk.String]
-
-func (t *SlotComponentDataProfileName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataProfileName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataProfileUuid models.Option[pk.UUID]
-
-func (t *SlotComponentDataProfileUuid) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.UUID])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataProfileUuid) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.UUID])(t).WriteTo(w)
-}
-
-type SlotComponentDataProfilePropertiesArrayTypeSignature models.Option[pk.String]
-
-func (t *SlotComponentDataProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
+func (t SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.Boolean])(t).WriteTo(w)
 }
 
 type SlotComponentDataWrittenBookContentFilteredTitle models.Option[pk.String]
@@ -127,6 +77,46 @@ func (t SlotComponentDataEquippableAllowedEntities) WriteTo(w io.Writer) (int64,
 	return (models.Option[IDSet])(t).WriteTo(w)
 }
 
+type SlotComponentDataProfileName models.Option[pk.String]
+
+func (t *SlotComponentDataProfileName) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t SlotComponentDataProfileName) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
+type SlotComponentDataProfileUuid models.Option[pk.UUID]
+
+func (t *SlotComponentDataProfileUuid) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.UUID])(t).ReadFrom(r)
+}
+
+func (t SlotComponentDataProfileUuid) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.UUID])(t).WriteTo(w)
+}
+
+type SlotComponentDataProfilePropertiesArrayTypeSignature models.Option[pk.String]
+
+func (t *SlotComponentDataProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t SlotComponentDataProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
+type SlotComponentDataUseCooldownCooldownGroup models.Option[pk.String]
+
+func (t *SlotComponentDataUseCooldownCooldownGroup) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t SlotComponentDataUseCooldownCooldownGroup) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
 type SlotComponentDataPotionContentsPotionId models.Option[pk.VarInt]
 
 func (t *SlotComponentDataPotionContentsPotionId) ReadFrom(r io.Reader) (int64, error) {
@@ -157,46 +147,6 @@ func (t SlotComponentDataPotionContentsCustomName) WriteTo(w io.Writer) (int64, 
 	return (models.Option[pk.String])(t).WriteTo(w)
 }
 
-type SlotComponentDataToolRulesArrayTypeSpeed models.Option[pk.Float]
-
-func (t *SlotComponentDataToolRulesArrayTypeSpeed) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Float])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataToolRulesArrayTypeSpeed) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Float])(t).WriteTo(w)
-}
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks models.Option[pk.Boolean]
-
-func (t *SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Boolean])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Boolean])(t).WriteTo(w)
-}
-
-type GameProfilePropertiesArrayTypeSignature models.Option[pk.String]
-
-func (t *GameProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t GameProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type Varint pk.VarInt
-
-func (t *Varint) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.VarInt)(t).ReadFrom(r)
-}
-
-func (t Varint) WriteTo(w io.Writer) (int64, error) {
-	return (pk.VarInt)(t).WriteTo(w)
-}
-
 type Optvarint pk.VarInt
 
 func (t *Optvarint) ReadFrom(r io.Reader) (int64, error) {
@@ -204,6 +154,36 @@ func (t *Optvarint) ReadFrom(r io.Reader) (int64, error) {
 }
 
 func (t Optvarint) WriteTo(w io.Writer) (int64, error) {
+	return (pk.VarInt)(t).WriteTo(w)
+}
+
+type U16 pk.UnsignedShort
+
+func (t *U16) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.UnsignedShort)(t).ReadFrom(r)
+}
+
+func (t U16) WriteTo(w io.Writer) (int64, error) {
+	return (pk.UnsignedShort)(t).WriteTo(w)
+}
+
+type bool pk.Boolean
+
+func (t *bool) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.Boolean)(t).ReadFrom(r)
+}
+
+func (t bool) WriteTo(w io.Writer) (int64, error) {
+	return (pk.Boolean)(t).WriteTo(w)
+}
+
+type ContainerID pk.VarInt
+
+func (t *ContainerID) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.VarInt)(t).ReadFrom(r)
+}
+
+func (t ContainerID) WriteTo(w io.Writer) (int64, error) {
 	return (pk.VarInt)(t).WriteTo(w)
 }
 
@@ -227,54 +207,14 @@ func (t I16) WriteTo(w io.Writer) (int64, error) {
 	return (pk.Short)(t).WriteTo(w)
 }
 
-type Ingredient models.Array[pk.VarInt, Slot]
+type GameProfilePropertiesArrayTypeSignature models.Option[pk.String]
 
-func (t *Ingredient) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, Slot])(t).ReadFrom(r)
+func (t *GameProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
 }
 
-func (t Ingredient) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, Slot])(t).WriteTo(w)
-}
-
-type ContainerID pk.VarInt
-
-func (t *ContainerID) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.VarInt)(t).ReadFrom(r)
-}
-
-func (t ContainerID) WriteTo(w io.Writer) (int64, error) {
-	return (pk.VarInt)(t).WriteTo(w)
-}
-
-type ChatSession models.Option[models.Void]
-
-func (t *ChatSession) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.Void])(t).ReadFrom(r)
-}
-
-func (t ChatSession) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.Void])(t).WriteTo(w)
-}
-
-type ByteArray pk.ByteArray
-
-func (t *ByteArray) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.ByteArray)(t).ReadFrom(r)
-}
-
-func (t ByteArray) WriteTo(w io.Writer) (int64, error) {
-	return (pk.ByteArray)(t).WriteTo(w)
-}
-
-type PreviousMessages models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-func (t *PreviousMessages) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).ReadFrom(r)
-}
-
-func (t PreviousMessages) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).WriteTo(w)
+func (t GameProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
 }
 
 type I64 pk.Long
@@ -287,6 +227,56 @@ func (t I64) WriteTo(w io.Writer) (int64, error) {
 	return (pk.Long)(t).WriteTo(w)
 }
 
+type U32 models.UInt32
+
+func (t *U32) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.UInt32)(t).ReadFrom(r)
+}
+
+func (t U32) WriteTo(w io.Writer) (int64, error) {
+	return (models.UInt32)(t).WriteTo(w)
+}
+
+type U64 models.UInt64
+
+func (t *U64) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.UInt64)(t).ReadFrom(r)
+}
+
+func (t U64) WriteTo(w io.Writer) (int64, error) {
+	return (models.UInt64)(t).WriteTo(w)
+}
+
+type Ingredient models.Array[pk.VarInt, Slot]
+
+func (t *Ingredient) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, Slot])(t).ReadFrom(r)
+}
+
+func (t Ingredient) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, Slot])(t).WriteTo(w)
+}
+
+type PreviousMessages models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+func (t *PreviousMessages) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).ReadFrom(r)
+}
+
+func (t PreviousMessages) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).WriteTo(w)
+}
+
+type I32 pk.Int
+
+func (t *I32) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.Int)(t).ReadFrom(r)
+}
+
+func (t I32) WriteTo(w io.Writer) (int64, error) {
+	return (pk.Int)(t).WriteTo(w)
+}
+
 type F64 pk.Double
 
 func (t *F64) ReadFrom(r io.Reader) (int64, error) {
@@ -297,22 +287,32 @@ func (t F64) WriteTo(w io.Writer) (int64, error) {
 	return (pk.Double)(t).WriteTo(w)
 }
 
-type bool pk.Boolean
+type ChatSession models.Option[models.Void]
 
-func (t *bool) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.Boolean)(t).ReadFrom(r)
+func (t *ChatSession) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.Void])(t).ReadFrom(r)
 }
 
-func (t bool) WriteTo(w io.Writer) (int64, error) {
-	return (pk.Boolean)(t).WriteTo(w)
+func (t ChatSession) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.Void])(t).WriteTo(w)
 }
 
-type U16 pk.UnsignedShort
+type F32 pk.Float
 
-func (t *U16) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.UnsignedShort)(t).ReadFrom(r)
+func (t *F32) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.Float)(t).ReadFrom(r)
 }
 
-func (t U16) WriteTo(w io.Writer) (int64, error) {
-	return (pk.UnsignedShort)(t).WriteTo(w)
+func (t F32) WriteTo(w io.Writer) (int64, error) {
+	return (pk.Float)(t).WriteTo(w)
+}
+
+type ByteArray pk.ByteArray
+
+func (t *ByteArray) ReadFrom(r io.Reader) (int64, error) {
+	return (*pk.ByteArray)(t).ReadFrom(r)
+}
+
+func (t ByteArray) WriteTo(w io.Writer) (int64, error) {
+	return (pk.ByteArray)(t).WriteTo(w)
 }

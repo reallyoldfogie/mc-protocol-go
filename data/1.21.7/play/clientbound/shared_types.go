@@ -11,66 +11,6 @@ import (
 	"log"
 )
 
-type ChatTypesHolder struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         ChatTypes
-}
-
-func (r *ChatTypesHolder) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r ChatTypesHolder) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
 // Protodef: [
 //
 //	  "container",
@@ -307,6 +247,178 @@ func (t SpawnInfo) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
+type ChatTypesHolder struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         ChatTypes
+}
+
+func (r *ChatTypesHolder) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r ChatTypesHolder) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "tagType",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tags",
+//	      "type": "tags"
+//	    }
+//	  ]
+//	]
+type TagsTagsArrayType struct {
+	// "string"
+	TagType pk.String
+	// "tags"
+	Tags basetypes.Tags
+}
+
+func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.TagType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TagType")
+	}
+	bytesRead, err = t.Tags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Tags")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.TagType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Tags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "chat",
+//	      "type": "ChatType"
+//	    },
+//	    {
+//	      "name": "narration",
+//	      "type": "ChatType"
+//	    }
+//	  ]
+//	]
+type ChatTypes struct {
+	// "ChatType"
+	Chat ChatType
+	// "ChatType"
+	Narration ChatType
+}
+
+func (t *ChatTypes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Chat.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Chat")
+	}
+	bytesRead, err = t.Narration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Narration")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatTypes) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatTypes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Chat.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Narration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type DamageEventSourcePosition models.Option[basetypes.Vec3f64]
 
 func (t *DamageEventSourcePosition) ReadFrom(r io.Reader) (int64, error) {
@@ -317,14 +429,756 @@ func (t DamageEventSourcePosition) WriteTo(w io.Writer) (int64, error) {
 	return (models.Option[basetypes.Vec3f64])(t).WriteTo(w)
 }
 
-type SelectAdvancementTabId models.Option[pk.String]
-
-func (t *SelectAdvancementTabId) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "translationKey",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "parameters",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ChatTypeParameterType"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "style",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type ChatType struct {
+	// "string"
+	TranslationKey pk.String
+	// [
+	//                 "array",
+	//                 {
+	//                   "countType": "varint",
+	//                   "type": "ChatTypeParameterType"
+	//                 }
+	//               ]
+	Parameters models.Array[pk.VarInt, ChatTypeParameterType]
+	// "anonymousNbt"
+	Style models.AnonymousNBT
 }
 
-func (t SelectAdvancementTabId) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
+func (t *ChatType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.TranslationKey.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TranslationKey")
+	}
+	bytesRead, err = t.Parameters.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Parameters")
+	}
+	bytesRead, err = t.Style.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Style")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.TranslationKey.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Parameters.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Style.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "world_surface_wg",
+//	            "1": "world_surface",
+//	            "2": "ocean_floor_wg",
+//	            "3": "ocean_floor",
+//	            "4": "motion_blocking",
+//	            "5": "motion_blocking_no_leaves"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "data",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "i64"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type MapChunkHeightmapsArrayType struct {
+	// [
+	//                           "mapper",
+	//                           {
+	//                             "type": "varint",
+	//                             "mappings": {
+	//                               "0": "world_surface_wg",
+	//                               "1": "world_surface",
+	//                               "2": "ocean_floor_wg",
+	//                               "3": "ocean_floor",
+	//                               "4": "motion_blocking",
+	//                               "5": "motion_blocking_no_leaves"
+	//                             }
+	//                           }
+	//                         ]
+	Type MapChunkHeightmapsArrayTypeType
+	// [
+	//                           "array",
+	//                           {
+	//                             "countType": "varint",
+	//                             "type": "i64"
+	//                           }
+	//                         ]
+	Data models.Array[pk.VarInt, pk.Long]
+}
+
+func (t *MapChunkHeightmapsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.Data.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
+	}
+
+	return totalBytes, nil
+}
+
+func (t MapChunkHeightmapsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[MapChunkHeightmapsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Data.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type MapChunkSkyLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
+
+func (t *MapChunkSkyLightArrayType) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
+}
+
+func (t MapChunkSkyLightArrayType) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
+}
+
+type MapChunkBlockLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
+
+func (t *MapChunkBlockLightArrayType) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
+}
+
+func (t MapChunkBlockLightArrayType) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
+}
+
+type ServerDataIconBytes models.Option[pk.ByteArray]
+
+func (t *ServerDataIconBytes) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.ByteArray])(t).ReadFrom(r)
+}
+
+func (t ServerDataIconBytes) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.ByteArray])(t).WriteTo(w)
+}
+
+type ExplosionPlayerKnockback models.Option[basetypes.Vec3f64]
+
+func (t *ExplosionPlayerKnockback) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[basetypes.Vec3f64])(t).ReadFrom(r)
+}
+
+func (t ExplosionPlayerKnockback) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[basetypes.Vec3f64])(t).WriteTo(w)
+}
+
+type TabCompleteMatchesArrayTypeTooltip models.Option[models.AnonymousNBT]
+
+func (t *TabCompleteMatchesArrayTypeTooltip) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+}
+
+func (t TabCompleteMatchesArrayTypeTooltip) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "match",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tooltip",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    }
+//	  ]
+//	]
+type TabCompleteMatchesArrayType struct {
+	// "string"
+	Match pk.String
+	// [
+	//                           "option",
+	//                           "anonymousNbt"
+	//                         ]
+	Tooltip models.Option[models.AnonymousNBT]
+}
+
+func (t *TabCompleteMatchesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Match.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Match")
+	}
+	bytesRead, err = t.Tooltip.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Tooltip")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TabCompleteMatchesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TabCompleteMatchesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Match.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Tooltip.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type UpdateLightSkyLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
+
+func (t *UpdateLightSkyLightArrayType) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
+}
+
+func (t UpdateLightSkyLightArrayType) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
+}
+
+type UpdateLightBlockLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
+
+func (t *UpdateLightBlockLightArrayType) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
+}
+
+func (t UpdateLightBlockLightArrayType) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "dimensionName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "location",
+//	      "type": "position"
+//	    }
+//	  ]
+//	]
+type SpawnInfoDeath struct {
+	// "string"
+	DimensionName pk.String
+	// "position"
+	Location basetypes.Position
+}
+
+func (t *SpawnInfoDeath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.DimensionName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
+	}
+	bytesRead, err = t.Location.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SpawnInfoDeath) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SpawnInfoDeath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.DimensionName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements models.Array[pk.VarInt, basetypes.IDSet]
+
+func (t *RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Array[pk.VarInt, basetypes.IDSet])(t).ReadFrom(r)
+}
+
+func (t RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements) WriteTo(w io.Writer) (int64, error) {
+	return (models.Array[pk.VarInt, basetypes.IDSet])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "displayId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "display",
+//	      "type": "RecipeDisplay"
+//	    },
+//	    {
+//	      "name": "group",
+//	      "type": "optvarint"
+//	    },
+//	    {
+//	      "name": "category",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "crafting_building_blocks",
+//	            "1": "crafting_redstone",
+//	            "2": "crafting_equipment",
+//	            "3": "crafting_misc",
+//	            "4": "furnace_food",
+//	            "5": "furnace_blocks",
+//	            "6": "furnace_misc",
+//	            "7": "blast_furnace_blocks",
+//	            "8": "blast_furnace_misc",
+//	            "9": "smoker_food",
+//	            "10": "stonecutter",
+//	            "11": "smithing",
+//	            "12": "campfire"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "craftingRequirements",
+//	      "type": [
+//	        "option",
+//	        [
+//	          "array",
+//	          {
+//	            "countType": "varint",
+//	            "type": "IDSet"
+//	          }
+//	        ]
+//	      ]
+//	    }
+//	  ]
+//	]
+type RecipeBookAddEntriesArrayTypeRecipe struct {
+	// "varint"
+	DisplayId pk.VarInt
+	// "RecipeDisplay"
+	Display RecipeDisplay
+	// "optvarint"
+	Group models.Option[pk.VarInt]
+	// [
+	//                                 "mapper",
+	//                                 {
+	//                                   "type": "varint",
+	//                                   "mappings": {
+	//                                     "0": "crafting_building_blocks",
+	//                                     "1": "crafting_redstone",
+	//                                     "2": "crafting_equipment",
+	//                                     "3": "crafting_misc",
+	//                                     "4": "furnace_food",
+	//                                     "5": "furnace_blocks",
+	//                                     "6": "furnace_misc",
+	//                                     "7": "blast_furnace_blocks",
+	//                                     "8": "blast_furnace_misc",
+	//                                     "9": "smoker_food",
+	//                                     "10": "stonecutter",
+	//                                     "11": "smithing",
+	//                                     "12": "campfire"
+	//                                   }
+	//                                 }
+	//                               ]
+	Category RecipeBookAddEntriesArrayTypeRecipeCategory
+	// [
+	//                                 "option",
+	//                                 [
+	//                                   "array",
+	//                                   {
+	//                                     "countType": "varint",
+	//                                     "type": "IDSet"
+	//                                   }
+	//                                 ]
+	//                               ]
+	CraftingRequirements models.Option[RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements]
+}
+
+func (t *RecipeBookAddEntriesArrayTypeRecipe) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.DisplayId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DisplayId")
+	}
+	bytesRead, err = t.Display.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Display")
+	}
+	bytesRead, err = t.Group.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Group")
+	}
+	bytesRead, err = t.Category.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Category")
+	}
+	bytesRead, err = t.CraftingRequirements.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CraftingRequirements")
+	}
+
+	return totalBytes, nil
+}
+
+func (t RecipeBookAddEntriesArrayTypeRecipe) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[RecipeBookAddEntriesArrayTypeRecipe.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.DisplayId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Display.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Group.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Category.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CraftingRequirements.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// RecipeBookAddEntriesArrayTypeFlagsBitflags provides named accessors over a bitflag field.
+type RecipeBookAddEntriesArrayTypeFlagsBitflags struct {
+	pk.UnsignedByte
+}
+
+func (bf RecipeBookAddEntriesArrayTypeFlagsBitflags) Notification() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 0)) != 0
+}
+
+func (bf *RecipeBookAddEntriesArrayTypeFlagsBitflags) SetNotification(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 0)
+	} else {
+		v &^= (1 << 0)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+func (bf RecipeBookAddEntriesArrayTypeFlagsBitflags) Highlight() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 1)) != 0
+}
+
+func (bf *RecipeBookAddEntriesArrayTypeFlagsBitflags) SetHighlight(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 1)
+	} else {
+		v &^= (1 << 1)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "recipe",
+//	      "type": [
+//	        "container",
+//	        [
+//	          {
+//	            "name": "displayId",
+//	            "type": "varint"
+//	          },
+//	          {
+//	            "name": "display",
+//	            "type": "RecipeDisplay"
+//	          },
+//	          {
+//	            "name": "group",
+//	            "type": "optvarint"
+//	          },
+//	          {
+//	            "name": "category",
+//	            "type": [
+//	              "mapper",
+//	              {
+//	                "type": "varint",
+//	                "mappings": {
+//	                  "0": "crafting_building_blocks",
+//	                  "1": "crafting_redstone",
+//	                  "2": "crafting_equipment",
+//	                  "3": "crafting_misc",
+//	                  "4": "furnace_food",
+//	                  "5": "furnace_blocks",
+//	                  "6": "furnace_misc",
+//	                  "7": "blast_furnace_blocks",
+//	                  "8": "blast_furnace_misc",
+//	                  "9": "smoker_food",
+//	                  "10": "stonecutter",
+//	                  "11": "smithing",
+//	                  "12": "campfire"
+//	                }
+//	              }
+//	            ]
+//	          },
+//	          {
+//	            "name": "craftingRequirements",
+//	            "type": [
+//	              "option",
+//	              [
+//	                "array",
+//	                {
+//	                  "countType": "varint",
+//	                  "type": "IDSet"
+//	                }
+//	              ]
+//	            ]
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "flags",
+//	      "type": [
+//	        "bitflags",
+//	        {
+//	          "type": "u8",
+//	          "flags": [
+//	            "notification",
+//	            "highlight"
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type RecipeBookAddEntriesArrayType struct {
+	// [
+	//                           "container",
+	//                           [
+	//                             {
+	//                               "name": "displayId",
+	//                               "type": "varint"
+	//                             },
+	//                             {
+	//                               "name": "display",
+	//                               "type": "RecipeDisplay"
+	//                             },
+	//                             {
+	//                               "name": "group",
+	//                               "type": "optvarint"
+	//                             },
+	//                             {
+	//                               "name": "category",
+	//                               "type": [
+	//                                 "mapper",
+	//                                 {
+	//                                   "type": "varint",
+	//                                   "mappings": {
+	//                                     "0": "crafting_building_blocks",
+	//                                     "1": "crafting_redstone",
+	//                                     "2": "crafting_equipment",
+	//                                     "3": "crafting_misc",
+	//                                     "4": "furnace_food",
+	//                                     "5": "furnace_blocks",
+	//                                     "6": "furnace_misc",
+	//                                     "7": "blast_furnace_blocks",
+	//                                     "8": "blast_furnace_misc",
+	//                                     "9": "smoker_food",
+	//                                     "10": "stonecutter",
+	//                                     "11": "smithing",
+	//                                     "12": "campfire"
+	//                                   }
+	//                                 }
+	//                               ]
+	//                             },
+	//                             {
+	//                               "name": "craftingRequirements",
+	//                               "type": [
+	//                                 "option",
+	//                                 [
+	//                                   "array",
+	//                                   {
+	//                                     "countType": "varint",
+	//                                     "type": "IDSet"
+	//                                   }
+	//                                 ]
+	//                               ]
+	//                             }
+	//                           ]
+	//                         ]
+	Recipe RecipeBookAddEntriesArrayTypeRecipe
+	// [
+	//                           "bitflags",
+	//                           {
+	//                             "type": "u8",
+	//                             "flags": [
+	//                               "notification",
+	//                               "highlight"
+	//                             ]
+	//                           }
+	//                         ]
+	Flags RecipeBookAddEntriesArrayTypeFlagsBitflags
+}
+
+func (t *RecipeBookAddEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Recipe.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Recipe")
+	}
+	bytesRead, err = t.Flags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+
+	return totalBytes, nil
+}
+
+func (t RecipeBookAddEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[RecipeBookAddEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Recipe.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Flags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
 }
 
 type AdvancementsAdvancementMappingArrayTypeValueParentId models.Option[pk.String]
@@ -1400,6 +2254,36 @@ func (t AdvancementsProgressMappingArrayType) WriteTo(w io.Writer) (totalBytes i
 	return totalBytes, nil
 }
 
+type SelectAdvancementTabId models.Option[pk.String]
+
+func (t *SelectAdvancementTabId) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
+}
+
+func (t SelectAdvancementTabId) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
+}
+
+type ProfilelessChatTarget models.Option[models.AnonymousNBT]
+
+func (t *ProfilelessChatTarget) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+}
+
+func (t ProfilelessChatTarget) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+}
+
+type TestInstanceBlockStatusSize models.Option[basetypes.Vec3i]
+
+func (t *TestInstanceBlockStatusSize) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[basetypes.Vec3i])(t).ReadFrom(r)
+}
+
+func (t TestInstanceBlockStatusSize) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[basetypes.Vec3i])(t).WriteTo(w)
+}
+
 type SlotDisplayDataSmithingTrimPattern struct {
 	IsRegistryID bool
 	RegistryID   pk.VarInt
@@ -1893,222 +2777,66 @@ func (t SlotDisplay) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "position",
-//	      "type": "packedChunkPos"
-//	    },
-//	    {
-//	      "name": "data",
-//	      "type": "ByteArray"
-//	    }
-//	  ]
-//	]
-type ChunkBiomesBiomesArrayType struct {
-	// "packedChunkPos"
-	Position basetypes.PackedChunkPos
-	// "ByteArray"
-	Data pk.ByteArray
-}
-
-func (t *ChunkBiomesBiomesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Position.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Position")
-	}
-	bytesRead, err = t.Data.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChunkBiomesBiomesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChunkBiomesBiomesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Position.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Data.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements models.Array[pk.VarInt, basetypes.IDSet]
-
-func (t *RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, basetypes.IDSet])(t).ReadFrom(r)
-}
-
-func (t RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, basetypes.IDSet])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "displayId",
+//	      "name": "categoryId",
 //	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "display",
-//	      "type": "RecipeDisplay"
+//	      "name": "statisticId",
+//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "group",
-//	      "type": "optvarint"
-//	    },
-//	    {
-//	      "name": "category",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "crafting_building_blocks",
-//	            "1": "crafting_redstone",
-//	            "2": "crafting_equipment",
-//	            "3": "crafting_misc",
-//	            "4": "furnace_food",
-//	            "5": "furnace_blocks",
-//	            "6": "furnace_misc",
-//	            "7": "blast_furnace_blocks",
-//	            "8": "blast_furnace_misc",
-//	            "9": "smoker_food",
-//	            "10": "stonecutter",
-//	            "11": "smithing",
-//	            "12": "campfire"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "craftingRequirements",
-//	      "type": [
-//	        "option",
-//	        [
-//	          "array",
-//	          {
-//	            "countType": "varint",
-//	            "type": "IDSet"
-//	          }
-//	        ]
-//	      ]
+//	      "name": "value",
+//	      "type": "varint"
 //	    }
 //	  ]
 //	]
-type RecipeBookAddEntriesArrayTypeRecipe struct {
+type StatisticsEntriesArrayType struct {
 	// "varint"
-	DisplayId pk.VarInt
-	// "RecipeDisplay"
-	Display RecipeDisplay
-	// "optvarint"
-	Group models.Option[pk.VarInt]
-	// [
-	//                                 "mapper",
-	//                                 {
-	//                                   "type": "varint",
-	//                                   "mappings": {
-	//                                     "0": "crafting_building_blocks",
-	//                                     "1": "crafting_redstone",
-	//                                     "2": "crafting_equipment",
-	//                                     "3": "crafting_misc",
-	//                                     "4": "furnace_food",
-	//                                     "5": "furnace_blocks",
-	//                                     "6": "furnace_misc",
-	//                                     "7": "blast_furnace_blocks",
-	//                                     "8": "blast_furnace_misc",
-	//                                     "9": "smoker_food",
-	//                                     "10": "stonecutter",
-	//                                     "11": "smithing",
-	//                                     "12": "campfire"
-	//                                   }
-	//                                 }
-	//                               ]
-	Category RecipeBookAddEntriesArrayTypeRecipeCategory
-	// [
-	//                                 "option",
-	//                                 [
-	//                                   "array",
-	//                                   {
-	//                                     "countType": "varint",
-	//                                     "type": "IDSet"
-	//                                   }
-	//                                 ]
-	//                               ]
-	CraftingRequirements models.Option[RecipeBookAddEntriesArrayTypeRecipeCraftingRequirements]
+	CategoryId pk.VarInt
+	// "varint"
+	StatisticId pk.VarInt
+	// "varint"
+	Value pk.VarInt
 }
 
-func (t *RecipeBookAddEntriesArrayTypeRecipe) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *StatisticsEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.DisplayId.ReadFrom(r)
+	bytesRead, err = t.CategoryId.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DisplayId")
+		return totalBytes, errors.Wrap(err, "failed to read field CategoryId")
 	}
-	bytesRead, err = t.Display.ReadFrom(r)
+	bytesRead, err = t.StatisticId.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Display")
+		return totalBytes, errors.Wrap(err, "failed to read field StatisticId")
 	}
-	bytesRead, err = t.Group.ReadFrom(r)
+	bytesRead, err = t.Value.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Group")
-	}
-	bytesRead, err = t.Category.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Category")
-	}
-	bytesRead, err = t.CraftingRequirements.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CraftingRequirements")
+		return totalBytes, errors.Wrap(err, "failed to read field Value")
 	}
 
 	return totalBytes, nil
 }
 
-func (t RecipeBookAddEntriesArrayTypeRecipe) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t StatisticsEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[RecipeBookAddEntriesArrayTypeRecipe.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[StatisticsEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.DisplayId.WriteTo(w)
+	bytesWritten, err = t.CategoryId.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Display.WriteTo(w)
+	bytesWritten, err = t.StatisticId.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Group.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Category.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CraftingRequirements.WriteTo(w)
+	bytesWritten, err = t.Value.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -2116,38 +2844,14 @@ func (t RecipeBookAddEntriesArrayTypeRecipe) WriteTo(w io.Writer) (totalBytes in
 	return totalBytes, nil
 }
 
-// RecipeBookAddEntriesArrayTypeFlagsBitflags provides named accessors over a bitflag field.
-type RecipeBookAddEntriesArrayTypeFlagsBitflags struct {
-	pk.UnsignedByte
+type ResetScoreObjectiveName models.Option[pk.String]
+
+func (t *ResetScoreObjectiveName) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.String])(t).ReadFrom(r)
 }
 
-func (bf RecipeBookAddEntriesArrayTypeFlagsBitflags) Notification() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 0)) != 0
-}
-
-func (bf *RecipeBookAddEntriesArrayTypeFlagsBitflags) SetNotification(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 0)
-	} else {
-		v &^= (1 << 0)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
-}
-func (bf RecipeBookAddEntriesArrayTypeFlagsBitflags) Highlight() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 1)) != 0
-}
-
-func (bf *RecipeBookAddEntriesArrayTypeFlagsBitflags) SetHighlight(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 1)
-	} else {
-		v &^= (1 << 1)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
+func (t ResetScoreObjectiveName) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.String])(t).WriteTo(w)
 }
 
 // Protodef: [
@@ -2155,588 +2859,78 @@ func (bf *RecipeBookAddEntriesArrayTypeFlagsBitflags) SetHighlight(value bool) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "recipe",
-//	      "type": [
-//	        "container",
-//	        [
-//	          {
-//	            "name": "displayId",
-//	            "type": "varint"
-//	          },
-//	          {
-//	            "name": "display",
-//	            "type": "RecipeDisplay"
-//	          },
-//	          {
-//	            "name": "group",
-//	            "type": "optvarint"
-//	          },
-//	          {
-//	            "name": "category",
-//	            "type": [
-//	              "mapper",
-//	              {
-//	                "type": "varint",
-//	                "mappings": {
-//	                  "0": "crafting_building_blocks",
-//	                  "1": "crafting_redstone",
-//	                  "2": "crafting_equipment",
-//	                  "3": "crafting_misc",
-//	                  "4": "furnace_food",
-//	                  "5": "furnace_blocks",
-//	                  "6": "furnace_misc",
-//	                  "7": "blast_furnace_blocks",
-//	                  "8": "blast_furnace_misc",
-//	                  "9": "smoker_food",
-//	                  "10": "stonecutter",
-//	                  "11": "smithing",
-//	                  "12": "campfire"
-//	                }
-//	              }
-//	            ]
-//	          },
-//	          {
-//	            "name": "craftingRequirements",
-//	            "type": [
-//	              "option",
-//	              [
-//	                "array",
-//	                {
-//	                  "countType": "varint",
-//	                  "type": "IDSet"
-//	                }
-//	              ]
-//	            ]
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitflags",
-//	        {
-//	          "type": "u8",
-//	          "flags": [
-//	            "notification",
-//	            "highlight"
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type RecipeBookAddEntriesArrayType struct {
-	// [
-	//                           "container",
-	//                           [
-	//                             {
-	//                               "name": "displayId",
-	//                               "type": "varint"
-	//                             },
-	//                             {
-	//                               "name": "display",
-	//                               "type": "RecipeDisplay"
-	//                             },
-	//                             {
-	//                               "name": "group",
-	//                               "type": "optvarint"
-	//                             },
-	//                             {
-	//                               "name": "category",
-	//                               "type": [
-	//                                 "mapper",
-	//                                 {
-	//                                   "type": "varint",
-	//                                   "mappings": {
-	//                                     "0": "crafting_building_blocks",
-	//                                     "1": "crafting_redstone",
-	//                                     "2": "crafting_equipment",
-	//                                     "3": "crafting_misc",
-	//                                     "4": "furnace_food",
-	//                                     "5": "furnace_blocks",
-	//                                     "6": "furnace_misc",
-	//                                     "7": "blast_furnace_blocks",
-	//                                     "8": "blast_furnace_misc",
-	//                                     "9": "smoker_food",
-	//                                     "10": "stonecutter",
-	//                                     "11": "smithing",
-	//                                     "12": "campfire"
-	//                                   }
-	//                                 }
-	//                               ]
-	//                             },
-	//                             {
-	//                               "name": "craftingRequirements",
-	//                               "type": [
-	//                                 "option",
-	//                                 [
-	//                                   "array",
-	//                                   {
-	//                                     "countType": "varint",
-	//                                     "type": "IDSet"
-	//                                   }
-	//                                 ]
-	//                               ]
-	//                             }
-	//                           ]
-	//                         ]
-	Recipe RecipeBookAddEntriesArrayTypeRecipe
-	// [
-	//                           "bitflags",
-	//                           {
-	//                             "type": "u8",
-	//                             "flags": [
-	//                               "notification",
-	//                               "highlight"
-	//                             ]
-	//                           }
-	//                         ]
-	Flags RecipeBookAddEntriesArrayTypeFlagsBitflags
-}
-
-func (t *RecipeBookAddEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Recipe.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Recipe")
-	}
-	bytesRead, err = t.Flags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-
-	return totalBytes, nil
-}
-
-func (t RecipeBookAddEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[RecipeBookAddEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Recipe.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Flags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ProfilelessChatTarget models.Option[models.AnonymousNBT]
-
-func (t *ProfilelessChatTarget) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t ProfilelessChatTarget) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "dimensionName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "location",
-//	      "type": "position"
-//	    }
-//	  ]
-//	]
-type SpawnInfoDeath struct {
-	// "string"
-	DimensionName pk.String
-	// "position"
-	Location basetypes.Position
-}
-
-func (t *SpawnInfoDeath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.DimensionName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
-	}
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SpawnInfoDeath) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SpawnInfoDeath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.DimensionName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "world_surface_wg",
-//	            "1": "world_surface",
-//	            "2": "ocean_floor_wg",
-//	            "3": "ocean_floor",
-//	            "4": "motion_blocking",
-//	            "5": "motion_blocking_no_leaves"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "data",
+//	      "name": "ingredients",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": "i64"
+//	          "type": "SlotDisplay"
 //	        }
 //	      ]
+//	    },
+//	    {
+//	      "name": "result",
+//	      "type": "SlotDisplay"
+//	    },
+//	    {
+//	      "name": "craftingStation",
+//	      "type": "SlotDisplay"
 //	    }
 //	  ]
 //	]
-type MapChunkHeightmapsArrayType struct {
+type RecipeDisplayDataCraftingShapeless struct {
 	// [
-	//                           "mapper",
-	//                           {
-	//                             "type": "varint",
-	//                             "mappings": {
-	//                               "0": "world_surface_wg",
-	//                               "1": "world_surface",
-	//                               "2": "ocean_floor_wg",
-	//                               "3": "ocean_floor",
-	//                               "4": "motion_blocking",
-	//                               "5": "motion_blocking_no_leaves"
+	//                             "array",
+	//                             {
+	//                               "countType": "varint",
+	//                               "type": "SlotDisplay"
 	//                             }
-	//                           }
-	//                         ]
-	Type MapChunkHeightmapsArrayTypeType
-	// [
-	//                           "array",
-	//                           {
-	//                             "countType": "varint",
-	//                             "type": "i64"
-	//                           }
-	//                         ]
-	Data models.Array[pk.VarInt, pk.Long]
-}
-
-func (t *MapChunkHeightmapsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.Data.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
-	}
-
-	return totalBytes, nil
-}
-
-func (t MapChunkHeightmapsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[MapChunkHeightmapsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Data.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type MapChunkSkyLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
-
-func (t *MapChunkSkyLightArrayType) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
-}
-
-func (t MapChunkSkyLightArrayType) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
-}
-
-type MapChunkBlockLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
-
-func (t *MapChunkBlockLightArrayType) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
-}
-
-func (t MapChunkBlockLightArrayType) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
-}
-
-type PlayerChatSignature models.Option[models.FixedBuffer256]
-
-func (t *PlayerChatSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
-}
-
-func (t PlayerChatSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
-}
-
-type PlayerChatUnsignedChatContent models.Option[models.AnonymousNBT]
-
-func (t *PlayerChatUnsignedChatContent) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t PlayerChatUnsignedChatContent) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
-
-type PlayerChatNetworkTargetName models.Option[models.AnonymousNBT]
-
-func (t *PlayerChatNetworkTargetName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t PlayerChatNetworkTargetName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "translationKey",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "parameters",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ChatTypeParameterType"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "style",
-//	      "type": "anonymousNbt"
-//	    }
-//	  ]
-//	]
-type ChatType struct {
-	// "string"
-	TranslationKey pk.String
-	// [
-	//                 "array",
-	//                 {
-	//                   "countType": "varint",
-	//                   "type": "ChatTypeParameterType"
-	//                 }
-	//               ]
-	Parameters models.Array[pk.VarInt, ChatTypeParameterType]
-	// "anonymousNbt"
-	Style models.AnonymousNBT
-}
-
-func (t *ChatType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.TranslationKey.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TranslationKey")
-	}
-	bytesRead, err = t.Parameters.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Parameters")
-	}
-	bytesRead, err = t.Style.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Style")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChatType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChatType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.TranslationKey.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Parameters.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Style.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type MapIconsMapIconsElementDisplayName models.Option[models.AnonymousNBT]
-
-func (t *MapIconsMapIconsElementDisplayName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t MapIconsMapIconsElementDisplayName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "x",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "direction",
-//	      "type": "u8"
-//	    },
-//	    {
-//	      "name": "displayName",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    }
-//	  ]
-//	]
-type MapIconsMapIconsElement struct {
-	// "varint"
-	Type pk.VarInt
-	// "i8"
-	X pk.Byte
-	// "i8"
-	Z pk.Byte
-	// "u8"
-	Direction pk.UnsignedByte
-	// [
-	//                             "option",
-	//                             "anonymousNbt"
 	//                           ]
-	DisplayName models.Option[models.AnonymousNBT]
+	Ingredients models.Array[pk.VarInt, SlotDisplay]
+	// "SlotDisplay"
+	Result SlotDisplay
+	// "SlotDisplay"
+	CraftingStation SlotDisplay
 }
 
-func (t *MapIconsMapIconsElement) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *RecipeDisplayDataCraftingShapeless) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
+	bytesRead, err = t.Ingredients.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
+		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
 	}
-	bytesRead, err = t.X.ReadFrom(r)
+	bytesRead, err = t.Result.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
+		return totalBytes, errors.Wrap(err, "failed to read field Result")
 	}
-	bytesRead, err = t.Z.ReadFrom(r)
+	bytesRead, err = t.CraftingStation.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
-	}
-	bytesRead, err = t.Direction.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Direction")
-	}
-	bytesRead, err = t.DisplayName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DisplayName")
+		return totalBytes, errors.Wrap(err, "failed to read field CraftingStation")
 	}
 
 	return totalBytes, nil
 }
 
-func (t MapIconsMapIconsElement) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t RecipeDisplayDataCraftingShapeless) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[MapIconsMapIconsElement.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[RecipeDisplayDataCraftingShapeless.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Type.WriteTo(w)
+	bytesWritten, err = t.Ingredients.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.X.WriteTo(w)
+	bytesWritten, err = t.Result.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Direction.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DisplayName.WriteTo(w)
+	bytesWritten, err = t.CraftingStation.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3156,88 +3350,24 @@ func (t RecipeDisplayDataSmithing) WriteTo(w io.Writer) (totalBytes int64, err e
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "ingredients",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "SlotDisplay"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "result",
-//	      "type": "SlotDisplay"
-//	    },
-//	    {
-//	      "name": "craftingStation",
-//	      "type": "SlotDisplay"
-//	    }
-//	  ]
-//	]
-type RecipeDisplayDataCraftingShapeless struct {
-	// [
-	//                             "array",
-	//                             {
-	//                               "countType": "varint",
-	//                               "type": "SlotDisplay"
-	//                             }
-	//                           ]
-	Ingredients models.Array[pk.VarInt, SlotDisplay]
-	// "SlotDisplay"
-	Result SlotDisplay
-	// "SlotDisplay"
-	CraftingStation SlotDisplay
+type ScoreboardScoreDisplayName models.Option[models.AnonymousNBT]
+
+func (t *ScoreboardScoreDisplayName) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
 }
 
-func (t *RecipeDisplayDataCraftingShapeless) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Ingredients.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
-	}
-	bytesRead, err = t.Result.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Result")
-	}
-	bytesRead, err = t.CraftingStation.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CraftingStation")
-	}
-
-	return totalBytes, nil
+func (t ScoreboardScoreDisplayName) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
 }
 
-func (t RecipeDisplayDataCraftingShapeless) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
+type ScoreboardScoreNumberFormat models.Option[pk.VarInt]
 
-	defer func() {
-		log.Printf("[RecipeDisplayDataCraftingShapeless.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Ingredients.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Result.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CraftingStation.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
+func (t *ScoreboardScoreNumberFormat) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
+}
+
+func (t ScoreboardScoreNumberFormat) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.VarInt])(t).WriteTo(w)
 }
 
 // Protodef: [
@@ -3245,91 +3375,55 @@ func (t RecipeDisplayDataCraftingShapeless) WriteTo(w io.Writer) (totalBytes int
 //	  "container",
 //	  [
 //	    {
-//	      "name": "categoryId",
-//	      "type": "varint"
+//	      "name": "position",
+//	      "type": "packedChunkPos"
 //	    },
 //	    {
-//	      "name": "statisticId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "value",
-//	      "type": "varint"
+//	      "name": "data",
+//	      "type": "ByteArray"
 //	    }
 //	  ]
 //	]
-type StatisticsEntriesArrayType struct {
-	// "varint"
-	CategoryId pk.VarInt
-	// "varint"
-	StatisticId pk.VarInt
-	// "varint"
-	Value pk.VarInt
+type ChunkBiomesBiomesArrayType struct {
+	// "packedChunkPos"
+	Position basetypes.PackedChunkPos
+	// "ByteArray"
+	Data pk.ByteArray
 }
 
-func (t *StatisticsEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ChunkBiomesBiomesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.CategoryId.ReadFrom(r)
+	bytesRead, err = t.Position.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CategoryId")
+		return totalBytes, errors.Wrap(err, "failed to read field Position")
 	}
-	bytesRead, err = t.StatisticId.ReadFrom(r)
+	bytesRead, err = t.Data.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field StatisticId")
-	}
-	bytesRead, err = t.Value.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Value")
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
 	}
 
 	return totalBytes, nil
 }
 
-func (t StatisticsEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ChunkBiomesBiomesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[StatisticsEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ChunkBiomesBiomesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.CategoryId.WriteTo(w)
+	bytesWritten, err = t.Position.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.StatisticId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Value.WriteTo(w)
+	bytesWritten, err = t.Data.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
 	return totalBytes, nil
-}
-
-type UpdateLightSkyLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
-
-func (t *UpdateLightSkyLightArrayType) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
-}
-
-func (t UpdateLightSkyLightArrayType) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
-}
-
-type UpdateLightBlockLightArrayType models.Array[pk.VarInt, pk.UnsignedByte]
-
-func (t *UpdateLightBlockLightArrayType) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, pk.UnsignedByte])(t).ReadFrom(r)
-}
-
-func (t UpdateLightBlockLightArrayType) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, pk.UnsignedByte])(t).WriteTo(w)
 }
 
 type PlayerInfoDataArrayTypeDisplayNameTrue models.Option[models.AnonymousNBT]
@@ -3865,24 +3959,212 @@ func (t PlayerInfoDataArrayType) WriteToWithParentContext(w io.Writer, ctx model
 	return totalBytes, nil
 }
 
-type ScoreboardScoreDisplayName models.Option[models.AnonymousNBT]
-
-func (t *ScoreboardScoreDisplayName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type TrackedWaypointWaypointUnnamedType0006False struct {
+	// "string"
+	Id pk.String
 }
 
-func (t ScoreboardScoreDisplayName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+func (t *TrackedWaypointWaypointUnnamedType0006False) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+
+	return totalBytes, nil
 }
 
-type ScoreboardScoreNumberFormat models.Option[pk.VarInt]
+func (t TrackedWaypointWaypointUnnamedType0006False) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
 
-func (t *ScoreboardScoreNumberFormat) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
+	defer func() {
+		log.Printf("[TrackedWaypointWaypointUnnamedType0006False.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
 }
 
-func (t ScoreboardScoreNumberFormat) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "uuid",
+//	      "type": "UUID"
+//	    }
+//	  ]
+//	]
+type TrackedWaypointWaypointUnnamedType0006True struct {
+	// "UUID"
+	Uuid pk.UUID
+}
+
+func (t *TrackedWaypointWaypointUnnamedType0006True) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Uuid.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TrackedWaypointWaypointUnnamedType0006True) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TrackedWaypointWaypointUnnamedType0006True.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Uuid.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type TrackedWaypointWaypointIconColor models.Option[pk.Int]
+
+func (t *TrackedWaypointWaypointIconColor) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[pk.Int])(t).ReadFrom(r)
+}
+
+func (t TrackedWaypointWaypointIconColor) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[pk.Int])(t).WriteTo(w)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "style",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "color",
+//	      "type": [
+//	        "option",
+//	        "i32"
+//	      ]
+//	    }
+//	  ]
+//	]
+type TrackedWaypointWaypointIcon struct {
+	// "string"
+	Style pk.String
+	// [
+	//                             "option",
+	//                             "i32"
+	//                           ]
+	Color models.Option[pk.Int]
+}
+
+func (t *TrackedWaypointWaypointIcon) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Style.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Style")
+	}
+	bytesRead, err = t.Color.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Color")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TrackedWaypointWaypointIcon) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TrackedWaypointWaypointIcon.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Style.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Color.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "chunkX",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "chunkZ",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type TrackedWaypointWaypointDataChunk struct {
+	// "varint"
+	ChunkX pk.VarInt
+	// "varint"
+	ChunkZ pk.VarInt
+}
+
+func (t *TrackedWaypointWaypointDataChunk) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ChunkX.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ChunkX")
+	}
+	bytesRead, err = t.ChunkZ.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ChunkZ")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TrackedWaypointWaypointDataChunk) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TrackedWaypointWaypointDataChunk.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ChunkX.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ChunkZ.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
 }
 
 // Protodef: [
@@ -4283,23 +4565,13 @@ func (t TradeListTradesArrayType) WriteTo(w io.Writer) (totalBytes int64, err er
 	return totalBytes, nil
 }
 
-type ServerDataIconBytes models.Option[pk.ByteArray]
+type MapIconsMapIconsElementDisplayName models.Option[models.AnonymousNBT]
 
-func (t *ServerDataIconBytes) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.ByteArray])(t).ReadFrom(r)
-}
-
-func (t ServerDataIconBytes) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.ByteArray])(t).WriteTo(w)
-}
-
-type TabCompleteMatchesArrayTypeTooltip models.Option[models.AnonymousNBT]
-
-func (t *TabCompleteMatchesArrayTypeTooltip) ReadFrom(r io.Reader) (int64, error) {
+func (t *MapIconsMapIconsElementDisplayName) ReadFrom(r io.Reader) (int64, error) {
 	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
 }
 
-func (t TabCompleteMatchesArrayTypeTooltip) WriteTo(w io.Writer) (int64, error) {
+func (t MapIconsMapIconsElementDisplayName) WriteTo(w io.Writer) (int64, error) {
 	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
 }
 
@@ -4308,11 +4580,23 @@ func (t TabCompleteMatchesArrayTypeTooltip) WriteTo(w io.Writer) (int64, error) 
 //	  "container",
 //	  [
 //	    {
-//	      "name": "match",
-//	      "type": "string"
+//	      "name": "type",
+//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "tooltip",
+//	      "name": "x",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "direction",
+//	      "type": "u8"
+//	    },
+//	    {
+//	      "name": "displayName",
 //	      "type": [
 //	        "option",
 //	        "anonymousNbt"
@@ -4320,196 +4604,80 @@ func (t TabCompleteMatchesArrayTypeTooltip) WriteTo(w io.Writer) (int64, error) 
 //	    }
 //	  ]
 //	]
-type TabCompleteMatchesArrayType struct {
-	// "string"
-	Match pk.String
-	// [
-	//                           "option",
-	//                           "anonymousNbt"
-	//                         ]
-	Tooltip models.Option[models.AnonymousNBT]
-}
-
-func (t *TabCompleteMatchesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Match.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Match")
-	}
-	bytesRead, err = t.Tooltip.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tooltip")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TabCompleteMatchesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TabCompleteMatchesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Match.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tooltip.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type TrackedWaypointWaypointUnnamedType0006False struct {
-	// "string"
-	Id pk.String
-}
-
-func (t *TrackedWaypointWaypointUnnamedType0006False) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TrackedWaypointWaypointUnnamedType0006False) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TrackedWaypointWaypointUnnamedType0006False.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "uuid",
-//	      "type": "UUID"
-//	    }
-//	  ]
-//	]
-type TrackedWaypointWaypointUnnamedType0006True struct {
-	// "UUID"
-	Uuid pk.UUID
-}
-
-func (t *TrackedWaypointWaypointUnnamedType0006True) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Uuid.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TrackedWaypointWaypointUnnamedType0006True) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TrackedWaypointWaypointUnnamedType0006True.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Uuid.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type TrackedWaypointWaypointIconColor models.Option[pk.Int]
-
-func (t *TrackedWaypointWaypointIconColor) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Int])(t).ReadFrom(r)
-}
-
-func (t TrackedWaypointWaypointIconColor) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Int])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "style",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "color",
-//	      "type": [
-//	        "option",
-//	        "i32"
-//	      ]
-//	    }
-//	  ]
-//	]
-type TrackedWaypointWaypointIcon struct {
-	// "string"
-	Style pk.String
+type MapIconsMapIconsElement struct {
+	// "varint"
+	Type pk.VarInt
+	// "i8"
+	X pk.Byte
+	// "i8"
+	Z pk.Byte
+	// "u8"
+	Direction pk.UnsignedByte
 	// [
 	//                             "option",
-	//                             "i32"
+	//                             "anonymousNbt"
 	//                           ]
-	Color models.Option[pk.Int]
+	DisplayName models.Option[models.AnonymousNBT]
 }
 
-func (t *TrackedWaypointWaypointIcon) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *MapIconsMapIconsElement) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Style.ReadFrom(r)
+	bytesRead, err = t.Type.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Style")
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
-	bytesRead, err = t.Color.ReadFrom(r)
+	bytesRead, err = t.X.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Color")
+		return totalBytes, errors.Wrap(err, "failed to read field X")
+	}
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
+	bytesRead, err = t.Direction.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Direction")
+	}
+	bytesRead, err = t.DisplayName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DisplayName")
 	}
 
 	return totalBytes, nil
 }
 
-func (t TrackedWaypointWaypointIcon) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t MapIconsMapIconsElement) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[TrackedWaypointWaypointIcon.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[MapIconsMapIconsElement.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Style.WriteTo(w)
+	bytesWritten, err = t.Type.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Color.WriteTo(w)
+	bytesWritten, err = t.X.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Z.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Direction.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DisplayName.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -4522,50 +4690,98 @@ func (t TrackedWaypointWaypointIcon) WriteTo(w io.Writer) (totalBytes int64, err
 //	  "container",
 //	  [
 //	    {
-//	      "name": "chunkX",
-//	      "type": "varint"
+//	      "name": "position",
+//	      "type": "vec3f"
 //	    },
 //	    {
-//	      "name": "chunkZ",
-//	      "type": "varint"
+//	      "name": "movement",
+//	      "type": "vec3f"
+//	    },
+//	    {
+//	      "name": "yaw",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "pitch",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "weight",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type TrackedWaypointWaypointDataChunk struct {
-	// "varint"
-	ChunkX pk.VarInt
-	// "varint"
-	ChunkZ pk.VarInt
+type MoveMinecartStepsArrayType struct {
+	// "vec3f"
+	Position basetypes.Vec3f
+	// "vec3f"
+	Movement basetypes.Vec3f
+	// "f32"
+	Yaw pk.Float
+	// "f32"
+	Pitch pk.Float
+	// "f32"
+	Weight pk.Float
 }
 
-func (t *TrackedWaypointWaypointDataChunk) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *MoveMinecartStepsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.ChunkX.ReadFrom(r)
+	bytesRead, err = t.Position.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ChunkX")
+		return totalBytes, errors.Wrap(err, "failed to read field Position")
 	}
-	bytesRead, err = t.ChunkZ.ReadFrom(r)
+	bytesRead, err = t.Movement.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ChunkZ")
+		return totalBytes, errors.Wrap(err, "failed to read field Movement")
+	}
+	bytesRead, err = t.Yaw.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
+	}
+	bytesRead, err = t.Pitch.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
+	}
+	bytesRead, err = t.Weight.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Weight")
 	}
 
 	return totalBytes, nil
 }
 
-func (t TrackedWaypointWaypointDataChunk) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t MoveMinecartStepsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[TrackedWaypointWaypointDataChunk.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[MoveMinecartStepsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.ChunkX.WriteTo(w)
+	bytesWritten, err = t.Position.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.ChunkZ.WriteTo(w)
+	bytesWritten, err = t.Movement.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Yaw.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pitch.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Weight.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -4573,24 +4789,34 @@ func (t TrackedWaypointWaypointDataChunk) WriteTo(w io.Writer) (totalBytes int64
 	return totalBytes, nil
 }
 
-type ResetScoreObjectiveName models.Option[pk.String]
+type PlayerChatSignature models.Option[models.FixedBuffer256]
 
-func (t *ResetScoreObjectiveName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
+func (t *PlayerChatSignature) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
 }
 
-func (t ResetScoreObjectiveName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
+func (t PlayerChatSignature) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
 }
 
-type TestInstanceBlockStatusSize models.Option[basetypes.Vec3i]
+type PlayerChatUnsignedChatContent models.Option[models.AnonymousNBT]
 
-func (t *TestInstanceBlockStatusSize) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[basetypes.Vec3i])(t).ReadFrom(r)
+func (t *PlayerChatUnsignedChatContent) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
 }
 
-func (t TestInstanceBlockStatusSize) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[basetypes.Vec3i])(t).WriteTo(w)
+func (t PlayerChatUnsignedChatContent) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
+}
+
+type PlayerChatNetworkTargetName models.Option[models.AnonymousNBT]
+
+func (t *PlayerChatNetworkTargetName) ReadFrom(r io.Reader) (int64, error) {
+	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
+}
+
+func (t PlayerChatNetworkTargetName) WriteTo(w io.Writer) (int64, error) {
+	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
 }
 
 // Protodef: [
@@ -4710,232 +4936,6 @@ func (t DeclareRecipesStoneCutterRecipesArrayType) WriteTo(w io.Writer) (totalBy
 		return totalBytes, err
 	}
 	bytesWritten, err = t.SlotDisplay.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "chat",
-//	      "type": "ChatType"
-//	    },
-//	    {
-//	      "name": "narration",
-//	      "type": "ChatType"
-//	    }
-//	  ]
-//	]
-type ChatTypes struct {
-	// "ChatType"
-	Chat ChatType
-	// "ChatType"
-	Narration ChatType
-}
-
-func (t *ChatTypes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Chat.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Chat")
-	}
-	bytesRead, err = t.Narration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Narration")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChatTypes) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChatTypes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Chat.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Narration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "tagType",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "tags",
-//	      "type": "tags"
-//	    }
-//	  ]
-//	]
-type TagsTagsArrayType struct {
-	// "string"
-	TagType pk.String
-	// "tags"
-	Tags basetypes.Tags
-}
-
-func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.TagType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TagType")
-	}
-	bytesRead, err = t.Tags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tags")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.TagType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ExplosionPlayerKnockback models.Option[basetypes.Vec3f]
-
-func (t *ExplosionPlayerKnockback) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[basetypes.Vec3f])(t).ReadFrom(r)
-}
-
-func (t ExplosionPlayerKnockback) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[basetypes.Vec3f])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "position",
-//	      "type": "vec3f"
-//	    },
-//	    {
-//	      "name": "movement",
-//	      "type": "vec3f"
-//	    },
-//	    {
-//	      "name": "yaw",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "pitch",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "weight",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type MoveMinecartStepsArrayType struct {
-	// "vec3f"
-	Position basetypes.Vec3f
-	// "vec3f"
-	Movement basetypes.Vec3f
-	// "f32"
-	Yaw pk.Float
-	// "f32"
-	Pitch pk.Float
-	// "f32"
-	Weight pk.Float
-}
-
-func (t *MoveMinecartStepsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Position.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Position")
-	}
-	bytesRead, err = t.Movement.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Movement")
-	}
-	bytesRead, err = t.Yaw.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
-	}
-	bytesRead, err = t.Pitch.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
-	}
-	bytesRead, err = t.Weight.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Weight")
-	}
-
-	return totalBytes, nil
-}
-
-func (t MoveMinecartStepsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[MoveMinecartStepsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Position.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Movement.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Yaw.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Pitch.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Weight.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
