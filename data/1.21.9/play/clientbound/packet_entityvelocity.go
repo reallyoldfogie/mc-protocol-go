@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/pkg/errors"
+	"github.com/reallyoldfogie/mc-protocol-go/models"
 	"io"
 	"log"
 )
@@ -28,7 +29,7 @@ type EntityVelocity struct {
 	// "varint"
 	EntityId pk.VarInt
 	// "lpVec3"
-	Velocity LpVec3
+	Velocity models.LpVec3
 }
 
 // NewEntityVelocity creates a new EntityVelocity packet with the correct packet ID.
@@ -90,7 +91,7 @@ func (p *EntityVelocity) SetFields(fields map[string]pk.FieldEncoder) {
 		p.EntityId = val.(pk.VarInt)
 	}
 	if val, ok := fields["Velocity"]; ok {
-		p.Velocity = val.(LpVec3)
+		p.Velocity = val.(models.LpVec3)
 	}
 }
 
@@ -112,14 +113,14 @@ func (p *EntityVelocity) SetEntityId(val pk.VarInt) {
 // GetVelocity returns the Velocity field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EntityVelocity) GetVelocity() LpVec3 {
+func (p *EntityVelocity) GetVelocity() models.LpVec3 {
 	return p.Velocity
 }
 
 // SetVelocity sets the Velocity field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EntityVelocity) SetVelocity(val LpVec3) {
+func (p *EntityVelocity) SetVelocity(val models.LpVec3) {
 	p.Velocity = val
 }
 

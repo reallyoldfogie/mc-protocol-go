@@ -11,66 +11,124 @@ import (
 	"log"
 )
 
-type EntityMetadata struct {
-	EndVal  pk.UnsignedByte
-	Entries []EntityMetadataEntry
+type EntityMetadataPaintingVariantTitle = models.Option[models.AnonymousNBT]
+
+type EntityMetadataPaintingVariantAuthor = models.Option[models.AnonymousNBT]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "width",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "height",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "assetId",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "title",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    },
+//	    {
+//	      "name": "author",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    }
+//	  ]
+//	]
+type EntityMetadataPaintingVariant struct {
+	// "i32"
+	Width pk.Int
+	// "i32"
+	Height pk.Int
+	// "string"
+	AssetId pk.String
+	// [
+	//             "option",
+	//             "anonymousNbt"
+	//           ]
+	Title models.Option[models.AnonymousNBT]
+	// [
+	//             "option",
+	//             "anonymousNbt"
+	//           ]
+	Author models.Option[models.AnonymousNBT]
 }
 
-func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
+func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-
-	// Read entries in a loop until we encounter the terminator (endVal)
-	for {
-		// Read the next byte to check if it's the terminator
-		var marker pk.UnsignedByte
-		bytesRead, err = marker.ReadFrom(r)
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
-		}
-
-		// Check if this is the terminator
-		if marker == 255 {
-			t.EndVal = marker
-			break
-		}
-
-		// Not a terminator - this byte is the Key field of an entry
-		// Prepend the marker byte back to the reader so ReadFrom can read it
-		var entry EntityMetadataEntry
-
-		markerBuf := []byte{byte(marker)}
-		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
-		bytesRead, err = entry.ReadFrom(combinedReader)
-
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
-		}
-		t.Entries = append(t.Entries, entry)
+	bytesRead, err = t.Width.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Width")
+	}
+	bytesRead, err = t.Height.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Height")
+	}
+	bytesRead, err = t.AssetId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
+	}
+	bytesRead, err = t.Title.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Title")
+	}
+	bytesRead, err = t.Author.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Author")
 	}
 
-	return totalRead, nil
+	return totalBytes, nil
 }
 
-func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
+func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
-	// Write all entries
-	for _, entry := range t.Entries {
-		bytesWritten, err = entry.WriteTo(w)
-		if err != nil {
-			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
-		}
-		totalWritten += bytesWritten
+	defer func() {
+		log.Printf("[EntityMetadataPaintingVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Width.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
-
-	// Write terminator
-	t.EndVal = 255
-	bytesWritten, err = t.EndVal.WriteTo(w)
-	totalWritten += bytesWritten
-
-	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
+	bytesWritten, err = t.Height.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AssetId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Title.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Author.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
 }
 
 type EntityMetadataEntryType struct {
@@ -146,7 +204,41 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown EntityMetadataEntryType value: %s", m.Value)
 }
 
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+type EntityMetadataEntryValueHumanoidArm struct {
+	Value string
+}
+
+var EntityMetadataEntryValueHumanoidArmMappings = map[int64]string{
+	0: "left",
+	1: "right",
+}
+
+func (m *EntityMetadataEntryValueHumanoidArm) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read EntityMetadataEntryValueHumanoidArm key")
+	}
+
+	value, ok := EntityMetadataEntryValueHumanoidArmMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m EntityMetadataEntryValueHumanoidArm) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range EntityMetadataEntryValueHumanoidArmMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown EntityMetadataEntryValueHumanoidArm value: %s", m.Value)
+}
 
 // Protodef: [
 //
@@ -294,46 +386,6 @@ func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes i
 
 type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
 
-type EntityMetadataEntryValueHumanoidArm struct {
-	Value string
-}
-
-var EntityMetadataEntryValueHumanoidArmMappings = map[int64]string{
-	0: "left",
-	1: "right",
-}
-
-func (m *EntityMetadataEntryValueHumanoidArm) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read EntityMetadataEntryValueHumanoidArm key")
-	}
-
-	value, ok := EntityMetadataEntryValueHumanoidArmMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m EntityMetadataEntryValueHumanoidArm) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range EntityMetadataEntryValueHumanoidArmMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown EntityMetadataEntryValueHumanoidArm value: %s", m.Value)
-}
-
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
-
-type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
-
 type EntityMetadataEntryValuePaintingVariant struct {
 	IsRegistryID bool
 	RegistryID   pk.VarInt
@@ -393,6 +445,12 @@ func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, er
 
 	return totalBytes, nil
 }
+
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+
+type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
+
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
 
 // Protodef: [
 //
@@ -1114,122 +1172,64 @@ func (t EntityMetadataEntry) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	return totalBytes, nil
 }
 
-type EntityMetadataPaintingVariantTitle = models.Option[models.AnonymousNBT]
-
-type EntityMetadataPaintingVariantAuthor = models.Option[models.AnonymousNBT]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "width",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "height",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "assetId",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "title",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    },
-//	    {
-//	      "name": "author",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    }
-//	  ]
-//	]
-type EntityMetadataPaintingVariant struct {
-	// "i32"
-	Width pk.Int
-	// "i32"
-	Height pk.Int
-	// "string"
-	AssetId pk.String
-	// [
-	//             "option",
-	//             "anonymousNbt"
-	//           ]
-	Title models.Option[models.AnonymousNBT]
-	// [
-	//             "option",
-	//             "anonymousNbt"
-	//           ]
-	Author models.Option[models.AnonymousNBT]
+type EntityMetadata struct {
+	EndVal  pk.UnsignedByte
+	Entries []EntityMetadataEntry
 }
 
-func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Width.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Width")
-	}
-	bytesRead, err = t.Height.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Height")
-	}
-	bytesRead, err = t.AssetId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
-	}
-	bytesRead, err = t.Title.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Title")
-	}
-	bytesRead, err = t.Author.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Author")
+
+	// Read entries in a loop until we encounter the terminator (endVal)
+	for {
+		// Read the next byte to check if it's the terminator
+		var marker pk.UnsignedByte
+		bytesRead, err = marker.ReadFrom(r)
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
+		}
+
+		// Check if this is the terminator
+		if marker == 255 {
+			t.EndVal = marker
+			break
+		}
+
+		// Not a terminator - this byte is the Key field of an entry
+		// Prepend the marker byte back to the reader so ReadFrom can read it
+		var entry EntityMetadataEntry
+
+		markerBuf := []byte{byte(marker)}
+		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
+		bytesRead, err = entry.ReadFrom(combinedReader)
+
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
+		}
+		t.Entries = append(t.Entries, entry)
 	}
 
-	return totalBytes, nil
+	return totalRead, nil
 }
 
-func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
 	var bytesWritten int64
 
-	defer func() {
-		log.Printf("[EntityMetadataPaintingVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Width.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
+	// Write all entries
+	for _, entry := range t.Entries {
+		bytesWritten, err = entry.WriteTo(w)
+		if err != nil {
+			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
+		}
+		totalWritten += bytesWritten
 	}
-	bytesWritten, err = t.Height.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AssetId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Title.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Author.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
+
+	// Write terminator
+	t.EndVal = 255
+	bytesWritten, err = t.EndVal.WriteTo(w)
+	totalWritten += bytesWritten
+
+	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
 }

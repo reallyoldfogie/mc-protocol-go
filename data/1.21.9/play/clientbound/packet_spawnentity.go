@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/pkg/errors"
+	"github.com/reallyoldfogie/mc-protocol-go/models"
 	"io"
 	"log"
 )
@@ -74,7 +75,7 @@ type SpawnEntity struct {
 	// "f64"
 	Z pk.Double
 	// "lpVec3"
-	Velocity LpVec3
+	Velocity models.LpVec3
 	// "i8"
 	Pitch pk.Byte
 	// "i8"
@@ -186,7 +187,7 @@ func (p *SpawnEntity) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Z = val.(pk.Double)
 	}
 	if val, ok := fields["Velocity"]; ok {
-		p.Velocity = val.(LpVec3)
+		p.Velocity = val.(models.LpVec3)
 	}
 	if val, ok := fields["Pitch"]; ok {
 		p.Pitch = val.(pk.Byte)
@@ -290,14 +291,14 @@ func (p *SpawnEntity) SetZ(val pk.Double) {
 // GetVelocity returns the Velocity field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *SpawnEntity) GetVelocity() LpVec3 {
+func (p *SpawnEntity) GetVelocity() models.LpVec3 {
 	return p.Velocity
 }
 
 // SetVelocity sets the Velocity field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *SpawnEntity) SetVelocity(val LpVec3) {
+func (p *SpawnEntity) SetVelocity(val models.LpVec3) {
 	p.Velocity = val
 }
 

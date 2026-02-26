@@ -51,13 +51,13 @@ type AccelerationPowerType interface {
 }
 
 // AccelerationPowerGetter provides read access to the AccelerationPower field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AccelerationPowerGetter[T AccelerationPowerType] interface {
 	GetAccelerationPower() T
 }
 
 // AccelerationPowerSetter provides write access to the AccelerationPower field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AccelerationPowerSetter[T AccelerationPowerType] interface {
 	SetAccelerationPower(T)
 }
@@ -69,13 +69,13 @@ type AcknowledgedType interface {
 }
 
 // AcknowledgedGetter provides read access to the Acknowledged field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AcknowledgedGetter[T AcknowledgedType] interface {
 	GetAcknowledged() T
 }
 
 // AcknowledgedSetter provides write access to the Acknowledged field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AcknowledgedSetter[T AcknowledgedType] interface {
 	SetAcknowledged(T)
 }
@@ -87,13 +87,13 @@ type ActionType interface {
 }
 
 // ActionGetter provides read access to the Action field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ActionGetter[T ActionType] interface {
 	GetAction() T
 }
 
 // ActionSetter provides write access to the Action field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ActionSetter[T ActionType] interface {
 	SetAction(T)
 }
@@ -105,13 +105,13 @@ type ActionIdType interface {
 }
 
 // ActionIdGetter provides read access to the ActionId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ActionIdGetter[T ActionIdType] interface {
 	GetActionId() T
 }
 
 // ActionIdSetter provides write access to the ActionId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ActionIdSetter[T ActionIdType] interface {
 	SetActionId(T)
 }
@@ -123,33 +123,15 @@ type AdvancementMappingType interface {
 }
 
 // AdvancementMappingGetter provides read access to the AdvancementMapping field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AdvancementMappingGetter[T AdvancementMappingType] interface {
 	GetAdvancementMapping() T
 }
 
 // AdvancementMappingSetter provides write access to the AdvancementMapping field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AdvancementMappingSetter[T AdvancementMappingType] interface {
 	SetAdvancementMapping(T)
-}
-
-// AffectedBlockOffsetsType is a type constraint for the AffectedBlockOffsets field.
-// This field has types: any
-type AffectedBlockOffsetsType interface {
-	any
-}
-
-// AffectedBlockOffsetsGetter provides read access to the AffectedBlockOffsets field.
-// Implemented by packet types in versions: 1.21.1
-type AffectedBlockOffsetsGetter[T AffectedBlockOffsetsType] interface {
-	GetAffectedBlockOffsets() T
-}
-
-// AffectedBlockOffsetsSetter provides write access to the AffectedBlockOffsets field.
-// Implemented by packet types in versions: 1.21.1
-type AffectedBlockOffsetsSetter[T AffectedBlockOffsetsType] interface {
-	SetAffectedBlockOffsets(T)
 }
 
 // AgeType is a type constraint for the Age field.
@@ -159,13 +141,13 @@ type AgeType interface {
 }
 
 // AgeGetter provides read access to the Age field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AgeGetter[T AgeType] interface {
 	GetAge() T
 }
 
 // AgeSetter provides write access to the Age field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AgeSetter[T AgeType] interface {
 	SetAge(T)
 }
@@ -177,13 +159,13 @@ type AlwaysShowType interface {
 }
 
 // AlwaysShowGetter provides read access to the AlwaysShow field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AlwaysShowGetter[T AlwaysShowType] interface {
 	GetAlwaysShow() T
 }
 
 // AlwaysShowSetter provides write access to the AlwaysShow field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AlwaysShowSetter[T AlwaysShowType] interface {
 	SetAlwaysShow(T)
 }
@@ -195,13 +177,13 @@ type AmbientType interface {
 }
 
 // AmbientGetter provides read access to the Ambient field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmbientGetter[T AmbientType] interface {
 	GetAmbient() T
 }
 
 // AmbientSetter provides write access to the Ambient field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmbientSetter[T AmbientType] interface {
 	SetAmbient(T)
 }
@@ -213,13 +195,13 @@ type AmountType interface {
 }
 
 // AmountGetter provides read access to the Amount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmountGetter[T AmountType] interface {
 	GetAmount() T
 }
 
 // AmountSetter provides write access to the Amount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmountSetter[T AmountType] interface {
 	SetAmount(T)
 }
@@ -231,51 +213,15 @@ type AmplifierType interface {
 }
 
 // AmplifierGetter provides read access to the Amplifier field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmplifierGetter[T AmplifierType] interface {
 	GetAmplifier() T
 }
 
 // AmplifierSetter provides write access to the Amplifier field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AmplifierSetter[T AmplifierType] interface {
 	SetAmplifier(T)
-}
-
-// AngleType is a type constraint for the Angle field.
-// This field has types: pk.Float
-type AngleType interface {
-	pk.Float
-}
-
-// AngleGetter provides read access to the Angle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type AngleGetter[T AngleType] interface {
-	GetAngle() T
-}
-
-// AngleSetter provides write access to the Angle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type AngleSetter[T AngleType] interface {
-	SetAngle(T)
-}
-
-// AngryTextureType is a type constraint for the AngryTexture field.
-// This field has types: pk.String
-type AngryTextureType interface {
-	pk.String
-}
-
-// AngryTextureGetter provides read access to the AngryTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type AngryTextureGetter[T AngryTextureType] interface {
-	GetAngryTexture() T
-}
-
-// AngryTextureSetter provides write access to the AngryTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type AngryTextureSetter[T AngryTextureType] interface {
-	SetAngryTexture(T)
 }
 
 // AnimationType is a type constraint for the Animation field.
@@ -285,13 +231,13 @@ type AnimationType interface {
 }
 
 // AnimationGetter provides read access to the Animation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AnimationGetter[T AnimationType] interface {
 	GetAnimation() T
 }
 
 // AnimationSetter provides write access to the Animation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AnimationSetter[T AnimationType] interface {
 	SetAnimation(T)
 }
@@ -303,13 +249,13 @@ type ArgumentSignaturesType interface {
 }
 
 // ArgumentSignaturesGetter provides read access to the ArgumentSignatures field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ArgumentSignaturesGetter[T ArgumentSignaturesType] interface {
 	GetArgumentSignatures() T
 }
 
 // ArgumentSignaturesSetter provides write access to the ArgumentSignatures field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ArgumentSignaturesSetter[T ArgumentSignaturesType] interface {
 	SetArgumentSignatures(T)
 }
@@ -321,13 +267,13 @@ type AssetBaseType interface {
 }
 
 // AssetBaseGetter provides read access to the AssetBase field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AssetBaseGetter[T AssetBaseType] interface {
 	GetAssetBase() T
 }
 
 // AssetBaseSetter provides write access to the AssetBase field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AssetBaseSetter[T AssetBaseType] interface {
 	SetAssetBase(T)
 }
@@ -339,33 +285,15 @@ type AssetIdType interface {
 }
 
 // AssetIdGetter provides read access to the AssetId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AssetIdGetter[T AssetIdType] interface {
 	GetAssetId() T
 }
 
 // AssetIdSetter provides write access to the AssetId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AssetIdSetter[T AssetIdType] interface {
 	SetAssetId(T)
-}
-
-// AssetNameType is a type constraint for the AssetName field.
-// This field has types: pk.String
-type AssetNameType interface {
-	pk.String
-}
-
-// AssetNameGetter provides read access to the AssetName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type AssetNameGetter[T AssetNameType] interface {
-	GetAssetName() T
-}
-
-// AssetNameSetter provides write access to the AssetName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type AssetNameSetter[T AssetNameType] interface {
-	SetAssetName(T)
 }
 
 // AuthorType is a type constraint for the Author field.
@@ -375,13 +303,13 @@ type AuthorType interface {
 }
 
 // AuthorGetter provides read access to the Author field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AuthorGetter[T AuthorType] interface {
 	GetAuthor() T
 }
 
 // AuthorSetter provides write access to the Author field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type AuthorSetter[T AuthorType] interface {
 	SetAuthor(T)
 }
@@ -393,33 +321,15 @@ type BatchSizeType interface {
 }
 
 // BatchSizeGetter provides read access to the BatchSize field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BatchSizeGetter[T BatchSizeType] interface {
 	GetBatchSize() T
 }
 
 // BatchSizeSetter provides write access to the BatchSize field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BatchSizeSetter[T BatchSizeType] interface {
 	SetBatchSize(T)
-}
-
-// BiomeType is a type constraint for the Biome field.
-// This field has types: any
-type BiomeType interface {
-	any
-}
-
-// BiomeGetter provides read access to the Biome field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type BiomeGetter[T BiomeType] interface {
-	GetBiome() T
-}
-
-// BiomeSetter provides write access to the Biome field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type BiomeSetter[T BiomeType] interface {
-	SetBiome(T)
 }
 
 // BiomesType is a type constraint for the Biomes field.
@@ -429,13 +339,13 @@ type BiomesType interface {
 }
 
 // BiomesGetter provides read access to the Biomes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BiomesGetter[T BiomesType] interface {
 	GetBiomes() T
 }
 
 // BiomesSetter provides write access to the Biomes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BiomesSetter[T BiomesType] interface {
 	SetBiomes(T)
 }
@@ -447,69 +357,15 @@ type BlastType interface {
 }
 
 // BlastGetter provides read access to the Blast field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlastGetter[T BlastType] interface {
 	GetBlast() T
 }
 
 // BlastSetter provides write access to the Blast field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlastSetter[T BlastType] interface {
 	SetBlast(T)
-}
-
-// BlastFilteringCraftableType is a type constraint for the BlastFilteringCraftable field.
-// This field has types: pk.Boolean
-type BlastFilteringCraftableType interface {
-	pk.Boolean
-}
-
-// BlastFilteringCraftableGetter provides read access to the BlastFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type BlastFilteringCraftableGetter[T BlastFilteringCraftableType] interface {
-	GetBlastFilteringCraftable() T
-}
-
-// BlastFilteringCraftableSetter provides write access to the BlastFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type BlastFilteringCraftableSetter[T BlastFilteringCraftableType] interface {
-	SetBlastFilteringCraftable(T)
-}
-
-// BlastFurnaceOpenType is a type constraint for the BlastFurnaceOpen field.
-// This field has types: pk.Boolean
-type BlastFurnaceOpenType interface {
-	pk.Boolean
-}
-
-// BlastFurnaceOpenGetter provides read access to the BlastFurnaceOpen field.
-// Implemented by packet types in versions: 1.21.1
-type BlastFurnaceOpenGetter[T BlastFurnaceOpenType] interface {
-	GetBlastFurnaceOpen() T
-}
-
-// BlastFurnaceOpenSetter provides write access to the BlastFurnaceOpen field.
-// Implemented by packet types in versions: 1.21.1
-type BlastFurnaceOpenSetter[T BlastFurnaceOpenType] interface {
-	SetBlastFurnaceOpen(T)
-}
-
-// BlastGuiOpenType is a type constraint for the BlastGuiOpen field.
-// This field has types: pk.Boolean
-type BlastGuiOpenType interface {
-	pk.Boolean
-}
-
-// BlastGuiOpenGetter provides read access to the BlastGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type BlastGuiOpenGetter[T BlastGuiOpenType] interface {
-	GetBlastGuiOpen() T
-}
-
-// BlastGuiOpenSetter provides write access to the BlastGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type BlastGuiOpenSetter[T BlastGuiOpenType] interface {
-	SetBlastGuiOpen(T)
 }
 
 // BlockCountType is a type constraint for the BlockCount field.
@@ -537,13 +393,13 @@ type BlockEntitiesType interface {
 }
 
 // BlockEntitiesGetter provides read access to the BlockEntities field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockEntitiesGetter[T BlockEntitiesType] interface {
 	GetBlockEntities() T
 }
 
 // BlockEntitiesSetter provides write access to the BlockEntities field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockEntitiesSetter[T BlockEntitiesType] interface {
 	SetBlockEntities(T)
 }
@@ -555,33 +411,15 @@ type BlockIdType interface {
 }
 
 // BlockIdGetter provides read access to the BlockId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockIdGetter[T BlockIdType] interface {
 	GetBlockId() T
 }
 
 // BlockIdSetter provides write access to the BlockId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockIdSetter[T BlockIdType] interface {
 	SetBlockId(T)
-}
-
-// BlockInteractionTypeType is a type constraint for the BlockInteractionType field.
-// This field has types: pk.VarInt
-type BlockInteractionTypeType interface {
-	pk.VarInt
-}
-
-// BlockInteractionTypeGetter provides read access to the BlockInteractionType field.
-// Implemented by packet types in versions: 1.21.1
-type BlockInteractionTypeGetter[T BlockInteractionTypeType] interface {
-	GetBlockInteractionType() T
-}
-
-// BlockInteractionTypeSetter provides write access to the BlockInteractionType field.
-// Implemented by packet types in versions: 1.21.1
-type BlockInteractionTypeSetter[T BlockInteractionTypeType] interface {
-	SetBlockInteractionType(T)
 }
 
 // BlockLightType is a type constraint for the BlockLight field.
@@ -591,13 +429,13 @@ type BlockLightType interface {
 }
 
 // BlockLightGetter provides read access to the BlockLight field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockLightGetter[T BlockLightType] interface {
 	GetBlockLight() T
 }
 
 // BlockLightSetter provides write access to the BlockLight field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockLightSetter[T BlockLightType] interface {
 	SetBlockLight(T)
 }
@@ -609,13 +447,13 @@ type BlockLightMaskType interface {
 }
 
 // BlockLightMaskGetter provides read access to the BlockLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockLightMaskGetter[T BlockLightMaskType] interface {
 	GetBlockLightMask() T
 }
 
 // BlockLightMaskSetter provides write access to the BlockLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockLightMaskSetter[T BlockLightMaskType] interface {
 	SetBlockLightMask(T)
 }
@@ -663,13 +501,13 @@ type BlockSetType interface {
 }
 
 // BlockSetGetter provides read access to the BlockSet field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockSetGetter[T BlockSetType] interface {
 	GetBlockSet() T
 }
 
 // BlockSetSetter provides write access to the BlockSet field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BlockSetSetter[T BlockSetType] interface {
 	SetBlockSet(T)
 }
@@ -699,13 +537,13 @@ type BookIdType interface {
 }
 
 // BookIdGetter provides read access to the BookId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BookIdGetter[T BookIdType] interface {
 	GetBookId() T
 }
 
 // BookIdSetter provides write access to the BookId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BookIdSetter[T BookIdType] interface {
 	SetBookId(T)
 }
@@ -717,13 +555,13 @@ type BookOpenType interface {
 }
 
 // BookOpenGetter provides read access to the BookOpen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BookOpenGetter[T BookOpenType] interface {
 	GetBookOpen() T
 }
 
 // BookOpenSetter provides write access to the BookOpen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type BookOpenSetter[T BookOpenType] interface {
 	SetBookOpen(T)
 }
@@ -771,13 +609,13 @@ type Byte1Type interface {
 }
 
 // Byte1Getter provides read access to the Byte1 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Byte1Getter[T Byte1Type] interface {
 	GetByte1() T
 }
 
 // Byte1Setter provides write access to the Byte1 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Byte1Setter[T Byte1Type] interface {
 	SetByte1(T)
 }
@@ -789,13 +627,13 @@ type Byte2Type interface {
 }
 
 // Byte2Getter provides read access to the Byte2 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Byte2Getter[T Byte2Type] interface {
 	GetByte2() T
 }
 
 // Byte2Setter provides write access to the Byte2 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Byte2Setter[T Byte2Type] interface {
 	SetByte2(T)
 }
@@ -807,13 +645,13 @@ type CameraIdType interface {
 }
 
 // CameraIdGetter provides read access to the CameraId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CameraIdGetter[T CameraIdType] interface {
 	GetCameraId() T
 }
 
 // CameraIdSetter provides write access to the CameraId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CameraIdSetter[T CameraIdType] interface {
 	SetCameraId(T)
 }
@@ -825,13 +663,13 @@ type CanRestockType interface {
 }
 
 // CanRestockGetter provides read access to the CanRestock field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CanRestockGetter[T CanRestockType] interface {
 	GetCanRestock() T
 }
 
 // CanRestockSetter provides write access to the CanRestock field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CanRestockSetter[T CanRestockType] interface {
 	SetCanRestock(T)
 }
@@ -861,33 +699,15 @@ type CarriedItemType interface {
 }
 
 // CarriedItemGetter provides read access to the CarriedItem field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CarriedItemGetter[T CarriedItemType] interface {
 	GetCarriedItem() T
 }
 
 // CarriedItemSetter provides write access to the CarriedItem field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CarriedItemSetter[T CarriedItemType] interface {
 	SetCarriedItem(T)
-}
-
-// CategoryType is a type constraint for the Category field.
-// This field has types: pk.VarInt
-type CategoryType interface {
-	pk.VarInt
-}
-
-// CategoryGetter provides read access to the Category field.
-// Implemented by packet types in versions: 1.21.1
-type CategoryGetter[T CategoryType] interface {
-	GetCategory() T
-}
-
-// CategorySetter provides write access to the Category field.
-// Implemented by packet types in versions: 1.21.1
-type CategorySetter[T CategoryType] interface {
-	SetCategory(T)
 }
 
 // CenterType is a type constraint for the Center field.
@@ -915,13 +735,13 @@ type ChangedSlotsType interface {
 }
 
 // ChangedSlotsGetter provides read access to the ChangedSlots field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChangedSlotsGetter[T ChangedSlotsType] interface {
 	GetChangedSlots() T
 }
 
 // ChangedSlotsSetter provides write access to the ChangedSlots field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChangedSlotsSetter[T ChangedSlotsType] interface {
 	SetChangedSlots(T)
 }
@@ -933,13 +753,13 @@ type ChannelType interface {
 }
 
 // ChannelGetter provides read access to the Channel field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChannelGetter[T ChannelType] interface {
 	GetChannel() T
 }
 
 // ChannelSetter provides write access to the Channel field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChannelSetter[T ChannelType] interface {
 	SetChannel(T)
 }
@@ -951,13 +771,13 @@ type ChatType interface {
 }
 
 // ChatGetter provides read access to the Chat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatGetter[T ChatType] interface {
 	GetChat() T
 }
 
 // ChatSetter provides write access to the Chat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatSetter[T ChatType] interface {
 	SetChat(T)
 }
@@ -969,13 +789,13 @@ type ChatColorsType interface {
 }
 
 // ChatColorsGetter provides read access to the ChatColors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatColorsGetter[T ChatColorsType] interface {
 	GetChatColors() T
 }
 
 // ChatColorsSetter provides write access to the ChatColors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatColorsSetter[T ChatColorsType] interface {
 	SetChatColors(T)
 }
@@ -987,13 +807,13 @@ type ChatFlagsType interface {
 }
 
 // ChatFlagsGetter provides read access to the ChatFlags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatFlagsGetter[T ChatFlagsType] interface {
 	GetChatFlags() T
 }
 
 // ChatFlagsSetter provides write access to the ChatFlags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChatFlagsSetter[T ChatFlagsType] interface {
 	SetChatFlags(T)
 }
@@ -1005,13 +825,13 @@ type ChecksumType interface {
 }
 
 // ChecksumGetter provides read access to the Checksum field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChecksumGetter[T ChecksumType] interface {
 	GetChecksum() T
 }
 
 // ChecksumSetter provides write access to the Checksum field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChecksumSetter[T ChecksumType] interface {
 	SetChecksum(T)
 }
@@ -1023,13 +843,13 @@ type ChildrenType interface {
 }
 
 // ChildrenGetter provides read access to the Children field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChildrenGetter[T ChildrenType] interface {
 	GetChildren() T
 }
 
 // ChildrenSetter provides write access to the Children field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChildrenSetter[T ChildrenType] interface {
 	SetChildren(T)
 }
@@ -1041,13 +861,13 @@ type ChunkCoordinatesType interface {
 }
 
 // ChunkCoordinatesGetter provides read access to the ChunkCoordinates field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkCoordinatesGetter[T ChunkCoordinatesType] interface {
 	GetChunkCoordinates() T
 }
 
 // ChunkCoordinatesSetter provides write access to the ChunkCoordinates field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkCoordinatesSetter[T ChunkCoordinatesType] interface {
 	SetChunkCoordinates(T)
 }
@@ -1059,13 +879,13 @@ type ChunkDataType interface {
 }
 
 // ChunkDataGetter provides read access to the ChunkData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkDataGetter[T ChunkDataType] interface {
 	GetChunkData() T
 }
 
 // ChunkDataSetter provides write access to the ChunkData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkDataSetter[T ChunkDataType] interface {
 	SetChunkData(T)
 }
@@ -1095,13 +915,13 @@ type ChunkXType interface {
 }
 
 // ChunkXGetter provides read access to the ChunkX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkXGetter[T ChunkXType] interface {
 	GetChunkX() T
 }
 
 // ChunkXSetter provides write access to the ChunkX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkXSetter[T ChunkXType] interface {
 	SetChunkX(T)
 }
@@ -1113,13 +933,13 @@ type ChunkZType interface {
 }
 
 // ChunkZGetter provides read access to the ChunkZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkZGetter[T ChunkZType] interface {
 	GetChunkZ() T
 }
 
 // ChunkZSetter provides write access to the ChunkZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunkZSetter[T ChunkZType] interface {
 	SetChunkZ(T)
 }
@@ -1131,13 +951,13 @@ type ChunksPerTickType interface {
 }
 
 // ChunksPerTickGetter provides read access to the ChunksPerTick field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunksPerTickGetter[T ChunksPerTickType] interface {
 	GetChunksPerTick() T
 }
 
 // ChunksPerTickSetter provides write access to the ChunksPerTick field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ChunksPerTickSetter[T ChunksPerTickType] interface {
 	SetChunksPerTick(T)
 }
@@ -1185,13 +1005,13 @@ type CollectedEntityIdType interface {
 }
 
 // CollectedEntityIdGetter provides read access to the CollectedEntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CollectedEntityIdGetter[T CollectedEntityIdType] interface {
 	GetCollectedEntityId() T
 }
 
 // CollectedEntityIdSetter provides write access to the CollectedEntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CollectedEntityIdSetter[T CollectedEntityIdType] interface {
 	SetCollectedEntityId(T)
 }
@@ -1203,33 +1023,15 @@ type CollectorEntityIdType interface {
 }
 
 // CollectorEntityIdGetter provides read access to the CollectorEntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CollectorEntityIdGetter[T CollectorEntityIdType] interface {
 	GetCollectorEntityId() T
 }
 
 // CollectorEntityIdSetter provides write access to the CollectorEntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CollectorEntityIdSetter[T CollectorEntityIdType] interface {
 	SetCollectorEntityId(T)
-}
-
-// CollisionRuleType is a type constraint for the CollisionRule field.
-// This field has types: any
-type CollisionRuleType interface {
-	any
-}
-
-// CollisionRuleGetter provides read access to the CollisionRule field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CollisionRuleGetter[T CollisionRuleType] interface {
-	GetCollisionRule() T
-}
-
-// CollisionRuleSetter provides write access to the CollisionRule field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CollisionRuleSetter[T CollisionRuleType] interface {
-	SetCollisionRule(T)
 }
 
 // ColorType is a type constraint for the Color field.
@@ -1239,13 +1041,13 @@ type ColorType interface {
 }
 
 // ColorGetter provides read access to the Color field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorGetter[T ColorType] interface {
 	GetColor() T
 }
 
 // ColorSetter provides write access to the Color field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorSetter[T ColorType] interface {
 	SetColor(T)
 }
@@ -1257,13 +1059,13 @@ type ColorIdType interface {
 }
 
 // ColorIdGetter provides read access to the ColorId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorIdGetter[T ColorIdType] interface {
 	GetColorId() T
 }
 
 // ColorIdSetter provides write access to the ColorId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorIdSetter[T ColorIdType] interface {
 	SetColorId(T)
 }
@@ -1275,13 +1077,13 @@ type ColorsType interface {
 }
 
 // ColorsGetter provides read access to the Colors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorsGetter[T ColorsType] interface {
 	GetColors() T
 }
 
 // ColorsSetter provides write access to the Colors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColorsSetter[T ColorsType] interface {
 	SetColors(T)
 }
@@ -1293,13 +1095,13 @@ type ColumnsType interface {
 }
 
 // ColumnsGetter provides read access to the Columns field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColumnsGetter[T ColumnsType] interface {
 	GetColumns() T
 }
 
 // ColumnsSetter provides write access to the Columns field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ColumnsSetter[T ColumnsType] interface {
 	SetColumns(T)
 }
@@ -1311,13 +1113,13 @@ type CommandType interface {
 }
 
 // CommandGetter provides read access to the Command field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CommandGetter[T CommandType] interface {
 	GetCommand() T
 }
 
 // CommandSetter provides write access to the Command field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CommandSetter[T CommandType] interface {
 	SetCommand(T)
 }
@@ -1329,13 +1131,13 @@ type ComparatorOutputType interface {
 }
 
 // ComparatorOutputGetter provides read access to the ComparatorOutput field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ComparatorOutputGetter[T ComparatorOutputType] interface {
 	GetComparatorOutput() T
 }
 
 // ComparatorOutputSetter provides write access to the ComparatorOutput field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ComparatorOutputSetter[T ComparatorOutputType] interface {
 	SetComparatorOutput(T)
 }
@@ -1347,13 +1149,13 @@ type ComponentsType interface {
 }
 
 // ComponentsGetter provides read access to the Components field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ComponentsGetter[T ComponentsType] interface {
 	GetComponents() T
 }
 
 // ComponentsSetter provides write access to the Components field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ComponentsSetter[T ComponentsType] interface {
 	SetComponents(T)
 }
@@ -1365,13 +1167,13 @@ type ContentType interface {
 }
 
 // ContentGetter provides read access to the Content field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ContentGetter[T ContentType] interface {
 	GetContent() T
 }
 
 // ContentSetter provides write access to the Content field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ContentSetter[T ContentType] interface {
 	SetContent(T)
 }
@@ -1383,33 +1185,15 @@ type ContentsType interface {
 }
 
 // ContentsGetter provides read access to the Contents field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ContentsGetter[T ContentsType] interface {
 	GetContents() T
 }
 
 // ContentsSetter provides write access to the Contents field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ContentsSetter[T ContentsType] interface {
 	SetContents(T)
-}
-
-// CookTimeType is a type constraint for the CookTime field.
-// This field has types: pk.VarInt
-type CookTimeType interface {
-	pk.VarInt
-}
-
-// CookTimeGetter provides read access to the CookTime field.
-// Implemented by packet types in versions: 1.21.1
-type CookTimeGetter[T CookTimeType] interface {
-	GetCookTime() T
-}
-
-// CookTimeSetter provides write access to the CookTime field.
-// Implemented by packet types in versions: 1.21.1
-type CookTimeSetter[T CookTimeType] interface {
-	SetCookTime(T)
 }
 
 // CookieType is a type constraint for the Cookie field.
@@ -1419,13 +1203,13 @@ type CookieType interface {
 }
 
 // CookieGetter provides read access to the Cookie field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CookieGetter[T CookieType] interface {
 	GetCookie() T
 }
 
 // CookieSetter provides write access to the Cookie field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CookieSetter[T CookieType] interface {
 	SetCookie(T)
 }
@@ -1437,13 +1221,13 @@ type CooldownGroupType interface {
 }
 
 // CooldownGroupGetter provides read access to the CooldownGroup field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CooldownGroupGetter[T CooldownGroupType] interface {
 	GetCooldownGroup() T
 }
 
 // CooldownGroupSetter provides write access to the CooldownGroup field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CooldownGroupSetter[T CooldownGroupType] interface {
 	SetCooldownGroup(T)
 }
@@ -1455,13 +1239,13 @@ type CooldownTicksType interface {
 }
 
 // CooldownTicksGetter provides read access to the CooldownTicks field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CooldownTicksGetter[T CooldownTicksType] interface {
 	GetCooldownTicks() T
 }
 
 // CooldownTicksSetter provides write access to the CooldownTicks field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CooldownTicksSetter[T CooldownTicksType] interface {
 	SetCooldownTicks(T)
 }
@@ -1473,13 +1257,13 @@ type CopyMetadataType interface {
 }
 
 // CopyMetadataGetter provides read access to the CopyMetadata field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CopyMetadataGetter[T CopyMetadataType] interface {
 	GetCopyMetadata() T
 }
 
 // CopyMetadataSetter provides write access to the CopyMetadata field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CopyMetadataSetter[T CopyMetadataType] interface {
 	SetCopyMetadata(T)
 }
@@ -1503,19 +1287,19 @@ type CostMalusSetter[T CostMalusType] interface {
 }
 
 // CountType is a type constraint for the Count field.
-// This field has types: pk.Short | pk.VarInt
+// This field has types: pk.VarInt
 type CountType interface {
-	pk.Short | pk.VarInt
+	pk.VarInt
 }
 
 // CountGetter provides read access to the Count field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CountGetter[T CountType] interface {
 	GetCount() T
 }
 
 // CountSetter provides write access to the Count field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CountSetter[T CountType] interface {
 	SetCount(T)
 }
@@ -1527,69 +1311,15 @@ type CraftingType interface {
 }
 
 // CraftingGetter provides read access to the Crafting field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CraftingGetter[T CraftingType] interface {
 	GetCrafting() T
 }
 
 // CraftingSetter provides write access to the Crafting field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CraftingSetter[T CraftingType] interface {
 	SetCrafting(T)
-}
-
-// CraftingBookOpenType is a type constraint for the CraftingBookOpen field.
-// This field has types: pk.Boolean
-type CraftingBookOpenType interface {
-	pk.Boolean
-}
-
-// CraftingBookOpenGetter provides read access to the CraftingBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type CraftingBookOpenGetter[T CraftingBookOpenType] interface {
-	GetCraftingBookOpen() T
-}
-
-// CraftingBookOpenSetter provides write access to the CraftingBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type CraftingBookOpenSetter[T CraftingBookOpenType] interface {
-	SetCraftingBookOpen(T)
-}
-
-// CraftingFilteringCraftableType is a type constraint for the CraftingFilteringCraftable field.
-// This field has types: pk.Boolean
-type CraftingFilteringCraftableType interface {
-	pk.Boolean
-}
-
-// CraftingFilteringCraftableGetter provides read access to the CraftingFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CraftingFilteringCraftableGetter[T CraftingFilteringCraftableType] interface {
-	GetCraftingFilteringCraftable() T
-}
-
-// CraftingFilteringCraftableSetter provides write access to the CraftingFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CraftingFilteringCraftableSetter[T CraftingFilteringCraftableType] interface {
-	SetCraftingFilteringCraftable(T)
-}
-
-// CraftingGuiOpenType is a type constraint for the CraftingGuiOpen field.
-// This field has types: pk.Boolean
-type CraftingGuiOpenType interface {
-	pk.Boolean
-}
-
-// CraftingGuiOpenGetter provides read access to the CraftingGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CraftingGuiOpenGetter[T CraftingGuiOpenType] interface {
-	GetCraftingGuiOpen() T
-}
-
-// CraftingGuiOpenSetter provides write access to the CraftingGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type CraftingGuiOpenSetter[T CraftingGuiOpenType] interface {
-	SetCraftingGuiOpen(T)
 }
 
 // CursorItemType is a type constraint for the CursorItem field.
@@ -1599,13 +1329,13 @@ type CursorItemType interface {
 }
 
 // CursorItemGetter provides read access to the CursorItem field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorItemGetter[T CursorItemType] interface {
 	GetCursorItem() T
 }
 
 // CursorItemSetter provides write access to the CursorItem field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorItemSetter[T CursorItemType] interface {
 	SetCursorItem(T)
 }
@@ -1617,13 +1347,13 @@ type CursorXType interface {
 }
 
 // CursorXGetter provides read access to the CursorX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorXGetter[T CursorXType] interface {
 	GetCursorX() T
 }
 
 // CursorXSetter provides write access to the CursorX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorXSetter[T CursorXType] interface {
 	SetCursorX(T)
 }
@@ -1635,13 +1365,13 @@ type CursorYType interface {
 }
 
 // CursorYGetter provides read access to the CursorY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorYGetter[T CursorYType] interface {
 	GetCursorY() T
 }
 
 // CursorYSetter provides write access to the CursorY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorYSetter[T CursorYType] interface {
 	SetCursorY(T)
 }
@@ -1653,13 +1383,13 @@ type CursorZType interface {
 }
 
 // CursorZGetter provides read access to the CursorZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorZGetter[T CursorZType] interface {
 	GetCursorZ() T
 }
 
 // CursorZSetter provides write access to the CursorZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type CursorZSetter[T CursorZType] interface {
 	SetCursorZ(T)
 }
@@ -1671,13 +1401,13 @@ type DXType interface {
 }
 
 // DXGetter provides read access to the DX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DXGetter[T DXType] interface {
 	GetDX() T
 }
 
 // DXSetter provides write access to the DX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DXSetter[T DXType] interface {
 	SetDX(T)
 }
@@ -1689,13 +1419,13 @@ type DYType interface {
 }
 
 // DYGetter provides read access to the DY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DYGetter[T DYType] interface {
 	GetDY() T
 }
 
 // DYSetter provides write access to the DY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DYSetter[T DYType] interface {
 	SetDY(T)
 }
@@ -1707,13 +1437,13 @@ type DZType interface {
 }
 
 // DZGetter provides read access to the DZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DZGetter[T DZType] interface {
 	GetDZ() T
 }
 
 // DZSetter provides write access to the DZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DZSetter[T DZType] interface {
 	SetDZ(T)
 }
@@ -1725,13 +1455,13 @@ type DataType interface {
 }
 
 // DataGetter provides read access to the Data field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DataGetter[T DataType] interface {
 	GetData() T
 }
 
 // DataSetter provides write access to the Data field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DataSetter[T DataType] interface {
 	SetData(T)
 }
@@ -1743,13 +1473,13 @@ type DeathType interface {
 }
 
 // DeathGetter provides read access to the Death field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DeathGetter[T DeathType] interface {
 	GetDeath() T
 }
 
 // DeathSetter provides write access to the Death field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DeathSetter[T DeathType] interface {
 	SetDeath(T)
 }
@@ -1797,13 +1527,13 @@ type DecalType interface {
 }
 
 // DecalGetter provides read access to the Decal field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DecalGetter[T DecalType] interface {
 	GetDecal() T
 }
 
 // DecalSetter provides write access to the Decal field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DecalSetter[T DecalType] interface {
 	SetDecal(T)
 }
@@ -1815,13 +1545,13 @@ type DescriptionType interface {
 }
 
 // DescriptionGetter provides read access to the Description field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DescriptionGetter[T DescriptionType] interface {
 	GetDescription() T
 }
 
 // DescriptionSetter provides write access to the Description field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DescriptionSetter[T DescriptionType] interface {
 	SetDescription(T)
 }
@@ -1833,13 +1563,13 @@ type DestroyStageType interface {
 }
 
 // DestroyStageGetter provides read access to the DestroyStage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DestroyStageGetter[T DestroyStageType] interface {
 	GetDestroyStage() T
 }
 
 // DestroyStageSetter provides write access to the DestroyStage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DestroyStageSetter[T DestroyStageType] interface {
 	SetDestroyStage(T)
 }
@@ -1851,13 +1581,13 @@ type DetailsType interface {
 }
 
 // DetailsGetter provides read access to the Details field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DetailsGetter[T DetailsType] interface {
 	GetDetails() T
 }
 
 // DetailsSetter provides write access to the Details field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DetailsSetter[T DetailsType] interface {
 	SetDetails(T)
 }
@@ -1869,13 +1599,13 @@ type DialogType interface {
 }
 
 // DialogGetter provides read access to the Dialog field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DialogGetter[T DialogType] interface {
 	GetDialog() T
 }
 
 // DialogSetter provides write access to the Dialog field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DialogSetter[T DialogType] interface {
 	SetDialog(T)
 }
@@ -1887,31 +1617,31 @@ type DiameterType interface {
 }
 
 // DiameterGetter provides read access to the Diameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DiameterGetter[T DiameterType] interface {
 	GetDiameter() T
 }
 
 // DiameterSetter provides write access to the Diameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DiameterSetter[T DiameterType] interface {
 	SetDiameter(T)
 }
 
 // DifficultyType is a type constraint for the Difficulty field.
-// This field has types: any | pk.UnsignedByte
+// This field has types: any
 type DifficultyType interface {
-	any | pk.UnsignedByte
+	any
 }
 
 // DifficultyGetter provides read access to the Difficulty field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DifficultyGetter[T DifficultyType] interface {
 	GetDifficulty() T
 }
 
 // DifficultySetter provides write access to the Difficulty field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DifficultySetter[T DifficultyType] interface {
 	SetDifficulty(T)
 }
@@ -1923,13 +1653,13 @@ type DifficultyLockedType interface {
 }
 
 // DifficultyLockedGetter provides read access to the DifficultyLocked field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DifficultyLockedGetter[T DifficultyLockedType] interface {
 	GetDifficultyLocked() T
 }
 
 // DifficultyLockedSetter provides write access to the DifficultyLocked field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DifficultyLockedSetter[T DifficultyLockedType] interface {
 	SetDifficultyLocked(T)
 }
@@ -1941,13 +1671,13 @@ type DimensionType interface {
 }
 
 // DimensionGetter provides read access to the Dimension field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DimensionGetter[T DimensionType] interface {
 	GetDimension() T
 }
 
 // DimensionSetter provides write access to the Dimension field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DimensionSetter[T DimensionType] interface {
 	SetDimension(T)
 }
@@ -1977,13 +1707,13 @@ type DirectionType interface {
 }
 
 // DirectionGetter provides read access to the Direction field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DirectionGetter[T DirectionType] interface {
 	GetDirection() T
 }
 
 // DirectionSetter provides write access to the Direction field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DirectionSetter[T DirectionType] interface {
 	SetDirection(T)
 }
@@ -1995,13 +1725,13 @@ type DisplayNameType interface {
 }
 
 // DisplayNameGetter provides read access to the DisplayName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DisplayNameGetter[T DisplayNameType] interface {
 	GetDisplayName() T
 }
 
 // DisplayNameSetter provides write access to the DisplayName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DisplayNameSetter[T DisplayNameType] interface {
 	SetDisplayName(T)
 }
@@ -2013,13 +1743,13 @@ type DisplayTextType interface {
 }
 
 // DisplayTextGetter provides read access to the DisplayText field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DisplayTextGetter[T DisplayTextType] interface {
 	GetDisplayText() T
 }
 
 // DisplayTextSetter provides write access to the DisplayText field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DisplayTextSetter[T DisplayTextType] interface {
 	SetDisplayText(T)
 }
@@ -2031,13 +1761,13 @@ type DistanceType interface {
 }
 
 // DistanceGetter provides read access to the Distance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DistanceGetter[T DistanceType] interface {
 	GetDistance() T
 }
 
 // DistanceSetter provides write access to the Distance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DistanceSetter[T DistanceType] interface {
 	SetDistance(T)
 }
@@ -2049,13 +1779,13 @@ type DividersType interface {
 }
 
 // DividersGetter provides read access to the Dividers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DividersGetter[T DividersType] interface {
 	GetDividers() T
 }
 
 // DividersSetter provides write access to the Dividers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DividersSetter[T DividersType] interface {
 	SetDividers(T)
 }
@@ -2067,13 +1797,13 @@ type DoLimitedCraftingType interface {
 }
 
 // DoLimitedCraftingGetter provides read access to the DoLimitedCrafting field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DoLimitedCraftingGetter[T DoLimitedCraftingType] interface {
 	GetDoLimitedCrafting() T
 }
 
 // DoLimitedCraftingSetter provides write access to the DoLimitedCrafting field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DoLimitedCraftingSetter[T DoLimitedCraftingType] interface {
 	SetDoLimitedCrafting(T)
 }
@@ -2085,13 +1815,13 @@ type DurationType interface {
 }
 
 // DurationGetter provides read access to the Duration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DurationGetter[T DurationType] interface {
 	GetDuration() T
 }
 
 // DurationSetter provides write access to the Duration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DurationSetter[T DurationType] interface {
 	SetDuration(T)
 }
@@ -2103,13 +1833,13 @@ type DxType interface {
 }
 
 // DxGetter provides read access to the Dx field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DxGetter[T DxType] interface {
 	GetDx() T
 }
 
 // DxSetter provides write access to the Dx field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DxSetter[T DxType] interface {
 	SetDx(T)
 }
@@ -2121,13 +1851,13 @@ type DyType interface {
 }
 
 // DyGetter provides read access to the Dy field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DyGetter[T DyType] interface {
 	GetDy() T
 }
 
 // DySetter provides write access to the Dy field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DySetter[T DyType] interface {
 	SetDy(T)
 }
@@ -2139,13 +1869,13 @@ type DzType interface {
 }
 
 // DzGetter provides read access to the Dz field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DzGetter[T DzType] interface {
 	GetDz() T
 }
 
 // DzSetter provides write access to the Dz field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type DzSetter[T DzType] interface {
 	SetDz(T)
 }
@@ -2157,13 +1887,13 @@ type EffectIdType interface {
 }
 
 // EffectIdGetter provides read access to the EffectId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EffectIdGetter[T EffectIdType] interface {
 	GetEffectId() T
 }
 
 // EffectIdSetter provides write access to the EffectId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EffectIdSetter[T EffectIdType] interface {
 	SetEffectId(T)
 }
@@ -2211,13 +1941,13 @@ type EmptyBlockLightMaskType interface {
 }
 
 // EmptyBlockLightMaskGetter provides read access to the EmptyBlockLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EmptyBlockLightMaskGetter[T EmptyBlockLightMaskType] interface {
 	GetEmptyBlockLightMask() T
 }
 
 // EmptyBlockLightMaskSetter provides write access to the EmptyBlockLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EmptyBlockLightMaskSetter[T EmptyBlockLightMaskType] interface {
 	SetEmptyBlockLightMask(T)
 }
@@ -2229,13 +1959,13 @@ type EmptySkyLightMaskType interface {
 }
 
 // EmptySkyLightMaskGetter provides read access to the EmptySkyLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EmptySkyLightMaskGetter[T EmptySkyLightMaskType] interface {
 	GetEmptySkyLightMask() T
 }
 
 // EmptySkyLightMaskSetter provides write access to the EmptySkyLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EmptySkyLightMaskSetter[T EmptySkyLightMaskType] interface {
 	SetEmptySkyLightMask(T)
 }
@@ -2247,13 +1977,13 @@ type EnableRespawnScreenType interface {
 }
 
 // EnableRespawnScreenGetter provides read access to the EnableRespawnScreen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableRespawnScreenGetter[T EnableRespawnScreenType] interface {
 	GetEnableRespawnScreen() T
 }
 
 // EnableRespawnScreenSetter provides write access to the EnableRespawnScreen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableRespawnScreenSetter[T EnableRespawnScreenType] interface {
 	SetEnableRespawnScreen(T)
 }
@@ -2265,13 +1995,13 @@ type EnableServerListingType interface {
 }
 
 // EnableServerListingGetter provides read access to the EnableServerListing field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableServerListingGetter[T EnableServerListingType] interface {
 	GetEnableServerListing() T
 }
 
 // EnableServerListingSetter provides write access to the EnableServerListing field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableServerListingSetter[T EnableServerListingType] interface {
 	SetEnableServerListing(T)
 }
@@ -2283,13 +2013,13 @@ type EnableTextFilteringType interface {
 }
 
 // EnableTextFilteringGetter provides read access to the EnableTextFiltering field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableTextFilteringGetter[T EnableTextFilteringType] interface {
 	GetEnableTextFiltering() T
 }
 
 // EnableTextFilteringSetter provides write access to the EnableTextFiltering field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnableTextFilteringSetter[T EnableTextFilteringType] interface {
 	SetEnableTextFiltering(T)
 }
@@ -2301,13 +2031,13 @@ type EnchantmentType interface {
 }
 
 // EnchantmentGetter provides read access to the Enchantment field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnchantmentGetter[T EnchantmentType] interface {
 	GetEnchantment() T
 }
 
 // EnchantmentSetter provides write access to the Enchantment field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnchantmentSetter[T EnchantmentType] interface {
 	SetEnchantment(T)
 }
@@ -2319,13 +2049,13 @@ type EnforcesSecureChatType interface {
 }
 
 // EnforcesSecureChatGetter provides read access to the EnforcesSecureChat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnforcesSecureChatGetter[T EnforcesSecureChatType] interface {
 	GetEnforcesSecureChat() T
 }
 
 // EnforcesSecureChatSetter provides write access to the EnforcesSecureChat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EnforcesSecureChatSetter[T EnforcesSecureChatType] interface {
 	SetEnforcesSecureChat(T)
 }
@@ -2337,13 +2067,13 @@ type EntityFeetEyesType interface {
 }
 
 // EntityFeetEyesGetter provides read access to the EntityFeetEyes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityFeetEyesGetter[T EntityFeetEyesType] interface {
 	GetEntityFeetEyes() T
 }
 
 // EntityFeetEyesSetter provides write access to the EntityFeetEyes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityFeetEyesSetter[T EntityFeetEyesType] interface {
 	SetEntityFeetEyes(T)
 }
@@ -2355,13 +2085,13 @@ type EntityIdType interface {
 }
 
 // EntityIdGetter provides read access to the EntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityIdGetter[T EntityIdType] interface {
 	GetEntityId() T
 }
 
 // EntityIdSetter provides write access to the EntityId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityIdSetter[T EntityIdType] interface {
 	SetEntityId(T)
 }
@@ -2373,13 +2103,13 @@ type EntityIdsType interface {
 }
 
 // EntityIdsGetter provides read access to the EntityIds field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityIdsGetter[T EntityIdsType] interface {
 	GetEntityIds() T
 }
 
 // EntityIdsSetter provides write access to the EntityIds field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityIdsSetter[T EntityIdsType] interface {
 	SetEntityIds(T)
 }
@@ -2391,13 +2121,13 @@ type EntityNameType interface {
 }
 
 // EntityNameGetter provides read access to the EntityName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityNameGetter[T EntityNameType] interface {
 	GetEntityName() T
 }
 
 // EntityNameSetter provides write access to the EntityName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityNameSetter[T EntityNameType] interface {
 	SetEntityName(T)
 }
@@ -2409,13 +2139,13 @@ type EntityStatusType interface {
 }
 
 // EntityStatusGetter provides read access to the EntityStatus field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityStatusGetter[T EntityStatusType] interface {
 	GetEntityStatus() T
 }
 
 // EntityStatusSetter provides write access to the EntityStatus field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityStatusSetter[T EntityStatusType] interface {
 	SetEntityStatus(T)
 }
@@ -2427,13 +2157,13 @@ type EntityUUIDType interface {
 }
 
 // EntityUUIDGetter provides read access to the EntityUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityUUIDGetter[T EntityUUIDType] interface {
 	GetEntityUUID() T
 }
 
 // EntityUUIDSetter provides write access to the EntityUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntityUUIDSetter[T EntityUUIDType] interface {
 	SetEntityUUID(T)
 }
@@ -2445,13 +2175,13 @@ type EntriesType interface {
 }
 
 // EntriesGetter provides read access to the Entries field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntriesGetter[T EntriesType] interface {
 	GetEntries() T
 }
 
 // EntriesSetter provides write access to the Entries field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EntriesSetter[T EntriesType] interface {
 	SetEntries(T)
 }
@@ -2463,13 +2193,13 @@ type EquipmentsType interface {
 }
 
 // EquipmentsGetter provides read access to the Equipments field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EquipmentsGetter[T EquipmentsType] interface {
 	GetEquipments() T
 }
 
 // EquipmentsSetter provides write access to the Equipments field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type EquipmentsSetter[T EquipmentsType] interface {
 	SetEquipments(T)
 }
@@ -2499,13 +2229,13 @@ type ExactMatchersType interface {
 }
 
 // ExactMatchersGetter provides read access to the ExactMatchers field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExactMatchersGetter[T ExactMatchersType] interface {
 	GetExactMatchers() T
 }
 
 // ExactMatchersSetter provides write access to the ExactMatchers field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExactMatchersSetter[T ExactMatchersType] interface {
 	SetExactMatchers(T)
 }
@@ -2529,19 +2259,19 @@ type ExhaustionSetter[T ExhaustionType] interface {
 }
 
 // ExperienceType is a type constraint for the Experience field.
-// This field has types: pk.Float | pk.VarInt
+// This field has types: pk.VarInt
 type ExperienceType interface {
-	pk.Float | pk.VarInt
+	pk.VarInt
 }
 
 // ExperienceGetter provides read access to the Experience field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExperienceGetter[T ExperienceType] interface {
 	GetExperience() T
 }
 
 // ExperienceSetter provides write access to the Experience field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExperienceSetter[T ExperienceType] interface {
 	SetExperience(T)
 }
@@ -2553,13 +2283,13 @@ type ExperienceBarType interface {
 }
 
 // ExperienceBarGetter provides read access to the ExperienceBar field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExperienceBarGetter[T ExperienceBarType] interface {
 	GetExperienceBar() T
 }
 
 // ExperienceBarSetter provides write access to the ExperienceBar field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExperienceBarSetter[T ExperienceBarType] interface {
 	SetExperienceBar(T)
 }
@@ -2571,13 +2301,13 @@ type ExpireTimeType interface {
 }
 
 // ExpireTimeGetter provides read access to the ExpireTime field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExpireTimeGetter[T ExpireTimeType] interface {
 	GetExpireTime() T
 }
 
 // ExpireTimeSetter provides write access to the ExpireTime field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExpireTimeSetter[T ExpireTimeType] interface {
 	SetExpireTime(T)
 }
@@ -2589,13 +2319,13 @@ type ExplosionParticleType interface {
 }
 
 // ExplosionParticleGetter provides read access to the ExplosionParticle field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExplosionParticleGetter[T ExplosionParticleType] interface {
 	GetExplosionParticle() T
 }
 
 // ExplosionParticleSetter provides write access to the ExplosionParticle field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExplosionParticleSetter[T ExplosionParticleType] interface {
 	SetExplosionParticle(T)
 }
@@ -2607,13 +2337,13 @@ type ExtraNodeDataType interface {
 }
 
 // ExtraNodeDataGetter provides read access to the ExtraNodeData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExtraNodeDataGetter[T ExtraNodeDataType] interface {
 	GetExtraNodeData() T
 }
 
 // ExtraNodeDataSetter provides write access to the ExtraNodeData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ExtraNodeDataSetter[T ExtraNodeDataType] interface {
 	SetExtraNodeData(T)
 }
@@ -2643,13 +2373,13 @@ type FaceType interface {
 }
 
 // FaceGetter provides read access to the Face field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FaceGetter[T FaceType] interface {
 	GetFace() T
 }
 
 // FaceSetter provides write access to the Face field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FaceSetter[T FaceType] interface {
 	SetFace(T)
 }
@@ -2661,13 +2391,13 @@ type FadeColorsType interface {
 }
 
 // FadeColorsGetter provides read access to the FadeColors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeColorsGetter[T FadeColorsType] interface {
 	GetFadeColors() T
 }
 
 // FadeColorsSetter provides write access to the FadeColors field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeColorsSetter[T FadeColorsType] interface {
 	SetFadeColors(T)
 }
@@ -2679,13 +2409,13 @@ type FadeInType interface {
 }
 
 // FadeInGetter provides read access to the FadeIn field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeInGetter[T FadeInType] interface {
 	GetFadeIn() T
 }
 
 // FadeInSetter provides write access to the FadeIn field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeInSetter[T FadeInType] interface {
 	SetFadeIn(T)
 }
@@ -2697,13 +2427,13 @@ type FadeOutType interface {
 }
 
 // FadeOutGetter provides read access to the FadeOut field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeOutGetter[T FadeOutType] interface {
 	GetFadeOut() T
 }
 
 // FadeOutSetter provides write access to the FadeOut field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FadeOutSetter[T FadeOutType] interface {
 	SetFadeOut(T)
 }
@@ -2715,13 +2445,13 @@ type FeaturesType interface {
 }
 
 // FeaturesGetter provides read access to the Features field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FeaturesGetter[T FeaturesType] interface {
 	GetFeatures() T
 }
 
 // FeaturesSetter provides write access to the Features field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FeaturesSetter[T FeaturesType] interface {
 	SetFeatures(T)
 }
@@ -2733,13 +2463,13 @@ type FeetEyesType interface {
 }
 
 // FeetEyesGetter provides read access to the FeetEyes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FeetEyesGetter[T FeetEyesType] interface {
 	GetFeetEyes() T
 }
 
 // FeetEyesSetter provides write access to the FeetEyes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FeetEyesSetter[T FeetEyesType] interface {
 	SetFeetEyes(T)
 }
@@ -2751,13 +2481,13 @@ type FilterActiveType interface {
 }
 
 // FilterActiveGetter provides read access to the FilterActive field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterActiveGetter[T FilterActiveType] interface {
 	GetFilterActive() T
 }
 
 // FilterActiveSetter provides write access to the FilterActive field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterActiveSetter[T FilterActiveType] interface {
 	SetFilterActive(T)
 }
@@ -2769,13 +2499,13 @@ type FilterTypeType interface {
 }
 
 // FilterTypeGetter provides read access to the FilterType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterTypeGetter[T FilterTypeType] interface {
 	GetFilterType() T
 }
 
 // FilterTypeSetter provides write access to the FilterType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterTypeSetter[T FilterTypeType] interface {
 	SetFilterType(T)
 }
@@ -2787,13 +2517,13 @@ type FilterTypeMaskType interface {
 }
 
 // FilterTypeMaskGetter provides read access to the FilterTypeMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterTypeMaskGetter[T FilterTypeMaskType] interface {
 	GetFilterTypeMask() T
 }
 
 // FilterTypeMaskSetter provides write access to the FilterTypeMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilterTypeMaskSetter[T FilterTypeMaskType] interface {
 	SetFilterTypeMask(T)
 }
@@ -2805,13 +2535,13 @@ type FilteredContentType interface {
 }
 
 // FilteredContentGetter provides read access to the FilteredContent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilteredContentGetter[T FilteredContentType] interface {
 	GetFilteredContent() T
 }
 
 // FilteredContentSetter provides write access to the FilteredContent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilteredContentSetter[T FilteredContentType] interface {
 	SetFilteredContent(T)
 }
@@ -2823,87 +2553,15 @@ type FilteringType interface {
 }
 
 // FilteringGetter provides read access to the Filtering field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilteringGetter[T FilteringType] interface {
 	GetFiltering() T
 }
 
 // FilteringSetter provides write access to the Filtering field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FilteringSetter[T FilteringType] interface {
 	SetFiltering(T)
-}
-
-// FilteringBlastFurnaceType is a type constraint for the FilteringBlastFurnace field.
-// This field has types: pk.Boolean
-type FilteringBlastFurnaceType interface {
-	pk.Boolean
-}
-
-// FilteringBlastFurnaceGetter provides read access to the FilteringBlastFurnace field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringBlastFurnaceGetter[T FilteringBlastFurnaceType] interface {
-	GetFilteringBlastFurnace() T
-}
-
-// FilteringBlastFurnaceSetter provides write access to the FilteringBlastFurnace field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringBlastFurnaceSetter[T FilteringBlastFurnaceType] interface {
-	SetFilteringBlastFurnace(T)
-}
-
-// FilteringCraftableType is a type constraint for the FilteringCraftable field.
-// This field has types: pk.Boolean
-type FilteringCraftableType interface {
-	pk.Boolean
-}
-
-// FilteringCraftableGetter provides read access to the FilteringCraftable field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringCraftableGetter[T FilteringCraftableType] interface {
-	GetFilteringCraftable() T
-}
-
-// FilteringCraftableSetter provides write access to the FilteringCraftable field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringCraftableSetter[T FilteringCraftableType] interface {
-	SetFilteringCraftable(T)
-}
-
-// FilteringSmeltableType is a type constraint for the FilteringSmeltable field.
-// This field has types: pk.Boolean
-type FilteringSmeltableType interface {
-	pk.Boolean
-}
-
-// FilteringSmeltableGetter provides read access to the FilteringSmeltable field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringSmeltableGetter[T FilteringSmeltableType] interface {
-	GetFilteringSmeltable() T
-}
-
-// FilteringSmeltableSetter provides write access to the FilteringSmeltable field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringSmeltableSetter[T FilteringSmeltableType] interface {
-	SetFilteringSmeltable(T)
-}
-
-// FilteringSmokerType is a type constraint for the FilteringSmoker field.
-// This field has types: pk.Boolean
-type FilteringSmokerType interface {
-	pk.Boolean
-}
-
-// FilteringSmokerGetter provides read access to the FilteringSmoker field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringSmokerGetter[T FilteringSmokerType] interface {
-	GetFilteringSmoker() T
-}
-
-// FilteringSmokerSetter provides write access to the FilteringSmoker field.
-// Implemented by packet types in versions: 1.21.1
-type FilteringSmokerSetter[T FilteringSmokerType] interface {
-	SetFilteringSmoker(T)
 }
 
 // FinalStateType is a type constraint for the FinalState field.
@@ -2913,13 +2571,13 @@ type FinalStateType interface {
 }
 
 // FinalStateGetter provides read access to the FinalState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FinalStateGetter[T FinalStateType] interface {
 	GetFinalState() T
 }
 
 // FinalStateSetter provides write access to the FinalState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FinalStateSetter[T FinalStateType] interface {
 	SetFinalState(T)
 }
@@ -2931,13 +2589,13 @@ type FixedRangeType interface {
 }
 
 // FixedRangeGetter provides read access to the FixedRange field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FixedRangeGetter[T FixedRangeType] interface {
 	GetFixedRange() T
 }
 
 // FixedRangeSetter provides write access to the FixedRange field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FixedRangeSetter[T FixedRangeType] interface {
 	SetFixedRange(T)
 }
@@ -2949,13 +2607,13 @@ type FlagsType interface {
 }
 
 // FlagsGetter provides read access to the Flags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FlagsGetter[T FlagsType] interface {
 	GetFlags() T
 }
 
 // FlagsSetter provides write access to the Flags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FlagsSetter[T FlagsType] interface {
 	SetFlags(T)
 }
@@ -2967,13 +2625,13 @@ type FlyingSpeedType interface {
 }
 
 // FlyingSpeedGetter provides read access to the FlyingSpeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FlyingSpeedGetter[T FlyingSpeedType] interface {
 	GetFlyingSpeed() T
 }
 
 // FlyingSpeedSetter provides write access to the FlyingSpeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FlyingSpeedSetter[T FlyingSpeedType] interface {
 	SetFlyingSpeed(T)
 }
@@ -2985,13 +2643,13 @@ type FoodType interface {
 }
 
 // FoodGetter provides read access to the Food field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FoodGetter[T FoodType] interface {
 	GetFood() T
 }
 
 // FoodSetter provides write access to the Food field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FoodSetter[T FoodType] interface {
 	SetFood(T)
 }
@@ -3003,13 +2661,13 @@ type FoodSaturationType interface {
 }
 
 // FoodSaturationGetter provides read access to the FoodSaturation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FoodSaturationGetter[T FoodSaturationType] interface {
 	GetFoodSaturation() T
 }
 
 // FoodSaturationSetter provides write access to the FoodSaturation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FoodSaturationSetter[T FoodSaturationType] interface {
 	SetFoodSaturation(T)
 }
@@ -3021,13 +2679,13 @@ type FooterType interface {
 }
 
 // FooterGetter provides read access to the Footer field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FooterGetter[T FooterType] interface {
 	GetFooter() T
 }
 
 // FooterSetter provides write access to the Footer field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FooterSetter[T FooterType] interface {
 	SetFooter(T)
 }
@@ -3039,69 +2697,15 @@ type ForcedType interface {
 }
 
 // ForcedGetter provides read access to the Forced field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ForcedGetter[T ForcedType] interface {
 	GetForced() T
 }
 
 // ForcedSetter provides write access to the Forced field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ForcedSetter[T ForcedType] interface {
 	SetForced(T)
-}
-
-// FormattingType is a type constraint for the Formatting field.
-// This field has types: any
-type FormattingType interface {
-	any
-}
-
-// FormattingGetter provides read access to the Formatting field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type FormattingGetter[T FormattingType] interface {
-	GetFormatting() T
-}
-
-// FormattingSetter provides write access to the Formatting field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type FormattingSetter[T FormattingType] interface {
-	SetFormatting(T)
-}
-
-// ForwardType is a type constraint for the Forward field.
-// This field has types: pk.Float
-type ForwardType interface {
-	pk.Float
-}
-
-// ForwardGetter provides read access to the Forward field.
-// Implemented by packet types in versions: 1.21.1
-type ForwardGetter[T ForwardType] interface {
-	GetForward() T
-}
-
-// ForwardSetter provides write access to the Forward field.
-// Implemented by packet types in versions: 1.21.1
-type ForwardSetter[T ForwardType] interface {
-	SetForward(T)
-}
-
-// FriendlyFireType is a type constraint for the FriendlyFire field.
-// This field has types: any
-type FriendlyFireType interface {
-	any
-}
-
-// FriendlyFireGetter provides read access to the FriendlyFire field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type FriendlyFireGetter[T FriendlyFireType] interface {
-	GetFriendlyFire() T
-}
-
-// FriendlyFireSetter provides write access to the FriendlyFire field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type FriendlyFireSetter[T FriendlyFireType] interface {
-	SetFriendlyFire(T)
 }
 
 // FurnaceType is a type constraint for the Furnace field.
@@ -3111,13 +2715,13 @@ type FurnaceType interface {
 }
 
 // FurnaceGetter provides read access to the Furnace field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FurnaceGetter[T FurnaceType] interface {
 	GetFurnace() T
 }
 
 // FurnaceSetter provides write access to the Furnace field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type FurnaceSetter[T FurnaceType] interface {
 	SetFurnace(T)
 }
@@ -3129,13 +2733,13 @@ type GameModeType interface {
 }
 
 // GameModeGetter provides read access to the GameMode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GameModeGetter[T GameModeType] interface {
 	GetGameMode() T
 }
 
 // GameModeSetter provides write access to the GameMode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GameModeSetter[T GameModeType] interface {
 	SetGameMode(T)
 }
@@ -3147,13 +2751,13 @@ type GamemodeType interface {
 }
 
 // GamemodeGetter provides read access to the Gamemode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GamemodeGetter[T GamemodeType] interface {
 	GetGamemode() T
 }
 
 // GamemodeSetter provides write access to the Gamemode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GamemodeSetter[T GamemodeType] interface {
 	SetGamemode(T)
 }
@@ -3165,13 +2769,13 @@ type GlobalType interface {
 }
 
 // GlobalGetter provides read access to the Global field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GlobalGetter[T GlobalType] interface {
 	GetGlobal() T
 }
 
 // GlobalSetter provides write access to the Global field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GlobalSetter[T GlobalType] interface {
 	SetGlobal(T)
 }
@@ -3183,13 +2787,13 @@ type GlobalIndexType interface {
 }
 
 // GlobalIndexGetter provides read access to the GlobalIndex field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GlobalIndexGetter[T GlobalIndexType] interface {
 	GetGlobalIndex() T
 }
 
 // GlobalIndexSetter provides write access to the GlobalIndex field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type GlobalIndexSetter[T GlobalIndexType] interface {
 	SetGlobalIndex(T)
 }
@@ -3212,24 +2816,6 @@ type GlobalPosSetter[T GlobalPosType] interface {
 	SetGlobalPos(T)
 }
 
-// GroupType is a type constraint for the Group field.
-// This field has types: pk.String
-type GroupType interface {
-	pk.String
-}
-
-// GroupGetter provides read access to the Group field.
-// Implemented by packet types in versions: 1.21.1
-type GroupGetter[T GroupType] interface {
-	GetGroup() T
-}
-
-// GroupSetter provides write access to the Group field.
-// Implemented by packet types in versions: 1.21.1
-type GroupSetter[T GroupType] interface {
-	SetGroup(T)
-}
-
 // HandType is a type constraint for the Hand field.
 // This field has types: any | pk.VarInt
 type HandType interface {
@@ -3237,13 +2823,13 @@ type HandType interface {
 }
 
 // HandGetter provides read access to the Hand field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HandGetter[T HandType] interface {
 	GetHand() T
 }
 
 // HandSetter provides write access to the Hand field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HandSetter[T HandType] interface {
 	SetHand(T)
 }
@@ -3255,13 +2841,13 @@ type HasTrailType interface {
 }
 
 // HasTrailGetter provides read access to the HasTrail field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HasTrailGetter[T HasTrailType] interface {
 	GetHasTrail() T
 }
 
 // HasTrailSetter provides write access to the HasTrail field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HasTrailSetter[T HasTrailType] interface {
 	SetHasTrail(T)
 }
@@ -3273,13 +2859,13 @@ type HasTwinkleType interface {
 }
 
 // HasTwinkleGetter provides read access to the HasTwinkle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HasTwinkleGetter[T HasTwinkleType] interface {
 	GetHasTwinkle() T
 }
 
 // HasTwinkleSetter provides write access to the HasTwinkle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HasTwinkleSetter[T HasTwinkleType] interface {
 	SetHasTwinkle(T)
 }
@@ -3291,13 +2877,13 @@ type HashType interface {
 }
 
 // HashGetter provides read access to the Hash field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HashGetter[T HashType] interface {
 	GetHash() T
 }
 
 // HashSetter provides write access to the Hash field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HashSetter[T HashType] interface {
 	SetHash(T)
 }
@@ -3309,13 +2895,13 @@ type HashedSeedType interface {
 }
 
 // HashedSeedGetter provides read access to the HashedSeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HashedSeedGetter[T HashedSeedType] interface {
 	GetHashedSeed() T
 }
 
 // HashedSeedSetter provides write access to the HashedSeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HashedSeedSetter[T HashedSeedType] interface {
 	SetHashedSeed(T)
 }
@@ -3327,13 +2913,13 @@ type HeadPitchType interface {
 }
 
 // HeadPitchGetter provides read access to the HeadPitch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeadPitchGetter[T HeadPitchType] interface {
 	GetHeadPitch() T
 }
 
 // HeadPitchSetter provides write access to the HeadPitch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeadPitchSetter[T HeadPitchType] interface {
 	SetHeadPitch(T)
 }
@@ -3345,13 +2931,13 @@ type HeadYawType interface {
 }
 
 // HeadYawGetter provides read access to the HeadYaw field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeadYawGetter[T HeadYawType] interface {
 	GetHeadYaw() T
 }
 
 // HeadYawSetter provides write access to the HeadYaw field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeadYawSetter[T HeadYawType] interface {
 	SetHeadYaw(T)
 }
@@ -3363,13 +2949,13 @@ type HeaderType interface {
 }
 
 // HeaderGetter provides read access to the Header field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeaderGetter[T HeaderType] interface {
 	GetHeader() T
 }
 
 // HeaderSetter provides write access to the Header field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeaderSetter[T HeaderType] interface {
 	SetHeader(T)
 }
@@ -3381,13 +2967,13 @@ type HealthType interface {
 }
 
 // HealthGetter provides read access to the Health field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HealthGetter[T HealthType] interface {
 	GetHealth() T
 }
 
 // HealthSetter provides write access to the Health field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HealthSetter[T HealthType] interface {
 	SetHealth(T)
 }
@@ -3399,13 +2985,13 @@ type HeightType interface {
 }
 
 // HeightGetter provides read access to the Height field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeightGetter[T HeightType] interface {
 	GetHeight() T
 }
 
 // HeightSetter provides write access to the Height field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeightSetter[T HeightType] interface {
 	SetHeight(T)
 }
@@ -3417,13 +3003,13 @@ type HeightmapsType interface {
 }
 
 // HeightmapsGetter provides read access to the Heightmaps field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeightmapsGetter[T HeightmapsType] interface {
 	GetHeightmaps() T
 }
 
 // HeightmapsSetter provides write access to the Heightmaps field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HeightmapsSetter[T HeightmapsType] interface {
 	SetHeightmaps(T)
 }
@@ -3435,13 +3021,13 @@ type HiddenEffectType interface {
 }
 
 // HiddenEffectGetter provides read access to the HiddenEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HiddenEffectGetter[T HiddenEffectType] interface {
 	GetHiddenEffect() T
 }
 
 // HiddenEffectSetter provides write access to the HiddenEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HiddenEffectSetter[T HiddenEffectType] interface {
 	SetHiddenEffect(T)
 }
@@ -3453,13 +3039,13 @@ type HostType interface {
 }
 
 // HostGetter provides read access to the Host field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HostGetter[T HostType] interface {
 	GetHost() T
 }
 
 // HostSetter provides write access to the Host field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type HostSetter[T HostType] interface {
 	SetHost(T)
 }
@@ -3471,13 +3057,13 @@ type IconBytesType interface {
 }
 
 // IconBytesGetter provides read access to the IconBytes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IconBytesGetter[T IconBytesType] interface {
 	GetIconBytes() T
 }
 
 // IconBytesSetter provides write access to the IconBytes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IconBytesSetter[T IconBytesType] interface {
 	SetIconBytes(T)
 }
@@ -3489,13 +3075,13 @@ type IconsType interface {
 }
 
 // IconsGetter provides read access to the Icons field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IconsGetter[T IconsType] interface {
 	GetIcons() T
 }
 
 // IconsSetter provides write access to the Icons field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IconsSetter[T IconsType] interface {
 	SetIcons(T)
 }
@@ -3507,13 +3093,13 @@ type IdType interface {
 }
 
 // IdGetter provides read access to the Id field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IdGetter[T IdType] interface {
 	GetId() T
 }
 
 // IdSetter provides write access to the Id field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IdSetter[T IdType] interface {
 	SetId(T)
 }
@@ -3525,13 +3111,13 @@ type IdentifiersType interface {
 }
 
 // IdentifiersGetter provides read access to the Identifiers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IdentifiersGetter[T IdentifiersType] interface {
 	GetIdentifiers() T
 }
 
 // IdentifiersSetter provides write access to the Identifiers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IdentifiersSetter[T IdentifiersType] interface {
 	SetIdentifiers(T)
 }
@@ -3543,13 +3129,13 @@ type IncludeDataType interface {
 }
 
 // IncludeDataGetter provides read access to the IncludeData field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IncludeDataGetter[T IncludeDataType] interface {
 	GetIncludeData() T
 }
 
 // IncludeDataSetter provides write access to the IncludeData field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IncludeDataSetter[T IncludeDataType] interface {
 	SetIncludeData(T)
 }
@@ -3561,67 +3147,31 @@ type IndexType interface {
 }
 
 // IndexGetter provides read access to the Index field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IndexGetter[T IndexType] interface {
 	GetIndex() T
 }
 
 // IndexSetter provides write access to the Index field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IndexSetter[T IndexType] interface {
 	SetIndex(T)
 }
 
-// IngredientType is a type constraint for the Ingredient field.
-// This field has types: any
-type IngredientType interface {
-	any
-}
-
-// IngredientGetter provides read access to the Ingredient field.
-// Implemented by packet types in versions: 1.21.1
-type IngredientGetter[T IngredientType] interface {
-	GetIngredient() T
-}
-
-// IngredientSetter provides write access to the Ingredient field.
-// Implemented by packet types in versions: 1.21.1
-type IngredientSetter[T IngredientType] interface {
-	SetIngredient(T)
-}
-
-// IngredientIdType is a type constraint for the IngredientId field.
-// This field has types: pk.VarInt
-type IngredientIdType interface {
-	pk.VarInt
-}
-
-// IngredientIdGetter provides read access to the IngredientId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type IngredientIdGetter[T IngredientIdType] interface {
-	GetIngredientId() T
-}
-
-// IngredientIdSetter provides write access to the IngredientId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type IngredientIdSetter[T IngredientIdType] interface {
-	SetIngredientId(T)
-}
-
 // InputsType is a type constraint for the Inputs field.
-// This field has types: Bitflags
+// This field has types: Bitflags | pk.UnsignedByte
 type InputsType interface {
-	Bitflags
+	Bitflags | pk.UnsignedByte
 }
 
 // InputsGetter provides read access to the Inputs field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InputsGetter[T InputsType] interface {
 	GetInputs() T
 }
 
 // InputsSetter provides write access to the Inputs field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InputsSetter[T InputsType] interface {
 	SetInputs(T)
 }
@@ -3633,13 +3183,13 @@ type InsideBlockType interface {
 }
 
 // InsideBlockGetter provides read access to the InsideBlock field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InsideBlockGetter[T InsideBlockType] interface {
 	GetInsideBlock() T
 }
 
 // InsideBlockSetter provides write access to the InsideBlock field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InsideBlockSetter[T InsideBlockType] interface {
 	SetInsideBlock(T)
 }
@@ -3651,13 +3201,13 @@ type IntegrityType interface {
 }
 
 // IntegrityGetter provides read access to the Integrity field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IntegrityGetter[T IntegrityType] interface {
 	GetIntegrity() T
 }
 
 // IntegritySetter provides write access to the Integrity field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IntegritySetter[T IntegrityType] interface {
 	SetIntegrity(T)
 }
@@ -3669,13 +3219,13 @@ type InventoryTypeType interface {
 }
 
 // InventoryTypeGetter provides read access to the InventoryType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InventoryTypeGetter[T InventoryTypeType] interface {
 	GetInventoryType() T
 }
 
 // InventoryTypeSetter provides write access to the InventoryType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type InventoryTypeSetter[T InventoryTypeType] interface {
 	SetInventoryType(T)
 }
@@ -3687,13 +3237,13 @@ type IsActionBarType interface {
 }
 
 // IsActionBarGetter provides read access to the IsActionBar field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsActionBarGetter[T IsActionBarType] interface {
 	GetIsActionBar() T
 }
 
 // IsActionBarSetter provides write access to the IsActionBar field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsActionBarSetter[T IsActionBarType] interface {
 	SetIsActionBar(T)
 }
@@ -3705,13 +3255,13 @@ type IsDebugType interface {
 }
 
 // IsDebugGetter provides read access to the IsDebug field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsDebugGetter[T IsDebugType] interface {
 	GetIsDebug() T
 }
 
 // IsDebugSetter provides write access to the IsDebug field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsDebugSetter[T IsDebugType] interface {
 	SetIsDebug(T)
 }
@@ -3723,13 +3273,13 @@ type IsEntityType interface {
 }
 
 // IsEntityGetter provides read access to the IsEntity field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsEntityGetter[T IsEntityType] interface {
 	GetIsEntity() T
 }
 
 // IsEntitySetter provides write access to the IsEntity field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsEntitySetter[T IsEntityType] interface {
 	SetIsEntity(T)
 }
@@ -3741,13 +3291,13 @@ type IsExactMatchType interface {
 }
 
 // IsExactMatchGetter provides read access to the IsExactMatch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsExactMatchGetter[T IsExactMatchType] interface {
 	GetIsExactMatch() T
 }
 
 // IsExactMatchSetter provides write access to the IsExactMatch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsExactMatchSetter[T IsExactMatchType] interface {
 	SetIsExactMatch(T)
 }
@@ -3759,13 +3309,13 @@ type IsFlatType interface {
 }
 
 // IsFlatGetter provides read access to the IsFlat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFlatGetter[T IsFlatType] interface {
 	GetIsFlat() T
 }
 
 // IsFlatSetter provides write access to the IsFlat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFlatSetter[T IsFlatType] interface {
 	SetIsFlat(T)
 }
@@ -3777,13 +3327,13 @@ type IsFrontTextType interface {
 }
 
 // IsFrontTextGetter provides read access to the IsFrontText field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFrontTextGetter[T IsFrontTextType] interface {
 	GetIsFrontText() T
 }
 
 // IsFrontTextSetter provides write access to the IsFrontText field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFrontTextSetter[T IsFrontTextType] interface {
 	SetIsFrontText(T)
 }
@@ -3795,13 +3345,13 @@ type IsFrozenType interface {
 }
 
 // IsFrozenGetter provides read access to the IsFrozen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFrozenGetter[T IsFrozenType] interface {
 	GetIsFrozen() T
 }
 
 // IsFrozenSetter provides write access to the IsFrozen field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsFrozenSetter[T IsFrozenType] interface {
 	SetIsFrozen(T)
 }
@@ -3813,13 +3363,13 @@ type IsHardcoreType interface {
 }
 
 // IsHardcoreGetter provides read access to the IsHardcore field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsHardcoreGetter[T IsHardcoreType] interface {
 	GetIsHardcore() T
 }
 
 // IsHardcoreSetter provides write access to the IsHardcore field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsHardcoreSetter[T IsHardcoreType] interface {
 	SetIsHardcore(T)
 }
@@ -3831,13 +3381,13 @@ type IsRegularVillagerType interface {
 }
 
 // IsRegularVillagerGetter provides read access to the IsRegularVillager field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsRegularVillagerGetter[T IsRegularVillagerType] interface {
 	GetIsRegularVillager() T
 }
 
 // IsRegularVillagerSetter provides write access to the IsRegularVillager field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type IsRegularVillagerSetter[T IsRegularVillagerType] interface {
 	SetIsRegularVillager(T)
 }
@@ -3849,13 +3399,13 @@ type ItemType interface {
 }
 
 // ItemGetter provides read access to the Item field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemGetter[T ItemType] interface {
 	GetItem() T
 }
 
 // ItemSetter provides write access to the Item field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemSetter[T ItemType] interface {
 	SetItem(T)
 }
@@ -3867,13 +3417,13 @@ type ItemCountType interface {
 }
 
 // ItemCountGetter provides read access to the ItemCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemCountGetter[T ItemCountType] interface {
 	GetItemCount() T
 }
 
 // ItemCountSetter provides write access to the ItemCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemCountSetter[T ItemCountType] interface {
 	SetItemCount(T)
 }
@@ -3885,33 +3435,15 @@ type ItemDamageType interface {
 }
 
 // ItemDamageGetter provides read access to the ItemDamage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemDamageGetter[T ItemDamageType] interface {
 	GetItemDamage() T
 }
 
 // ItemDamageSetter provides write access to the ItemDamage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemDamageSetter[T ItemDamageType] interface {
 	SetItemDamage(T)
-}
-
-// ItemIDType is a type constraint for the ItemID field.
-// This field has types: pk.VarInt
-type ItemIDType interface {
-	pk.VarInt
-}
-
-// ItemIDGetter provides read access to the ItemID field.
-// Implemented by packet types in versions: 1.21.1
-type ItemIDGetter[T ItemIDType] interface {
-	GetItemID() T
-}
-
-// ItemIDSetter provides write access to the ItemID field.
-// Implemented by packet types in versions: 1.21.1
-type ItemIDSetter[T ItemIDType] interface {
-	SetItemID(T)
 }
 
 // ItemIdType is a type constraint for the ItemId field.
@@ -3921,13 +3453,13 @@ type ItemIdType interface {
 }
 
 // ItemIdGetter provides read access to the ItemId field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemIdGetter[T ItemIdType] interface {
 	GetItemId() T
 }
 
 // ItemIdSetter provides write access to the ItemId field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemIdSetter[T ItemIdType] interface {
 	SetItemId(T)
 }
@@ -3939,13 +3471,13 @@ type ItemNameType interface {
 }
 
 // ItemNameGetter provides read access to the ItemName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemNameGetter[T ItemNameType] interface {
 	GetItemName() T
 }
 
 // ItemNameSetter provides write access to the ItemName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemNameSetter[T ItemNameType] interface {
 	SetItemName(T)
 }
@@ -3957,13 +3489,13 @@ type ItemsType interface {
 }
 
 // ItemsGetter provides read access to the Items field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemsGetter[T ItemsType] interface {
 	GetItems() T
 }
 
 // ItemsSetter provides write access to the Items field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ItemsSetter[T ItemsType] interface {
 	SetItems(T)
 }
@@ -3975,33 +3507,15 @@ type JointTypeType interface {
 }
 
 // JointTypeGetter provides read access to the JointType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type JointTypeGetter[T JointTypeType] interface {
 	GetJointType() T
 }
 
 // JointTypeSetter provides write access to the JointType field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type JointTypeSetter[T JointTypeType] interface {
 	SetJointType(T)
-}
-
-// JumpType is a type constraint for the Jump field.
-// This field has types: pk.UnsignedByte
-type JumpType interface {
-	pk.UnsignedByte
-}
-
-// JumpGetter provides read access to the Jump field.
-// Implemented by packet types in versions: 1.21.1
-type JumpGetter[T JumpType] interface {
-	GetJump() T
-}
-
-// JumpSetter provides write access to the Jump field.
-// Implemented by packet types in versions: 1.21.1
-type JumpSetter[T JumpType] interface {
-	SetJump(T)
 }
 
 // JumpBoostType is a type constraint for the JumpBoost field.
@@ -4011,13 +3525,13 @@ type JumpBoostType interface {
 }
 
 // JumpBoostGetter provides read access to the JumpBoost field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type JumpBoostGetter[T JumpBoostType] interface {
 	GetJumpBoost() T
 }
 
 // JumpBoostSetter provides write access to the JumpBoost field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type JumpBoostSetter[T JumpBoostType] interface {
 	SetJumpBoost(T)
 }
@@ -4029,13 +3543,13 @@ type KeepAliveIdType interface {
 }
 
 // KeepAliveIdGetter provides read access to the KeepAliveId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeepAliveIdGetter[T KeepAliveIdType] interface {
 	GetKeepAliveId() T
 }
 
 // KeepAliveIdSetter provides write access to the KeepAliveId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeepAliveIdSetter[T KeepAliveIdType] interface {
 	SetKeepAliveId(T)
 }
@@ -4047,13 +3561,13 @@ type KeepJigsawsType interface {
 }
 
 // KeepJigsawsGetter provides read access to the KeepJigsaws field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeepJigsawsGetter[T KeepJigsawsType] interface {
 	GetKeepJigsaws() T
 }
 
 // KeepJigsawsSetter provides write access to the KeepJigsaws field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeepJigsawsSetter[T KeepJigsawsType] interface {
 	SetKeepJigsaws(T)
 }
@@ -4065,33 +3579,15 @@ type KeyType interface {
 }
 
 // KeyGetter provides read access to the Key field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeyGetter[T KeyType] interface {
 	GetKey() T
 }
 
 // KeySetter provides write access to the Key field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type KeySetter[T KeyType] interface {
 	SetKey(T)
-}
-
-// LargeExplosionParticleType is a type constraint for the LargeExplosionParticle field.
-// This field has types: any
-type LargeExplosionParticleType interface {
-	any
-}
-
-// LargeExplosionParticleGetter provides read access to the LargeExplosionParticle field.
-// Implemented by packet types in versions: 1.21.1
-type LargeExplosionParticleGetter[T LargeExplosionParticleType] interface {
-	GetLargeExplosionParticle() T
-}
-
-// LargeExplosionParticleSetter provides write access to the LargeExplosionParticle field.
-// Implemented by packet types in versions: 1.21.1
-type LargeExplosionParticleSetter[T LargeExplosionParticleType] interface {
-	SetLargeExplosionParticle(T)
 }
 
 // LeftPaddleType is a type constraint for the LeftPaddle field.
@@ -4101,13 +3597,13 @@ type LeftPaddleType interface {
 }
 
 // LeftPaddleGetter provides read access to the LeftPaddle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LeftPaddleGetter[T LeftPaddleType] interface {
 	GetLeftPaddle() T
 }
 
 // LeftPaddleSetter provides write access to the LeftPaddle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LeftPaddleSetter[T LeftPaddleType] interface {
 	SetLeftPaddle(T)
 }
@@ -4119,13 +3615,13 @@ type LengthType interface {
 }
 
 // LengthGetter provides read access to the Length field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LengthGetter[T LengthType] interface {
 	GetLength() T
 }
 
 // LengthSetter provides write access to the Length field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LengthSetter[T LengthType] interface {
 	SetLength(T)
 }
@@ -4137,13 +3633,13 @@ type LengthInSecondsType interface {
 }
 
 // LengthInSecondsGetter provides read access to the LengthInSeconds field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LengthInSecondsGetter[T LengthInSecondsType] interface {
 	GetLengthInSeconds() T
 }
 
 // LengthInSecondsSetter provides write access to the LengthInSeconds field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LengthInSecondsSetter[T LengthInSecondsType] interface {
 	SetLengthInSeconds(T)
 }
@@ -4155,13 +3651,13 @@ type LevelType interface {
 }
 
 // LevelGetter provides read access to the Level field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LevelGetter[T LevelType] interface {
 	GetLevel() T
 }
 
 // LevelSetter provides write access to the Level field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LevelSetter[T LevelType] interface {
 	SetLevel(T)
 }
@@ -4173,13 +3669,13 @@ type LevelsType interface {
 }
 
 // LevelsGetter provides read access to the Levels field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LevelsGetter[T LevelsType] interface {
 	GetLevels() T
 }
 
 // LevelsSetter provides write access to the Levels field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LevelsSetter[T LevelsType] interface {
 	SetLevels(T)
 }
@@ -4191,13 +3687,13 @@ type LinksType interface {
 }
 
 // LinksGetter provides read access to the Links field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LinksGetter[T LinksType] interface {
 	GetLinks() T
 }
 
 // LinksSetter provides write access to the Links field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LinksSetter[T LinksType] interface {
 	SetLinks(T)
 }
@@ -4209,13 +3705,13 @@ type LocaleType interface {
 }
 
 // LocaleGetter provides read access to the Locale field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LocaleGetter[T LocaleType] interface {
 	GetLocale() T
 }
 
 // LocaleSetter provides write access to the Locale field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LocaleSetter[T LocaleType] interface {
 	SetLocale(T)
 }
@@ -4227,13 +3723,13 @@ type LocationType interface {
 }
 
 // LocationGetter provides read access to the Location field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LocationGetter[T LocationType] interface {
 	GetLocation() T
 }
 
 // LocationSetter provides write access to the Location field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LocationSetter[T LocationType] interface {
 	SetLocation(T)
 }
@@ -4245,13 +3741,13 @@ type LockedType interface {
 }
 
 // LockedGetter provides read access to the Locked field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LockedGetter[T LockedType] interface {
 	GetLocked() T
 }
 
 // LockedSetter provides write access to the Locked field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LockedSetter[T LockedType] interface {
 	SetLocked(T)
 }
@@ -4263,13 +3759,13 @@ type LongDistanceType interface {
 }
 
 // LongDistanceGetter provides read access to the LongDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LongDistanceGetter[T LongDistanceType] interface {
 	GetLongDistance() T
 }
 
 // LongDistanceSetter provides write access to the LongDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type LongDistanceSetter[T LongDistanceType] interface {
 	SetLongDistance(T)
 }
@@ -4281,13 +3777,13 @@ type MainHandType interface {
 }
 
 // MainHandGetter provides read access to the MainHand field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MainHandGetter[T MainHandType] interface {
 	GetMainHand() T
 }
 
 // MainHandSetter provides write access to the MainHand field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MainHandSetter[T MainHandType] interface {
 	SetMainHand(T)
 }
@@ -4299,13 +3795,13 @@ type MakeAllType interface {
 }
 
 // MakeAllGetter provides read access to the MakeAll field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MakeAllGetter[T MakeAllType] interface {
 	GetMakeAll() T
 }
 
 // MakeAllSetter provides write access to the MakeAll field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MakeAllSetter[T MakeAllType] interface {
 	SetMakeAll(T)
 }
@@ -4317,13 +3813,13 @@ type MatchesType interface {
 }
 
 // MatchesGetter provides read access to the Matches field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MatchesGetter[T MatchesType] interface {
 	GetMatches() T
 }
 
 // MatchesSetter provides write access to the Matches field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MatchesSetter[T MatchesType] interface {
 	SetMatches(T)
 }
@@ -4353,13 +3849,13 @@ type MaxPlayersType interface {
 }
 
 // MaxPlayersGetter provides read access to the MaxPlayers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MaxPlayersGetter[T MaxPlayersType] interface {
 	GetMaxPlayers() T
 }
 
 // MaxPlayersSetter provides write access to the MaxPlayers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MaxPlayersSetter[T MaxPlayersType] interface {
 	SetMaxPlayers(T)
 }
@@ -4371,13 +3867,13 @@ type MessageType interface {
 }
 
 // MessageGetter provides read access to the Message field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageGetter[T MessageType] interface {
 	GetMessage() T
 }
 
 // MessageSetter provides write access to the Message field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageSetter[T MessageType] interface {
 	SetMessage(T)
 }
@@ -4389,13 +3885,13 @@ type MessageCountType interface {
 }
 
 // MessageCountGetter provides read access to the MessageCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageCountGetter[T MessageCountType] interface {
 	GetMessageCount() T
 }
 
 // MessageCountSetter provides write access to the MessageCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageCountSetter[T MessageCountType] interface {
 	SetMessageCount(T)
 }
@@ -4407,13 +3903,13 @@ type MessageIdType interface {
 }
 
 // MessageIdGetter provides read access to the MessageId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageIdGetter[T MessageIdType] interface {
 	GetMessageId() T
 }
 
 // MessageIdSetter provides write access to the MessageId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MessageIdSetter[T MessageIdType] interface {
 	SetMessageId(T)
 }
@@ -4425,13 +3921,13 @@ type MetadataType interface {
 }
 
 // MetadataGetter provides read access to the Metadata field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MetadataGetter[T MetadataType] interface {
 	GetMetadata() T
 }
 
 // MetadataSetter provides write access to the Metadata field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MetadataSetter[T MetadataType] interface {
 	SetMetadata(T)
 }
@@ -4479,31 +3975,31 @@ type MirrorType interface {
 }
 
 // MirrorGetter provides read access to the Mirror field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MirrorGetter[T MirrorType] interface {
 	GetMirror() T
 }
 
 // MirrorSetter provides write access to the Mirror field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MirrorSetter[T MirrorType] interface {
 	SetMirror(T)
 }
 
 // ModeType is a type constraint for the Mode field.
-// This field has types: any | pk.Byte | pk.VarInt
+// This field has types: any | pk.VarInt
 type ModeType interface {
-	any | pk.Byte | pk.VarInt
+	any | pk.VarInt
 }
 
 // ModeGetter provides read access to the Mode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ModeGetter[T ModeType] interface {
 	GetMode() T
 }
 
 // ModeSetter provides write access to the Mode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ModeSetter[T ModeType] interface {
 	SetMode(T)
 }
@@ -4533,13 +4029,13 @@ type MotdType interface {
 }
 
 // MotdGetter provides read access to the Motd field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MotdGetter[T MotdType] interface {
 	GetMotd() T
 }
 
 // MotdSetter provides write access to the Motd field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MotdSetter[T MotdType] interface {
 	SetMotd(T)
 }
@@ -4551,13 +4047,13 @@ type MouseType interface {
 }
 
 // MouseGetter provides read access to the Mouse field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MouseGetter[T MouseType] interface {
 	GetMouse() T
 }
 
 // MouseSetter provides write access to the Mouse field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MouseSetter[T MouseType] interface {
 	SetMouse(T)
 }
@@ -4569,13 +4065,13 @@ type MouseButtonType interface {
 }
 
 // MouseButtonGetter provides read access to the MouseButton field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MouseButtonGetter[T MouseButtonType] interface {
 	GetMouseButton() T
 }
 
 // MouseButtonSetter provides write access to the MouseButton field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type MouseButtonSetter[T MouseButtonType] interface {
 	SetMouseButton(T)
 }
@@ -4605,33 +4101,15 @@ type NameType interface {
 }
 
 // NameGetter provides read access to the Name field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NameGetter[T NameType] interface {
 	GetName() T
 }
 
 // NameSetter provides write access to the Name field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NameSetter[T NameType] interface {
 	SetName(T)
-}
-
-// NameTagVisibilityType is a type constraint for the NameTagVisibility field.
-// This field has types: any
-type NameTagVisibilityType interface {
-	any
-}
-
-// NameTagVisibilityGetter provides read access to the NameTagVisibility field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type NameTagVisibilityGetter[T NameTagVisibilityType] interface {
-	GetNameTagVisibility() T
-}
-
-// NameTagVisibilitySetter provides write access to the NameTagVisibility field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type NameTagVisibilitySetter[T NameTagVisibilityType] interface {
-	SetNameTagVisibility(T)
 }
 
 // NarrationType is a type constraint for the Narration field.
@@ -4641,13 +4119,13 @@ type NarrationType interface {
 }
 
 // NarrationGetter provides read access to the Narration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NarrationGetter[T NarrationType] interface {
 	GetNarration() T
 }
 
 // NarrationSetter provides write access to the Narration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NarrationSetter[T NarrationType] interface {
 	SetNarration(T)
 }
@@ -4659,13 +4137,13 @@ type NbSlotsType interface {
 }
 
 // NbSlotsGetter provides read access to the NbSlots field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbSlotsGetter[T NbSlotsType] interface {
 	GetNbSlots() T
 }
 
 // NbSlotsSetter provides write access to the NbSlots field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbSlotsSetter[T NbSlotsType] interface {
 	SetNbSlots(T)
 }
@@ -4677,13 +4155,13 @@ type NbtType interface {
 }
 
 // NbtGetter provides read access to the Nbt field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbtGetter[T NbtType] interface {
 	GetNbt() T
 }
 
 // NbtSetter provides write access to the Nbt field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbtSetter[T NbtType] interface {
 	SetNbt(T)
 }
@@ -4695,13 +4173,13 @@ type NbtDataType interface {
 }
 
 // NbtDataGetter provides read access to the NbtData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbtDataGetter[T NbtDataType] interface {
 	GetNbtData() T
 }
 
 // NbtDataSetter provides write access to the NbtData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NbtDataSetter[T NbtDataType] interface {
 	SetNbtData(T)
 }
@@ -4713,13 +4191,13 @@ type NetworkNameType interface {
 }
 
 // NetworkNameGetter provides read access to the NetworkName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NetworkNameGetter[T NetworkNameType] interface {
 	GetNetworkName() T
 }
 
 // NetworkNameSetter provides write access to the NetworkName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NetworkNameSetter[T NetworkNameType] interface {
 	SetNetworkName(T)
 }
@@ -4731,13 +4209,13 @@ type NetworkTargetNameType interface {
 }
 
 // NetworkTargetNameGetter provides read access to the NetworkTargetName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NetworkTargetNameGetter[T NetworkTargetNameType] interface {
 	GetNetworkTargetName() T
 }
 
 // NetworkTargetNameSetter provides write access to the NetworkTargetName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NetworkTargetNameSetter[T NetworkTargetNameType] interface {
 	SetNetworkTargetName(T)
 }
@@ -4749,31 +4227,31 @@ type NewDiameterType interface {
 }
 
 // NewDiameterGetter provides read access to the NewDiameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NewDiameterGetter[T NewDiameterType] interface {
 	GetNewDiameter() T
 }
 
 // NewDiameterSetter provides write access to the NewDiameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NewDiameterSetter[T NewDiameterType] interface {
 	SetNewDiameter(T)
 }
 
 // NewDifficultyType is a type constraint for the NewDifficulty field.
-// This field has types: any | pk.UnsignedByte
+// This field has types: any
 type NewDifficultyType interface {
-	any | pk.UnsignedByte
+	any
 }
 
 // NewDifficultyGetter provides read access to the NewDifficulty field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NewDifficultyGetter[T NewDifficultyType] interface {
 	GetNewDifficulty() T
 }
 
 // NewDifficultySetter provides write access to the NewDifficulty field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NewDifficultySetter[T NewDifficultyType] interface {
 	SetNewDifficulty(T)
 }
@@ -4803,13 +4281,13 @@ type NextStateType interface {
 }
 
 // NextStateGetter provides read access to the NextState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NextStateGetter[T NextStateType] interface {
 	GetNextState() T
 }
 
 // NextStateSetter provides write access to the NextState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NextStateSetter[T NextStateType] interface {
 	SetNextState(T)
 }
@@ -4821,13 +4299,13 @@ type NodesType interface {
 }
 
 // NodesGetter provides read access to the Nodes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NodesGetter[T NodesType] interface {
 	GetNodes() T
 }
 
 // NodesSetter provides write access to the Nodes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NodesSetter[T NodesType] interface {
 	SetNodes(T)
 }
@@ -4839,13 +4317,13 @@ type NumberFormatType interface {
 }
 
 // NumberFormatGetter provides read access to the NumberFormat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NumberFormatGetter[T NumberFormatType] interface {
 	GetNumberFormat() T
 }
 
 // NumberFormatSetter provides write access to the NumberFormat field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type NumberFormatSetter[T NumberFormatType] interface {
 	SetNumberFormat(T)
 }
@@ -4857,13 +4335,13 @@ type ObjectDataType interface {
 }
 
 // ObjectDataGetter provides read access to the ObjectData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectDataGetter[T ObjectDataType] interface {
 	GetObjectData() T
 }
 
 // ObjectDataSetter provides write access to the ObjectData field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectDataSetter[T ObjectDataType] interface {
 	SetObjectData(T)
 }
@@ -4875,13 +4353,13 @@ type ObjectUUIDType interface {
 }
 
 // ObjectUUIDGetter provides read access to the ObjectUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectUUIDGetter[T ObjectUUIDType] interface {
 	GetObjectUUID() T
 }
 
 // ObjectUUIDSetter provides write access to the ObjectUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectUUIDSetter[T ObjectUUIDType] interface {
 	SetObjectUUID(T)
 }
@@ -4893,13 +4371,13 @@ type ObjectiveNameType interface {
 }
 
 // ObjectiveNameGetter provides read access to the ObjectiveName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectiveNameGetter[T ObjectiveNameType] interface {
 	GetObjectiveName() T
 }
 
 // ObjectiveNameSetter provides write access to the ObjectiveName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ObjectiveNameSetter[T ObjectiveNameType] interface {
 	SetObjectiveName(T)
 }
@@ -4911,13 +4389,13 @@ type OffsetType interface {
 }
 
 // OffsetGetter provides read access to the Offset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetGetter[T OffsetType] interface {
 	GetOffset() T
 }
 
 // OffsetSetter provides write access to the Offset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetSetter[T OffsetType] interface {
 	SetOffset(T)
 }
@@ -4929,13 +4407,13 @@ type OffsetXType interface {
 }
 
 // OffsetXGetter provides read access to the OffsetX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetXGetter[T OffsetXType] interface {
 	GetOffsetX() T
 }
 
 // OffsetXSetter provides write access to the OffsetX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetXSetter[T OffsetXType] interface {
 	SetOffsetX(T)
 }
@@ -4947,13 +4425,13 @@ type OffsetYType interface {
 }
 
 // OffsetYGetter provides read access to the OffsetY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetYGetter[T OffsetYType] interface {
 	GetOffsetY() T
 }
 
 // OffsetYSetter provides write access to the OffsetY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetYSetter[T OffsetYType] interface {
 	SetOffsetY(T)
 }
@@ -4965,13 +4443,13 @@ type OffsetZType interface {
 }
 
 // OffsetZGetter provides read access to the OffsetZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetZGetter[T OffsetZType] interface {
 	GetOffsetZ() T
 }
 
 // OffsetZSetter provides write access to the OffsetZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OffsetZSetter[T OffsetZType] interface {
 	SetOffsetZ(T)
 }
@@ -4983,13 +4461,13 @@ type OldDiameterType interface {
 }
 
 // OldDiameterGetter provides read access to the OldDiameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OldDiameterGetter[T OldDiameterType] interface {
 	GetOldDiameter() T
 }
 
 // OldDiameterSetter provides write access to the OldDiameter field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OldDiameterSetter[T OldDiameterType] interface {
 	SetOldDiameter(T)
 }
@@ -5001,13 +4479,13 @@ type OnGroundType interface {
 }
 
 // OnGroundGetter provides read access to the OnGround field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OnGroundGetter[T OnGroundType] interface {
 	GetOnGround() T
 }
 
 // OnGroundSetter provides write access to the OnGround field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OnGroundSetter[T OnGroundType] interface {
 	SetOnGround(T)
 }
@@ -5019,13 +4497,13 @@ type OpenType interface {
 }
 
 // OpenGetter provides read access to the Open field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OpenGetter[T OpenType] interface {
 	GetOpen() T
 }
 
 // OpenSetter provides write access to the Open field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OpenSetter[T OpenType] interface {
 	SetOpen(T)
 }
@@ -5055,13 +4533,13 @@ type OperationType interface {
 }
 
 // OperationGetter provides read access to the Operation field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OperationGetter[T OperationType] interface {
 	GetOperation() T
 }
 
 // OperationSetter provides write access to the Operation field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OperationSetter[T OperationType] interface {
 	SetOperation(T)
 }
@@ -5073,13 +4551,13 @@ type OverrideArmorAssetsType interface {
 }
 
 // OverrideArmorAssetsGetter provides read access to the OverrideArmorAssets field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OverrideArmorAssetsGetter[T OverrideArmorAssetsType] interface {
 	GetOverrideArmorAssets() T
 }
 
 // OverrideArmorAssetsSetter provides write access to the OverrideArmorAssets field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type OverrideArmorAssetsSetter[T OverrideArmorAssetsType] interface {
 	SetOverrideArmorAssets(T)
 }
@@ -5091,13 +4569,13 @@ type PacksType interface {
 }
 
 // PacksGetter provides read access to the Packs field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PacksGetter[T PacksType] interface {
 	GetPacks() T
 }
 
 // PacksSetter provides write access to the Packs field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PacksSetter[T PacksType] interface {
 	SetPacks(T)
 }
@@ -5109,13 +4587,13 @@ type PagesType interface {
 }
 
 // PagesGetter provides read access to the Pages field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PagesGetter[T PagesType] interface {
 	GetPages() T
 }
 
 // PagesSetter provides write access to the Pages field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PagesSetter[T PagesType] interface {
 	SetPages(T)
 }
@@ -5127,13 +4605,13 @@ type ParametersType interface {
 }
 
 // ParametersGetter provides read access to the Parameters field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParametersGetter[T ParametersType] interface {
 	GetParameters() T
 }
 
 // ParametersSetter provides write access to the Parameters field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParametersSetter[T ParametersType] interface {
 	SetParameters(T)
 }
@@ -5145,13 +4623,13 @@ type ParamsType interface {
 }
 
 // ParamsGetter provides read access to the Params field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParamsGetter[T ParamsType] interface {
 	GetParams() T
 }
 
 // ParamsSetter provides write access to the Params field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParamsSetter[T ParamsType] interface {
 	SetParams(T)
 }
@@ -5163,13 +4641,13 @@ type PartialMatchersType interface {
 }
 
 // PartialMatchersGetter provides read access to the PartialMatchers field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PartialMatchersGetter[T PartialMatchersType] interface {
 	GetPartialMatchers() T
 }
 
 // PartialMatchersSetter provides write access to the PartialMatchers field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PartialMatchersSetter[T PartialMatchersType] interface {
 	SetPartialMatchers(T)
 }
@@ -5181,13 +4659,13 @@ type ParticleType interface {
 }
 
 // ParticleGetter provides read access to the Particle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParticleGetter[T ParticleType] interface {
 	GetParticle() T
 }
 
 // ParticleSetter provides write access to the Particle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParticleSetter[T ParticleType] interface {
 	SetParticle(T)
 }
@@ -5199,13 +4677,13 @@ type ParticleStatusType interface {
 }
 
 // ParticleStatusGetter provides read access to the ParticleStatus field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParticleStatusGetter[T ParticleStatusType] interface {
 	GetParticleStatus() T
 }
 
 // ParticleStatusSetter provides write access to the ParticleStatus field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ParticleStatusSetter[T ParticleStatusType] interface {
 	SetParticleStatus(T)
 }
@@ -5217,13 +4695,13 @@ type PassengersType interface {
 }
 
 // PassengersGetter provides read access to the Passengers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PassengersGetter[T PassengersType] interface {
 	GetPassengers() T
 }
 
 // PassengersSetter provides write access to the Passengers field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PassengersSetter[T PassengersType] interface {
 	SetPassengers(T)
 }
@@ -5235,13 +4713,13 @@ type PatternType interface {
 }
 
 // PatternGetter provides read access to the Pattern field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PatternGetter[T PatternType] interface {
 	GetPattern() T
 }
 
 // PatternSetter provides write access to the Pattern field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PatternSetter[T PatternType] interface {
 	SetPattern(T)
 }
@@ -5253,13 +4731,13 @@ type PayloadType interface {
 }
 
 // PayloadGetter provides read access to the Payload field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PayloadGetter[T PayloadType] interface {
 	GetPayload() T
 }
 
 // PayloadSetter provides write access to the Payload field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PayloadSetter[T PayloadType] interface {
 	SetPayload(T)
 }
@@ -5271,13 +4749,13 @@ type PickupItemCountType interface {
 }
 
 // PickupItemCountGetter provides read access to the PickupItemCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PickupItemCountGetter[T PickupItemCountType] interface {
 	GetPickupItemCount() T
 }
 
 // PickupItemCountSetter provides write access to the PickupItemCount field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PickupItemCountSetter[T PickupItemCountType] interface {
 	SetPickupItemCount(T)
 }
@@ -5307,13 +4785,13 @@ type PitchType interface {
 }
 
 // PitchGetter provides read access to the Pitch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PitchGetter[T PitchType] interface {
 	GetPitch() T
 }
 
 // PitchSetter provides write access to the Pitch field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PitchSetter[T PitchType] interface {
 	SetPitch(T)
 }
@@ -5325,13 +4803,13 @@ type PlacementPriorityType interface {
 }
 
 // PlacementPriorityGetter provides read access to the PlacementPriority field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlacementPriorityGetter[T PlacementPriorityType] interface {
 	GetPlacementPriority() T
 }
 
 // PlacementPrioritySetter provides write access to the PlacementPriority field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlacementPrioritySetter[T PlacementPriorityType] interface {
 	SetPlacementPriority(T)
 }
@@ -5343,13 +4821,13 @@ type PlainMessageType interface {
 }
 
 // PlainMessageGetter provides read access to the PlainMessage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlainMessageGetter[T PlainMessageType] interface {
 	GetPlainMessage() T
 }
 
 // PlainMessageSetter provides write access to the PlainMessage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlainMessageSetter[T PlainMessageType] interface {
 	SetPlainMessage(T)
 }
@@ -5361,13 +4839,13 @@ type PlayerIdType interface {
 }
 
 // PlayerIdGetter provides read access to the PlayerId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerIdGetter[T PlayerIdType] interface {
 	GetPlayerId() T
 }
 
 // PlayerIdSetter provides write access to the PlayerId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerIdSetter[T PlayerIdType] interface {
 	SetPlayerId(T)
 }
@@ -5379,69 +4857,15 @@ type PlayerKnockbackType interface {
 }
 
 // PlayerKnockbackGetter provides read access to the PlayerKnockback field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerKnockbackGetter[T PlayerKnockbackType] interface {
 	GetPlayerKnockback() T
 }
 
 // PlayerKnockbackSetter provides write access to the PlayerKnockback field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerKnockbackSetter[T PlayerKnockbackType] interface {
 	SetPlayerKnockback(T)
-}
-
-// PlayerMotionXType is a type constraint for the PlayerMotionX field.
-// This field has types: pk.Float
-type PlayerMotionXType interface {
-	pk.Float
-}
-
-// PlayerMotionXGetter provides read access to the PlayerMotionX field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionXGetter[T PlayerMotionXType] interface {
-	GetPlayerMotionX() T
-}
-
-// PlayerMotionXSetter provides write access to the PlayerMotionX field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionXSetter[T PlayerMotionXType] interface {
-	SetPlayerMotionX(T)
-}
-
-// PlayerMotionYType is a type constraint for the PlayerMotionY field.
-// This field has types: pk.Float
-type PlayerMotionYType interface {
-	pk.Float
-}
-
-// PlayerMotionYGetter provides read access to the PlayerMotionY field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionYGetter[T PlayerMotionYType] interface {
-	GetPlayerMotionY() T
-}
-
-// PlayerMotionYSetter provides write access to the PlayerMotionY field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionYSetter[T PlayerMotionYType] interface {
-	SetPlayerMotionY(T)
-}
-
-// PlayerMotionZType is a type constraint for the PlayerMotionZ field.
-// This field has types: pk.Float
-type PlayerMotionZType interface {
-	pk.Float
-}
-
-// PlayerMotionZGetter provides read access to the PlayerMotionZ field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionZGetter[T PlayerMotionZType] interface {
-	GetPlayerMotionZ() T
-}
-
-// PlayerMotionZSetter provides write access to the PlayerMotionZ field.
-// Implemented by packet types in versions: 1.21.1
-type PlayerMotionZSetter[T PlayerMotionZType] interface {
-	SetPlayerMotionZ(T)
 }
 
 // PlayerUUIDType is a type constraint for the PlayerUUID field.
@@ -5451,13 +4875,13 @@ type PlayerUUIDType interface {
 }
 
 // PlayerUUIDGetter provides read access to the PlayerUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerUUIDGetter[T PlayerUUIDType] interface {
 	GetPlayerUUID() T
 }
 
 // PlayerUUIDSetter provides write access to the PlayerUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayerUUIDSetter[T PlayerUUIDType] interface {
 	SetPlayerUUID(T)
 }
@@ -5469,13 +4893,13 @@ type PlayersType interface {
 }
 
 // PlayersGetter provides read access to the Players field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayersGetter[T PlayersType] interface {
 	GetPlayers() T
 }
 
 // PlayersSetter provides write access to the Players field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PlayersSetter[T PlayersType] interface {
 	SetPlayers(T)
 }
@@ -5487,13 +4911,13 @@ type PoolType interface {
 }
 
 // PoolGetter provides read access to the Pool field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PoolGetter[T PoolType] interface {
 	GetPool() T
 }
 
 // PoolSetter provides write access to the Pool field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PoolSetter[T PoolType] interface {
 	SetPool(T)
 }
@@ -5505,13 +4929,13 @@ type PortType interface {
 }
 
 // PortGetter provides read access to the Port field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortGetter[T PortType] interface {
 	GetPort() T
 }
 
 // PortSetter provides write access to the Port field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortSetter[T PortType] interface {
 	SetPort(T)
 }
@@ -5523,13 +4947,13 @@ type PortalCooldownType interface {
 }
 
 // PortalCooldownGetter provides read access to the PortalCooldown field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortalCooldownGetter[T PortalCooldownType] interface {
 	GetPortalCooldown() T
 }
 
 // PortalCooldownSetter provides write access to the PortalCooldown field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortalCooldownSetter[T PortalCooldownType] interface {
 	SetPortalCooldown(T)
 }
@@ -5541,13 +4965,13 @@ type PortalTeleportBoundaryType interface {
 }
 
 // PortalTeleportBoundaryGetter provides read access to the PortalTeleportBoundary field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortalTeleportBoundaryGetter[T PortalTeleportBoundaryType] interface {
 	GetPortalTeleportBoundary() T
 }
 
 // PortalTeleportBoundarySetter provides write access to the PortalTeleportBoundary field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PortalTeleportBoundarySetter[T PortalTeleportBoundaryType] interface {
 	SetPortalTeleportBoundary(T)
 }
@@ -5559,13 +4983,13 @@ type PosType interface {
 }
 
 // PosGetter provides read access to the Pos field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PosGetter[T PosType] interface {
 	GetPos() T
 }
 
 // PosSetter provides write access to the Pos field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PosSetter[T PosType] interface {
 	SetPos(T)
 }
@@ -5577,33 +5001,15 @@ type PositionType interface {
 }
 
 // PositionGetter provides read access to the Position field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PositionGetter[T PositionType] interface {
 	GetPosition() T
 }
 
 // PositionSetter provides write access to the Position field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PositionSetter[T PositionType] interface {
 	SetPosition(T)
-}
-
-// PrefixType is a type constraint for the Prefix field.
-// This field has types: any
-type PrefixType interface {
-	any
-}
-
-// PrefixGetter provides read access to the Prefix field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type PrefixGetter[T PrefixType] interface {
-	GetPrefix() T
-}
-
-// PrefixSetter provides write access to the Prefix field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type PrefixSetter[T PrefixType] interface {
-	SetPrefix(T)
 }
 
 // PreviousGamemodeType is a type constraint for the PreviousGamemode field.
@@ -5613,13 +5019,13 @@ type PreviousGamemodeType interface {
 }
 
 // PreviousGamemodeGetter provides read access to the PreviousGamemode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PreviousGamemodeGetter[T PreviousGamemodeType] interface {
 	GetPreviousGamemode() T
 }
 
 // PreviousGamemodeSetter provides write access to the PreviousGamemode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PreviousGamemodeSetter[T PreviousGamemodeType] interface {
 	SetPreviousGamemode(T)
 }
@@ -5631,13 +5037,13 @@ type PreviousMessagesType interface {
 }
 
 // PreviousMessagesGetter provides read access to the PreviousMessages field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PreviousMessagesGetter[T PreviousMessagesType] interface {
 	GetPreviousMessages() T
 }
 
 // PreviousMessagesSetter provides write access to the PreviousMessages field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PreviousMessagesSetter[T PreviousMessagesType] interface {
 	SetPreviousMessages(T)
 }
@@ -5649,13 +5055,13 @@ type PrimaryEffectType interface {
 }
 
 // PrimaryEffectGetter provides read access to the PrimaryEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PrimaryEffectGetter[T PrimaryEffectType] interface {
 	GetPrimaryEffect() T
 }
 
 // PrimaryEffectSetter provides write access to the PrimaryEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PrimaryEffectSetter[T PrimaryEffectType] interface {
 	SetPrimaryEffect(T)
 }
@@ -5667,13 +5073,13 @@ type ProgressMappingType interface {
 }
 
 // ProgressMappingGetter provides read access to the ProgressMapping field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ProgressMappingGetter[T ProgressMappingType] interface {
 	GetProgressMapping() T
 }
 
 // ProgressMappingSetter provides write access to the ProgressMapping field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ProgressMappingSetter[T ProgressMappingType] interface {
 	SetProgressMapping(T)
 }
@@ -5685,13 +5091,13 @@ type PromptMessageType interface {
 }
 
 // PromptMessageGetter provides read access to the PromptMessage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PromptMessageGetter[T PromptMessageType] interface {
 	GetPromptMessage() T
 }
 
 // PromptMessageSetter provides write access to the PromptMessage field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PromptMessageSetter[T PromptMessageType] interface {
 	SetPromptMessage(T)
 }
@@ -5703,13 +5109,13 @@ type PropertiesType interface {
 }
 
 // PropertiesGetter provides read access to the Properties field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PropertiesGetter[T PropertiesType] interface {
 	GetProperties() T
 }
 
 // PropertiesSetter provides write access to the Properties field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PropertiesSetter[T PropertiesType] interface {
 	SetProperties(T)
 }
@@ -5721,13 +5127,13 @@ type PropertyType interface {
 }
 
 // PropertyGetter provides read access to the Property field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PropertyGetter[T PropertyType] interface {
 	GetProperty() T
 }
 
 // PropertySetter provides write access to the Property field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PropertySetter[T PropertyType] interface {
 	SetProperty(T)
 }
@@ -5739,13 +5145,13 @@ type ProtocolVersionType interface {
 }
 
 // ProtocolVersionGetter provides read access to the ProtocolVersion field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ProtocolVersionGetter[T ProtocolVersionType] interface {
 	GetProtocolVersion() T
 }
 
 // ProtocolVersionSetter provides write access to the ProtocolVersion field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ProtocolVersionSetter[T ProtocolVersionType] interface {
 	SetProtocolVersion(T)
 }
@@ -5757,13 +5163,13 @@ type PublicKeyType interface {
 }
 
 // PublicKeyGetter provides read access to the PublicKey field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PublicKeyGetter[T PublicKeyType] interface {
 	GetPublicKey() T
 }
 
 // PublicKeySetter provides write access to the PublicKey field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type PublicKeySetter[T PublicKeyType] interface {
 	SetPublicKey(T)
 }
@@ -5775,13 +5181,13 @@ type RadiusType interface {
 }
 
 // RadiusGetter provides read access to the Radius field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RadiusGetter[T RadiusType] interface {
 	GetRadius() T
 }
 
 // RadiusSetter provides write access to the Radius field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RadiusSetter[T RadiusType] interface {
 	SetRadius(T)
 }
@@ -5793,13 +5199,13 @@ type RangeType interface {
 }
 
 // RangeGetter provides read access to the Range field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RangeGetter[T RangeType] interface {
 	GetRange() T
 }
 
 // RangeSetter provides write access to the Range field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RangeSetter[T RangeType] interface {
 	SetRange(T)
 }
@@ -5823,39 +5229,21 @@ type ReachedSetter[T ReachedType] interface {
 }
 
 // ReasonType is a type constraint for the Reason field.
-// This field has types: any | pk.String | pk.UnsignedByte
+// This field has types: any | pk.String
 type ReasonType interface {
-	any | pk.String | pk.UnsignedByte
+	any | pk.String
 }
 
 // ReasonGetter provides read access to the Reason field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReasonGetter[T ReasonType] interface {
 	GetReason() T
 }
 
 // ReasonSetter provides write access to the Reason field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReasonSetter[T ReasonType] interface {
 	SetReason(T)
-}
-
-// RecipeType is a type constraint for the Recipe field.
-// This field has types: pk.String
-type RecipeType interface {
-	pk.String
-}
-
-// RecipeGetter provides read access to the Recipe field.
-// Implemented by packet types in versions: 1.21.1
-type RecipeGetter[T RecipeType] interface {
-	GetRecipe() T
-}
-
-// RecipeSetter provides write access to the Recipe field.
-// Implemented by packet types in versions: 1.21.1
-type RecipeSetter[T RecipeType] interface {
-	SetRecipe(T)
 }
 
 // RecipeDisplayType is a type constraint for the RecipeDisplay field.
@@ -5865,31 +5253,31 @@ type RecipeDisplayType interface {
 }
 
 // RecipeDisplayGetter provides read access to the RecipeDisplay field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeDisplayGetter[T RecipeDisplayType] interface {
 	GetRecipeDisplay() T
 }
 
 // RecipeDisplaySetter provides write access to the RecipeDisplay field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeDisplaySetter[T RecipeDisplayType] interface {
 	SetRecipeDisplay(T)
 }
 
 // RecipeIdType is a type constraint for the RecipeId field.
-// This field has types: pk.String | pk.VarInt
+// This field has types: pk.VarInt
 type RecipeIdType interface {
-	pk.String | pk.VarInt
+	pk.VarInt
 }
 
 // RecipeIdGetter provides read access to the RecipeId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeIdGetter[T RecipeIdType] interface {
 	GetRecipeId() T
 }
 
 // RecipeIdSetter provides write access to the RecipeId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeIdSetter[T RecipeIdType] interface {
 	SetRecipeId(T)
 }
@@ -5901,13 +5289,13 @@ type RecipeIdsType interface {
 }
 
 // RecipeIdsGetter provides read access to the RecipeIds field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeIdsGetter[T RecipeIdsType] interface {
 	GetRecipeIds() T
 }
 
 // RecipeIdsSetter provides write access to the RecipeIds field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipeIdsSetter[T RecipeIdsType] interface {
 	SetRecipeIds(T)
 }
@@ -5919,51 +5307,15 @@ type RecipesType interface {
 }
 
 // RecipesGetter provides read access to the Recipes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipesGetter[T RecipesType] interface {
 	GetRecipes() T
 }
 
 // RecipesSetter provides write access to the Recipes field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecipesSetter[T RecipesType] interface {
 	SetRecipes(T)
-}
-
-// Recipes1Type is a type constraint for the Recipes1 field.
-// This field has types: any
-type Recipes1Type interface {
-	any
-}
-
-// Recipes1Getter provides read access to the Recipes1 field.
-// Implemented by packet types in versions: 1.21.1
-type Recipes1Getter[T Recipes1Type] interface {
-	GetRecipes1() T
-}
-
-// Recipes1Setter provides write access to the Recipes1 field.
-// Implemented by packet types in versions: 1.21.1
-type Recipes1Setter[T Recipes1Type] interface {
-	SetRecipes1(T)
-}
-
-// Recipes2Type is a type constraint for the Recipes2 field.
-// This field has types: any
-type Recipes2Type interface {
-	any
-}
-
-// Recipes2Getter provides read access to the Recipes2 field.
-// Implemented by packet types in versions: 1.21.1
-type Recipes2Getter[T Recipes2Type] interface {
-	GetRecipes2() T
-}
-
-// Recipes2Setter provides write access to the Recipes2 field.
-// Implemented by packet types in versions: 1.21.1
-type Recipes2Setter[T Recipes2Type] interface {
-	SetRecipes2(T)
 }
 
 // RecordsType is a type constraint for the Records field.
@@ -5973,13 +5325,13 @@ type RecordsType interface {
 }
 
 // RecordsGetter provides read access to the Records field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecordsGetter[T RecordsType] interface {
 	GetRecords() T
 }
 
 // RecordsSetter provides write access to the Records field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RecordsSetter[T RecordsType] interface {
 	SetRecords(T)
 }
@@ -5991,13 +5343,13 @@ type RedirectNodeType interface {
 }
 
 // RedirectNodeGetter provides read access to the RedirectNode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RedirectNodeGetter[T RedirectNodeType] interface {
 	GetRedirectNode() T
 }
 
 // RedirectNodeSetter provides write access to the RedirectNode field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RedirectNodeSetter[T RedirectNodeType] interface {
 	SetRedirectNode(T)
 }
@@ -6009,13 +5361,13 @@ type ReducedDebugInfoType interface {
 }
 
 // ReducedDebugInfoGetter provides read access to the ReducedDebugInfo field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReducedDebugInfoGetter[T ReducedDebugInfoType] interface {
 	GetReducedDebugInfo() T
 }
 
 // ReducedDebugInfoSetter provides write access to the ReducedDebugInfo field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReducedDebugInfoSetter[T ReducedDebugInfoType] interface {
 	SetReducedDebugInfo(T)
 }
@@ -6081,13 +5433,13 @@ type RemoveComponentsType interface {
 }
 
 // RemoveComponentsGetter provides read access to the RemoveComponents field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RemoveComponentsGetter[T RemoveComponentsType] interface {
 	GetRemoveComponents() T
 }
 
 // RemoveComponentsSetter provides write access to the RemoveComponents field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RemoveComponentsSetter[T RemoveComponentsType] interface {
 	SetRemoveComponents(T)
 }
@@ -6099,13 +5451,13 @@ type ReplaceType interface {
 }
 
 // ReplaceGetter provides read access to the Replace field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReplaceGetter[T ReplaceType] interface {
 	GetReplace() T
 }
 
 // ReplaceSetter provides write access to the Replace field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ReplaceSetter[T ReplaceType] interface {
 	SetReplace(T)
 }
@@ -6117,13 +5469,13 @@ type ResetType interface {
 }
 
 // ResetGetter provides read access to the Reset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResetGetter[T ResetType] interface {
 	GetReset() T
 }
 
 // ResetSetter provides write access to the Reset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResetSetter[T ResetType] interface {
 	SetReset(T)
 }
@@ -6135,31 +5487,31 @@ type ResponseType interface {
 }
 
 // ResponseGetter provides read access to the Response field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResponseGetter[T ResponseType] interface {
 	GetResponse() T
 }
 
 // ResponseSetter provides write access to the Response field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResponseSetter[T ResponseType] interface {
 	SetResponse(T)
 }
 
 // ResultType is a type constraint for the Result field.
-// This field has types: any | pk.VarInt
+// This field has types: pk.VarInt
 type ResultType interface {
-	any | pk.VarInt
+	pk.VarInt
 }
 
 // ResultGetter provides read access to the Result field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResultGetter[T ResultType] interface {
 	GetResult() T
 }
 
 // ResultSetter provides write access to the Result field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ResultSetter[T ResultType] interface {
 	SetResult(T)
 }
@@ -6171,13 +5523,13 @@ type RightPaddleType interface {
 }
 
 // RightPaddleGetter provides read access to the RightPaddle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RightPaddleGetter[T RightPaddleType] interface {
 	GetRightPaddle() T
 }
 
 // RightPaddleSetter provides write access to the RightPaddle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RightPaddleSetter[T RightPaddleType] interface {
 	SetRightPaddle(T)
 }
@@ -6189,13 +5541,13 @@ type RootIndexType interface {
 }
 
 // RootIndexGetter provides read access to the RootIndex field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RootIndexGetter[T RootIndexType] interface {
 	GetRootIndex() T
 }
 
 // RootIndexSetter provides write access to the RootIndex field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RootIndexSetter[T RootIndexType] interface {
 	SetRootIndex(T)
 }
@@ -6207,13 +5559,13 @@ type RotationType interface {
 }
 
 // RotationGetter provides read access to the Rotation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RotationGetter[T RotationType] interface {
 	GetRotation() T
 }
 
 // RotationSetter provides write access to the Rotation field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RotationSetter[T RotationType] interface {
 	SetRotation(T)
 }
@@ -6225,13 +5577,13 @@ type RowsType interface {
 }
 
 // RowsGetter provides read access to the Rows field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RowsGetter[T RowsType] interface {
 	GetRows() T
 }
 
 // RowsSetter provides write access to the Rows field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type RowsSetter[T RowsType] interface {
 	SetRows(T)
 }
@@ -6243,13 +5595,13 @@ type SaltType interface {
 }
 
 // SaltGetter provides read access to the Salt field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SaltGetter[T SaltType] interface {
 	GetSalt() T
 }
 
 // SaltSetter provides write access to the Salt field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SaltSetter[T SaltType] interface {
 	SetSalt(T)
 }
@@ -6261,13 +5613,13 @@ type SampleType interface {
 }
 
 // SampleGetter provides read access to the Sample field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SampleGetter[T SampleType] interface {
 	GetSample() T
 }
 
 // SampleSetter provides write access to the Sample field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SampleSetter[T SampleType] interface {
 	SetSample(T)
 }
@@ -6279,13 +5631,13 @@ type ScaleType interface {
 }
 
 // ScaleGetter provides read access to the Scale field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ScaleGetter[T ScaleType] interface {
 	GetScale() T
 }
 
 // ScaleSetter provides write access to the Scale field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ScaleSetter[T ScaleType] interface {
 	SetScale(T)
 }
@@ -6315,13 +5667,13 @@ type ScoreNameType interface {
 }
 
 // ScoreNameGetter provides read access to the ScoreName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ScoreNameGetter[T ScoreNameType] interface {
 	GetScoreName() T
 }
 
 // ScoreNameSetter provides write access to the ScoreName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ScoreNameSetter[T ScoreNameType] interface {
 	SetScoreName(T)
 }
@@ -6333,13 +5685,13 @@ type SeaLevelType interface {
 }
 
 // SeaLevelGetter provides read access to the SeaLevel field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SeaLevelGetter[T SeaLevelType] interface {
 	GetSeaLevel() T
 }
 
 // SeaLevelSetter provides write access to the SeaLevel field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SeaLevelSetter[T SeaLevelType] interface {
 	SetSeaLevel(T)
 }
@@ -6351,13 +5703,13 @@ type SecondaryEffectType interface {
 }
 
 // SecondaryEffectGetter provides read access to the SecondaryEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SecondaryEffectGetter[T SecondaryEffectType] interface {
 	GetSecondaryEffect() T
 }
 
 // SecondaryEffectSetter provides write access to the SecondaryEffect field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SecondaryEffectSetter[T SecondaryEffectType] interface {
 	SetSecondaryEffect(T)
 }
@@ -6369,13 +5721,13 @@ type SeedType interface {
 }
 
 // SeedGetter provides read access to the Seed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SeedGetter[T SeedType] interface {
 	GetSeed() T
 }
 
 // SeedSetter provides write access to the Seed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SeedSetter[T SeedType] interface {
 	SetSeed(T)
 }
@@ -6387,13 +5739,13 @@ type SelectedItemIndexType interface {
 }
 
 // SelectedItemIndexGetter provides read access to the SelectedItemIndex field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SelectedItemIndexGetter[T SelectedItemIndexType] interface {
 	GetSelectedItemIndex() T
 }
 
 // SelectedItemIndexSetter provides write access to the SelectedItemIndex field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SelectedItemIndexSetter[T SelectedItemIndexType] interface {
 	SetSelectedItemIndex(T)
 }
@@ -6405,13 +5757,13 @@ type SelectionPriorityType interface {
 }
 
 // SelectionPriorityGetter provides read access to the SelectionPriority field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SelectionPriorityGetter[T SelectionPriorityType] interface {
 	GetSelectionPriority() T
 }
 
 // SelectionPrioritySetter provides write access to the SelectionPriority field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SelectionPrioritySetter[T SelectionPriorityType] interface {
 	SetSelectionPriority(T)
 }
@@ -6423,13 +5775,13 @@ type SenderUuidType interface {
 }
 
 // SenderUuidGetter provides read access to the SenderUuid field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SenderUuidGetter[T SenderUuidType] interface {
 	GetSenderUuid() T
 }
 
 // SenderUuidSetter provides write access to the SenderUuid field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SenderUuidSetter[T SenderUuidType] interface {
 	SetSenderUuid(T)
 }
@@ -6441,13 +5793,13 @@ type SequenceType interface {
 }
 
 // SequenceGetter provides read access to the Sequence field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SequenceGetter[T SequenceType] interface {
 	GetSequence() T
 }
 
 // SequenceSetter provides write access to the Sequence field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SequenceSetter[T SequenceType] interface {
 	SetSequence(T)
 }
@@ -6459,13 +5811,13 @@ type SequenceIdType interface {
 }
 
 // SequenceIdGetter provides read access to the SequenceId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SequenceIdGetter[T SequenceIdType] interface {
 	GetSequenceId() T
 }
 
 // SequenceIdSetter provides write access to the SequenceId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SequenceIdSetter[T SequenceIdType] interface {
 	SetSequenceId(T)
 }
@@ -6477,13 +5829,13 @@ type ServerHostType interface {
 }
 
 // ServerHostGetter provides read access to the ServerHost field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerHostGetter[T ServerHostType] interface {
 	GetServerHost() T
 }
 
 // ServerHostSetter provides write access to the ServerHost field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerHostSetter[T ServerHostType] interface {
 	SetServerHost(T)
 }
@@ -6495,13 +5847,13 @@ type ServerIdType interface {
 }
 
 // ServerIdGetter provides read access to the ServerId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerIdGetter[T ServerIdType] interface {
 	GetServerId() T
 }
 
 // ServerIdSetter provides write access to the ServerId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerIdSetter[T ServerIdType] interface {
 	SetServerId(T)
 }
@@ -6513,13 +5865,13 @@ type ServerPortType interface {
 }
 
 // ServerPortGetter provides read access to the ServerPort field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerPortGetter[T ServerPortType] interface {
 	GetServerPort() T
 }
 
 // ServerPortSetter provides write access to the ServerPort field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ServerPortSetter[T ServerPortType] interface {
 	SetServerPort(T)
 }
@@ -6531,13 +5883,13 @@ type SessionUUIDType interface {
 }
 
 // SessionUUIDGetter provides read access to the SessionUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SessionUUIDGetter[T SessionUUIDType] interface {
 	GetSessionUUID() T
 }
 
 // SessionUUIDSetter provides write access to the SessionUUID field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SessionUUIDSetter[T SessionUUIDType] interface {
 	SetSessionUUID(T)
 }
@@ -6549,13 +5901,13 @@ type ShapeType interface {
 }
 
 // ShapeGetter provides read access to the Shape field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShapeGetter[T ShapeType] interface {
 	GetShape() T
 }
 
 // ShapeSetter provides write access to the Shape field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShapeSetter[T ShapeType] interface {
 	SetShape(T)
 }
@@ -6567,13 +5919,13 @@ type SharedSecretType interface {
 }
 
 // SharedSecretGetter provides read access to the SharedSecret field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SharedSecretGetter[T SharedSecretType] interface {
 	GetSharedSecret() T
 }
 
 // SharedSecretSetter provides write access to the SharedSecret field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SharedSecretSetter[T SharedSecretType] interface {
 	SetSharedSecret(T)
 }
@@ -6585,13 +5937,13 @@ type ShouldAuthenticateType interface {
 }
 
 // ShouldAuthenticateGetter provides read access to the ShouldAuthenticate field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShouldAuthenticateGetter[T ShouldAuthenticateType] interface {
 	GetShouldAuthenticate() T
 }
 
 // ShouldAuthenticateSetter provides write access to the ShouldAuthenticate field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShouldAuthenticateSetter[T ShouldAuthenticateType] interface {
 	SetShouldAuthenticate(T)
 }
@@ -6603,13 +5955,13 @@ type ShowAdvancementsType interface {
 }
 
 // ShowAdvancementsGetter provides read access to the ShowAdvancements field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowAdvancementsGetter[T ShowAdvancementsType] interface {
 	GetShowAdvancements() T
 }
 
 // ShowAdvancementsSetter provides write access to the ShowAdvancements field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowAdvancementsSetter[T ShowAdvancementsType] interface {
 	SetShowAdvancements(T)
 }
@@ -6621,13 +5973,13 @@ type ShowIconType interface {
 }
 
 // ShowIconGetter provides read access to the ShowIcon field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowIconGetter[T ShowIconType] interface {
 	GetShowIcon() T
 }
 
 // ShowIconSetter provides write access to the ShowIcon field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowIconSetter[T ShowIconType] interface {
 	SetShowIcon(T)
 }
@@ -6639,33 +5991,15 @@ type ShowParticlesType interface {
 }
 
 // ShowParticlesGetter provides read access to the ShowParticles field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowParticlesGetter[T ShowParticlesType] interface {
 	GetShowParticles() T
 }
 
 // ShowParticlesSetter provides write access to the ShowParticles field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ShowParticlesSetter[T ShowParticlesType] interface {
 	SetShowParticles(T)
-}
-
-// SidewaysType is a type constraint for the Sideways field.
-// This field has types: pk.Float
-type SidewaysType interface {
-	pk.Float
-}
-
-// SidewaysGetter provides read access to the Sideways field.
-// Implemented by packet types in versions: 1.21.1
-type SidewaysGetter[T SidewaysType] interface {
-	GetSideways() T
-}
-
-// SidewaysSetter provides write access to the Sideways field.
-// Implemented by packet types in versions: 1.21.1
-type SidewaysSetter[T SidewaysType] interface {
-	SetSideways(T)
 }
 
 // SignatureType is a type constraint for the Signature field.
@@ -6675,13 +6009,13 @@ type SignatureType interface {
 }
 
 // SignatureGetter provides read access to the Signature field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SignatureGetter[T SignatureType] interface {
 	GetSignature() T
 }
 
 // SignatureSetter provides write access to the Signature field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SignatureSetter[T SignatureType] interface {
 	SetSignature(T)
 }
@@ -6693,13 +6027,13 @@ type SimulationDistanceType interface {
 }
 
 // SimulationDistanceGetter provides read access to the SimulationDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SimulationDistanceGetter[T SimulationDistanceType] interface {
 	GetSimulationDistance() T
 }
 
 // SimulationDistanceSetter provides write access to the SimulationDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SimulationDistanceSetter[T SimulationDistanceType] interface {
 	SetSimulationDistance(T)
 }
@@ -6711,13 +6045,13 @@ type SizeType interface {
 }
 
 // SizeGetter provides read access to the Size field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeGetter[T SizeType] interface {
 	GetSize() T
 }
 
 // SizeSetter provides write access to the Size field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeSetter[T SizeType] interface {
 	SetSize(T)
 }
@@ -6729,13 +6063,13 @@ type SizeXType interface {
 }
 
 // SizeXGetter provides read access to the SizeX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeXGetter[T SizeXType] interface {
 	GetSizeX() T
 }
 
 // SizeXSetter provides write access to the SizeX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeXSetter[T SizeXType] interface {
 	SetSizeX(T)
 }
@@ -6747,13 +6081,13 @@ type SizeYType interface {
 }
 
 // SizeYGetter provides read access to the SizeY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeYGetter[T SizeYType] interface {
 	GetSizeY() T
 }
 
 // SizeYSetter provides write access to the SizeY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeYSetter[T SizeYType] interface {
 	SetSizeY(T)
 }
@@ -6765,13 +6099,13 @@ type SizeZType interface {
 }
 
 // SizeZGetter provides read access to the SizeZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeZGetter[T SizeZType] interface {
 	GetSizeZ() T
 }
 
 // SizeZSetter provides write access to the SizeZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SizeZSetter[T SizeZType] interface {
 	SetSizeZ(T)
 }
@@ -6783,13 +6117,13 @@ type SkinPartsType interface {
 }
 
 // SkinPartsGetter provides read access to the SkinParts field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkinPartsGetter[T SkinPartsType] interface {
 	GetSkinParts() T
 }
 
 // SkinPartsSetter provides write access to the SkinParts field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkinPartsSetter[T SkinPartsType] interface {
 	SetSkinParts(T)
 }
@@ -6819,13 +6153,13 @@ type SkyLightType interface {
 }
 
 // SkyLightGetter provides read access to the SkyLight field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkyLightGetter[T SkyLightType] interface {
 	GetSkyLight() T
 }
 
 // SkyLightSetter provides write access to the SkyLight field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkyLightSetter[T SkyLightType] interface {
 	SetSkyLight(T)
 }
@@ -6837,31 +6171,31 @@ type SkyLightMaskType interface {
 }
 
 // SkyLightMaskGetter provides read access to the SkyLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkyLightMaskGetter[T SkyLightMaskType] interface {
 	GetSkyLightMask() T
 }
 
 // SkyLightMaskSetter provides write access to the SkyLightMask field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SkyLightMaskSetter[T SkyLightMaskType] interface {
 	SetSkyLightMask(T)
 }
 
 // SlotType is a type constraint for the Slot field.
-// This field has types: pk.Byte | pk.Short | pk.VarInt
+// This field has types: pk.Short | pk.VarInt
 type SlotType interface {
-	pk.Byte | pk.Short | pk.VarInt
+	pk.Short | pk.VarInt
 }
 
 // SlotGetter provides read access to the Slot field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SlotGetter[T SlotType] interface {
 	GetSlot() T
 }
 
 // SlotSetter provides write access to the Slot field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SlotSetter[T SlotType] interface {
 	SetSlot(T)
 }
@@ -6873,87 +6207,15 @@ type SlotIdType interface {
 }
 
 // SlotIdGetter provides read access to the SlotId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SlotIdGetter[T SlotIdType] interface {
 	GetSlotId() T
 }
 
 // SlotIdSetter provides write access to the SlotId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SlotIdSetter[T SlotIdType] interface {
 	SetSlotId(T)
-}
-
-// SmallExplosionParticleType is a type constraint for the SmallExplosionParticle field.
-// This field has types: any
-type SmallExplosionParticleType interface {
-	any
-}
-
-// SmallExplosionParticleGetter provides read access to the SmallExplosionParticle field.
-// Implemented by packet types in versions: 1.21.1
-type SmallExplosionParticleGetter[T SmallExplosionParticleType] interface {
-	GetSmallExplosionParticle() T
-}
-
-// SmallExplosionParticleSetter provides write access to the SmallExplosionParticle field.
-// Implemented by packet types in versions: 1.21.1
-type SmallExplosionParticleSetter[T SmallExplosionParticleType] interface {
-	SetSmallExplosionParticle(T)
-}
-
-// SmeltingBookOpenType is a type constraint for the SmeltingBookOpen field.
-// This field has types: pk.Boolean
-type SmeltingBookOpenType interface {
-	pk.Boolean
-}
-
-// SmeltingBookOpenGetter provides read access to the SmeltingBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type SmeltingBookOpenGetter[T SmeltingBookOpenType] interface {
-	GetSmeltingBookOpen() T
-}
-
-// SmeltingBookOpenSetter provides write access to the SmeltingBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type SmeltingBookOpenSetter[T SmeltingBookOpenType] interface {
-	SetSmeltingBookOpen(T)
-}
-
-// SmeltingFilteringCraftableType is a type constraint for the SmeltingFilteringCraftable field.
-// This field has types: pk.Boolean
-type SmeltingFilteringCraftableType interface {
-	pk.Boolean
-}
-
-// SmeltingFilteringCraftableGetter provides read access to the SmeltingFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmeltingFilteringCraftableGetter[T SmeltingFilteringCraftableType] interface {
-	GetSmeltingFilteringCraftable() T
-}
-
-// SmeltingFilteringCraftableSetter provides write access to the SmeltingFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmeltingFilteringCraftableSetter[T SmeltingFilteringCraftableType] interface {
-	SetSmeltingFilteringCraftable(T)
-}
-
-// SmeltingGuiOpenType is a type constraint for the SmeltingGuiOpen field.
-// This field has types: pk.Boolean
-type SmeltingGuiOpenType interface {
-	pk.Boolean
-}
-
-// SmeltingGuiOpenGetter provides read access to the SmeltingGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmeltingGuiOpenGetter[T SmeltingGuiOpenType] interface {
-	GetSmeltingGuiOpen() T
-}
-
-// SmeltingGuiOpenSetter provides write access to the SmeltingGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmeltingGuiOpenSetter[T SmeltingGuiOpenType] interface {
-	SetSmeltingGuiOpen(T)
 }
 
 // SmokerType is a type constraint for the Smoker field.
@@ -6963,69 +6225,15 @@ type SmokerType interface {
 }
 
 // SmokerGetter provides read access to the Smoker field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SmokerGetter[T SmokerType] interface {
 	GetSmoker() T
 }
 
 // SmokerSetter provides write access to the Smoker field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SmokerSetter[T SmokerType] interface {
 	SetSmoker(T)
-}
-
-// SmokerBookOpenType is a type constraint for the SmokerBookOpen field.
-// This field has types: pk.Boolean
-type SmokerBookOpenType interface {
-	pk.Boolean
-}
-
-// SmokerBookOpenGetter provides read access to the SmokerBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type SmokerBookOpenGetter[T SmokerBookOpenType] interface {
-	GetSmokerBookOpen() T
-}
-
-// SmokerBookOpenSetter provides write access to the SmokerBookOpen field.
-// Implemented by packet types in versions: 1.21.1
-type SmokerBookOpenSetter[T SmokerBookOpenType] interface {
-	SetSmokerBookOpen(T)
-}
-
-// SmokerFilteringCraftableType is a type constraint for the SmokerFilteringCraftable field.
-// This field has types: pk.Boolean
-type SmokerFilteringCraftableType interface {
-	pk.Boolean
-}
-
-// SmokerFilteringCraftableGetter provides read access to the SmokerFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmokerFilteringCraftableGetter[T SmokerFilteringCraftableType] interface {
-	GetSmokerFilteringCraftable() T
-}
-
-// SmokerFilteringCraftableSetter provides write access to the SmokerFilteringCraftable field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmokerFilteringCraftableSetter[T SmokerFilteringCraftableType] interface {
-	SetSmokerFilteringCraftable(T)
-}
-
-// SmokerGuiOpenType is a type constraint for the SmokerGuiOpen field.
-// This field has types: pk.Boolean
-type SmokerGuiOpenType interface {
-	pk.Boolean
-}
-
-// SmokerGuiOpenGetter provides read access to the SmokerGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmokerGuiOpenGetter[T SmokerGuiOpenType] interface {
-	GetSmokerGuiOpen() T
-}
-
-// SmokerGuiOpenSetter provides write access to the SmokerGuiOpen field.
-// Implemented by packet types in versions: 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SmokerGuiOpenSetter[T SmokerGuiOpenType] interface {
-	SetSmokerGuiOpen(T)
 }
 
 // SneakingType is a type constraint for the Sneaking field.
@@ -7035,13 +6243,13 @@ type SneakingType interface {
 }
 
 // SneakingGetter provides read access to the Sneaking field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SneakingGetter[T SneakingType] interface {
 	GetSneaking() T
 }
 
 // SneakingSetter provides write access to the Sneaking field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SneakingSetter[T SneakingType] interface {
 	SetSneaking(T)
 }
@@ -7053,13 +6261,13 @@ type SoundType interface {
 }
 
 // SoundGetter provides read access to the Sound field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundGetter[T SoundType] interface {
 	GetSound() T
 }
 
 // SoundSetter provides write access to the Sound field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundSetter[T SoundType] interface {
 	SetSound(T)
 }
@@ -7071,13 +6279,13 @@ type SoundCategoryType interface {
 }
 
 // SoundCategoryGetter provides read access to the SoundCategory field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundCategoryGetter[T SoundCategoryType] interface {
 	GetSoundCategory() T
 }
 
 // SoundCategorySetter provides write access to the SoundCategory field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundCategorySetter[T SoundCategoryType] interface {
 	SetSoundCategory(T)
 }
@@ -7089,13 +6297,13 @@ type SoundEventType interface {
 }
 
 // SoundEventGetter provides read access to the SoundEvent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundEventGetter[T SoundEventType] interface {
 	GetSoundEvent() T
 }
 
 // SoundEventSetter provides write access to the SoundEvent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundEventSetter[T SoundEventType] interface {
 	SetSoundEvent(T)
 }
@@ -7107,13 +6315,13 @@ type SoundNameType interface {
 }
 
 // SoundNameGetter provides read access to the SoundName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundNameGetter[T SoundNameType] interface {
 	GetSoundName() T
 }
 
 // SoundNameSetter provides write access to the SoundName field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SoundNameSetter[T SoundNameType] interface {
 	SetSoundName(T)
 }
@@ -7125,13 +6333,13 @@ type SourceType interface {
 }
 
 // SourceGetter provides read access to the Source field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceGetter[T SourceType] interface {
 	GetSource() T
 }
 
 // SourceSetter provides write access to the Source field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceSetter[T SourceType] interface {
 	SetSource(T)
 }
@@ -7143,13 +6351,13 @@ type SourceCauseIdType interface {
 }
 
 // SourceCauseIdGetter provides read access to the SourceCauseId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceCauseIdGetter[T SourceCauseIdType] interface {
 	GetSourceCauseId() T
 }
 
 // SourceCauseIdSetter provides write access to the SourceCauseId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceCauseIdSetter[T SourceCauseIdType] interface {
 	SetSourceCauseId(T)
 }
@@ -7161,13 +6369,13 @@ type SourceDirectIdType interface {
 }
 
 // SourceDirectIdGetter provides read access to the SourceDirectId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceDirectIdGetter[T SourceDirectIdType] interface {
 	GetSourceDirectId() T
 }
 
 // SourceDirectIdSetter provides write access to the SourceDirectId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceDirectIdSetter[T SourceDirectIdType] interface {
 	SetSourceDirectId(T)
 }
@@ -7179,13 +6387,13 @@ type SourcePositionType interface {
 }
 
 // SourcePositionGetter provides read access to the SourcePosition field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourcePositionGetter[T SourcePositionType] interface {
 	GetSourcePosition() T
 }
 
 // SourcePositionSetter provides write access to the SourcePosition field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourcePositionSetter[T SourcePositionType] interface {
 	SetSourcePosition(T)
 }
@@ -7197,13 +6405,13 @@ type SourceTypeIdType interface {
 }
 
 // SourceTypeIdGetter provides read access to the SourceTypeId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceTypeIdGetter[T SourceTypeIdType] interface {
 	GetSourceTypeId() T
 }
 
 // SourceTypeIdSetter provides write access to the SourceTypeId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SourceTypeIdSetter[T SourceTypeIdType] interface {
 	SetSourceTypeId(T)
 }
@@ -7215,13 +6423,13 @@ type SpeedType interface {
 }
 
 // SpeedGetter provides read access to the Speed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SpeedGetter[T SpeedType] interface {
 	GetSpeed() T
 }
 
 // SpeedSetter provides write access to the Speed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type SpeedSetter[T SpeedType] interface {
 	SetSpeed(T)
 }
@@ -7233,13 +6441,13 @@ type StartType interface {
 }
 
 // StartGetter provides read access to the Start field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StartGetter[T StartType] interface {
 	GetStart() T
 }
 
 // StartSetter provides write access to the Start field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StartSetter[T StartType] interface {
 	SetStart(T)
 }
@@ -7251,13 +6459,13 @@ type StateType interface {
 }
 
 // StateGetter provides read access to the State field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StateGetter[T StateType] interface {
 	GetState() T
 }
 
 // StateSetter provides write access to the State field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StateSetter[T StateType] interface {
 	SetState(T)
 }
@@ -7269,13 +6477,13 @@ type StateIdType interface {
 }
 
 // StateIdGetter provides read access to the StateId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StateIdGetter[T StateIdType] interface {
 	GetStateId() T
 }
 
 // StateIdSetter provides write access to the StateId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StateIdSetter[T StateIdType] interface {
 	SetStateId(T)
 }
@@ -7287,13 +6495,13 @@ type StatusType interface {
 }
 
 // StatusGetter provides read access to the Status field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StatusGetter[T StatusType] interface {
 	GetStatus() T
 }
 
 // StatusSetter provides write access to the Status field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StatusSetter[T StatusType] interface {
 	SetStatus(T)
 }
@@ -7305,13 +6513,13 @@ type StayType interface {
 }
 
 // StayGetter provides read access to the Stay field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StayGetter[T StayType] interface {
 	GetStay() T
 }
 
 // StaySetter provides write access to the Stay field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StaySetter[T StayType] interface {
 	SetStay(T)
 }
@@ -7323,13 +6531,13 @@ type StepsType interface {
 }
 
 // StepsGetter provides read access to the Steps field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StepsGetter[T StepsType] interface {
 	GetSteps() T
 }
 
 // StepsSetter provides write access to the Steps field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StepsSetter[T StepsType] interface {
 	SetSteps(T)
 }
@@ -7341,33 +6549,15 @@ type StoneCutterRecipesType interface {
 }
 
 // StoneCutterRecipesGetter provides read access to the StoneCutterRecipes field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StoneCutterRecipesGetter[T StoneCutterRecipesType] interface {
 	GetStoneCutterRecipes() T
 }
 
 // StoneCutterRecipesSetter provides write access to the StoneCutterRecipes field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StoneCutterRecipesSetter[T StoneCutterRecipesType] interface {
 	SetStoneCutterRecipes(T)
-}
-
-// StrictErrorHandlingType is a type constraint for the StrictErrorHandling field.
-// This field has types: pk.Boolean
-type StrictErrorHandlingType interface {
-	pk.Boolean
-}
-
-// StrictErrorHandlingGetter provides read access to the StrictErrorHandling field.
-// Implemented by packet types in versions: 1.21.1
-type StrictErrorHandlingGetter[T StrictErrorHandlingType] interface {
-	GetStrictErrorHandling() T
-}
-
-// StrictErrorHandlingSetter provides write access to the StrictErrorHandling field.
-// Implemented by packet types in versions: 1.21.1
-type StrictErrorHandlingSetter[T StrictErrorHandlingType] interface {
-	SetStrictErrorHandling(T)
 }
 
 // StyleType is a type constraint for the Style field.
@@ -7377,13 +6567,13 @@ type StyleType interface {
 }
 
 // StyleGetter provides read access to the Style field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StyleGetter[T StyleType] interface {
 	GetStyle() T
 }
 
 // StyleSetter provides write access to the Style field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StyleSetter[T StyleType] interface {
 	SetStyle(T)
 }
@@ -7395,13 +6585,13 @@ type StylingType interface {
 }
 
 // StylingGetter provides read access to the Styling field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StylingGetter[T StylingType] interface {
 	GetStyling() T
 }
 
 // StylingSetter provides write access to the Styling field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type StylingSetter[T StylingType] interface {
 	SetStyling(T)
 }
@@ -7424,24 +6614,6 @@ type SubscriptionsSetter[T SubscriptionsType] interface {
 	SetSubscriptions(T)
 }
 
-// SuffixType is a type constraint for the Suffix field.
-// This field has types: any
-type SuffixType interface {
-	any
-}
-
-// SuffixGetter provides read access to the Suffix field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SuffixGetter[T SuffixType] interface {
-	GetSuffix() T
-}
-
-// SuffixSetter provides write access to the Suffix field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5
-type SuffixSetter[T SuffixType] interface {
-	SetSuffix(T)
-}
-
 // TabIdType is a type constraint for the TabId field.
 // This field has types: any
 type TabIdType interface {
@@ -7449,13 +6621,13 @@ type TabIdType interface {
 }
 
 // TabIdGetter provides read access to the TabId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TabIdGetter[T TabIdType] interface {
 	GetTabId() T
 }
 
 // TabIdSetter provides write access to the TabId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TabIdSetter[T TabIdType] interface {
 	SetTabId(T)
 }
@@ -7467,33 +6639,15 @@ type TagsType interface {
 }
 
 // TagsGetter provides read access to the Tags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TagsGetter[T TagsType] interface {
 	GetTags() T
 }
 
 // TagsSetter provides write access to the Tags field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TagsSetter[T TagsType] interface {
 	SetTags(T)
-}
-
-// TameTextureType is a type constraint for the TameTexture field.
-// This field has types: pk.String
-type TameTextureType interface {
-	pk.String
-}
-
-// TameTextureGetter provides read access to the TameTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type TameTextureGetter[T TameTextureType] interface {
-	GetTameTexture() T
-}
-
-// TameTextureSetter provides write access to the TameTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type TameTextureSetter[T TameTextureType] interface {
-	SetTameTexture(T)
 }
 
 // TargetType is a type constraint for the Target field.
@@ -7503,13 +6657,13 @@ type TargetType interface {
 }
 
 // TargetGetter provides read access to the Target field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TargetGetter[T TargetType] interface {
 	GetTarget() T
 }
 
 // TargetSetter provides write access to the Target field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TargetSetter[T TargetType] interface {
 	SetTarget(T)
 }
@@ -7539,13 +6693,13 @@ type TeamType interface {
 }
 
 // TeamGetter provides read access to the Team field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TeamGetter[T TeamType] interface {
 	GetTeam() T
 }
 
 // TeamSetter provides write access to the Team field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TeamSetter[T TeamType] interface {
 	SetTeam(T)
 }
@@ -7557,33 +6711,15 @@ type TeleportIdType interface {
 }
 
 // TeleportIdGetter provides read access to the TeleportId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TeleportIdGetter[T TeleportIdType] interface {
 	GetTeleportId() T
 }
 
 // TeleportIdSetter provides write access to the TeleportId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TeleportIdSetter[T TeleportIdType] interface {
 	SetTeleportId(T)
-}
-
-// TemplateItemIdType is a type constraint for the TemplateItemId field.
-// This field has types: pk.VarInt
-type TemplateItemIdType interface {
-	pk.VarInt
-}
-
-// TemplateItemIdGetter provides read access to the TemplateItemId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type TemplateItemIdGetter[T TemplateItemIdType] interface {
-	GetTemplateItemId() T
-}
-
-// TemplateItemIdSetter provides write access to the TemplateItemId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type TemplateItemIdSetter[T TemplateItemIdType] interface {
-	SetTemplateItemId(T)
 }
 
 // TextType is a type constraint for the Text field.
@@ -7593,13 +6729,13 @@ type TextType interface {
 }
 
 // TextGetter provides read access to the Text field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TextGetter[T TextType] interface {
 	GetText() T
 }
 
 // TextSetter provides write access to the Text field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TextSetter[T TextType] interface {
 	SetText(T)
 }
@@ -7611,13 +6747,13 @@ type Text1Type interface {
 }
 
 // Text1Getter provides read access to the Text1 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text1Getter[T Text1Type] interface {
 	GetText1() T
 }
 
 // Text1Setter provides write access to the Text1 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text1Setter[T Text1Type] interface {
 	SetText1(T)
 }
@@ -7629,13 +6765,13 @@ type Text2Type interface {
 }
 
 // Text2Getter provides read access to the Text2 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text2Getter[T Text2Type] interface {
 	GetText2() T
 }
 
 // Text2Setter provides write access to the Text2 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text2Setter[T Text2Type] interface {
 	SetText2(T)
 }
@@ -7647,13 +6783,13 @@ type Text3Type interface {
 }
 
 // Text3Getter provides read access to the Text3 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text3Getter[T Text3Type] interface {
 	GetText3() T
 }
 
 // Text3Setter provides write access to the Text3 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text3Setter[T Text3Type] interface {
 	SetText3(T)
 }
@@ -7665,13 +6801,13 @@ type Text4Type interface {
 }
 
 // Text4Getter provides read access to the Text4 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text4Getter[T Text4Type] interface {
 	GetText4() T
 }
 
 // Text4Setter provides write access to the Text4 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type Text4Setter[T Text4Type] interface {
 	SetText4(T)
 }
@@ -7683,13 +6819,13 @@ type ThresholdType interface {
 }
 
 // ThresholdGetter provides read access to the Threshold field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ThresholdGetter[T ThresholdType] interface {
 	GetThreshold() T
 }
 
 // ThresholdSetter provides write access to the Threshold field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ThresholdSetter[T ThresholdType] interface {
 	SetThreshold(T)
 }
@@ -7701,13 +6837,13 @@ type TickDayTimeType interface {
 }
 
 // TickDayTimeGetter provides read access to the TickDayTime field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickDayTimeGetter[T TickDayTimeType] interface {
 	GetTickDayTime() T
 }
 
 // TickDayTimeSetter provides write access to the TickDayTime field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickDayTimeSetter[T TickDayTimeType] interface {
 	SetTickDayTime(T)
 }
@@ -7719,13 +6855,13 @@ type TickRateType interface {
 }
 
 // TickRateGetter provides read access to the TickRate field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickRateGetter[T TickRateType] interface {
 	GetTickRate() T
 }
 
 // TickRateSetter provides write access to the TickRate field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickRateSetter[T TickRateType] interface {
 	SetTickRate(T)
 }
@@ -7737,13 +6873,13 @@ type TickStepsType interface {
 }
 
 // TickStepsGetter provides read access to the TickSteps field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickStepsGetter[T TickStepsType] interface {
 	GetTickSteps() T
 }
 
 // TickStepsSetter provides write access to the TickSteps field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TickStepsSetter[T TickStepsType] interface {
 	SetTickSteps(T)
 }
@@ -7755,13 +6891,13 @@ type TimeType interface {
 }
 
 // TimeGetter provides read access to the Time field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TimeGetter[T TimeType] interface {
 	GetTime() T
 }
 
 // TimeSetter provides write access to the Time field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TimeSetter[T TimeType] interface {
 	SetTime(T)
 }
@@ -7773,13 +6909,13 @@ type TimestampType interface {
 }
 
 // TimestampGetter provides read access to the Timestamp field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TimestampGetter[T TimestampType] interface {
 	GetTimestamp() T
 }
 
 // TimestampSetter provides write access to the Timestamp field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TimestampSetter[T TimestampType] interface {
 	SetTimestamp(T)
 }
@@ -7791,13 +6927,13 @@ type TitleType interface {
 }
 
 // TitleGetter provides read access to the Title field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TitleGetter[T TitleType] interface {
 	GetTitle() T
 }
 
 // TitleSetter provides write access to the Title field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TitleSetter[T TitleType] interface {
 	SetTitle(T)
 }
@@ -7809,13 +6945,13 @@ type TotalExperienceType interface {
 }
 
 // TotalExperienceGetter provides read access to the TotalExperience field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TotalExperienceGetter[T TotalExperienceType] interface {
 	GetTotalExperience() T
 }
 
 // TotalExperienceSetter provides write access to the TotalExperience field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TotalExperienceSetter[T TotalExperienceType] interface {
 	SetTotalExperience(T)
 }
@@ -7827,13 +6963,13 @@ type TrackOutputType interface {
 }
 
 // TrackOutputGetter provides read access to the TrackOutput field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TrackOutputGetter[T TrackOutputType] interface {
 	GetTrackOutput() T
 }
 
 // TrackOutputSetter provides write access to the TrackOutput field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TrackOutputSetter[T TrackOutputType] interface {
 	SetTrackOutput(T)
 }
@@ -7845,13 +6981,13 @@ type TradesType interface {
 }
 
 // TradesGetter provides read access to the Trades field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TradesGetter[T TradesType] interface {
 	GetTrades() T
 }
 
 // TradesSetter provides write access to the Trades field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TradesSetter[T TradesType] interface {
 	SetTrades(T)
 }
@@ -7863,13 +6999,13 @@ type TransactionIdType interface {
 }
 
 // TransactionIdGetter provides read access to the TransactionId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TransactionIdGetter[T TransactionIdType] interface {
 	GetTransactionId() T
 }
 
 // TransactionIdSetter provides write access to the TransactionId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TransactionIdSetter[T TransactionIdType] interface {
 	SetTransactionId(T)
 }
@@ -7881,13 +7017,13 @@ type TranslationKeyType interface {
 }
 
 // TranslationKeyGetter provides read access to the TranslationKey field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TranslationKeyGetter[T TranslationKeyType] interface {
 	GetTranslationKey() T
 }
 
 // TranslationKeySetter provides write access to the TranslationKey field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TranslationKeySetter[T TranslationKeyType] interface {
 	SetTranslationKey(T)
 }
@@ -7899,13 +7035,13 @@ type TypeType interface {
 }
 
 // TypeGetter provides read access to the Type field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TypeGetter[T TypeType] interface {
 	GetType() T
 }
 
 // TypeSetter provides write access to the Type field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type TypeSetter[T TypeType] interface {
 	SetType(T)
 }
@@ -7917,13 +7053,13 @@ type UnnamedType0001Type interface {
 }
 
 // UnnamedType0001Getter provides read access to the UnnamedType0001 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0001Getter[T UnnamedType0001Type] interface {
 	GetUnnamedType0001() T
 }
 
 // UnnamedType0001Setter provides write access to the UnnamedType0001 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0001Setter[T UnnamedType0001Type] interface {
 	SetUnnamedType0001(T)
 }
@@ -7935,13 +7071,13 @@ type UnnamedType0002Type interface {
 }
 
 // UnnamedType0002Getter provides read access to the UnnamedType0002 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0002Getter[T UnnamedType0002Type] interface {
 	GetUnnamedType0002() T
 }
 
 // UnnamedType0002Setter provides write access to the UnnamedType0002 field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0002Setter[T UnnamedType0002Type] interface {
 	SetUnnamedType0002(T)
 }
@@ -7953,13 +7089,13 @@ type UnnamedType0003Type interface {
 }
 
 // UnnamedType0003Getter provides read access to the UnnamedType0003 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0003Getter[T UnnamedType0003Type] interface {
 	GetUnnamedType0003() T
 }
 
 // UnnamedType0003Setter provides write access to the UnnamedType0003 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0003Setter[T UnnamedType0003Type] interface {
 	SetUnnamedType0003(T)
 }
@@ -7971,13 +7107,13 @@ type UnnamedType0004Type interface {
 }
 
 // UnnamedType0004Getter provides read access to the UnnamedType0004 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0004Getter[T UnnamedType0004Type] interface {
 	GetUnnamedType0004() T
 }
 
 // UnnamedType0004Setter provides write access to the UnnamedType0004 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0004Setter[T UnnamedType0004Type] interface {
 	SetUnnamedType0004(T)
 }
@@ -7989,13 +7125,13 @@ type UnnamedType0005Type interface {
 }
 
 // UnnamedType0005Getter provides read access to the UnnamedType0005 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0005Getter[T UnnamedType0005Type] interface {
 	GetUnnamedType0005() T
 }
 
 // UnnamedType0005Setter provides write access to the UnnamedType0005 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0005Setter[T UnnamedType0005Type] interface {
 	SetUnnamedType0005(T)
 }
@@ -8007,13 +7143,13 @@ type UnnamedType0006Type interface {
 }
 
 // UnnamedType0006Getter provides read access to the UnnamedType0006 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0006Getter[T UnnamedType0006Type] interface {
 	GetUnnamedType0006() T
 }
 
 // UnnamedType0006Setter provides write access to the UnnamedType0006 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnnamedType0006Setter[T UnnamedType0006Type] interface {
 	SetUnnamedType0006(T)
 }
@@ -8025,15 +7161,33 @@ type UnnamedType0007Type interface {
 }
 
 // UnnamedType0007Getter provides read access to the UnnamedType0007 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11
 type UnnamedType0007Getter[T UnnamedType0007Type] interface {
 	GetUnnamedType0007() T
 }
 
 // UnnamedType0007Setter provides write access to the UnnamedType0007 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11
 type UnnamedType0007Setter[T UnnamedType0007Type] interface {
 	SetUnnamedType0007(T)
+}
+
+// UnnamedType0008Type is a type constraint for the UnnamedType0008 field.
+// This field has types: any
+type UnnamedType0008Type interface {
+	any
+}
+
+// UnnamedType0008Getter provides read access to the UnnamedType0008 field.
+// Implemented by packet types in versions: 1.21.9
+type UnnamedType0008Getter[T UnnamedType0008Type] interface {
+	GetUnnamedType0008() T
+}
+
+// UnnamedType0008Setter provides write access to the UnnamedType0008 field.
+// Implemented by packet types in versions: 1.21.9
+type UnnamedType0008Setter[T UnnamedType0008Type] interface {
+	SetUnnamedType0008(T)
 }
 
 // UnsignedChatContentType is a type constraint for the UnsignedChatContent field.
@@ -8043,13 +7197,13 @@ type UnsignedChatContentType interface {
 }
 
 // UnsignedChatContentGetter provides read access to the UnsignedChatContent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnsignedChatContentGetter[T UnsignedChatContentType] interface {
 	GetUnsignedChatContent() T
 }
 
 // UnsignedChatContentSetter provides write access to the UnsignedChatContent field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UnsignedChatContentSetter[T UnsignedChatContentType] interface {
 	SetUnsignedChatContent(T)
 }
@@ -8079,13 +7233,13 @@ type UrlType interface {
 }
 
 // UrlGetter provides read access to the Url field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UrlGetter[T UrlType] interface {
 	GetUrl() T
 }
 
 // UrlSetter provides write access to the Url field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UrlSetter[T UrlType] interface {
 	SetUrl(T)
 }
@@ -8097,13 +7251,13 @@ type UseDurationType interface {
 }
 
 // UseDurationGetter provides read access to the UseDuration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UseDurationGetter[T UseDurationType] interface {
 	GetUseDuration() T
 }
 
 // UseDurationSetter provides write access to the UseDuration field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UseDurationSetter[T UseDurationType] interface {
 	SetUseDuration(T)
 }
@@ -8115,13 +7269,13 @@ type UsernameType interface {
 }
 
 // UsernameGetter provides read access to the Username field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UsernameGetter[T UsernameType] interface {
 	GetUsername() T
 }
 
 // UsernameSetter provides write access to the Username field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UsernameSetter[T UsernameType] interface {
 	SetUsername(T)
 }
@@ -8133,13 +7287,13 @@ type UuidType interface {
 }
 
 // UuidGetter provides read access to the Uuid field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UuidGetter[T UuidType] interface {
 	GetUuid() T
 }
 
 // UuidSetter provides write access to the Uuid field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type UuidSetter[T UuidType] interface {
 	SetUuid(T)
 }
@@ -8151,13 +7305,13 @@ type ValueType interface {
 }
 
 // ValueGetter provides read access to the Value field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ValueGetter[T ValueType] interface {
 	GetValue() T
 }
 
 // ValueSetter provides write access to the Value field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ValueSetter[T ValueType] interface {
 	SetValue(T)
 }
@@ -8169,13 +7323,13 @@ type VehicleIdType interface {
 }
 
 // VehicleIdGetter provides read access to the VehicleId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VehicleIdGetter[T VehicleIdType] interface {
 	GetVehicleId() T
 }
 
 // VehicleIdSetter provides write access to the VehicleId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VehicleIdSetter[T VehicleIdType] interface {
 	SetVehicleId(T)
 }
@@ -8205,69 +7359,15 @@ type VelocityOffsetType interface {
 }
 
 // VelocityOffsetGetter provides read access to the VelocityOffset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VelocityOffsetGetter[T VelocityOffsetType] interface {
 	GetVelocityOffset() T
 }
 
 // VelocityOffsetSetter provides write access to the VelocityOffset field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VelocityOffsetSetter[T VelocityOffsetType] interface {
 	SetVelocityOffset(T)
-}
-
-// VelocityXType is a type constraint for the VelocityX field.
-// This field has types: pk.Short
-type VelocityXType interface {
-	pk.Short
-}
-
-// VelocityXGetter provides read access to the VelocityX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityXGetter[T VelocityXType] interface {
-	GetVelocityX() T
-}
-
-// VelocityXSetter provides write access to the VelocityX field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityXSetter[T VelocityXType] interface {
-	SetVelocityX(T)
-}
-
-// VelocityYType is a type constraint for the VelocityY field.
-// This field has types: pk.Short
-type VelocityYType interface {
-	pk.Short
-}
-
-// VelocityYGetter provides read access to the VelocityY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityYGetter[T VelocityYType] interface {
-	GetVelocityY() T
-}
-
-// VelocityYSetter provides write access to the VelocityY field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityYSetter[T VelocityYType] interface {
-	SetVelocityY(T)
-}
-
-// VelocityZType is a type constraint for the VelocityZ field.
-// This field has types: pk.Short
-type VelocityZType interface {
-	pk.Short
-}
-
-// VelocityZGetter provides read access to the VelocityZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityZGetter[T VelocityZType] interface {
-	GetVelocityZ() T
-}
-
-// VelocityZSetter provides write access to the VelocityZ field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8
-type VelocityZSetter[T VelocityZType] interface {
-	SetVelocityZ(T)
 }
 
 // VerifyTokenType is a type constraint for the VerifyToken field.
@@ -8277,13 +7377,13 @@ type VerifyTokenType interface {
 }
 
 // VerifyTokenGetter provides read access to the VerifyToken field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VerifyTokenGetter[T VerifyTokenType] interface {
 	GetVerifyToken() T
 }
 
 // VerifyTokenSetter provides write access to the VerifyToken field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VerifyTokenSetter[T VerifyTokenType] interface {
 	SetVerifyToken(T)
 }
@@ -8295,13 +7395,13 @@ type ViewDistanceType interface {
 }
 
 // ViewDistanceGetter provides read access to the ViewDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ViewDistanceGetter[T ViewDistanceType] interface {
 	GetViewDistance() T
 }
 
 // ViewDistanceSetter provides write access to the ViewDistance field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ViewDistanceSetter[T ViewDistanceType] interface {
 	SetViewDistance(T)
 }
@@ -8313,13 +7413,13 @@ type VillagerLevelType interface {
 }
 
 // VillagerLevelGetter provides read access to the VillagerLevel field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VillagerLevelGetter[T VillagerLevelType] interface {
 	GetVillagerLevel() T
 }
 
 // VillagerLevelSetter provides write access to the VillagerLevel field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VillagerLevelSetter[T VillagerLevelType] interface {
 	SetVillagerLevel(T)
 }
@@ -8331,13 +7431,13 @@ type VolumeType interface {
 }
 
 // VolumeGetter provides read access to the Volume field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VolumeGetter[T VolumeType] interface {
 	GetVolume() T
 }
 
 // VolumeSetter provides write access to the Volume field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type VolumeSetter[T VolumeType] interface {
 	SetVolume(T)
 }
@@ -8349,13 +7449,13 @@ type WType interface {
 }
 
 // WGetter provides read access to the W field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WGetter[T WType] interface {
 	GetW() T
 }
 
 // WSetter provides write access to the W field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WSetter[T WType] interface {
 	SetW(T)
 }
@@ -8385,13 +7485,13 @@ type WalkingSpeedType interface {
 }
 
 // WalkingSpeedGetter provides read access to the WalkingSpeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WalkingSpeedGetter[T WalkingSpeedType] interface {
 	GetWalkingSpeed() T
 }
 
 // WalkingSpeedSetter provides write access to the WalkingSpeed field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WalkingSpeedSetter[T WalkingSpeedType] interface {
 	SetWalkingSpeed(T)
 }
@@ -8403,13 +7503,13 @@ type WarningBlocksType interface {
 }
 
 // WarningBlocksGetter provides read access to the WarningBlocks field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WarningBlocksGetter[T WarningBlocksType] interface {
 	GetWarningBlocks() T
 }
 
 // WarningBlocksSetter provides write access to the WarningBlocks field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WarningBlocksSetter[T WarningBlocksType] interface {
 	SetWarningBlocks(T)
 }
@@ -8421,13 +7521,13 @@ type WarningTimeType interface {
 }
 
 // WarningTimeGetter provides read access to the WarningTime field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WarningTimeGetter[T WarningTimeType] interface {
 	GetWarningTime() T
 }
 
 // WarningTimeSetter provides write access to the WarningTime field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WarningTimeSetter[T WarningTimeType] interface {
 	SetWarningTime(T)
 }
@@ -8439,13 +7539,13 @@ type WaypointType interface {
 }
 
 // WaypointGetter provides read access to the Waypoint field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WaypointGetter[T WaypointType] interface {
 	GetWaypoint() T
 }
 
 // WaypointSetter provides write access to the Waypoint field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WaypointSetter[T WaypointType] interface {
 	SetWaypoint(T)
 }
@@ -8475,33 +7575,15 @@ type WidthType interface {
 }
 
 // WidthGetter provides read access to the Width field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WidthGetter[T WidthType] interface {
 	GetWidth() T
 }
 
 // WidthSetter provides write access to the Width field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WidthSetter[T WidthType] interface {
 	SetWidth(T)
-}
-
-// WildTextureType is a type constraint for the WildTexture field.
-// This field has types: pk.String
-type WildTextureType interface {
-	pk.String
-}
-
-// WildTextureGetter provides read access to the WildTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type WildTextureGetter[T WildTextureType] interface {
-	GetWildTexture() T
-}
-
-// WildTextureSetter provides write access to the WildTexture field.
-// Implemented by packet types in versions: 1.21.1, 1.21.2, 1.21.3, 1.21.4
-type WildTextureSetter[T WildTextureType] interface {
-	SetWildTexture(T)
 }
 
 // WindowIdType is a type constraint for the WindowId field.
@@ -8511,13 +7593,13 @@ type WindowIdType interface {
 }
 
 // WindowIdGetter provides read access to the WindowId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WindowIdGetter[T WindowIdType] interface {
 	GetWindowId() T
 }
 
 // WindowIdSetter provides write access to the WindowId field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WindowIdSetter[T WindowIdType] interface {
 	SetWindowId(T)
 }
@@ -8529,13 +7611,13 @@ type WindowTitleType interface {
 }
 
 // WindowTitleGetter provides read access to the WindowTitle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WindowTitleGetter[T WindowTitleType] interface {
 	GetWindowTitle() T
 }
 
 // WindowTitleSetter provides write access to the WindowTitle field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WindowTitleSetter[T WindowTitleType] interface {
 	SetWindowTitle(T)
 }
@@ -8547,13 +7629,13 @@ type WorldBorderHitType interface {
 }
 
 // WorldBorderHitGetter provides read access to the WorldBorderHit field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldBorderHitGetter[T WorldBorderHitType] interface {
 	GetWorldBorderHit() T
 }
 
 // WorldBorderHitSetter provides write access to the WorldBorderHit field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldBorderHitSetter[T WorldBorderHitType] interface {
 	SetWorldBorderHit(T)
 }
@@ -8565,13 +7647,13 @@ type WorldNamesType interface {
 }
 
 // WorldNamesGetter provides read access to the WorldNames field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldNamesGetter[T WorldNamesType] interface {
 	GetWorldNames() T
 }
 
 // WorldNamesSetter provides write access to the WorldNames field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldNamesSetter[T WorldNamesType] interface {
 	SetWorldNames(T)
 }
@@ -8583,13 +7665,13 @@ type WorldStateType interface {
 }
 
 // WorldStateGetter provides read access to the WorldState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldStateGetter[T WorldStateType] interface {
 	GetWorldState() T
 }
 
 // WorldStateSetter provides write access to the WorldState field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type WorldStateSetter[T WorldStateType] interface {
 	SetWorldState(T)
 }
@@ -8601,13 +7683,13 @@ type XType interface {
 }
 
 // XGetter provides read access to the X field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type XGetter[T XType] interface {
 	GetX() T
 }
 
 // XSetter provides write access to the X field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type XSetter[T XType] interface {
 	SetX(T)
 }
@@ -8619,13 +7701,13 @@ type YType interface {
 }
 
 // YGetter provides read access to the Y field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type YGetter[T YType] interface {
 	GetY() T
 }
 
 // YSetter provides write access to the Y field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type YSetter[T YType] interface {
 	SetY(T)
 }
@@ -8637,13 +7719,13 @@ type YawType interface {
 }
 
 // YawGetter provides read access to the Yaw field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type YawGetter[T YawType] interface {
 	GetYaw() T
 }
 
 // YawSetter provides write access to the Yaw field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type YawSetter[T YawType] interface {
 	SetYaw(T)
 }
@@ -8655,13 +7737,14 @@ type ZType interface {
 }
 
 // ZGetter provides read access to the Z field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ZGetter[T ZType] interface {
 	GetZ() T
 }
 
 // ZSetter provides write access to the Z field.
-// Implemented by packet types in versions: 1.21.1, 1.21.10, 1.21.11, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
 type ZSetter[T ZType] interface {
 	SetZ(T)
 }
+

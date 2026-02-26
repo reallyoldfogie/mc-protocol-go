@@ -11,6 +11,68 @@ import (
 	"log"
 )
 
+type EntityMetadata struct {
+	EndVal  pk.UnsignedByte
+	Entries []EntityMetadataEntry
+}
+
+func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
+	var bytesRead int64
+
+	// Read entries in a loop until we encounter the terminator (endVal)
+	for {
+		// Read the next byte to check if it's the terminator
+		var marker pk.UnsignedByte
+		bytesRead, err = marker.ReadFrom(r)
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
+		}
+
+		// Check if this is the terminator
+		if marker == 255 {
+			t.EndVal = marker
+			break
+		}
+
+		// Not a terminator - this byte is the Key field of an entry
+		// Prepend the marker byte back to the reader so ReadFrom can read it
+		var entry EntityMetadataEntry
+
+		markerBuf := []byte{byte(marker)}
+		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
+		bytesRead, err = entry.ReadFrom(combinedReader)
+
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
+		}
+		t.Entries = append(t.Entries, entry)
+	}
+
+	return totalRead, nil
+}
+
+func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
+	var bytesWritten int64
+
+	// Write all entries
+	for _, entry := range t.Entries {
+		bytesWritten, err = entry.WriteTo(w)
+		if err != nil {
+			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
+		}
+		totalWritten += bytesWritten
+	}
+
+	// Write terminator
+	t.EndVal = 255
+	bytesWritten, err = t.EndVal.WriteTo(w)
+	totalWritten += bytesWritten
+
+	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
+}
+
 type EntityMetadataPaintingVariantTitle = models.Option[models.AnonymousNBT]
 
 type EntityMetadataPaintingVariantAuthor = models.Option[models.AnonymousNBT]
@@ -131,68 +193,6 @@ func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, e
 	return totalBytes, nil
 }
 
-type EntityMetadata struct {
-	EndVal  pk.UnsignedByte
-	Entries []EntityMetadataEntry
-}
-
-func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
-	var bytesRead int64
-
-	// Read entries in a loop until we encounter the terminator (endVal)
-	for {
-		// Read the next byte to check if it's the terminator
-		var marker pk.UnsignedByte
-		bytesRead, err = marker.ReadFrom(r)
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
-		}
-
-		// Check if this is the terminator
-		if marker == 255 {
-			t.EndVal = marker
-			break
-		}
-
-		// Not a terminator - this byte is the Key field of an entry
-		// Prepend the marker byte back to the reader so ReadFrom can read it
-		var entry EntityMetadataEntry
-
-		markerBuf := []byte{byte(marker)}
-		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
-		bytesRead, err = entry.ReadFrom(combinedReader)
-
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
-		}
-		t.Entries = append(t.Entries, entry)
-	}
-
-	return totalRead, nil
-}
-
-func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
-	var bytesWritten int64
-
-	// Write all entries
-	for _, entry := range t.Entries {
-		bytesWritten, err = entry.WriteTo(w)
-		if err != nil {
-			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
-		}
-		totalWritten += bytesWritten
-	}
-
-	// Write terminator
-	t.EndVal = 255
-	bytesWritten, err = t.EndVal.WriteTo(w)
-	totalWritten += bytesWritten
-
-	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
-}
-
 type EntityMetadataEntryType struct {
 	Value string
 }
@@ -263,6 +263,8 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 	}
 	return 0, errors.Errorf("unknown EntityMetadataEntryType value: %s", m.Value)
 }
+
+type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
 
 // Protodef: [
 //
@@ -336,72 +338,6 @@ func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes i
 	return totalBytes, nil
 }
 
-type EntityMetadataEntryValuePaintingVariant struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         EntityMetadataPaintingVariant
-}
-
-func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
-
-type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
-
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
-
 // Protodef: [
 //
 //	  "container",
@@ -474,7 +410,71 @@ func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int6
 	return totalBytes, nil
 }
 
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+
+type EntityMetadataEntryValuePaintingVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         EntityMetadataPaintingVariant
+}
+
+func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
 type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+
+type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
 
 // Protodef: [
 //

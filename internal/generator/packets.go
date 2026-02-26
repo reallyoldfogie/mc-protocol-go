@@ -4753,6 +4753,22 @@ func fixUnprefixedBaseTypes(content string) string {
 	content = strings.ReplaceAll(content, " Mapper ", " basetypes.Mapper ")
 	content = strings.ReplaceAll(content, "\tMapper ", "\tbasetypes.Mapper ")
 
+	// Fix custom vector and composite types that remain in basetypes package
+	// These include LpVec3, Velocity, and similar composite types from protocol
+	// Only match when they are used as types (followed by newline or used in generics), not field names
+	for _, typeName := range []string{"LpVec3"} {
+		// Match as field type at end of line: "FieldName TypeName\n"
+		content = strings.ReplaceAll(content, " "+typeName+"\n", " basetypes."+typeName+"\n")
+		content = strings.ReplaceAll(content, "\t"+typeName+"\n", "\tbasetypes."+typeName+"\n")
+		// Match in generic type parameters: Array[LpVec3], Option[LpVec3], etc.
+		content = strings.ReplaceAll(content, "["+typeName+"]", "[basetypes."+typeName+"]")
+		content = strings.ReplaceAll(content, "["+typeName+",", "[basetypes."+typeName+",")
+		content = strings.ReplaceAll(content, ","+typeName+"]", ",basetypes."+typeName+"]")
+		content = strings.ReplaceAll(content, ","+typeName+",", ",basetypes."+typeName+",")
+		// Match pointer types: *LpVec3
+		content = strings.ReplaceAll(content, "*"+typeName, "*basetypes."+typeName)
+	}
+
 	// Clean up any double-prefixes that might have been created
 	content = strings.ReplaceAll(content, "basetypes.basetypes.", "basetypes.")
 	content = strings.ReplaceAll(content, "models.models.", "models.")
@@ -4778,7 +4794,7 @@ func needsBaseTypesPrefix(typeName string) bool {
 	}
 
 	// Explicit list of known basetypes that remain in basetypes package
-	basetypeNames := []string{"Bitfield", "Mapper", "IDSet", "CommandNode"}
+	basetypeNames := []string{"Bitfield", "Mapper", "IDSet", "CommandNode", "LpVec3", "Velocity"}
 	if slices.Contains(basetypeNames, typeName) {
 		return true
 	}
@@ -4788,7 +4804,7 @@ func needsBaseTypesPrefix(typeName string) bool {
 		return true
 	}
 
-	// Check for Vec types (Vec2f, Vec3i, etc.)
+	// Check for Vec types (Vec2f, Vec3i, LpVec3, etc.)
 	if strings.HasPrefix(typeName, "Vec") && len(typeName) > 3 {
 		return true
 	}
@@ -5173,6 +5189,8 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 		return "EntityMetadata" // fallback
 	case "topBitSetTerminatedArray", "TopBitSetTerminatedArray":
 		return "models.TopBitSetTerminatedArray"
+	case "lpvec3", "LpVec3", "lpVec3":
+		return "models.LpVec3"
 	case "option":
 		// Handle option types - convert to models.Option with appropriate type parameters
 		if in != nil && in.Extras != nil {

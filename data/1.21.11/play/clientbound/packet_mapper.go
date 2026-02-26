@@ -8,52 +8,34 @@ import (
 	"io"
 )
 
-type EntityUpdateAttributesPropertiesArrayTypeKey struct {
+type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
 	Value string
 }
 
-var EntityUpdateAttributesPropertiesArrayTypeKeyMappings = map[int64]string{
-	0:  "generic.armor",
-	1:  "generic.armor_toughness",
-	10: "player.entity_interaction_range",
-	11: "generic.fall_damage_multiplier",
-	12: "generic.flying_speed",
-	13: "generic.follow_range",
-	14: "generic.gravity",
-	15: "generic.jump_strength",
-	16: "generic.knockback_resistance",
-	17: "generic.luck",
-	18: "generic.max_absorption",
-	19: "generic.max_health",
-	2:  "generic.attack_damage",
-	20: "generic.movement_speed",
-	21: "generic.safe_fall_distance",
-	22: "generic.scale",
-	23: "zombie.spawn_reinforcements",
-	24: "generic.step_height",
-	25: "submerged_mining_speed",
-	26: "sweeping_damage_ratio",
-	27: "tempt_range",
-	28: "water_movement_efficiency",
-	29: "waypoint_transmit_range",
-	3:  "generic.attack_knockback",
-	30: "waypoint_receive_range",
-	4:  "generic.attack_speed",
-	5:  "player.block_break_speed",
-	6:  "player.block_interaction_range",
-	7:  "burning_time",
-	8:  "camera_distance",
-	9:  "explosion_knockback_resistance",
+var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
+	0:  "crafting_building_blocks",
+	1:  "crafting_redstone",
+	10: "stonecutter",
+	11: "smithing",
+	12: "campfire",
+	2:  "crafting_equipment",
+	3:  "crafting_misc",
+	4:  "furnace_food",
+	5:  "furnace_blocks",
+	6:  "furnace_misc",
+	7:  "blast_furnace_blocks",
+	8:  "blast_furnace_misc",
+	9:  "smoker_food",
 }
 
-func (m *EntityUpdateAttributesPropertiesArrayTypeKey) ReadFrom(r io.Reader) (int64, error) {
+func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read EntityUpdateAttributesPropertiesArrayTypeKey key")
+		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
 	}
 
-	value, ok := EntityUpdateAttributesPropertiesArrayTypeKeyMappings[int64(key)]
+	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -63,14 +45,187 @@ func (m *EntityUpdateAttributesPropertiesArrayTypeKey) ReadFrom(r io.Reader) (in
 	return n, nil
 }
 
-func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range EntityUpdateAttributesPropertiesArrayTypeKeyMappings {
+func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
+	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
+}
+
+type PacketName struct {
+	Value string
+}
+
+var PacketNameMappings = map[int64]string{
+	0x00: "bundle_delimiter",
+	0x01: "spawn_entity",
+	0x02: "animation",
+	0x03: "statistics",
+	0x04: "acknowledge_player_digging",
+	0x05: "block_break_animation",
+	0x06: "tile_entity_data",
+	0x07: "block_action",
+	0x08: "block_change",
+	0x09: "boss_bar",
+	0x0a: "difficulty",
+	0x0b: "chunk_batch_finished",
+	0x0c: "chunk_batch_start",
+	0x0d: "chunk_biomes",
+	0x0e: "clear_titles",
+	0x0f: "tab_complete",
+	0x10: "declare_commands",
+	0x11: "close_window",
+	0x12: "window_items",
+	0x13: "craft_progress_bar",
+	0x14: "set_slot",
+	0x15: "cookie_request",
+	0x16: "set_cooldown",
+	0x17: "chat_suggestions",
+	0x18: "custom_payload",
+	0x19: "damage_event",
+	0x1a: "debug_block_value",
+	0x1b: "debug_chunk_value",
+	0x1c: "debug_entity_value",
+	0x1d: "debug_event",
+	0x1e: "debug_sample",
+	0x1f: "hide_message",
+	0x20: "kick_disconnect",
+	0x21: "profileless_chat",
+	0x22: "entity_status",
+	0x23: "sync_entity_position",
+	0x24: "explosion",
+	0x25: "unload_chunk",
+	0x26: "game_state_change",
+	0x27: "game_test_highlight_pos",
+	0x28: "open_horse_window",
+	0x29: "hurt_animation",
+	0x2a: "initialize_world_border",
+	0x2b: "keep_alive",
+	0x2c: "map_chunk",
+	0x2d: "world_event",
+	0x2e: "world_particles",
+	0x2f: "update_light",
+	0x30: "login",
+	0x31: "map",
+	0x32: "trade_list",
+	0x33: "rel_entity_move",
+	0x34: "entity_move_look",
+	0x35: "move_minecart",
+	0x36: "entity_look",
+	0x37: "vehicle_move",
+	0x38: "open_book",
+	0x39: "open_window",
+	0x3a: "open_sign_entity",
+	0x3b: "ping",
+	0x3c: "ping_response",
+	0x3d: "craft_recipe_response",
+	0x3e: "abilities",
+	0x3f: "player_chat",
+	0x40: "end_combat_event",
+	0x41: "enter_combat_event",
+	0x42: "death_combat_event",
+	0x43: "player_remove",
+	0x44: "player_info",
+	0x45: "face_player",
+	0x46: "position",
+	0x47: "player_rotation",
+	0x48: "recipe_book_add",
+	0x49: "recipe_book_remove",
+	0x4a: "recipe_book_settings",
+	0x4b: "entity_destroy",
+	0x4c: "remove_entity_effect",
+	0x4d: "reset_score",
+	0x4e: "remove_resource_pack",
+	0x4f: "add_resource_pack",
+	0x50: "respawn",
+	0x51: "entity_head_rotation",
+	0x52: "multi_block_change",
+	0x53: "select_advancement_tab",
+	0x54: "server_data",
+	0x55: "action_bar",
+	0x56: "world_border_center",
+	0x57: "world_border_lerp_size",
+	0x58: "world_border_size",
+	0x59: "world_border_warning_delay",
+	0x5a: "world_border_warning_reach",
+	0x5b: "camera",
+	0x5c: "update_view_position",
+	0x5d: "update_view_distance",
+	0x5e: "set_cursor_item",
+	0x5f: "spawn_position",
+	0x60: "scoreboard_display_objective",
+	0x61: "entity_metadata",
+	0x62: "attach_entity",
+	0x63: "entity_velocity",
+	0x64: "entity_equipment",
+	0x65: "experience",
+	0x66: "update_health",
+	0x67: "held_item_slot",
+	0x68: "scoreboard_objective",
+	0x69: "set_passengers",
+	0x6a: "set_player_inventory",
+	0x6b: "teams",
+	0x6c: "scoreboard_score",
+	0x6d: "simulation_distance",
+	0x6e: "set_title_subtitle",
+	0x6f: "update_time",
+	0x70: "set_title_text",
+	0x71: "set_title_time",
+	0x72: "entity_sound_effect",
+	0x73: "sound_effect",
+	0x74: "start_configuration",
+	0x75: "stop_sound",
+	0x76: "store_cookie",
+	0x77: "system_chat",
+	0x78: "playerlist_header",
+	0x79: "nbt_query_response",
+	0x7a: "collect",
+	0x7b: "entity_teleport",
+	0x7c: "test_instance_block_status",
+	0x7d: "set_ticking_state",
+	0x7e: "step_tick",
+	0x7f: "transfer",
+	0x80: "advancements",
+	0x81: "entity_update_attributes",
+	0x82: "entity_effect",
+	0x83: "declare_recipes",
+	0x84: "tags",
+	0x85: "set_projectile_power",
+	0x86: "custom_report_details",
+	0x87: "server_links",
+	0x88: "tracked_waypoint",
+	0x89: "clear_dialog",
+	0x8a: "show_dialog",
+}
+
+func (m *PacketName) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read PacketName key")
+	}
+
+	value, ok := PacketNameMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m PacketName) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range PacketNameMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
 }
 
 type SlotDisplayType struct {
@@ -115,25 +270,24 @@ func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
 }
 
-type SpawnInfoGamemode struct {
+type ChatTypeParameterType struct {
 	Value string
 }
 
-var SpawnInfoGamemodeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
+var ChatTypeParameterTypeMappings = map[int64]string{
+	0: "content",
+	1: "sender",
+	2: "target",
 }
 
-func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.Byte
+func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
+		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
 	}
 
-	value, ok := SpawnInfoGamemodeMappings[int64(key)]
+	value, ok := ChatTypeParameterTypeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -143,14 +297,102 @@ func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SpawnInfoGamemodeMappings {
+func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChatTypeParameterTypeMappings {
 		if v == m.Value {
-			key := pk.Byte(k)
+			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
+	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
+}
+
+type MapChunkHeightmapsArrayTypeType struct {
+	Value string
+}
+
+var MapChunkHeightmapsArrayTypeTypeMappings = map[int64]string{
+	0: "world_surface_wg",
+	1: "world_surface",
+	2: "ocean_floor_wg",
+	3: "ocean_floor",
+	4: "motion_blocking",
+	5: "motion_blocking_no_leaves",
+}
+
+func (m *MapChunkHeightmapsArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read MapChunkHeightmapsArrayTypeType key")
+	}
+
+	value, ok := MapChunkHeightmapsArrayTypeTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m MapChunkHeightmapsArrayTypeType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range MapChunkHeightmapsArrayTypeTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown MapChunkHeightmapsArrayTypeType value: %s", m.Value)
+}
+
+type GameStateChangeReason struct {
+	Value string
+}
+
+var GameStateChangeReasonMappings = map[int64]string{
+	0:  "no_respawn_block_available",
+	1:  "start_raining",
+	10: "guardian_elder_effect",
+	11: "immediate_respawn",
+	12: "limited_crafting",
+	13: "level_chunks_load_start",
+	2:  "stop_raining",
+	3:  "change_game_mode",
+	4:  "win_game",
+	5:  "demo_event",
+	6:  "play_arrow_hit_sound",
+	7:  "rain_level_change",
+	8:  "thunder_level_change",
+	9:  "puffer_fish_sting",
+}
+
+func (m *GameStateChangeReason) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.UnsignedByte
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read GameStateChangeReason key")
+	}
+
+	value, ok := GameStateChangeReasonMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m GameStateChangeReason) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range GameStateChangeReasonMappings {
+		if v == m.Value {
+			key := pk.UnsignedByte(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown GameStateChangeReason value: %s", m.Value)
 }
 
 type TeamsMode struct {
@@ -419,27 +661,25 @@ func (m TrackedWaypointWaypointType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown TrackedWaypointWaypointType value: %s", m.Value)
 }
 
-type MapChunkHeightmapsArrayTypeType struct {
+type SpawnInfoGamemode struct {
 	Value string
 }
 
-var MapChunkHeightmapsArrayTypeTypeMappings = map[int64]string{
-	0: "world_surface_wg",
-	1: "world_surface",
-	2: "ocean_floor_wg",
-	3: "ocean_floor",
-	4: "motion_blocking",
-	5: "motion_blocking_no_leaves",
+var SpawnInfoGamemodeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
 }
 
-func (m *MapChunkHeightmapsArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
+func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.Byte
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read MapChunkHeightmapsArrayTypeType key")
+		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
 	}
 
-	value, ok := MapChunkHeightmapsArrayTypeTypeMappings[int64(key)]
+	value, ok := SpawnInfoGamemodeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -449,62 +689,14 @@ func (m *MapChunkHeightmapsArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m MapChunkHeightmapsArrayTypeType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range MapChunkHeightmapsArrayTypeTypeMappings {
+func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SpawnInfoGamemodeMappings {
 		if v == m.Value {
-			key := pk.VarInt(k)
+			key := pk.Byte(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown MapChunkHeightmapsArrayTypeType value: %s", m.Value)
-}
-
-type GameStateChangeReason struct {
-	Value string
-}
-
-var GameStateChangeReasonMappings = map[int64]string{
-	0:  "no_respawn_block_available",
-	1:  "start_raining",
-	10: "guardian_elder_effect",
-	11: "immediate_respawn",
-	12: "limited_crafting",
-	13: "level_chunks_load_start",
-	2:  "stop_raining",
-	3:  "change_game_mode",
-	4:  "win_game",
-	5:  "demo_event",
-	6:  "play_arrow_hit_sound",
-	7:  "rain_level_change",
-	8:  "thunder_level_change",
-	9:  "puffer_fish_sting",
-}
-
-func (m *GameStateChangeReason) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.UnsignedByte
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read GameStateChangeReason key")
-	}
-
-	value, ok := GameStateChangeReasonMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m GameStateChangeReason) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range GameStateChangeReasonMappings {
-		if v == m.Value {
-			key := pk.UnsignedByte(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown GameStateChangeReason value: %s", m.Value)
+	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
 }
 
 type DifficultyDifficulty struct {
@@ -545,160 +737,52 @@ func (m DifficultyDifficulty) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown DifficultyDifficulty value: %s", m.Value)
 }
 
-type PacketName struct {
+type EntityUpdateAttributesPropertiesArrayTypeKey struct {
 	Value string
 }
 
-var PacketNameMappings = map[int64]string{
-	0x00: "bundle_delimiter",
-	0x01: "spawn_entity",
-	0x02: "animation",
-	0x03: "statistics",
-	0x04: "acknowledge_player_digging",
-	0x05: "block_break_animation",
-	0x06: "tile_entity_data",
-	0x07: "block_action",
-	0x08: "block_change",
-	0x09: "boss_bar",
-	0x0a: "difficulty",
-	0x0b: "chunk_batch_finished",
-	0x0c: "chunk_batch_start",
-	0x0d: "chunk_biomes",
-	0x0e: "clear_titles",
-	0x0f: "tab_complete",
-	0x10: "declare_commands",
-	0x11: "close_window",
-	0x12: "window_items",
-	0x13: "craft_progress_bar",
-	0x14: "set_slot",
-	0x15: "cookie_request",
-	0x16: "set_cooldown",
-	0x17: "chat_suggestions",
-	0x18: "custom_payload",
-	0x19: "damage_event",
-	0x1a: "debug_block_value",
-	0x1b: "debug_chunk_value",
-	0x1c: "debug_entity_value",
-	0x1d: "debug_event",
-	0x1e: "debug_sample",
-	0x1f: "hide_message",
-	0x20: "kick_disconnect",
-	0x21: "profileless_chat",
-	0x22: "entity_status",
-	0x23: "sync_entity_position",
-	0x24: "explosion",
-	0x25: "unload_chunk",
-	0x26: "game_state_change",
-	0x27: "game_test_highlight_pos",
-	0x28: "open_horse_window",
-	0x29: "hurt_animation",
-	0x2a: "initialize_world_border",
-	0x2b: "keep_alive",
-	0x2c: "map_chunk",
-	0x2d: "world_event",
-	0x2e: "world_particles",
-	0x2f: "update_light",
-	0x30: "login",
-	0x31: "map",
-	0x32: "trade_list",
-	0x33: "rel_entity_move",
-	0x34: "entity_move_look",
-	0x35: "move_minecart",
-	0x36: "entity_look",
-	0x37: "vehicle_move",
-	0x38: "open_book",
-	0x39: "open_window",
-	0x3a: "open_sign_entity",
-	0x3b: "ping",
-	0x3c: "ping_response",
-	0x3d: "craft_recipe_response",
-	0x3e: "abilities",
-	0x3f: "player_chat",
-	0x40: "end_combat_event",
-	0x41: "enter_combat_event",
-	0x42: "death_combat_event",
-	0x43: "player_remove",
-	0x44: "player_info",
-	0x45: "face_player",
-	0x46: "position",
-	0x47: "player_rotation",
-	0x48: "recipe_book_add",
-	0x49: "recipe_book_remove",
-	0x4a: "recipe_book_settings",
-	0x4b: "entity_destroy",
-	0x4c: "remove_entity_effect",
-	0x4d: "reset_score",
-	0x4e: "remove_resource_pack",
-	0x4f: "add_resource_pack",
-	0x50: "respawn",
-	0x51: "entity_head_rotation",
-	0x52: "multi_block_change",
-	0x53: "select_advancement_tab",
-	0x54: "server_data",
-	0x55: "action_bar",
-	0x56: "world_border_center",
-	0x57: "world_border_lerp_size",
-	0x58: "world_border_size",
-	0x59: "world_border_warning_delay",
-	0x5a: "world_border_warning_reach",
-	0x5b: "camera",
-	0x5c: "update_view_position",
-	0x5d: "update_view_distance",
-	0x5e: "set_cursor_item",
-	0x5f: "spawn_position",
-	0x60: "scoreboard_display_objective",
-	0x61: "entity_metadata",
-	0x62: "attach_entity",
-	0x63: "entity_velocity",
-	0x64: "entity_equipment",
-	0x65: "experience",
-	0x66: "update_health",
-	0x67: "held_item_slot",
-	0x68: "scoreboard_objective",
-	0x69: "set_passengers",
-	0x6a: "set_player_inventory",
-	0x6b: "teams",
-	0x6c: "scoreboard_score",
-	0x6d: "simulation_distance",
-	0x6e: "set_title_subtitle",
-	0x6f: "update_time",
-	0x70: "set_title_text",
-	0x71: "set_title_time",
-	0x72: "entity_sound_effect",
-	0x73: "sound_effect",
-	0x74: "start_configuration",
-	0x75: "stop_sound",
-	0x76: "store_cookie",
-	0x77: "system_chat",
-	0x78: "playerlist_header",
-	0x79: "nbt_query_response",
-	0x7a: "collect",
-	0x7b: "entity_teleport",
-	0x7c: "test_instance_block_status",
-	0x7d: "set_ticking_state",
-	0x7e: "step_tick",
-	0x7f: "transfer",
-	0x80: "advancements",
-	0x81: "entity_update_attributes",
-	0x82: "entity_effect",
-	0x83: "declare_recipes",
-	0x84: "tags",
-	0x85: "set_projectile_power",
-	0x86: "custom_report_details",
-	0x87: "server_links",
-	0x88: "tracked_waypoint",
-	0x89: "clear_dialog",
-	0x8a: "show_dialog",
+var EntityUpdateAttributesPropertiesArrayTypeKeyMappings = map[int64]string{
+	0:  "generic.armor",
+	1:  "generic.armor_toughness",
+	10: "player.entity_interaction_range",
+	11: "generic.fall_damage_multiplier",
+	12: "generic.flying_speed",
+	13: "generic.follow_range",
+	14: "generic.gravity",
+	15: "generic.jump_strength",
+	16: "generic.knockback_resistance",
+	17: "generic.luck",
+	18: "generic.max_absorption",
+	19: "generic.max_health",
+	2:  "generic.attack_damage",
+	20: "generic.movement_speed",
+	21: "generic.safe_fall_distance",
+	22: "generic.scale",
+	23: "zombie.spawn_reinforcements",
+	24: "generic.step_height",
+	25: "submerged_mining_speed",
+	26: "sweeping_damage_ratio",
+	27: "tempt_range",
+	28: "water_movement_efficiency",
+	29: "waypoint_transmit_range",
+	3:  "generic.attack_knockback",
+	30: "waypoint_receive_range",
+	4:  "generic.attack_speed",
+	5:  "player.block_break_speed",
+	6:  "player.block_interaction_range",
+	7:  "burning_time",
+	8:  "camera_distance",
+	9:  "explosion_knockback_resistance",
 }
 
-func (m *PacketName) ReadFrom(r io.Reader) (int64, error) {
+func (m *EntityUpdateAttributesPropertiesArrayTypeKey) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read PacketName key")
+		return n, errors.Wrap(err, "failed to read EntityUpdateAttributesPropertiesArrayTypeKey key")
 	}
 
-	value, ok := PacketNameMappings[int64(key)]
+	value, ok := EntityUpdateAttributesPropertiesArrayTypeKeyMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -708,14 +792,14 @@ func (m *PacketName) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m PacketName) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range PacketNameMappings {
+func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range EntityUpdateAttributesPropertiesArrayTypeKeyMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
+	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
 }
 
 type RecipeDisplayType struct {
@@ -755,88 +839,4 @@ func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
-}
-
-type ChatTypeParameterType struct {
-	Value string
-}
-
-var ChatTypeParameterTypeMappings = map[int64]string{
-	0: "content",
-	1: "sender",
-	2: "target",
-}
-
-func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
-	}
-
-	value, ok := ChatTypeParameterTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChatTypeParameterTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
-}
-
-type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
-	Value string
-}
-
-var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
-	0:  "crafting_building_blocks",
-	1:  "crafting_redstone",
-	10: "stonecutter",
-	11: "smithing",
-	12: "campfire",
-	2:  "crafting_equipment",
-	3:  "crafting_misc",
-	4:  "furnace_food",
-	5:  "furnace_blocks",
-	6:  "furnace_misc",
-	7:  "blast_furnace_blocks",
-	8:  "blast_furnace_misc",
-	9:  "smoker_food",
-}
-
-func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
-	}
-
-	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
 }
