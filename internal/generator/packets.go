@@ -4163,6 +4163,28 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 									// Clear Extras since the fields have been extracted
 									caseType.Extras = nil
 									sw.Fields[caseName] = caseType
+								} else {
+									// Simple type - resolve via toNative() like regular switch cases
+									lookupKey := caseType.TypeName
+									if lookupKey == "" {
+										lookupKey = caseType.Name
+									}
+									// Convert to native type
+									nativeTypeName := toNative(lookupKey, caseType, baseTypes, isGeneratingBaseTypes)
+									// Check if toNative converted it
+									if nativeTypeName != lookupKey {
+										// toNative converted it - check if it needs basetypes prefix
+										if !isGeneratingBaseTypes && !strings.Contains(nativeTypeName, ".") && !strings.HasPrefix(nativeTypeName, "pk.") && nativeTypeName != "struct{}" && nativeTypeName != "models.Void" {
+											if _, ok := baseTypes[strings.ToLower(nativeTypeName)]; ok {
+												nativeTypeName = "basetypes." + nativeTypeName
+											} else if needsBaseTypesPrefix(nativeTypeName) {
+												nativeTypeName = "basetypes." + nativeTypeName
+											}
+										}
+										caseType.Name = nativeTypeName
+										caseType.TypeName = nativeTypeName
+										sw.Fields[caseName] = caseType
+									}
 								}
 							}
 
@@ -4184,6 +4206,31 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 									sw.Default.Name = childTypeName
 									sw.Default.TypeName = childTypeName
 									sw.Default.Extras = nil
+								} else {
+									// Simple type default - resolve via toNative()
+									lookupKey := sw.Default.TypeName
+									if lookupKey == "" {
+										lookupKey = sw.Default.Name
+										if lookupKey == "" {
+											// No type info, skip
+											continue
+										}
+									}
+									// Convert to native type
+									nativeTypeName := toNative(lookupKey, sw.Default, baseTypes, isGeneratingBaseTypes)
+									// Check if toNative converted it
+									if nativeTypeName != lookupKey {
+										// toNative converted it - check if it needs basetypes prefix
+										if !isGeneratingBaseTypes && !strings.Contains(nativeTypeName, ".") && !strings.HasPrefix(nativeTypeName, "pk.") && nativeTypeName != "struct{}" && nativeTypeName != "models.Void" {
+											if _, ok := baseTypes[strings.ToLower(nativeTypeName)]; ok {
+												nativeTypeName = "basetypes." + nativeTypeName
+											} else if needsBaseTypesPrefix(nativeTypeName) {
+												nativeTypeName = "basetypes." + nativeTypeName
+											}
+										}
+										sw.Default.Name = nativeTypeName
+										sw.Default.TypeName = nativeTypeName
+									}
 								}
 							}
 						}
