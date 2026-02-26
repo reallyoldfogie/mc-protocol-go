@@ -11,6 +11,126 @@ import (
 	"log"
 )
 
+type EntityMetadataPaintingVariantTitle = models.Option[models.AnonymousNBT]
+
+type EntityMetadataPaintingVariantAuthor = models.Option[models.AnonymousNBT]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "width",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "height",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "assetId",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "title",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    },
+//	    {
+//	      "name": "author",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    }
+//	  ]
+//	]
+type EntityMetadataPaintingVariant struct {
+	// "i32"
+	Width pk.Int
+	// "i32"
+	Height pk.Int
+	// "string"
+	AssetId pk.String
+	// [
+	//             "option",
+	//             "anonymousNbt"
+	//           ]
+	Title models.Option[models.AnonymousNBT]
+	// [
+	//             "option",
+	//             "anonymousNbt"
+	//           ]
+	Author models.Option[models.AnonymousNBT]
+}
+
+func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Width.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Width")
+	}
+	bytesRead, err = t.Height.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Height")
+	}
+	bytesRead, err = t.AssetId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
+	}
+	bytesRead, err = t.Title.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Title")
+	}
+	bytesRead, err = t.Author.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Author")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityMetadataPaintingVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Width.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Height.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AssetId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Title.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Author.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type EntityMetadata struct {
 	EndVal  pk.UnsignedByte
 	Entries []EntityMetadataEntry
@@ -146,141 +266,11 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown EntityMetadataEntryType value: %s", m.Value)
 }
 
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+
 type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "villagerType",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "villagerProfession",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "level",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type EntityMetadataEntryValueVillagerData struct {
-	// "varint"
-	VillagerType pk.VarInt
-	// "varint"
-	VillagerProfession pk.VarInt
-	// "varint"
-	Level pk.VarInt
-}
-
-func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.VillagerType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
-	}
-	bytesRead, err = t.VillagerProfession.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
-	}
-	bytesRead, err = t.Level.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Level")
-	}
-
-	return totalBytes, nil
-}
-
-func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[EntityMetadataEntryValueVillagerData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.VillagerType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VillagerProfession.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Level.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type EntityMetadataEntryValuePaintingVariant struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         EntityMetadataPaintingVariant
-}
-
-func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
 
 // Protodef: [
 //
@@ -354,9 +344,79 @@ func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int6
 	return totalBytes, nil
 }
 
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "villagerType",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "villagerProfession",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "level",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type EntityMetadataEntryValueVillagerData struct {
+	// "varint"
+	VillagerType pk.VarInt
+	// "varint"
+	VillagerProfession pk.VarInt
+	// "varint"
+	Level pk.VarInt
+}
 
-type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
+func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.VillagerType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
+	}
+	bytesRead, err = t.VillagerProfession.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
+	}
+	bytesRead, err = t.Level.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Level")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityMetadataEntryValueVillagerData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.VillagerType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.VillagerProfession.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Level.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
 
 type EntityMetadataEntryValueHumanoidArm struct {
 	Value string
@@ -392,6 +452,66 @@ func (m EntityMetadataEntryValueHumanoidArm) WriteTo(w io.Writer) (int64, error)
 		}
 	}
 	return 0, errors.Errorf("unknown EntityMetadataEntryValueHumanoidArm value: %s", m.Value)
+}
+
+type EntityMetadataEntryValuePaintingVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         EntityMetadataPaintingVariant
+}
+
+func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
 }
 
 // Protodef: [
@@ -1110,126 +1230,6 @@ func (t EntityMetadataEntry) WriteTo(w io.Writer) (totalBytes int64, err error) 
 			// Not a void case and doesn't implement WriteTo
 			return totalBytes, fmt.Errorf("switch field Value value does not implement WriteTo: %T", t.Value)
 		}
-	}
-	return totalBytes, nil
-}
-
-type EntityMetadataPaintingVariantTitle = models.Option[models.AnonymousNBT]
-
-type EntityMetadataPaintingVariantAuthor = models.Option[models.AnonymousNBT]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "width",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "height",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "assetId",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "title",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    },
-//	    {
-//	      "name": "author",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    }
-//	  ]
-//	]
-type EntityMetadataPaintingVariant struct {
-	// "i32"
-	Width pk.Int
-	// "i32"
-	Height pk.Int
-	// "string"
-	AssetId pk.String
-	// [
-	//             "option",
-	//             "anonymousNbt"
-	//           ]
-	Title models.Option[models.AnonymousNBT]
-	// [
-	//             "option",
-	//             "anonymousNbt"
-	//           ]
-	Author models.Option[models.AnonymousNBT]
-}
-
-func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Width.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Width")
-	}
-	bytesRead, err = t.Height.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Height")
-	}
-	bytesRead, err = t.AssetId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
-	}
-	bytesRead, err = t.Title.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Title")
-	}
-	bytesRead, err = t.Author.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Author")
-	}
-
-	return totalBytes, nil
-}
-
-func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[EntityMetadataPaintingVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Width.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Height.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AssetId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Title.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Author.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
 	}
 	return totalBytes, nil
 }

@@ -29,6 +29,9 @@ var parentContextRequirements = map[string][]string{}
 // Tracks explicit count arrays: maps "ContainerName.FieldName" to count field name
 var explicitCountArrayFields = map[string]string{}
 
+// Tracks processed containers for expanding type aliases (case-insensitive key -> container)
+var containerRegistry = map[string]*datatypes.Container{}
+
 func generatePacketIDs(baseDir, version string, packetsData inversePacketParse) inversePacketParse {
 	fmt.Println("generating", version, "packetid.go")
 
@@ -515,6 +518,7 @@ func generateProtocolStructs(version string, protocolDefinitions *protocol.Proto
 	})
 	parentContextRequirements = make(map[string][]string)
 	explicitCountArrayFields = make(map[string]string)
+	containerRegistry = make(map[string]*datatypes.Container)
 	// typeRegistry = make(map[string]*datatypes.Type)
 
 	// Note: packet IDs will be extracted directly from protocol.json
@@ -3647,6 +3651,51 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 		if originalNameCheck == "option" || originalNameCheck == "array" || originalNameCheck == "container" {
 			return []*datatypes.Type{}
 		}
+
+		// SPECIAL CASE: Expand packet type aliases by copying referenced container's fields
+		// This allows packets that alias other containers to be full packet structs with PacketID support
+		if isPacket && foundID {
+			// Try to look up the referenced type in containerRegistry
+			lookupKey := strings.ToLower(t.TypeName)
+			if refContainer, ok := containerRegistry[lookupKey]; ok {
+				fmt.Printf("DEBUG [processType]: Expanding packet type alias '%s' from container '%s'\n", t.Name, t.TypeName)
+				// Create a new container for this packet, copying fields from the referenced container
+				newContainer := &datatypes.Container{}
+				newContainer.SetName(t.Name)
+
+				// Deep copy the fields from the referenced container
+				newFields := make([]*datatypes.ContainerField, len(refContainer.Fields))
+				for i, field := range refContainer.Fields {
+					// Create a copy of the field
+					fieldCopy := &datatypes.ContainerField{
+						Name: field.Name,
+						Anon: field.Anon,
+					}
+					// Copy the type
+					if field.Type != nil {
+						fieldCopy.Type = &datatypes.Type{
+							Name:           field.Type.Name,
+							TypeName:       field.Type.TypeName,
+							Comment:        field.Type.Comment,
+							RawDefinition: field.Type.RawDefinition,
+						}
+						// Deep copy Extras if present (for complex types)
+						if field.Type.Extras != nil {
+							fieldCopy.Type.Extras = field.Type.Extras
+						}
+					}
+					newFields[i] = fieldCopy
+				}
+				newContainer.Fields = newFields
+
+				// Convert this type to a container so it gets proper packet struct treatment
+				t.TypeName = "container"
+				t.Extras = newContainer
+				// Don't process as simple type alias - let container processing handle it below
+				return processType(t, baseTypes, isAnon, isGeneratingBaseTypes, packetIDMap)
+			}
+		}
+
 		// Save original values before ANY conversion (for comparison and identifier generation)
 		originalNameValue := t.Name
 		originalTypeNameValue := t.TypeName
@@ -4652,6 +4701,8 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 		}
 
 		types = append(types, t)
+		// Register container for potential type alias expansion
+		containerRegistry[strings.ToLower(container.GetName())] = container
 	} else if array, ok := isArray(t); ok {
 		fmt.Println(array.GetName())
 		// types = append(types, &datatypes.Type{Name: "Array_" + array.GetName() + "_TO_DO_processType", TypeName: "[]string"})

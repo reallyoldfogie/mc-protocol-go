@@ -276,7 +276,7 @@
 				return play_clientbound.NewOpenWindow(), nil
 		case 58: // Play.Clientbound[{58}] = generator.packetData{Name:"OpenSignEntity", ID:58, Hex:"0X3A", StructName:"OpenSignEntity", ProtoTypeName:"packet_open_sign_entity", AltName:"ClientboundOpenSignEditor"}
 				return play_clientbound.NewOpenSignEntity(), nil
-		case 59: // Play.Clientbound[{59}] = generator.packetData{Name:"Ping", ID:59, Hex:"0X3B", StructName:"", ProtoTypeName:"packet_ping", AltName:""}
+		case 59: // Play.Clientbound[{59}] = generator.packetData{Name:"Ping", ID:59, Hex:"0X3B", StructName:"Ping", ProtoTypeName:"packet_ping", AltName:""}
 				return play_clientbound.NewPing(), nil
 		case 60: // Play.Clientbound[{60}] = generator.packetData{Name:"PingResponse", ID:60, Hex:"0X3C", StructName:"PingResponse", ProtoTypeName:"packet_ping_response", AltName:"ClientboundPongResponse"}
 				return play_clientbound.NewPingResponse(), nil
@@ -352,7 +352,7 @@
 				return play_clientbound.NewUpdateViewDistance(), nil
 		case 94: // Play.Clientbound[{94}] = generator.packetData{Name:"SetCursorItem", ID:94, Hex:"0X5E", StructName:"SetCursorItem", ProtoTypeName:"packet_set_cursor_item", AltName:""}
 				return play_clientbound.NewSetCursorItem(), nil
-		case 95: // Play.Clientbound[{95}] = generator.packetData{Name:"SpawnPosition", ID:95, Hex:"0X5F", StructName:"", ProtoTypeName:"packet_spawn_position", AltName:"ClientboundSetDefaultSpawnPosition"}
+		case 95: // Play.Clientbound[{95}] = generator.packetData{Name:"SpawnPosition", ID:95, Hex:"0X5F", StructName:"SpawnPosition", ProtoTypeName:"packet_spawn_position", AltName:"ClientboundSetDefaultSpawnPosition"}
 				return play_clientbound.NewSpawnPosition(), nil
 		case 96: // Play.Clientbound[{96}] = generator.packetData{Name:"ScoreboardDisplayObjective", ID:96, Hex:"0X60", StructName:"ScoreboardDisplayObjective", ProtoTypeName:"packet_scoreboard_display_objective", AltName:"ClientboundSetDisplayObjective"}
 				return play_clientbound.NewScoreboardDisplayObjective(), nil

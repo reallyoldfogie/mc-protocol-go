@@ -11,6 +11,68 @@ import (
 	"log"
 )
 
+type EntityMetadata struct {
+	EndVal  pk.UnsignedByte
+	Entries []EntityMetadataEntry
+}
+
+func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
+	var bytesRead int64
+
+	// Read entries in a loop until we encounter the terminator (endVal)
+	for {
+		// Read the next byte to check if it's the terminator
+		var marker pk.UnsignedByte
+		bytesRead, err = marker.ReadFrom(r)
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
+		}
+
+		// Check if this is the terminator
+		if marker == 255 {
+			t.EndVal = marker
+			break
+		}
+
+		// Not a terminator - this byte is the Key field of an entry
+		// Prepend the marker byte back to the reader so ReadFrom can read it
+		var entry EntityMetadataEntry
+
+		markerBuf := []byte{byte(marker)}
+		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
+		bytesRead, err = entry.ReadFrom(combinedReader)
+
+		totalRead += bytesRead
+		if err != nil {
+			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
+		}
+		t.Entries = append(t.Entries, entry)
+	}
+
+	return totalRead, nil
+}
+
+func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
+	var bytesWritten int64
+
+	// Write all entries
+	for _, entry := range t.Entries {
+		bytesWritten, err = entry.WriteTo(w)
+		if err != nil {
+			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
+		}
+		totalWritten += bytesWritten
+	}
+
+	// Write terminator
+	t.EndVal = 255
+	bytesWritten, err = t.EndVal.WriteTo(w)
+	totalWritten += bytesWritten
+
+	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
+}
+
 type EntityMetadataEntryType struct {
 	Value string
 }
@@ -87,82 +149,6 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "villagerType",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "villagerProfession",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "level",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type EntityMetadataEntryValueVillagerData struct {
-	// "varint"
-	VillagerType pk.VarInt
-	// "varint"
-	VillagerProfession pk.VarInt
-	// "varint"
-	Level pk.VarInt
-}
-
-func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.VillagerType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
-	}
-	bytesRead, err = t.VillagerProfession.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
-	}
-	bytesRead, err = t.Level.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Level")
-	}
-
-	return totalBytes, nil
-}
-
-func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[EntityMetadataEntryValueVillagerData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.VillagerType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VillagerProfession.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Level.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
-
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
 //	      "name": "pitch",
 //	      "type": "f32"
 //	    },
@@ -230,7 +216,83 @@ func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int6
 	return totalBytes, nil
 }
 
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "villagerType",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "villagerProfession",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "level",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type EntityMetadataEntryValueVillagerData struct {
+	// "varint"
+	VillagerType pk.VarInt
+	// "varint"
+	VillagerProfession pk.VarInt
+	// "varint"
+	Level pk.VarInt
+}
+
+func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.VillagerType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
+	}
+	bytesRead, err = t.VillagerProfession.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
+	}
+	bytesRead, err = t.Level.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Level")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityMetadataEntryValueVillagerData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.VillagerType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.VillagerProfession.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Level.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
+
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
 
 type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
 
@@ -1090,66 +1152,4 @@ func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, e
 		return totalBytes, err
 	}
 	return totalBytes, nil
-}
-
-type EntityMetadata struct {
-	EndVal  pk.UnsignedByte
-	Entries []EntityMetadataEntry
-}
-
-func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
-	var bytesRead int64
-
-	// Read entries in a loop until we encounter the terminator (endVal)
-	for {
-		// Read the next byte to check if it's the terminator
-		var marker pk.UnsignedByte
-		bytesRead, err = marker.ReadFrom(r)
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop marker")
-		}
-
-		// Check if this is the terminator
-		if marker == 255 {
-			t.EndVal = marker
-			break
-		}
-
-		// Not a terminator - this byte is the Key field of an entry
-		// Prepend the marker byte back to the reader so ReadFrom can read it
-		var entry EntityMetadataEntry
-
-		markerBuf := []byte{byte(marker)}
-		combinedReader := io.MultiReader(bytes.NewReader(markerBuf), r)
-		bytesRead, err = entry.ReadFrom(combinedReader)
-
-		totalRead += bytesRead
-		if err != nil {
-			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
-		}
-		t.Entries = append(t.Entries, entry)
-	}
-
-	return totalRead, nil
-}
-
-func (t EntityMetadata) WriteTo(w io.Writer) (totalWritten int64, err error) {
-	var bytesWritten int64
-
-	// Write all entries
-	for _, entry := range t.Entries {
-		bytesWritten, err = entry.WriteTo(w)
-		if err != nil {
-			return totalWritten + bytesWritten, errors.Wrap(err, "failed to write entity metadata loop entry")
-		}
-		totalWritten += bytesWritten
-	}
-
-	// Write terminator
-	t.EndVal = 255
-	bytesWritten, err = t.EndVal.WriteTo(w)
-	totalWritten += bytesWritten
-
-	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
 }

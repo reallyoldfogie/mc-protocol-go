@@ -138,6 +138,46 @@ func (b CommandNodeFlags) WriteTo(w io.Writer) (int64, error) {
 	return int64(nn), err
 }
 
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData1 struct {
+	// "string"
+	Name pk.String
+}
+
+func (t *CommandNodeExtraNodeData1) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData1) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData1.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type CommandNodeExtraNodeData2Parser struct {
 	Value string
 }
@@ -230,6 +270,432 @@ func (m CommandNodeExtraNodeData2Parser) WriteTo(w io.Writer) (int64, error) {
 }
 
 //
+type CommandNodeExtraNodeData2PropertiesBrigadierLongFlags struct {
+	Unused     int64
+	MaxPresent int64
+	MinPresent int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesBrigadierLongFlags) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (6 bits, signed=false)
+	unused_mask := uint64((1 << 6) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 6
+	// Extract max_present (1 bits, signed=false)
+	max_present_mask := uint64((1 << 1) - 1)
+	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
+	b.MaxPresent = int64(max_present_value)
+	currentOffset += 1
+	// Extract min_present (1 bits, signed=false)
+	min_present_mask := uint64((1 << 1) - 1)
+	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
+	b.MinPresent = int64(min_present_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesBrigadierLongFlags) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (6 bits)
+	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 6)
+	currentOffset += 6
+	// Pack max_present (1 bits)
+	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
+	packed |= max_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+	// Pack min_present (1 bits)
+	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
+	packed |= min_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "flags",
+//	      "type": [
+//	        "bitfield",
+//	        [
+//	          {
+//	            "name": "unused",
+//	            "size": 6,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "max_present",
+//	            "size": 1,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "min_present",
+//	            "size": 1,
+//	            "signed": false
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "min",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/min_present",
+//	          "fields": {
+//	            "1": "i64"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "max",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/max_present",
+//	          "fields": {
+//	            "1": "i64"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesBrigadierLong struct {
+	// [
+	//                                     "bitfield",
+	//                                     [
+	//                                       {
+	//                                         "name": "unused",
+	//                                         "size": 6,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "max_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "min_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       }
+	//                                     ]
+	//                                   ]
+	Flags CommandNodeExtraNodeData2PropertiesBrigadierLongFlags
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/min_present",
+	//                                       "fields": {
+	//                                         "1": "i64"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Min pk.Field
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/max_present",
+	//                                       "fields": {
+	//                                         "1": "i64"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Max pk.Field
+}
+
+func (t *CommandNodeExtraNodeData2PropertiesBrigadierLong) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Flags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+	// Switch field Min based on flags/min_present
+	// Check bitflag member
+	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
+
+	switch compareValueMin {
+	case "1":
+		var val pk.Long
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
+		}
+		t.Min = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
+		}
+		t.Min = &__void
+	}
+
+	// Switch field Max based on flags/max_present
+	// Check bitflag member
+	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
+
+	switch compareValueMax {
+	case "1":
+		var val pk.Long
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
+		}
+		t.Max = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
+		}
+		t.Max = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData2PropertiesBrigadierLong) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierLong.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Flags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Min based on flags/min_present
+	if t.Min != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Min.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
+		}
+	}
+	// Switch field Max based on flags/max_present
+	if t.Max != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Max.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
+		}
+	}
+	return totalBytes, nil
+}
+
+type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
+	Value string
+}
+
+var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
+	0: "SINGLE_WORD",
+	1: "QUOTABLE_PHRASE",
+	2: "GREEDY_PHRASE",
+}
+
+func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
+	}
+
+	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
+}
+
+//
+type CommandNodeExtraNodeData2PropertiesMinecraftEntity struct {
+	Unused            int64
+	OnlyAllowPlayers  int64
+	OnlyAllowEntities int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesMinecraftEntity) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (6 bits, signed=false)
+	unused_mask := uint64((1 << 6) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 6
+	// Extract onlyAllowPlayers (1 bits, signed=false)
+	onlyAllowPlayers_mask := uint64((1 << 1) - 1)
+	onlyAllowPlayers_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowPlayers_mask
+	b.OnlyAllowPlayers = int64(onlyAllowPlayers_value)
+	currentOffset += 1
+	// Extract onlyAllowEntities (1 bits, signed=false)
+	onlyAllowEntities_mask := uint64((1 << 1) - 1)
+	onlyAllowEntities_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowEntities_mask
+	b.OnlyAllowEntities = int64(onlyAllowEntities_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesMinecraftEntity) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (6 bits)
+	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 6)
+	currentOffset += 6
+	// Pack onlyAllowPlayers (1 bits)
+	onlyAllowPlayers_value := uint64(b.OnlyAllowPlayers) & ((1 << 1) - 1)
+	packed |= onlyAllowPlayers_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+	// Pack onlyAllowEntities (1 bits)
+	onlyAllowEntities_value := uint64(b.OnlyAllowEntities) & ((1 << 1) - 1)
+	packed |= onlyAllowEntities_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
+//
 type CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder struct {
 	Unused        int64
 	AllowMultiple int64
@@ -309,82 +775,299 @@ func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Wr
 	return int64(nn), err
 }
 
+//
+type CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags struct {
+	Unused     int64
+	MaxPresent int64
+	MinPresent int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (6 bits, signed=false)
+	unused_mask := uint64((1 << 6) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 6
+	// Extract max_present (1 bits, signed=false)
+	max_present_mask := uint64((1 << 1) - 1)
+	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
+	b.MaxPresent = int64(max_present_value)
+	currentOffset += 1
+	// Extract min_present (1 bits, signed=false)
+	min_present_mask := uint64((1 << 1) - 1)
+	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
+	b.MinPresent = int64(min_present_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (6 bits)
+	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 6)
+	currentOffset += 6
+	// Pack max_present (1 bits)
+	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
+	packed |= max_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+	// Pack min_present (1 bits)
+	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
+	packed |= min_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
 // Protodef: [
 //
 //	  "container",
 //	  [
+//	    {
+//	      "name": "flags",
+//	      "type": [
+//	        "bitfield",
+//	        [
+//	          {
+//	            "name": "unused",
+//	            "size": 6,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "max_present",
+//	            "size": 1,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "min_present",
+//	            "size": 1,
+//	            "signed": false
+//	          }
+//	        ]
+//	      ]
+//	    },
 //	    {
 //	      "name": "min",
-//	      "type": "i32"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
-	// "i32"
-	Min pk.Int
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Min.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Min")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Min.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/min_present",
+//	          "fields": {
+//	            "1": "f32"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
+//	    },
 //	    {
-//	      "name": "registry",
-//	      "type": "string"
+//	      "name": "max",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/max_present",
+//	          "fields": {
+//	            "1": "f32"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector struct {
-	// "string"
-	Registry pk.String
+type CommandNodeExtraNodeData2PropertiesBrigadierFloat struct {
+	// [
+	//                                     "bitfield",
+	//                                     [
+	//                                       {
+	//                                         "name": "unused",
+	//                                         "size": 6,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "max_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "min_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       }
+	//                                     ]
+	//                                   ]
+	Flags CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/min_present",
+	//                                       "fields": {
+	//                                         "1": "f32"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Min pk.Field
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/max_present",
+	//                                       "fields": {
+	//                                         "1": "f32"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Max pk.Field
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesBrigadierFloat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
+	bytesRead, err = t.Flags.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+	// Switch field Min based on flags/min_present
+	// Check bitflag member
+	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
+
+	switch compareValueMin {
+	case "1":
+		var val pk.Float
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
+		}
+		t.Min = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
+		}
+		t.Min = &__void
+	}
+
+	// Switch field Max based on flags/max_present
+	// Check bitflag member
+	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
+
+	switch compareValueMax {
+	case "1":
+		var val pk.Float
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
+		}
+		t.Max = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
+		}
+		t.Max = &__void
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesBrigadierFloat) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierFloat.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
+	bytesWritten, err = t.Flags.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
+	}
+	// Switch field Min based on flags/min_present
+	if t.Min != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Min.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
+		}
+	}
+	// Switch field Max based on flags/max_present
+	if t.Max != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Max.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
+		}
 	}
 	return totalBytes, nil
 }
@@ -686,299 +1369,42 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierInteger) WriteTo(w io.Writer
 	return totalBytes, nil
 }
 
-//
-type CommandNodeExtraNodeData2PropertiesBrigadierLongFlags struct {
-	Unused     int64
-	MaxPresent int64
-	MinPresent int64
-}
-
-func (b *CommandNodeExtraNodeData2PropertiesBrigadierLongFlags) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (6 bits, signed=false)
-	unused_mask := uint64((1 << 6) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 6
-	// Extract max_present (1 bits, signed=false)
-	max_present_mask := uint64((1 << 1) - 1)
-	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
-	b.MaxPresent = int64(max_present_value)
-	currentOffset += 1
-	// Extract min_present (1 bits, signed=false)
-	min_present_mask := uint64((1 << 1) - 1)
-	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
-	b.MinPresent = int64(min_present_value)
-	currentOffset += 1
-
-	return int64(nn), nil
-}
-
-func (b CommandNodeExtraNodeData2PropertiesBrigadierLongFlags) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierLongFlags total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (6 bits)
-	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 6)
-	currentOffset += 6
-	// Pack max_present (1 bits)
-	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
-	packed |= max_present_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-	// Pack min_present (1 bits)
-	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
-	packed |= min_present_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
 // Protodef: [
 //
 //	  "container",
 //	  [
-//	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitfield",
-//	        [
-//	          {
-//	            "name": "unused",
-//	            "size": 6,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "max_present",
-//	            "size": 1,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "min_present",
-//	            "size": 1,
-//	            "signed": false
-//	          }
-//	        ]
-//	      ]
-//	    },
 //	    {
 //	      "name": "min",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/min_present",
-//	          "fields": {
-//	            "1": "i64"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "max",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/max_present",
-//	          "fields": {
-//	            "1": "i64"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
+//	      "type": "i32"
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesBrigadierLong struct {
-	// [
-	//                                     "bitfield",
-	//                                     [
-	//                                       {
-	//                                         "name": "unused",
-	//                                         "size": 6,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "max_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "min_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       }
-	//                                     ]
-	//                                   ]
-	Flags CommandNodeExtraNodeData2PropertiesBrigadierLongFlags
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/min_present",
-	//                                       "fields": {
-	//                                         "1": "i64"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Min pk.Field
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/max_present",
-	//                                       "fields": {
-	//                                         "1": "i64"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Max pk.Field
+type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
+	// "i32"
+	Min pk.Int
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesBrigadierLong) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Flags.ReadFrom(r)
+	bytesRead, err = t.Min.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-	// Switch field Min based on flags/min_present
-	// Check bitflag member
-	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
-
-	switch compareValueMin {
-	case "1":
-		var val pk.Long
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
-		}
-		t.Min = &val
-	default:
-		// Void case - no data to read
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
-		}
-		t.Min = &__void
-	}
-
-	// Switch field Max based on flags/max_present
-	// Check bitflag member
-	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
-
-	switch compareValueMax {
-	case "1":
-		var val pk.Long
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
-		}
-		t.Max = &val
-	default:
-		// Void case - no data to read
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
-		}
-		t.Max = &__void
+		return totalBytes, errors.Wrap(err, "failed to read field Min")
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesBrigadierLong) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierLong.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Flags.WriteTo(w)
+	bytesWritten, err = t.Min.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
-	}
-	// Switch field Min based on flags/min_present
-	if t.Min != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Min.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
-		}
-	}
-	// Switch field Max based on flags/max_present
-	if t.Max != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Max.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
-		}
 	}
 	return totalBytes, nil
 }
@@ -993,12 +1419,12 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierLong) WriteTo(w io.Writer) (
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag struct {
 	// "string"
 	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
@@ -1009,143 +1435,11 @@ func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-//
-type CommandNodeExtraNodeData2PropertiesMinecraftEntity struct {
-	Unused            int64
-	OnlyAllowPlayers  int64
-	OnlyAllowEntities int64
-}
-
-func (b *CommandNodeExtraNodeData2PropertiesMinecraftEntity) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (6 bits, signed=false)
-	unused_mask := uint64((1 << 6) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 6
-	// Extract onlyAllowPlayers (1 bits, signed=false)
-	onlyAllowPlayers_mask := uint64((1 << 1) - 1)
-	onlyAllowPlayers_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowPlayers_mask
-	b.OnlyAllowPlayers = int64(onlyAllowPlayers_value)
-	currentOffset += 1
-	// Extract onlyAllowEntities (1 bits, signed=false)
-	onlyAllowEntities_mask := uint64((1 << 1) - 1)
-	onlyAllowEntities_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowEntities_mask
-	b.OnlyAllowEntities = int64(onlyAllowEntities_value)
-	currentOffset += 1
-
-	return int64(nn), nil
-}
-
-func (b CommandNodeExtraNodeData2PropertiesMinecraftEntity) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (6 bits)
-	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 6)
-	currentOffset += 6
-	// Pack onlyAllowPlayers (1 bits)
-	onlyAllowPlayers_value := uint64(b.OnlyAllowPlayers) & ((1 << 1) - 1)
-	packed |= onlyAllowPlayers_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-	// Pack onlyAllowEntities (1 bits)
-	onlyAllowEntities_value := uint64(b.OnlyAllowEntities) & ((1 << 1) - 1)
-	packed |= onlyAllowEntities_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "registry",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResource struct {
-	// "string"
-	Registry pk.String
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResource) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResource.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
@@ -1205,12 +1499,12 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) WriteTo(w io.Wr
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag struct {
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector struct {
 	// "string"
 	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
@@ -1221,11 +1515,11 @@ func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) ReadFrom(r i
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
@@ -1235,96 +1529,44 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.
 	return totalBytes, nil
 }
 
+// Protodef: [
 //
-type CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags struct {
-	Unused     int64
-	MaxPresent int64
-	MinPresent int64
+//	  "container",
+//	  [
+//	    {
+//	      "name": "registry",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
+	// "string"
+	Registry pk.String
 }
 
-func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Registry.ReadFrom(r)
+	totalBytes += bytesRead
 	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags")
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
 	}
 
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (6 bits, signed=false)
-	unused_mask := uint64((1 << 6) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 6
-	// Extract max_present (1 bits, signed=false)
-	max_present_mask := uint64((1 << 1) - 1)
-	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
-	b.MaxPresent = int64(max_present_value)
-	currentOffset += 1
-	// Extract min_present (1 bits, signed=false)
-	min_present_mask := uint64((1 << 1) - 1)
-	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
-	b.MinPresent = int64(min_present_value)
-	currentOffset += 1
-
-	return int64(nn), nil
+	return totalBytes, nil
 }
 
-func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
 
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Registry.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (6 bits)
-	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 6)
-	currentOffset += 6
-	// Pack max_present (1 bits)
-	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
-	packed |= max_present_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-	// Pack min_present (1 bits)
-	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
-	packed |= min_present_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
+	return totalBytes, nil
 }
 
 // Protodef: [
@@ -1332,202 +1574,37 @@ func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Wri
 //	  "container",
 //	  [
 //	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitfield",
-//	        [
-//	          {
-//	            "name": "unused",
-//	            "size": 6,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "max_present",
-//	            "size": 1,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "min_present",
-//	            "size": 1,
-//	            "signed": false
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "min",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/min_present",
-//	          "fields": {
-//	            "1": "f32"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "max",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/max_present",
-//	          "fields": {
-//	            "1": "f32"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
+//	      "name": "registry",
+//	      "type": "string"
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesBrigadierFloat struct {
-	// [
-	//                                     "bitfield",
-	//                                     [
-	//                                       {
-	//                                         "name": "unused",
-	//                                         "size": 6,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "max_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "min_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       }
-	//                                     ]
-	//                                   ]
-	Flags CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/min_present",
-	//                                       "fields": {
-	//                                         "1": "f32"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Min pk.Field
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/max_present",
-	//                                       "fields": {
-	//                                         "1": "f32"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Max pk.Field
+type CommandNodeExtraNodeData2PropertiesMinecraftResource struct {
+	// "string"
+	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesBrigadierFloat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResource) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Flags.ReadFrom(r)
+	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-	// Switch field Min based on flags/min_present
-	// Check bitflag member
-	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
-
-	switch compareValueMin {
-	case "1":
-		var val pk.Float
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
-		}
-		t.Min = &val
-	default:
-		// Void case - no data to read
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
-		}
-		t.Min = &__void
-	}
-
-	// Switch field Max based on flags/max_present
-	// Check bitflag member
-	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
-
-	switch compareValueMax {
-	case "1":
-		var val pk.Float
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
-		}
-		t.Max = &val
-	default:
-		// Void case - no data to read
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
-		}
-		t.Max = &__void
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesBrigadierFloat) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierFloat.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResource.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Flags.WriteTo(w)
+	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
-	}
-	// Switch field Min based on flags/min_present
-	if t.Min != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Min.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
-		}
-	}
-	// Switch field Max based on flags/max_present
-	if t.Max != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Max.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
-		}
 	}
 	return totalBytes, nil
 }
@@ -1827,43 +1904,6 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierDouble) WriteTo(w io.Writer)
 		}
 	}
 	return totalBytes, nil
-}
-
-type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
-	Value string
-}
-
-var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
-	0: "SINGLE_WORD",
-	1: "QUOTABLE_PHRASE",
-	2: "GREEDY_PHRASE",
-}
-
-func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
-	}
-
-	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
 }
 
 // Protodef: [
@@ -3284,46 +3324,6 @@ func (t CommandNodeExtraNodeData2) WriteToWithParentContext(w io.Writer, ctx mod
 		return totalBytes, err
 	}
 	bytesWritten, err = t.SuggestionType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData1 struct {
-	// "string"
-	Name pk.String
-}
-
-func (t *CommandNodeExtraNodeData1) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData1) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData1.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

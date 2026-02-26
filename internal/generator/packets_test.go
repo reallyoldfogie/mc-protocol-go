@@ -395,7 +395,7 @@ func TestVersionToPkg(t *testing.T) {
 		{
 			name:    "version with rc",
 			version: "1.21-rc1",
-			want:    "v1_21-rc1",
+			want:    "v1_21_rc1",
 		},
 	}
 

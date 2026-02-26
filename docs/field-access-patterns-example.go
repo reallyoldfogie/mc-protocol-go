@@ -46,8 +46,7 @@ func ExampleVersionAgnosticAccess(pkt models.PacketMarshaller) {
 // Use typed interfaces for fields that have stable types across versions.
 // This gives you some type safety while remaining version-agnostic.
 func ExampleSemiAgnosticAccess(pkt models.PacketMarshaller) {
-	// Check if packet has Count field (multiple types across versions)
-	// Try as pk.VarInt first (most common)
+	// Check if packet has Count field
 	if getter, ok := pkt.(models.CountGetter[pk.VarInt]); ok {
 		count := getter.GetCount() // Returns pk.VarInt
 		fmt.Printf("Count (pk.VarInt): %d\n", count)
@@ -56,10 +55,6 @@ func ExampleSemiAgnosticAccess(pkt models.PacketMarshaller) {
 		if setter, ok := pkt.(models.CountSetter[pk.VarInt]); ok {
 			setter.SetCount(count + 1)
 		}
-	} else if getter, ok := pkt.(models.CountGetter[pk.Short]); ok {
-		// Some versions use pk.Short
-		count := getter.GetCount() // Returns pk.Short
-		fmt.Printf("Count (pk.Short): %d\n", count)
 	}
 
 	// For fields with multiple types across versions, use generics
