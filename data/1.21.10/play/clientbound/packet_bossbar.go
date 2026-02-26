@@ -234,13 +234,14 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 		}
 		p.Title = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Title] default case")
+			return errors.Wrap(err, "failed to read void switch field Title default case")
 		}
-		p.Title = &val
+		p.Title = &__void
 	}
 
 	// Switch field Health based on action
@@ -265,13 +266,14 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 		}
 		p.Health = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Health] default case")
+			return errors.Wrap(err, "failed to read void switch field Health default case")
 		}
-		p.Health = &val
+		p.Health = &__void
 	}
 
 	// Switch field Color based on action
@@ -296,13 +298,14 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 		}
 		p.Color = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Color] default case")
+			return errors.Wrap(err, "failed to read void switch field Color default case")
 		}
-		p.Color = &val
+		p.Color = &__void
 	}
 
 	// Switch field Dividers based on action
@@ -327,13 +330,14 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 		}
 		p.Dividers = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Dividers] default case")
+			return errors.Wrap(err, "failed to read void switch field Dividers default case")
 		}
-		p.Dividers = &val
+		p.Dividers = &__void
 	}
 
 	// Switch field Flags based on action
@@ -358,13 +362,14 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 		}
 		p.Flags = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Flags] default case")
+			return errors.Wrap(err, "failed to read void switch field Flags default case")
 		}
-		p.Flags = &val
+		p.Flags = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -553,13 +558,14 @@ func (t *BossBar) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Title = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Title default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Title default case")
 		}
-		t.Title = &val
+		t.Title = &__void
 	}
 
 	// Switch field Health based on action
@@ -584,13 +590,14 @@ func (t *BossBar) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Health = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Health default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Health default case")
 		}
-		t.Health = &val
+		t.Health = &__void
 	}
 
 	// Switch field Color based on action
@@ -615,13 +622,14 @@ func (t *BossBar) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Color = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Color default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Color default case")
 		}
-		t.Color = &val
+		t.Color = &__void
 	}
 
 	// Switch field Dividers based on action
@@ -646,13 +654,14 @@ func (t *BossBar) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Dividers = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Dividers default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Dividers default case")
 		}
-		t.Dividers = &val
+		t.Dividers = &__void
 	}
 
 	// Switch field Flags based on action
@@ -677,13 +686,14 @@ func (t *BossBar) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Flags = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Flags default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Flags default case")
 		}
-		t.Flags = &val
+		t.Flags = &__void
 	}
 
 	return totalBytes, nil

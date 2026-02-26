@@ -4,8 +4,6 @@
 	var (
 		VersionProtocol = map[string]uint { 
 			"1.21.10": 773,
-			"1.21.11": 774,
-			"1.21.9": 773,
 		}
 	)
 	

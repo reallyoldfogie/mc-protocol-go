@@ -114,13 +114,14 @@ func (p *HideMessage) Scan(packet pk.Packet) error {
 		}
 		p.Signature = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Signature] default case")
+			return errors.Wrap(err, "failed to read void switch field Signature default case")
 		}
-		p.Signature = &val
+		p.Signature = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -206,13 +207,14 @@ func (t *HideMessage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Signature = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Signature default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Signature default case")
 		}
-		t.Signature = &val
+		t.Signature = &__void
 	}
 
 	return totalBytes, nil

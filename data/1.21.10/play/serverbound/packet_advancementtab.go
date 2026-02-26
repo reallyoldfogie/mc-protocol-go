@@ -104,13 +104,14 @@ func (p *AdvancementTab) Scan(packet pk.Packet) error {
 		}
 		p.TabId = &val
 	case "1":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[TabId] case 1")
+			return errors.Wrap(err, "failed to read void switch field TabId case 1")
 		}
-		p.TabId = &val
+		p.TabId = &__void
 	default:
 		// No explicit default; treat as void (no data)
 		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
@@ -207,13 +208,14 @@ func (t *AdvancementTab) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.TabId = &val
 	case "1":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field TabId case 1")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field TabId case 1")
 		}
-		t.TabId = &val
+		t.TabId = &__void
 	default:
 		// No explicit default; treat as void (no data)
 		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"

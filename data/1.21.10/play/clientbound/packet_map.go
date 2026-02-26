@@ -301,13 +301,14 @@ func (p *Map) Scan(packet pk.Packet) error {
 
 	switch compareValueRows {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Rows] case 0")
+			return errors.Wrap(err, "failed to read void switch field Rows case 0")
 		}
-		p.Rows = &val
+		p.Rows = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -324,13 +325,14 @@ func (p *Map) Scan(packet pk.Packet) error {
 
 	switch compareValueX {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[X] case 0")
+			return errors.Wrap(err, "failed to read void switch field X case 0")
 		}
-		p.X = &val
+		p.X = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -347,13 +349,14 @@ func (p *Map) Scan(packet pk.Packet) error {
 
 	switch compareValueY {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Y] case 0")
+			return errors.Wrap(err, "failed to read void switch field Y case 0")
 		}
-		p.Y = &val
+		p.Y = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -370,13 +373,14 @@ func (p *Map) Scan(packet pk.Packet) error {
 
 	switch compareValueData {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Data] case 0")
+			return errors.Wrap(err, "failed to read void switch field Data case 0")
 		}
-		p.Data = &val
+		p.Data = &__void
 	default:
 		var val pk.ByteArray
 		bytesRead, err = val.ReadFrom(r)
@@ -608,13 +612,14 @@ func (t *Map) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueRows {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Rows case 0")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Rows case 0")
 		}
-		t.Rows = &val
+		t.Rows = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -631,13 +636,14 @@ func (t *Map) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueX {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field X case 0")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field X case 0")
 		}
-		t.X = &val
+		t.X = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -654,13 +660,14 @@ func (t *Map) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueY {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Y case 0")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Y case 0")
 		}
-		t.Y = &val
+		t.Y = &__void
 	default:
 		var val pk.UnsignedByte
 		bytesRead, err = val.ReadFrom(r)
@@ -677,13 +684,14 @@ func (t *Map) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueData {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case 0")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case 0")
 		}
-		t.Data = &val
+		t.Data = &__void
 	default:
 		var val pk.ByteArray
 		bytesRead, err = val.ReadFrom(r)

@@ -6,15 +6,17 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Varint = pk.VarInt
+type ContainerID = pk.VarInt
 
-type I64 = pk.Long
+type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
 
-type bool = pk.Boolean
+type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
 
-type I16 = pk.Short
+type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
 
-type U64 = models.UInt64
+type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
 type ChatSession = models.Option[models.Void]
 
@@ -24,31 +26,23 @@ type PlayerSkinPatchCape = models.Option[pk.String]
 
 type PlayerSkinPatchElytra = models.Option[pk.String]
 
-type Optvarint = pk.VarInt
-
-type I8 = pk.Byte
+type ByteArray = pk.ByteArray
 
 type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
-type U32 = models.UInt32
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type F64 = pk.Double
+type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
 
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
 
-type F32 = pk.Float
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
-type U16 = pk.UnsignedShort
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-type ContainerID = pk.VarInt
-
-type PartialResolvableProfileName = models.Option[pk.String]
-
-type PartialResolvableProfileUuid = models.Option[pk.UUID]
-
-type I32 = pk.Int
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
 type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
@@ -58,20 +52,6 @@ type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
 type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
-
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
-
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
-
-type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
-
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
 type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
@@ -80,14 +60,20 @@ type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
-type ByteArray = pk.ByteArray
-
 type GameProfilePropertySignature = models.Option[pk.String]
 
-type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
+type DebugSubscriptionUpdateUnnamedType0006DefaultPayloadBreezesAttackTarget = models.Option[pk.VarInt]
 
-type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
+type DebugSubscriptionUpdateUnnamedType0006DefaultPayloadBreezesJumpTarget = models.Option[Position]
 
-type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
+type DebugSubscriptionUpdateUnnamedType0006DefaultPayloadBeesHivePos = models.Option[Position]
 
-type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
+type DebugSubscriptionUpdateUnnamedType0006DefaultPayloadBeesFlowerPos = models.Option[Position]
+
+type PartialResolvableProfileName = models.Option[pk.String]
+
+type PartialResolvableProfileUuid = models.Option[pk.UUID]
+
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type Optvarint = pk.VarInt

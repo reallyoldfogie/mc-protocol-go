@@ -1907,7 +1907,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return totalBytes, fmt.Errorf("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
 		{{- end}}
 		}
-	{{- else if ne $type.TypeName "[]byte"}}
+	{{- else if and (ne $type.TypeName "[]byte") (ne $type.TypeName "models.Void") (ne $type.TypeName "struct{}")}}
 	case "{{$key}}":
 		var val {{$type.TypeName}}
 		{{- if typeRequiresParentContext $type}}
@@ -1925,11 +1925,25 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} case {{$key}}")
 		}
 		{{$prefix}}{{$fieldName}} = &val
+	{{- else if or (eq $type.TypeName "[]byte") (eq $type.TypeName "models.Void") (eq $type.TypeName "struct{}")}}
+	case "{{$key}}":
+		// Void case - no data to read
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field {{$fieldName}} case {{$key}}")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
+		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- if $sw.Default}}
-	{{- if ne $sw.Default.TypeName "[]byte"}}
+	{{- if and (ne $sw.Default.TypeName "[]byte") (ne $sw.Default.TypeName "models.Void") (ne $sw.Default.TypeName "struct{}")}}
 	default:
 		var val {{$sw.Default.TypeName}}
 		bytesRead, err = val.ReadFrom(r)
@@ -1941,7 +1955,17 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	{{- else}}
 	default:
 		// Void case - no data to read
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field {{$fieldName}} default case")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
 		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
     {{- else}}
     default:
@@ -2042,7 +2066,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return errors.New("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
 		{{- end}}
 		}
-	{{- else if ne $type.TypeName "[]byte"}}
+	{{- else if and (ne $type.TypeName "[]byte") (ne $type.TypeName "models.Void") (ne $type.TypeName "struct{}")}}
 	case "{{$key}}":
 		var val {{$type.TypeName}}
 		bytesRead, err = val.ReadFrom(r)
@@ -2051,11 +2075,25 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return errors.Wrap(err,"scanning packet field[{{$fieldName}}] case {{$key}}")
 		}
 		{{$prefix}}{{$fieldName}} = &val
+	{{- else if or (eq $type.TypeName "[]byte") (eq $type.TypeName "models.Void") (eq $type.TypeName "struct{}")}}
+	case "{{$key}}":
+		// Void case - no data to read
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return errors.Wrap(err, "failed to read void switch field {{$fieldName}} case {{$key}}")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
+		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- if $sw.Default}}
-	{{- if ne $sw.Default.TypeName "[]byte"}}
+	{{- if and (ne $sw.Default.TypeName "[]byte") (ne $sw.Default.TypeName "models.Void") (ne $sw.Default.TypeName "struct{}")}}
 	default:
 		var val {{$sw.Default.TypeName}}
 		bytesRead, err = val.ReadFrom(r)
@@ -2067,7 +2105,17 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	{{- else}}
 	default:
 		// Void case - no data to read
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return errors.Wrap(err, "failed to read void switch field {{$fieldName}} default case")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
 		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
     {{- else}}
     default:
@@ -2168,7 +2216,7 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return totalBytes, errors.New("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
 		{{- end}}
 		}
-	{{- else if ne $type.TypeName "[]byte"}}
+	{{- else if and (ne $type.TypeName "[]byte") (ne $type.TypeName "models.Void") (ne $type.TypeName "struct{}")}}
 	case "{{$key}}":
 		var val {{$type.TypeName}}
 		{{- if typeRequiresParentContext $type}}
@@ -2181,11 +2229,25 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 			return totalBytes, errors.Wrap(err, "failed to read switch field {{$fieldName}} case {{$key}} with parent context")
 		}
 		{{$prefix}}{{$fieldName}} = &val
+	{{- else if or (eq $type.TypeName "[]byte") (eq $type.TypeName "models.Void") (eq $type.TypeName "struct{}")}}
+	case "{{$key}}":
+		// Void case - no data to read
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field {{$fieldName}} case {{$key}}")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
+		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- end}}
 	{{- if $sw.Default}}
-	{{- if ne $sw.Default.TypeName "[]byte"}}
+	{{- if and (ne $sw.Default.TypeName "[]byte") (ne $sw.Default.TypeName "models.Void") (ne $sw.Default.TypeName "struct{}")}}
 	default:
 		var val {{$sw.Default.TypeName}}
 		bytesRead, err = val.ReadFrom(r)
@@ -2196,7 +2258,17 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 		{{$prefix}}{{$fieldName}} = &val
 	{{- else}}
 	default:
+		{{- if eq (resolveFieldType $container $.field) "pk.Field"}}
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field {{$fieldName}} default case")
+		}
+		{{$prefix}}{{$fieldName}} = &__void
+		{{- else}}
 		{{$prefix}}{{$fieldName}} = struct{}{}
+		{{- end}}
 	{{- end}}
     {{- else}}
     default:
@@ -4031,6 +4103,91 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 						field.Type.TypeName = "pk.Field"       // Treat as regular switch field
 						field.Type.Extras = option.Type.Extras // Preserve switch metadata
 						// Keep field.Type.Extras for template to access switch info
+
+						// CRITICAL: Ensure the comparison field exists in the container
+						// For optional switches like ["option", ["switch", {"compareTo": "type", ...}]],
+						// the comparison field (e.g., "type") must be a sibling field in the container
+						if sw, ok := option.Type.Extras.(*datatypes.Switch); ok && sw.CompareTo != "" {
+							compareFieldName := getCompareToFieldName(sw)
+							if compareFieldName != "" {
+								// Check if the comparison field exists in the container
+								fieldExists := false
+								for _, f := range container.Fields {
+									if toIdentifier(f.Name) == compareFieldName {
+										fieldExists = true
+										break
+									}
+								}
+
+								if fieldExists {
+									// Mark the container as requiring context for this switch
+									// so the template knows to use the parent field for comparison
+									if _, exists := parentContextRequirements[t.Name]; !exists {
+										parentContextRequirements[t.Name] = []string{}
+									}
+									parentContextRequirements[t.Name] = append(parentContextRequirements[t.Name], compareFieldName)
+									fmt.Printf("DEBUG [optional-switch]: Marked container '%s' as requiring context for switch comparison field '%s'\n",
+										t.Name, compareFieldName)
+								} else {
+									fmt.Printf("WARNING [optional-switch]: Container '%s' field '%s' references comparison field '%s' which is NOT FOUND in container\n",
+										t.Name, field.Name, compareFieldName)
+								}
+							}
+						}
+
+						// Process switch case types to generate proper names for containers
+						// This handles inline containers in switch cases like ["container", [...]]
+						if sw, ok := option.Type.Extras.(*datatypes.Switch); ok {
+							// Process each switch case
+							for caseName, caseType := range sw.Fields {
+								if caseType == nil {
+									continue
+								}
+								caseTypeLower := strings.ToLower(caseType.TypeName)
+
+								// Check if this case contains a container or other complex type
+								if caseType.Extras != nil && (caseTypeLower == "" || caseTypeLower == "container" || caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper") {
+									// Generate a child type for this complex case
+									childTypeName := toIdentifier(parentName + "_" + field.Name + "_" + caseName)
+									childType := *caseType
+									childType.Name = childTypeName
+									if childType.Extras != nil {
+										childType.Extras.SetName(childTypeName)
+									}
+									// Process and add the child type
+									childTypes := processType(&childType, baseTypes, false, isGeneratingBaseTypes, nil)
+									types = append(types, childTypes...)
+									// Update the case to reference the new type
+									caseType.Name = childTypeName
+									caseType.TypeName = childTypeName
+									// Clear Extras since the fields have been extracted
+									caseType.Extras = nil
+									sw.Fields[caseName] = caseType
+								}
+							}
+
+							// Process default case if present
+							if sw.Default != nil {
+								defaultTypeLower := strings.ToLower(sw.Default.TypeName)
+								if sw.Default.Extras != nil && (defaultTypeLower == "" || defaultTypeLower == "container" || defaultTypeLower == "registryentryholder" || defaultTypeLower == "registryentryholderset" || defaultTypeLower == "option" || defaultTypeLower == "mapper" || defaultTypeLower == "array") {
+									// Generate a child type for this complex default case
+									childTypeName := toIdentifier(parentName + "_" + field.Name + "_default")
+									childType := *sw.Default
+									childType.Name = childTypeName
+									if childType.Extras != nil {
+										childType.Extras.SetName(childTypeName)
+									}
+									// Process and add the child type
+									childTypes := processType(&childType, baseTypes, false, isGeneratingBaseTypes, nil)
+									types = append(types, childTypes...)
+									// Update the default to reference the new type
+									sw.Default.Name = childTypeName
+									sw.Default.TypeName = childTypeName
+									sw.Default.Extras = nil
+								}
+							}
+						}
+
 						continue // Skip further option processing
 					}
 

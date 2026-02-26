@@ -200,13 +200,14 @@ func (p *UseEntity) Scan(packet pk.Packet) error {
 		}
 		p.X = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[X] default case")
+			return errors.Wrap(err, "failed to read void switch field X default case")
 		}
-		p.X = &val
+		p.X = &__void
 	}
 
 	// Switch field Y based on mouse
@@ -223,13 +224,14 @@ func (p *UseEntity) Scan(packet pk.Packet) error {
 		}
 		p.Y = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Y] default case")
+			return errors.Wrap(err, "failed to read void switch field Y default case")
 		}
-		p.Y = &val
+		p.Y = &__void
 	}
 
 	// Switch field Z based on mouse
@@ -246,13 +248,14 @@ func (p *UseEntity) Scan(packet pk.Packet) error {
 		}
 		p.Z = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Z] default case")
+			return errors.Wrap(err, "failed to read void switch field Z default case")
 		}
-		p.Z = &val
+		p.Z = &__void
 	}
 
 	// Switch field Hand based on mouse
@@ -277,13 +280,14 @@ func (p *UseEntity) Scan(packet pk.Packet) error {
 		}
 		p.Hand = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Hand] default case")
+			return errors.Wrap(err, "failed to read void switch field Hand default case")
 		}
-		p.Hand = &val
+		p.Hand = &__void
 	}
 
 	bytesRead, err = p.Sneaking.ReadFrom(r)
@@ -469,13 +473,14 @@ func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.X = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field X default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field X default case")
 		}
-		t.X = &val
+		t.X = &__void
 	}
 
 	// Switch field Y based on mouse
@@ -492,13 +497,14 @@ func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Y = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Y default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Y default case")
 		}
-		t.Y = &val
+		t.Y = &__void
 	}
 
 	// Switch field Z based on mouse
@@ -515,13 +521,14 @@ func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Z = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Z default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Z default case")
 		}
-		t.Z = &val
+		t.Z = &__void
 	}
 
 	// Switch field Hand based on mouse
@@ -546,13 +553,14 @@ func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Hand = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Hand default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Hand default case")
 		}
-		t.Hand = &val
+		t.Hand = &__void
 	}
 
 	bytesRead, err = t.Sneaking.ReadFrom(r)

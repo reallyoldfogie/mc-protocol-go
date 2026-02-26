@@ -177,13 +177,14 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 		}
 		p.EntityId = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[EntityId] default case")
+			return errors.Wrap(err, "failed to read void switch field EntityId default case")
 		}
-		p.EntityId = &val
+		p.EntityId = &__void
 	}
 
 	// Switch field EntityFeetEyes based on isEntity
@@ -200,13 +201,14 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 		}
 		p.EntityFeetEyes = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[EntityFeetEyes] default case")
+			return errors.Wrap(err, "failed to read void switch field EntityFeetEyes default case")
 		}
-		p.EntityFeetEyes = &val
+		p.EntityFeetEyes = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -402,13 +404,14 @@ func (t *FacePlayer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.EntityId = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field EntityId default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field EntityId default case")
 		}
-		t.EntityId = &val
+		t.EntityId = &__void
 	}
 
 	// Switch field EntityFeetEyes based on isEntity
@@ -425,13 +428,14 @@ func (t *FacePlayer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.EntityFeetEyes = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field EntityFeetEyes default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field EntityFeetEyes default case")
 		}
-		t.EntityFeetEyes = &val
+		t.EntityFeetEyes = &__void
 	}
 
 	return totalBytes, nil

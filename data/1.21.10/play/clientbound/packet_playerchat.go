@@ -274,13 +274,14 @@ func (p *PlayerChat) Scan(packet pk.Packet) error {
 		}
 		p.FilterTypeMask = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[FilterTypeMask] default case")
+			return errors.Wrap(err, "failed to read void switch field FilterTypeMask default case")
 		}
-		p.FilterTypeMask = &val
+		p.FilterTypeMask = &__void
 	}
 
 	bytesRead, err = p.Type.ReadFrom(r)
@@ -642,13 +643,14 @@ func (t *PlayerChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.FilterTypeMask = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field FilterTypeMask default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field FilterTypeMask default case")
 		}
-		t.FilterTypeMask = &val
+		t.FilterTypeMask = &__void
 	}
 
 	bytesRead, err = t.Type.ReadFrom(r)
