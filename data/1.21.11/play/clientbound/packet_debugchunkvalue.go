@@ -74,8 +74,8 @@ func (p *DebugChunkValue) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *DebugChunkValue) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ChunkPos"] = p.ChunkPos
-	fields["Update"] = p.Update
+	fields["ChunkPos"] = &p.ChunkPos
+	fields["Update"] = &p.Update
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *DebugChunkValue) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *DebugChunkValue) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ChunkPos"]; ok {
-		p.ChunkPos = val.(basetypes.PackedChunkPos)
+		p.ChunkPos = *val.(*basetypes.PackedChunkPos)
 	}
 	if val, ok := fields["Update"]; ok {
-		p.Update = val.(basetypes.DebugSubscriptionUpdate)
+		p.Update = *val.(*basetypes.DebugSubscriptionUpdate)
 	}
 }
 

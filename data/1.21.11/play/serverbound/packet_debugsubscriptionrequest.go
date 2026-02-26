@@ -79,7 +79,7 @@ func (p *DebugSubscriptionRequest) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *DebugSubscriptionRequest) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Subscriptions"] = p.Subscriptions
+	fields["Subscriptions"] = &p.Subscriptions
 	return fields
 }
 
@@ -90,9 +90,8 @@ func (p *DebugSubscriptionRequest) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *DebugSubscriptionRequest) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Subscriptions"]; ok {
-		p.Subscriptions = val.(models.Array[pk.VarInt, basetypes.DebugSubscriptionDataType])
+		p.Subscriptions = *val.(*models.Array[pk.VarInt, basetypes.DebugSubscriptionDataType])
 	}
 }
 

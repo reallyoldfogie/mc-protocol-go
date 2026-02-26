@@ -6,17 +6,43 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Optvarint = pk.VarInt
+type ByteArray = pk.ByteArray
+
+type F32 = pk.Float
+
+type Ingredient = models.Array[pk.VarInt, Slot]
 
 type U16 = pk.UnsignedShort
 
 type I16 = pk.Short
+
+type ContainerID = pk.VarInt
+
+type F64 = pk.Double
+
+type bool = pk.Boolean
+
+type PartialResolvableProfileName = models.Option[pk.String]
+
+type PartialResolvableProfileUuid = models.Option[pk.UUID]
+
+type Varint = pk.VarInt
+
+type U32 = models.UInt32
+
+type U64 = models.UInt64
 
 type SlotComponentDataEquippableModel = models.Option[pk.String]
 
 type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
 type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
+
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+
+type SlotComponentDataPiercingWeaponSound = models.Option[ItemSoundHolder]
+
+type SlotComponentDataPiercingWeaponHitSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
@@ -25,16 +51,6 @@ type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
 type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataPiercingWeaponSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataPiercingWeaponHitSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
 
 type SlotComponentDataKineticWeaponDismountConditions = models.Option[KineticWeaponCondition]
 
@@ -52,45 +68,31 @@ type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
+type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
+
 type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type Varint = pk.VarInt
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBreezesAttackTarget = models.Option[pk.VarInt]
 
-type U64 = models.UInt64
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBreezesJumpTarget = models.Option[Position]
 
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBeesHivePos = models.Option[Position]
 
-type ByteArray = pk.ByteArray
-
-type ContainerID = pk.VarInt
-
-type F32 = pk.Float
-
-type F64 = pk.Double
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBeesFlowerPos = models.Option[Position]
 
 type ChatSession = models.Option[models.Void]
 
-type PlayerSkinPatchBody = models.Option[pk.String]
-
-type PlayerSkinPatchCape = models.Option[pk.String]
-
-type PlayerSkinPatchElytra = models.Option[pk.String]
-
-type bool = pk.Boolean
-
-type U32 = models.UInt32
-
-type I32 = pk.Int
-
 type I64 = pk.Long
 
-type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
+type GameProfilePropertySignature = models.Option[pk.String]
 
-type I8 = pk.Byte
+type Optvarint = pk.VarInt
+
+type I32 = pk.Int
 
 type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
 
@@ -100,8 +102,14 @@ type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
 
 type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
 
-type PartialResolvableProfileName = models.Option[pk.String]
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
-type PartialResolvableProfileUuid = models.Option[pk.UUID]
+type PlayerSkinPatchBody = models.Option[pk.String]
 
-type GameProfilePropertySignature = models.Option[pk.String]
+type PlayerSkinPatchCape = models.Option[pk.String]
+
+type PlayerSkinPatchElytra = models.Option[pk.String]
+
+type I8 = pk.Byte
+
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]

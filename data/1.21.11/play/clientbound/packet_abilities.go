@@ -81,9 +81,9 @@ func (p *Abilities) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Abilities) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Flags"] = p.Flags
-	fields["FlyingSpeed"] = p.FlyingSpeed
-	fields["WalkingSpeed"] = p.WalkingSpeed
+	fields["Flags"] = &p.Flags
+	fields["FlyingSpeed"] = &p.FlyingSpeed
+	fields["WalkingSpeed"] = &p.WalkingSpeed
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *Abilities) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Abilities) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(pk.Byte)
+		p.Flags = *val.(*pk.Byte)
 	}
 	if val, ok := fields["FlyingSpeed"]; ok {
-		p.FlyingSpeed = val.(pk.Float)
+		p.FlyingSpeed = *val.(*pk.Float)
 	}
 	if val, ok := fields["WalkingSpeed"]; ok {
-		p.WalkingSpeed = val.(pk.Float)
+		p.WalkingSpeed = *val.(*pk.Float)
 	}
 }
 

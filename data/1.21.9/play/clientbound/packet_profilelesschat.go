@@ -96,10 +96,10 @@ func (p *ProfilelessChat) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ProfilelessChat) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Message"] = p.Message
-	fields["Type"] = p.Type
-	fields["Name"] = p.Name
-	fields["Target"] = p.Target
+	fields["Message"] = &p.Message
+	fields["Type"] = &p.Type
+	fields["Name"] = &p.Name
+	fields["Target"] = &p.Target
 	return fields
 }
 
@@ -110,18 +110,17 @@ func (p *ProfilelessChat) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ProfilelessChat) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Message"]; ok {
-		p.Message = val.(models.AnonymousNBT)
+		p.Message = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["Type"]; ok {
-		p.Type = val.(ChatTypesHolder)
+		p.Type = *val.(*ChatTypesHolder)
 	}
 	if val, ok := fields["Name"]; ok {
-		p.Name = val.(models.AnonymousNBT)
+		p.Name = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["Target"]; ok {
-		p.Target = val.(models.Option[models.AnonymousNBT])
+		p.Target = *val.(*models.Option[models.AnonymousNBT])
 	}
 }
 

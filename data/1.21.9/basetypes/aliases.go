@@ -6,7 +6,25 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type ByteArray = pk.ByteArray
+type ChatSession = models.Option[models.Void]
+
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeesHivePos = models.Option[Position]
+
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeesFlowerPos = models.Option[Position]
+
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezesAttackTarget = models.Option[pk.VarInt]
+
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezesJumpTarget = models.Option[Position]
+
+type PartialResolvableProfileName = models.Option[pk.String]
+
+type PartialResolvableProfileUuid = models.Option[pk.UUID]
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type Optvarint = pk.VarInt
+
+type ContainerID = pk.VarInt
 
 type PlayerSkinPatchBody = models.Option[pk.String]
 
@@ -14,51 +32,9 @@ type PlayerSkinPatchCape = models.Option[pk.String]
 
 type PlayerSkinPatchElytra = models.Option[pk.String]
 
+type Ingredient = models.Array[pk.VarInt, Slot]
+
 type GameProfilePropertySignature = models.Option[pk.String]
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type PartialResolvableProfileName = models.Option[pk.String]
-
-type PartialResolvableProfileUuid = models.Option[pk.UUID]
-
-type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
-
-type ChatSession = models.Option[models.Void]
-
-type Optvarint = pk.VarInt
-
-type ContainerID = pk.VarInt
-
-type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
-
-type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
-
-type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
-
-type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
-
-type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
-
-type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
-
-type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
-
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
-
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
-
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
@@ -68,4 +44,36 @@ type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
 type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
+
+type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
+
+type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
+
+type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
+
+type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
+
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
+
+type ByteArray = pk.ByteArray
+
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
+
+type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
+
+type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
+
+type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
+
+type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]

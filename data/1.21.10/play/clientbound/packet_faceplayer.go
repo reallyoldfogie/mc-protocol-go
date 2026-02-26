@@ -223,11 +223,11 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *FacePlayer) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["FeetEyes"] = p.FeetEyes
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["IsEntity"] = p.IsEntity
+	fields["FeetEyes"] = &p.FeetEyes
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["IsEntity"] = &p.IsEntity
 	fields["EntityId"] = p.EntityId
 	fields["EntityFeetEyes"] = p.EntityFeetEyes
 	return fields
@@ -240,21 +240,20 @@ func (p *FacePlayer) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *FacePlayer) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["FeetEyes"]; ok {
-		p.FeetEyes = val.(pk.VarInt)
+		p.FeetEyes = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["IsEntity"]; ok {
-		p.IsEntity = val.(pk.Boolean)
+		p.IsEntity = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["EntityId"]; ok {
 		p.EntityId = val.(pk.Field)

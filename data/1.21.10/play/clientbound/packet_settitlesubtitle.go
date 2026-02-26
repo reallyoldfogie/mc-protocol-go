@@ -66,7 +66,7 @@ func (p *SetTitleSubtitle) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetTitleSubtitle) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Text"] = p.Text
+	fields["Text"] = &p.Text
 	return fields
 }
 
@@ -77,9 +77,8 @@ func (p *SetTitleSubtitle) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetTitleSubtitle) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Text"]; ok {
-		p.Text = val.(models.AnonymousNBT)
+		p.Text = *val.(*models.AnonymousNBT)
 	}
 }
 

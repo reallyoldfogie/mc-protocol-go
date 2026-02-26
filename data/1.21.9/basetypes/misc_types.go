@@ -257,102 +257,66 @@ func (t Node) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "openSet",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Node"
-//	        }
-//	      ]
+//	      "name": "x",
+//	      "type": "i32"
 //	    },
 //	    {
-//	      "name": "closedSet",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Node"
-//	        }
-//	      ]
+//	      "name": "y",
+//	      "type": "i32"
 //	    },
 //	    {
-//	      "name": "targetNodes",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Node"
-//	        }
-//	      ]
+//	      "name": "z",
+//	      "type": "i32"
 //	    }
 //	  ]
 //	]
-type PathDebugData struct {
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "Node"
-	//             }
-	//           ]
-	OpenSet models.Array[pk.VarInt, Node]
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "Node"
-	//             }
-	//           ]
-	ClosedSet models.Array[pk.VarInt, Node]
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "Node"
-	//             }
-	//           ]
-	TargetNodes models.Array[pk.VarInt, Node]
+type Vec3i32 struct {
+	// "i32"
+	X pk.Int
+	// "i32"
+	Y pk.Int
+	// "i32"
+	Z pk.Int
 }
 
-func (t *PathDebugData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *Vec3i32) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.OpenSet.ReadFrom(r)
+	bytesRead, err = t.X.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field OpenSet")
+		return totalBytes, errors.Wrap(err, "failed to read field X")
 	}
-	bytesRead, err = t.ClosedSet.ReadFrom(r)
+	bytesRead, err = t.Y.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ClosedSet")
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
 	}
-	bytesRead, err = t.TargetNodes.ReadFrom(r)
+	bytesRead, err = t.Z.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TargetNodes")
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
 	}
 
 	return totalBytes, nil
 }
 
-func (t PathDebugData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t Vec3i32) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[PathDebugData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[Vec3i32.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.OpenSet.WriteTo(w)
+	bytesWritten, err = t.X.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.ClosedSet.WriteTo(w)
+	bytesWritten, err = t.Y.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.TargetNodes.WriteTo(w)
+	bytesWritten, err = t.Z.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -365,124 +329,606 @@ func (t PathDebugData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "body",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
+//	      "name": "globalPos",
+//	      "type": "GlobalPos"
 //	    },
 //	    {
-//	      "name": "cape",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
+//	      "name": "yaw",
+//	      "type": "f32"
 //	    },
 //	    {
-//	      "name": "elytra",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    },
-//	    {
-//	      "name": "model",
-//	      "type": [
-//	        "option",
-//	        [
-//	          "mapper",
-//	          {
-//	            "type": "varint",
-//	            "mappings": {
-//	              "0": "wide",
-//	              "1": "slim"
-//	            }
-//	          }
-//	        ]
-//	      ]
+//	      "name": "pitch",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type PlayerSkinPatch struct {
-	// [
-	//             "option",
-	//             "string"
-	//           ]
-	Body models.Option[pk.String]
-	// [
-	//             "option",
-	//             "string"
-	//           ]
-	Cape models.Option[pk.String]
-	// [
-	//             "option",
-	//             "string"
-	//           ]
-	Elytra models.Option[pk.String]
-	// [
-	//             "option",
-	//             [
-	//               "mapper",
-	//               {
-	//                 "type": "varint",
-	//                 "mappings": {
-	//                   "0": "wide",
-	//                   "1": "slim"
-	//                 }
-	//               }
-	//             ]
-	//           ]
-	Model models.Option[PlayerSkinPatchModel]
+type RespawnData struct {
+	// "GlobalPos"
+	GlobalPos GlobalPos
+	// "f32"
+	Yaw pk.Float
+	// "f32"
+	Pitch pk.Float
 }
 
-func (t *PlayerSkinPatch) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *RespawnData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Body.ReadFrom(r)
+	bytesRead, err = t.GlobalPos.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Body")
+		return totalBytes, errors.Wrap(err, "failed to read field GlobalPos")
 	}
-	bytesRead, err = t.Cape.ReadFrom(r)
+	bytesRead, err = t.Yaw.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Cape")
+		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
 	}
-	bytesRead, err = t.Elytra.ReadFrom(r)
+	bytesRead, err = t.Pitch.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Elytra")
-	}
-	bytesRead, err = t.Model.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Model")
+		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 
 	return totalBytes, nil
 }
 
-func (t PlayerSkinPatch) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t RespawnData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[PlayerSkinPatch.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[RespawnData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Body.WriteTo(w)
+	bytesWritten, err = t.GlobalPos.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Cape.WriteTo(w)
+	bytesWritten, err = t.Yaw.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Elytra.WriteTo(w)
+	bytesWritten, err = t.Pitch.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Model.WriteTo(w)
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "reached",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "nextNodeIndex",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "target",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "nodes",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "Node"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "debugData",
+//	      "type": "PathDebugData"
+//	    }
+//	  ]
+//	]
+type Path struct {
+	// "bool"
+	Reached pk.Boolean
+	// "i32"
+	NextNodeIndex pk.Int
+	// "position"
+	Target Position
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "Node"
+	//             }
+	//           ]
+	Nodes models.Array[pk.VarInt, Node]
+	// "PathDebugData"
+	DebugData PathDebugData
+}
+
+func (t *Path) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Reached.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Reached")
+	}
+	bytesRead, err = t.NextNodeIndex.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field NextNodeIndex")
+	}
+	bytesRead, err = t.Target.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Target")
+	}
+	bytesRead, err = t.Nodes.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Nodes")
+	}
+	bytesRead, err = t.DebugData.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DebugData")
+	}
+
+	return totalBytes, nil
+}
+
+func (t Path) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[Path.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Reached.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.NextNodeIndex.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Target.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Nodes.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DebugData.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "uuid",
+//	      "type": "UUID"
+//	    },
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "properties",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "GameProfileProperty"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type GameProfile struct {
+	// "UUID"
+	Uuid pk.UUID
+	// "string"
+	Name pk.String
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "GameProfileProperty"
+	//             }
+	//           ]
+	Properties models.Array[pk.VarInt, GameProfileProperty]
+}
+
+func (t *GameProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Uuid.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
+	}
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Properties.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Properties")
+	}
+
+	return totalBytes, nil
+}
+
+func (t GameProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[GameProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Uuid.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Properties.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "soundEvent",
+//	      "type": "ItemSoundHolder"
+//	    },
+//	    {
+//	      "name": "useDuration",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "range",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "description",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type InstrumentData struct {
+	// "ItemSoundHolder"
+	SoundEvent ItemSoundHolder
+	// "f32"
+	UseDuration pk.Float
+	// "f32"
+	Range pk.Float
+	// "anonymousNbt"
+	Description models.AnonymousNBT
+}
+
+func (t *InstrumentData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.SoundEvent.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field SoundEvent")
+	}
+	bytesRead, err = t.UseDuration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field UseDuration")
+	}
+	bytesRead, err = t.Range.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Range")
+	}
+	bytesRead, err = t.Description.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Description")
+	}
+
+	return totalBytes, nil
+}
+
+func (t InstrumentData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[InstrumentData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.SoundEvent.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.UseDuration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Range.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Description.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "z",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "x",
+//	      "type": "i32"
+//	    }
+//	  ]
+//	]
+type PackedChunkPos struct {
+	// "i32"
+	Z pk.Int
+	// "i32"
+	X pk.Int
+}
+
+func (t *PackedChunkPos) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
+	bytesRead, err = t.X.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field X")
+	}
+
+	return totalBytes, nil
+}
+
+func (t PackedChunkPos) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[PackedChunkPos.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Z.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.X.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+//
+type ChunkBlockEntityUnnamedType0001 struct {
+	X int64
+	Z int64
+}
+
+func (b *ChunkBlockEntityUnnamedType0001) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 4
+	totalBits += 4
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield ChunkBlockEntityUnnamedType0001 total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield ChunkBlockEntityUnnamedType0001")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract x (4 bits, signed=false)
+	x_mask := uint64((1 << 4) - 1)
+	x_value := (packed >> (totalBits - currentOffset - 4)) & x_mask
+	b.X = int64(x_value)
+	currentOffset += 4
+	// Extract z (4 bits, signed=false)
+	z_mask := uint64((1 << 4) - 1)
+	z_value := (packed >> (totalBits - currentOffset - 4)) & z_mask
+	b.Z = int64(z_value)
+	currentOffset += 4
+
+	return int64(nn), nil
+}
+
+func (b ChunkBlockEntityUnnamedType0001) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 4
+	totalBits += 4
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield ChunkBlockEntityUnnamedType0001 total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack x (4 bits)
+	x_value := uint64(b.X) & ((1 << 4) - 1)
+	packed |= x_value << (totalBits - currentOffset - 4)
+	currentOffset += 4
+	// Pack z (4 bits)
+	z_value := uint64(b.Z) & ((1 << 4) - 1)
+	packed |= z_value << (totalBits - currentOffset - 4)
+	currentOffset += 4
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "bitfield",
+//	        [
+//	          {
+//	            "name": "x",
+//	            "size": 4,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "z",
+//	            "size": 4,
+//	            "signed": false
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "y",
+//	      "type": "i16"
+//	    },
+//	    {
+//	      "name": "type",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "nbtData",
+//	      "type": "anonOptionalNbt"
+//	    }
+//	  ]
+//	]
+type ChunkBlockEntity struct {
+	// [
+	//             "bitfield",
+	//             [
+	//               {
+	//                 "name": "x",
+	//                 "size": 4,
+	//                 "signed": false
+	//               },
+	//               {
+	//                 "name": "z",
+	//                 "size": 4,
+	//                 "signed": false
+	//               }
+	//             ]
+	//           ]
+	UnnamedType0001 ChunkBlockEntityUnnamedType0001
+	// "i16"
+	Y pk.Short
+	// "varint"
+	Type pk.VarInt
+	// "anonOptionalNbt"
+	NbtData models.AnonymousNBT
+}
+
+func (t *ChunkBlockEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.UnnamedType0001.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field UnnamedType0001")
+	}
+	bytesRead, err = t.Y.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
+	}
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.NbtData.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field NbtData")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChunkBlockEntity) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChunkBlockEntity.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.UnnamedType0001.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Y.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.NbtData.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -629,72 +1075,1629 @@ func (t BannerPatternLayer) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "name",
-//	      "type": "string"
+//	      "name": "type",
+//	      "type": "SlotComponentType"
+//	    }
+//	  ]
+//	]
+type SlotUnnamedType0002DefaultRemoveComponentsArrayType struct {
+	// "SlotComponentType"
+	Type SlotComponentType
+}
+
+func (t *SlotUnnamedType0002DefaultRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotUnnamedType0002DefaultRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotUnnamedType0002DefaultRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "itemId",
+//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "value",
-//	      "type": "string"
+//	      "name": "addedComponentCount",
+//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "signature",
+//	      "name": "removedComponentCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "components",
 //	      "type": [
-//	        "option",
-//	        "string"
+//	        "array",
+//	        {
+//	          "count": "addedComponentCount",
+//	          "type": "SlotComponent"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "removeComponents",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "count": "removedComponentCount",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "type",
+//	                "type": "SlotComponentType"
+//	              }
+//	            ]
+//	          ]
+//	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type GameProfileProperty struct {
+type SlotUnnamedType0002Default struct {
+	// "varint"
+	ItemId pk.VarInt
+	// "varint"
+	AddedComponentCount pk.VarInt
+	// "varint"
+	RemovedComponentCount pk.VarInt
+	// [
+	//                       "array",
+	//                       {
+	//                         "count": "addedComponentCount",
+	//                         "type": "SlotComponent"
+	//                       }
+	//                     ]
+	Components models.ExplicitCountArray[SlotComponent]
+	// [
+	//                       "array",
+	//                       {
+	//                         "count": "removedComponentCount",
+	//                         "type": [
+	//                           "container",
+	//                           [
+	//                             {
+	//                               "name": "type",
+	//                               "type": "SlotComponentType"
+	//                             }
+	//                           ]
+	//                         ]
+	//                       }
+	//                     ]
+	RemoveComponents models.ExplicitCountArray[SlotUnnamedType0002DefaultRemoveComponentsArrayType]
+}
+
+func (t *SlotUnnamedType0002Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ItemId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
+	}
+	bytesRead, err = t.AddedComponentCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AddedComponentCount")
+	}
+	bytesRead, err = t.RemovedComponentCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RemovedComponentCount")
+	}
+	// Initialize ExplicitCountArray with count field name
+	t.Components.CountFieldName = "AddedComponentCount"
+	// Prepare parent context for explicit count array 'Components'
+	Components_ctx := models.NewParentContext()
+	Components_ctx.SetField("AddedComponentCount", t.AddedComponentCount)
+	t.Components.SetParentContext(Components_ctx)
+	bytesRead, err = t.Components.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Components")
+	}
+	// Initialize ExplicitCountArray with count field name
+	t.RemoveComponents.CountFieldName = "RemovedComponentCount"
+	// Prepare parent context for explicit count array 'RemoveComponents'
+	RemoveComponents_ctx := models.NewParentContext()
+	RemoveComponents_ctx.SetField("RemovedComponentCount", t.RemovedComponentCount)
+	t.RemoveComponents.SetParentContext(RemoveComponents_ctx)
+	bytesRead, err = t.RemoveComponents.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotUnnamedType0002Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotUnnamedType0002Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ItemId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AddedComponentCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.RemovedComponentCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Components.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.RemoveComponents.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "itemCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "itemCount",
+//	          "fields": {
+//	            "0": "void"
+//	          },
+//	          "default": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "itemId",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "addedComponentCount",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "removedComponentCount",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "components",
+//	                "type": [
+//	                  "array",
+//	                  {
+//	                    "count": "addedComponentCount",
+//	                    "type": "SlotComponent"
+//	                  }
+//	                ]
+//	              },
+//	              {
+//	                "name": "removeComponents",
+//	                "type": [
+//	                  "array",
+//	                  {
+//	                    "count": "removedComponentCount",
+//	                    "type": [
+//	                      "container",
+//	                      [
+//	                        {
+//	                          "name": "type",
+//	                          "type": "SlotComponentType"
+//	                        }
+//	                      ]
+//	                    ]
+//	                  }
+//	                ]
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type Slot struct {
+	// "varint"
+	ItemCount pk.VarInt
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "itemCount",
+	//               "fields": {
+	//                 "0": "void"
+	//               },
+	//               "default": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "itemId",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "addedComponentCount",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "removedComponentCount",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "components",
+	//                     "type": [
+	//                       "array",
+	//                       {
+	//                         "count": "addedComponentCount",
+	//                         "type": "SlotComponent"
+	//                       }
+	//                     ]
+	//                   },
+	//                   {
+	//                     "name": "removeComponents",
+	//                     "type": [
+	//                       "array",
+	//                       {
+	//                         "count": "removedComponentCount",
+	//                         "type": [
+	//                           "container",
+	//                           [
+	//                             {
+	//                               "name": "type",
+	//                               "type": "SlotComponentType"
+	//                             }
+	//                           ]
+	//                         ]
+	//                       }
+	//                     ]
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	UnnamedType0002 pk.Field
+}
+
+func (t *Slot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ItemCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
+	}
+	// Switch field UnnamedType0002 based on itemCount
+	// Convert compareTo value to string for matching
+	compareValueUnnamedType0002 := fmt.Sprintf("%v", t.ItemCount)
+
+	switch compareValueUnnamedType0002 {
+	case "0":
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0002 case 0")
+		}
+		t.UnnamedType0002 = &__void
+	default:
+		var val SlotUnnamedType0002Default
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 default case")
+		}
+		t.UnnamedType0002 = &val
+	}
+
+	return totalBytes, nil
+}
+
+func (t Slot) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[Slot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ItemCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field UnnamedType0002 based on itemCount
+	if t.UnnamedType0002 != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.UnnamedType0002.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field UnnamedType0002 value does not implement WriteTo: %T", t.UnnamedType0002)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "dimensionName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "location",
+//	      "type": "position"
+//	    }
+//	  ]
+//	]
+type GlobalPos struct {
+	// "string"
+	DimensionName pk.String
+	// "position"
+	Location Position
+}
+
+func (t *GlobalPos) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.DimensionName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
+	}
+	bytesRead, err = t.Location.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+
+	return totalBytes, nil
+}
+
+func (t GlobalPos) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[GlobalPos.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.DimensionName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "hivePos",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    },
+//	    {
+//	      "name": "flowerPos",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    },
+//	    {
+//	      "name": "travelTicks",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "blacklistedHives",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBees struct {
+	// [
+	//                                     "option",
+	//                                     "position"
+	//                                   ]
+	HivePos models.Option[Position]
+	// [
+	//                                     "option",
+	//                                     "position"
+	//                                   ]
+	FlowerPos models.Option[Position]
+	// "varint"
+	TravelTicks pk.VarInt
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "position"
+	//                                     }
+	//                                   ]
+	BlacklistedHives models.Array[pk.VarInt, Position]
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBees) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.HivePos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HivePos")
+	}
+	bytesRead, err = t.FlowerPos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FlowerPos")
+	}
+	bytesRead, err = t.TravelTicks.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TravelTicks")
+	}
+	bytesRead, err = t.BlacklistedHives.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BlacklistedHives")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBees) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBees.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.HivePos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FlowerPos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TravelTicks.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BlacklistedHives.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pos",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "poiType",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "freeTicketCount",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadPois struct {
+	// "position"
+	Pos Position
+	// "varint"
+	PoiType pk.VarInt
+	// "varint"
+	FreeTicketCount pk.VarInt
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadPois) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
+	}
+	bytesRead, err = t.PoiType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field PoiType")
+	}
+	bytesRead, err = t.FreeTicketCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FreeTicketCount")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadPois) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadPois.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.PoiType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FreeTicketCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "index",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRedstoneWireOrientations struct {
+	// "varint"
+	Index pk.VarInt
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRedstoneWireOrientations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Index.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Index")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRedstoneWireOrientations) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRedstoneWireOrientations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Index.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "listenerRadius",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEventListeners struct {
+	// "varint"
+	ListenerRadius pk.VarInt
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEventListeners) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ListenerRadius.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ListenerRadius")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEventListeners) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEventListeners.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ListenerRadius.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "profession",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "xp",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "health",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "maxHealth",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "inventory",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "wantsGolem",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "angerLevel",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "activities",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "behaviors",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "memories",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "gossips",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "pois",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "potentialPois",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBrains struct {
 	// "string"
 	Name pk.String
 	// "string"
-	Value pk.String
+	Profession pk.String
+	// "i32"
+	Xp pk.Int
+	// "f32"
+	Health pk.Float
+	// "f32"
+	MaxHealth pk.Float
+	// "string"
+	Inventory pk.String
+	// "bool"
+	WantsGolem pk.Boolean
+	// "i32"
+	AngerLevel pk.Int
 	// [
-	//             "option",
-	//             "string"
-	//           ]
-	Signature models.Option[pk.String]
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "string"
+	//                                     }
+	//                                   ]
+	Activities models.Array[pk.VarInt, pk.String]
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "string"
+	//                                     }
+	//                                   ]
+	Behaviors models.Array[pk.VarInt, pk.String]
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "string"
+	//                                     }
+	//                                   ]
+	Memories models.Array[pk.VarInt, pk.String]
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "string"
+	//                                     }
+	//                                   ]
+	Gossips models.Array[pk.VarInt, pk.String]
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "position"
+	//                                     }
+	//                                   ]
+	Pois models.Array[pk.VarInt, Position]
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "position"
+	//                                     }
+	//                                   ]
+	PotentialPois models.Array[pk.VarInt, Position]
 }
 
-func (t *GameProfileProperty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBrains) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Name")
 	}
-	bytesRead, err = t.Value.ReadFrom(r)
+	bytesRead, err = t.Profession.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Value")
+		return totalBytes, errors.Wrap(err, "failed to read field Profession")
 	}
-	bytesRead, err = t.Signature.ReadFrom(r)
+	bytesRead, err = t.Xp.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Signature")
+		return totalBytes, errors.Wrap(err, "failed to read field Xp")
+	}
+	bytesRead, err = t.Health.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Health")
+	}
+	bytesRead, err = t.MaxHealth.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MaxHealth")
+	}
+	bytesRead, err = t.Inventory.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Inventory")
+	}
+	bytesRead, err = t.WantsGolem.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field WantsGolem")
+	}
+	bytesRead, err = t.AngerLevel.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AngerLevel")
+	}
+	bytesRead, err = t.Activities.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Activities")
+	}
+	bytesRead, err = t.Behaviors.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Behaviors")
+	}
+	bytesRead, err = t.Memories.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Memories")
+	}
+	bytesRead, err = t.Gossips.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Gossips")
+	}
+	bytesRead, err = t.Pois.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pois")
+	}
+	bytesRead, err = t.PotentialPois.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field PotentialPois")
 	}
 
 	return totalBytes, nil
 }
 
-func (t GameProfileProperty) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBrains) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[GameProfileProperty.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBrains.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Value.WriteTo(w)
+	bytesWritten, err = t.Profession.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Signature.WriteTo(w)
+	bytesWritten, err = t.Xp.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Health.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MaxHealth.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Inventory.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.WantsGolem.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AngerLevel.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Activities.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Behaviors.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Memories.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Gossips.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pois.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.PotentialPois.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "path",
+//	      "type": "Path"
+//	    },
+//	    {
+//	      "name": "maxNodeDistance",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityPaths struct {
+	// "Path"
+	Path Path
+	// "f32"
+	MaxNodeDistance pk.Float
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityPaths) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Path.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Path")
+	}
+	bytesRead, err = t.MaxNodeDistance.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MaxNodeDistance")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityPaths) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityPaths.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Path.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MaxNodeDistance.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "positions",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRaids struct {
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "position"
+	//                                     }
+	//                                   ]
+	Positions models.Array[pk.VarInt, Position]
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRaids) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Positions.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Positions")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRaids) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRaids.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Positions.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "structures",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "DebugStructureInfo"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadStructures struct {
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": "DebugStructureInfo"
+	//                                     }
+	//                                   ]
+	Structures models.Array[pk.VarInt, DebugStructureInfo]
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadStructures) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Structures.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Structures")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadStructures) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadStructures.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Structures.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pos",
+//	      "type": "position"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadNeighborUpdates struct {
+	// "position"
+	Pos Position
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadNeighborUpdates) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadNeighborUpdates) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadNeighborUpdates.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "attackTarget",
+//	      "type": [
+//	        "option",
+//	        "varint"
+//	      ]
+//	    },
+//	    {
+//	      "name": "jumpTarget",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezes struct {
+	// [
+	//                                     "option",
+	//                                     "varint"
+	//                                   ]
+	AttackTarget models.Option[pk.VarInt]
+	// [
+	//                                     "option",
+	//                                     "position"
+	//                                   ]
+	JumpTarget models.Option[Position]
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.AttackTarget.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AttackTarget")
+	}
+	bytesRead, err = t.JumpTarget.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field JumpTarget")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezes) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.AttackTarget.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.JumpTarget.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "priority",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "running",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectorsGoalsArrayType struct {
+	// "varint"
+	Priority pk.VarInt
+	// "bool"
+	Running pk.Boolean
+	// "string"
+	Name pk.String
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectorsGoalsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Priority.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Priority")
+	}
+	bytesRead, err = t.Running.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Running")
+	}
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectorsGoalsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectorsGoalsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Priority.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Running.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "goals",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "priority",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "running",
+//	                "type": "bool"
+//	              },
+//	              {
+//	                "name": "name",
+//	                "type": "string"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectors struct {
+	// [
+	//                                     "array",
+	//                                     {
+	//                                       "countType": "varint",
+	//                                       "type": [
+	//                                         "container",
+	//                                         [
+	//                                           {
+	//                                             "name": "priority",
+	//                                             "type": "varint"
+	//                                           },
+	//                                           {
+	//                                             "name": "running",
+	//                                             "type": "bool"
+	//                                           },
+	//                                           {
+	//                                             "name": "name",
+	//                                             "type": "string"
+	//                                           }
+	//                                         ]
+	//                                       ]
+	//                                     }
+	//                                   ]
+	Goals models.Array[pk.VarInt, DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectorsGoalsArrayType]
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectors) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Goals.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Goals")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectors) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectors.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Goals.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityBlockIntersections struct {
+	// "varint"
+	Id pk.VarInt
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityBlockIntersections) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityBlockIntersections) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityBlockIntersections.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "occupantCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "honeyLevel",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "sedated",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeeHives struct {
+	// "varint"
+	Type pk.VarInt
+	// "varint"
+	OccupantCount pk.VarInt
+	// "varint"
+	HoneyLevel pk.VarInt
+	// "bool"
+	Sedated pk.Boolean
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeeHives) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.OccupantCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field OccupantCount")
+	}
+	bytesRead, err = t.HoneyLevel.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HoneyLevel")
+	}
+	bytesRead, err = t.Sedated.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sedated")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeeHives) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeeHives.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.OccupantCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.HoneyLevel.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Sedated.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "event",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "pos",
+//	      "type": "vec3f64"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEvents struct {
+	// "varint"
+	Event pk.VarInt
+	// "vec3f64"
+	Pos Vec3f64
+}
+
+func (t *DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEvents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Event.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Event")
+	}
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEvents) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEvents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Event.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pos.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -1034,7 +3037,8 @@ func (t GameProfileProperty) WriteTo(w io.Writer) (totalBytes int64, err error) 
 //	    }
 //	  ]
 //	]
-type DebugSubscriptionUpdateUnnamedType0001Default struct {
+type DebugSubscriptionUpdateUnnamedType0003Default struct {
+	Type pk.VarInt
 	// [
 	//                       "option",
 	//                       [
@@ -1361,15 +3365,20 @@ type DebugSubscriptionUpdateUnnamedType0001Default struct {
 	Payload pk.Field
 }
 
-func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *DebugSubscriptionUpdateUnnamedType0003Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
 	// Switch field Payload based on type
 	// Convert compareTo value to string for matching
 	compareValuePayload := fmt.Sprintf("%v", t.Type)
 
 	switch compareValuePayload {
 	case "BeeHives":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBeeHives
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1377,7 +3386,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Bees":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBees
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1385,7 +3394,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Brains":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBrains
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1393,7 +3402,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Breezes":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadBreezes
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1401,15 +3410,16 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "DedicatedServerTickTime":
-		var val void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Payload case DedicatedServerTickTime")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Payload case DedicatedServerTickTime")
 		}
-		t.Payload = &val
+		t.Payload = &__void
 	case "EntityBlockIntersections":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityBlockIntersections
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1417,7 +3427,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "EntityPaths":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadEntityPaths
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1425,7 +3435,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "GameEventListeners":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEventListeners
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1433,7 +3443,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "GameEvents":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGameEvents
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1441,7 +3451,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "GoalSelectors":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadGoalSelectors
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1449,7 +3459,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "NeighborUpdates":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadNeighborUpdates
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1457,7 +3467,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Pois":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadPois
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1465,7 +3475,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Raids":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRaids
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1473,7 +3483,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "RedstoneWireOrientations":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadRedstoneWireOrientations
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1481,7 +3491,7 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "Structures":
-		var val container
+		var val DebugSubscriptionUpdateUnnamedType0003DefaultPayloadStructures
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1489,13 +3499,14 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 		}
 		t.Payload = &val
 	case "VillageSections":
-		var val void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Payload case VillageSections")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Payload case VillageSections")
 		}
-		t.Payload = &val
+		t.Payload = &__void
 	default:
 		// No explicit default; treat as void (no data)
 		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
@@ -1512,12 +3523,17 @@ func (t *DebugSubscriptionUpdateUnnamedType0001Default) ReadFrom(r io.Reader) (t
 	return totalBytes, nil
 }
 
-func (t DebugSubscriptionUpdateUnnamedType0001Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t DebugSubscriptionUpdateUnnamedType0003Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[DebugSubscriptionUpdateUnnamedType0001Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[DebugSubscriptionUpdateUnnamedType0003Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
 	// Switch field Payload based on type
 	if t.Payload != nil {
 		// Write switch field value if it implements WriteTo
@@ -2233,7 +4249,7 @@ type DebugSubscriptionUpdate struct {
 	//               ]
 	//             }
 	//           ]
-	UnnamedType0001 pk.Field
+	UnnamedType0003 pk.Field
 }
 
 func (t *DebugSubscriptionUpdate) ReadFrom(r io.Reader) (totalBytes int64, err error) {
@@ -2243,27 +4259,28 @@ func (t *DebugSubscriptionUpdate) ReadFrom(r io.Reader) (totalBytes int64, err e
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
-	// Switch field UnnamedType0001 based on type
+	// Switch field UnnamedType0003 based on type
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0001 := t.Type.Value
+	compareValueUnnamedType0003 := t.Type.Value
 
-	switch compareValueUnnamedType0001 {
+	switch compareValueUnnamedType0003 {
 	case "DedicatedServerTickTime":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case DedicatedServerTickTime")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0003 case DedicatedServerTickTime")
 		}
-		t.UnnamedType0001 = &val
+		t.UnnamedType0003 = &__void
 	default:
-		var val DebugSubscriptionUpdateUnnamedType0001Default
+		var val DebugSubscriptionUpdateUnnamedType0003Default
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 default case")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0003 default case")
 		}
-		t.UnnamedType0001 = &val
+		t.UnnamedType0003 = &val
 	}
 
 	return totalBytes, nil
@@ -2280,10 +4297,10 @@ func (t DebugSubscriptionUpdate) WriteTo(w io.Writer) (totalBytes int64, err err
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0001 based on type
-	if t.UnnamedType0001 != nil {
+	// Switch field UnnamedType0003 based on type
+	if t.UnnamedType0003 != nil {
 		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0001.(interface {
+		if writer, ok := t.UnnamedType0003.(interface {
 			WriteTo(io.Writer) (int64, error)
 		}); ok {
 			bytesWritten, err = writer.WriteTo(w)
@@ -2293,8 +4310,1069 @@ func (t DebugSubscriptionUpdate) WriteTo(w io.Writer) (totalBytes int64, err err
 			}
 		} else {
 			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0001 value does not implement WriteTo: %T", t.UnnamedType0001)
+			return totalBytes, fmt.Errorf("switch field UnnamedType0003 value does not implement WriteTo: %T", t.UnnamedType0003)
 		}
+	}
+	return totalBytes, nil
+}
+
+//
+type Position struct {
+	X int64
+	Z int64
+	Y int64
+}
+
+func (b *Position) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 26
+	totalBits += 26
+	totalBits += 12
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield Position total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield Position")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract x (26 bits, signed=true)
+	x_mask := uint64((1 << 26) - 1)
+	x_value := (packed >> (totalBits - currentOffset - 26)) & x_mask
+	// Sign extend if negative
+	if x_value&(1<<(26-1)) != 0 {
+		// Sign extend by converting to signed and back
+		signBit := uint64(1) << 26
+		x_value = x_value - signBit
+	}
+	b.X = int64(x_value)
+	currentOffset += 26
+	// Extract z (26 bits, signed=true)
+	z_mask := uint64((1 << 26) - 1)
+	z_value := (packed >> (totalBits - currentOffset - 26)) & z_mask
+	// Sign extend if negative
+	if z_value&(1<<(26-1)) != 0 {
+		// Sign extend by converting to signed and back
+		signBit := uint64(1) << 26
+		z_value = z_value - signBit
+	}
+	b.Z = int64(z_value)
+	currentOffset += 26
+	// Extract y (12 bits, signed=true)
+	y_mask := uint64((1 << 12) - 1)
+	y_value := (packed >> (totalBits - currentOffset - 12)) & y_mask
+	// Sign extend if negative
+	if y_value&(1<<(12-1)) != 0 {
+		// Sign extend by converting to signed and back
+		signBit := uint64(1) << 12
+		y_value = y_value - signBit
+	}
+	b.Y = int64(y_value)
+	currentOffset += 12
+
+	return int64(nn), nil
+}
+
+func (b Position) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 26
+	totalBits += 26
+	totalBits += 12
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield Position total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack x (26 bits)
+	x_value := uint64(b.X) & ((1 << 26) - 1)
+	packed |= x_value << (totalBits - currentOffset - 26)
+	currentOffset += 26
+	// Pack z (26 bits)
+	z_value := uint64(b.Z) & ((1 << 26) - 1)
+	packed |= z_value << (totalBits - currentOffset - 26)
+	currentOffset += 26
+	// Pack y (12 bits)
+	y_value := uint64(b.Y) & ((1 << 12) - 1)
+	packed |= y_value << (totalBits - currentOffset - 12)
+	currentOffset += 12
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "SlotComponentType"
+//	    }
+//	  ]
+//	]
+type UntrustedSlotUnnamedType0004DefaultRemoveComponentsArrayType struct {
+	// "SlotComponentType"
+	Type SlotComponentType
+}
+
+func (t *UntrustedSlotUnnamedType0004DefaultRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+
+	return totalBytes, nil
+}
+
+func (t UntrustedSlotUnnamedType0004DefaultRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[UntrustedSlotUnnamedType0004DefaultRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "itemId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "addedComponentCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "removedComponentCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "components",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "count": "addedComponentCount",
+//	          "type": "UntrustedSlotComponent"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "removeComponents",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "count": "removedComponentCount",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "type",
+//	                "type": "SlotComponentType"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type UntrustedSlotUnnamedType0004Default struct {
+	// "varint"
+	ItemId pk.VarInt
+	// "varint"
+	AddedComponentCount pk.VarInt
+	// "varint"
+	RemovedComponentCount pk.VarInt
+	// [
+	//                       "array",
+	//                       {
+	//                         "count": "addedComponentCount",
+	//                         "type": "UntrustedSlotComponent"
+	//                       }
+	//                     ]
+	Components models.ExplicitCountArray[UntrustedSlotComponent]
+	// [
+	//                       "array",
+	//                       {
+	//                         "count": "removedComponentCount",
+	//                         "type": [
+	//                           "container",
+	//                           [
+	//                             {
+	//                               "name": "type",
+	//                               "type": "SlotComponentType"
+	//                             }
+	//                           ]
+	//                         ]
+	//                       }
+	//                     ]
+	RemoveComponents models.ExplicitCountArray[UntrustedSlotUnnamedType0004DefaultRemoveComponentsArrayType]
+}
+
+func (t *UntrustedSlotUnnamedType0004Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ItemId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
+	}
+	bytesRead, err = t.AddedComponentCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AddedComponentCount")
+	}
+	bytesRead, err = t.RemovedComponentCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RemovedComponentCount")
+	}
+	// Initialize ExplicitCountArray with count field name
+	t.Components.CountFieldName = "AddedComponentCount"
+	// Prepare parent context for explicit count array 'Components'
+	Components_ctx := models.NewParentContext()
+	Components_ctx.SetField("AddedComponentCount", t.AddedComponentCount)
+	t.Components.SetParentContext(Components_ctx)
+	bytesRead, err = t.Components.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Components")
+	}
+	// Initialize ExplicitCountArray with count field name
+	t.RemoveComponents.CountFieldName = "RemovedComponentCount"
+	// Prepare parent context for explicit count array 'RemoveComponents'
+	RemoveComponents_ctx := models.NewParentContext()
+	RemoveComponents_ctx.SetField("RemovedComponentCount", t.RemovedComponentCount)
+	t.RemoveComponents.SetParentContext(RemoveComponents_ctx)
+	bytesRead, err = t.RemoveComponents.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
+	}
+
+	return totalBytes, nil
+}
+
+func (t UntrustedSlotUnnamedType0004Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[UntrustedSlotUnnamedType0004Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ItemId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AddedComponentCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.RemovedComponentCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Components.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.RemoveComponents.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "itemCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "itemCount",
+//	          "fields": {
+//	            "0": "void",
+//	            "false": "void"
+//	          },
+//	          "default": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "itemId",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "addedComponentCount",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "removedComponentCount",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "components",
+//	                "type": [
+//	                  "array",
+//	                  {
+//	                    "count": "addedComponentCount",
+//	                    "type": "UntrustedSlotComponent"
+//	                  }
+//	                ]
+//	              },
+//	              {
+//	                "name": "removeComponents",
+//	                "type": [
+//	                  "array",
+//	                  {
+//	                    "count": "removedComponentCount",
+//	                    "type": [
+//	                      "container",
+//	                      [
+//	                        {
+//	                          "name": "type",
+//	                          "type": "SlotComponentType"
+//	                        }
+//	                      ]
+//	                    ]
+//	                  }
+//	                ]
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type UntrustedSlot struct {
+	// "varint"
+	ItemCount pk.VarInt
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "itemCount",
+	//               "fields": {
+	//                 "0": "void",
+	//                 "false": "void"
+	//               },
+	//               "default": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "itemId",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "addedComponentCount",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "removedComponentCount",
+	//                     "type": "varint"
+	//                   },
+	//                   {
+	//                     "name": "components",
+	//                     "type": [
+	//                       "array",
+	//                       {
+	//                         "count": "addedComponentCount",
+	//                         "type": "UntrustedSlotComponent"
+	//                       }
+	//                     ]
+	//                   },
+	//                   {
+	//                     "name": "removeComponents",
+	//                     "type": [
+	//                       "array",
+	//                       {
+	//                         "count": "removedComponentCount",
+	//                         "type": [
+	//                           "container",
+	//                           [
+	//                             {
+	//                               "name": "type",
+	//                               "type": "SlotComponentType"
+	//                             }
+	//                           ]
+	//                         ]
+	//                       }
+	//                     ]
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	UnnamedType0004 pk.Field
+}
+
+func (t *UntrustedSlot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ItemCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
+	}
+	// Switch field UnnamedType0004 based on itemCount
+	// Convert compareTo value to string for matching
+	compareValueUnnamedType0004 := fmt.Sprintf("%v", t.ItemCount)
+
+	switch compareValueUnnamedType0004 {
+	case "0":
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0004 case 0")
+		}
+		t.UnnamedType0004 = &__void
+	case "false":
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0004 case false")
+		}
+		t.UnnamedType0004 = &__void
+	default:
+		var val UntrustedSlotUnnamedType0004Default
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0004 default case")
+		}
+		t.UnnamedType0004 = &val
+	}
+
+	return totalBytes, nil
+}
+
+func (t UntrustedSlot) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[UntrustedSlot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ItemCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field UnnamedType0004 based on itemCount
+	if t.UnnamedType0004 != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.UnnamedType0004.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field UnnamedType0004 value does not implement WriteTo: %T", t.UnnamedType0004)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "properties",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "GameProfileProperty"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type GameProfileNameProp struct {
+	// "string"
+	Name pk.String
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "GameProfileProperty"
+	//             }
+	//           ]
+	Properties models.Array[pk.VarInt, GameProfileProperty]
+}
+
+func (t *GameProfileNameProp) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Properties.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Properties")
+	}
+
+	return totalBytes, nil
+}
+
+func (t GameProfileNameProp) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[GameProfileNameProp.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Properties.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "partial",
+//	            "1": "complete"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "anon": true,
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "type",
+//	          "fields": {
+//	            "partial": "PartialResolvableProfile",
+//	            "complete": "GameProfile"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "skinPatch",
+//	      "type": "PlayerSkinPatch"
+//	    }
+//	  ]
+//	]
+type ResolvableProfile struct {
+	// [
+	//             "mapper",
+	//             {
+	//               "type": "varint",
+	//               "mappings": {
+	//                 "0": "partial",
+	//                 "1": "complete"
+	//               }
+	//             }
+	//           ]
+	Type ResolvableProfileType
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "type",
+	//               "fields": {
+	//                 "partial": "PartialResolvableProfile",
+	//                 "complete": "GameProfile"
+	//               }
+	//             }
+	//           ]
+	UnnamedType0005 pk.Field
+	// "PlayerSkinPatch"
+	SkinPatch PlayerSkinPatch
+}
+
+func (t *ResolvableProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	// Switch field UnnamedType0005 based on type
+	// Convert compareTo value to string for matching
+	compareValueUnnamedType0005 := t.Type.Value
+
+	switch compareValueUnnamedType0005 {
+	case "complete":
+		var val GameProfile
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case complete")
+		}
+		t.UnnamedType0005 = &val
+	case "partial":
+		var val PartialResolvableProfile
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case partial")
+		}
+		t.UnnamedType0005 = &val
+	default:
+		// Mapper-backed discriminator with no explicit data for this value: treat as void
+		var __void models.Void
+		t.UnnamedType0005 = &__void
+	}
+
+	bytesRead, err = t.SkinPatch.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field SkinPatch")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ResolvableProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ResolvableProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field UnnamedType0005 based on type
+	if t.UnnamedType0005 != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.UnnamedType0005.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field UnnamedType0005 value does not implement WriteTo: %T", t.UnnamedType0005)
+		}
+	}
+	bytesWritten, err = t.SkinPatch.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "uuid",
+//	      "type": [
+//	        "option",
+//	        "UUID"
+//	      ]
+//	    },
+//	    {
+//	      "name": "properties",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "GameProfileProperty"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type PartialResolvableProfile struct {
+	// [
+	//             "option",
+	//             "string"
+	//           ]
+	Name models.Option[pk.String]
+	// [
+	//             "option",
+	//             "UUID"
+	//           ]
+	Uuid models.Option[pk.UUID]
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "GameProfileProperty"
+	//             }
+	//           ]
+	Properties models.Array[pk.VarInt, GameProfileProperty]
+}
+
+func (t *PartialResolvableProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Uuid.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
+	}
+	bytesRead, err = t.Properties.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Properties")
+	}
+
+	return totalBytes, nil
+}
+
+func (t PartialResolvableProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[PartialResolvableProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Uuid.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Properties.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "SlotComponentType"
+//	    },
+//	    {
+//	      "name": "hash",
+//	      "type": "i32"
+//	    }
+//	  ]
+//	]
+type HashedSlotComponentsArrayType struct {
+	// "SlotComponentType"
+	Type SlotComponentType
+	// "i32"
+	Hash pk.Int
+}
+
+func (t *HashedSlotComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.Hash.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Hash")
+	}
+
+	return totalBytes, nil
+}
+
+func (t HashedSlotComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[HashedSlotComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Hash.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "SlotComponentType"
+//	    }
+//	  ]
+//	]
+type HashedSlotRemoveComponentsArrayType struct {
+	// "SlotComponentType"
+	Type SlotComponentType
+}
+
+func (t *HashedSlotRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+
+	return totalBytes, nil
+}
+
+func (t HashedSlotRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[HashedSlotRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "itemId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "itemCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "components",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "type",
+//	                "type": "SlotComponentType"
+//	              },
+//	              {
+//	                "name": "hash",
+//	                "type": "i32"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "removeComponents",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "type",
+//	                "type": "SlotComponentType"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type HashedSlot struct {
+	// "varint"
+	ItemId pk.VarInt
+	// "varint"
+	ItemCount pk.VarInt
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "type",
+	//                     "type": "SlotComponentType"
+	//                   },
+	//                   {
+	//                     "name": "hash",
+	//                     "type": "i32"
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	Components models.Array[pk.VarInt, HashedSlotComponentsArrayType]
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "type",
+	//                     "type": "SlotComponentType"
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	RemoveComponents models.Array[pk.VarInt, HashedSlotRemoveComponentsArrayType]
+}
+
+func (t *HashedSlot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ItemId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
+	}
+	bytesRead, err = t.ItemCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
+	}
+	bytesRead, err = t.Components.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Components")
+	}
+	bytesRead, err = t.RemoveComponents.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
+	}
+
+	return totalBytes, nil
+}
+
+func (t HashedSlot) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[HashedSlot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ItemId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ItemCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Components.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.RemoveComponents.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -2369,13 +5447,14 @@ func (t *PreviousMessagesPreviousMessagesElement) ReadFrom(r io.Reader) (totalBy
 		}
 		t.Signature = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Signature default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Signature default case")
 		}
-		t.Signature = &val
+		t.Signature = &__void
 	}
 
 	return totalBytes, nil
@@ -2407,6 +5486,94 @@ func (t PreviousMessagesPreviousMessagesElement) WriteTo(w io.Writer) (totalByte
 			// Not a void case and doesn't implement WriteTo
 			return totalBytes, fmt.Errorf("switch field Signature value does not implement WriteTo: %T", t.Signature)
 		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "x",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "y",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "w",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type Vec4f struct {
+	// "f32"
+	X pk.Float
+	// "f32"
+	Y pk.Float
+	// "f32"
+	Z pk.Float
+	// "f32"
+	W pk.Float
+}
+
+func (t *Vec4f) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.X.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field X")
+	}
+	bytesRead, err = t.Y.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
+	}
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
+	bytesRead, err = t.W.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field W")
+	}
+
+	return totalBytes, nil
+}
+
+func (t Vec4f) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[Vec4f.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.X.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Y.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Z.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.W.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -2560,73 +5727,63 @@ func (t DataComponentMatchers) WriteTo(w io.Writer) (totalBytes int64, err error
 //	      "type": "ItemSoundHolder"
 //	    },
 //	    {
-//	      "name": "useDuration",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "range",
-//	      "type": "f32"
-//	    },
-//	    {
 //	      "name": "description",
 //	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "lengthInSeconds",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "comparatorOutput",
+//	      "type": "varint"
 //	    }
 //	  ]
 //	]
-type InstrumentData struct {
+type JukeboxSongData struct {
 	// "ItemSoundHolder"
 	SoundEvent ItemSoundHolder
-	// "f32"
-	UseDuration pk.Float
-	// "f32"
-	Range pk.Float
 	// "anonymousNbt"
 	Description models.AnonymousNBT
+	// "f32"
+	LengthInSeconds pk.Float
+	// "varint"
+	ComparatorOutput pk.VarInt
 }
 
-func (t *InstrumentData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *JukeboxSongData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.SoundEvent.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SoundEvent")
 	}
-	bytesRead, err = t.UseDuration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field UseDuration")
-	}
-	bytesRead, err = t.Range.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Range")
-	}
 	bytesRead, err = t.Description.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Description")
 	}
+	bytesRead, err = t.LengthInSeconds.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field LengthInSeconds")
+	}
+	bytesRead, err = t.ComparatorOutput.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ComparatorOutput")
+	}
 
 	return totalBytes, nil
 }
 
-func (t InstrumentData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t JukeboxSongData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[InstrumentData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[JukeboxSongData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.SoundEvent.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.UseDuration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Range.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -2636,42 +5793,12 @@ func (t InstrumentData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "SlotComponentType"
-//	    }
-//	  ]
-//	]
-type SlotUnnamedType0002DefaultRemoveComponentsArrayType struct {
-	// "SlotComponentType"
-	Type SlotComponentType
-}
-
-func (t *SlotUnnamedType0002DefaultRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
+	bytesWritten, err = t.LengthInSeconds.WriteTo(w)
+	totalBytes += bytesWritten
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
+		return totalBytes, err
 	}
-
-	return totalBytes, nil
-}
-
-func (t SlotUnnamedType0002DefaultRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotUnnamedType0002DefaultRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
+	bytesWritten, err = t.ComparatorOutput.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -2684,412 +5811,194 @@ func (t SlotUnnamedType0002DefaultRemoveComponentsArrayType) WriteTo(w io.Writer
 //	  "container",
 //	  [
 //	    {
-//	      "name": "itemId",
-//	      "type": "varint"
+//	      "name": "color",
+//	      "type": "i32"
 //	    },
 //	    {
-//	      "name": "addedComponentCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "removedComponentCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "components",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "count": "addedComponentCount",
-//	          "type": "SlotComponent"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "removeComponents",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "count": "removedComponentCount",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "type",
-//	                "type": "SlotComponentType"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotUnnamedType0002Default struct {
-	// "varint"
-	ItemId pk.VarInt
-	// "varint"
-	AddedComponentCount pk.VarInt
-	// "varint"
-	RemovedComponentCount pk.VarInt
-	// [
-	//                       "array",
-	//                       {
-	//                         "count": "addedComponentCount",
-	//                         "type": "SlotComponent"
-	//                       }
-	//                     ]
-	Components models.ExplicitCountArray[SlotComponent]
-	// [
-	//                       "array",
-	//                       {
-	//                         "count": "removedComponentCount",
-	//                         "type": [
-	//                           "container",
-	//                           [
-	//                             {
-	//                               "name": "type",
-	//                               "type": "SlotComponentType"
-	//                             }
-	//                           ]
-	//                         ]
-	//                       }
-	//                     ]
-	RemoveComponents models.ExplicitCountArray[SlotUnnamedType0002DefaultRemoveComponentsArrayType]
-}
-
-func (t *SlotUnnamedType0002Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ItemId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
-	}
-	bytesRead, err = t.AddedComponentCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AddedComponentCount")
-	}
-	bytesRead, err = t.RemovedComponentCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RemovedComponentCount")
-	}
-	// Initialize ExplicitCountArray with count field name
-	t.Components.CountFieldName = "AddedComponentCount"
-	// Prepare parent context for explicit count array 'Components'
-	Components_ctx := models.NewParentContext()
-	Components_ctx.SetField("AddedComponentCount", t.AddedComponentCount)
-	t.Components.SetParentContext(Components_ctx)
-	bytesRead, err = t.Components.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Components")
-	}
-	// Initialize ExplicitCountArray with count field name
-	t.RemoveComponents.CountFieldName = "RemovedComponentCount"
-	// Prepare parent context for explicit count array 'RemoveComponents'
-	RemoveComponents_ctx := models.NewParentContext()
-	RemoveComponents_ctx.SetField("RemovedComponentCount", t.RemovedComponentCount)
-	t.RemoveComponents.SetParentContext(RemoveComponents_ctx)
-	bytesRead, err = t.RemoveComponents.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotUnnamedType0002Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotUnnamedType0002Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ItemId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AddedComponentCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.RemovedComponentCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Components.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.RemoveComponents.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "itemCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "anon": true,
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "itemCount",
-//	          "fields": {
-//	            "0": "void"
-//	          },
-//	          "default": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "itemId",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "addedComponentCount",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "removedComponentCount",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "components",
-//	                "type": [
-//	                  "array",
-//	                  {
-//	                    "count": "addedComponentCount",
-//	                    "type": "SlotComponent"
-//	                  }
-//	                ]
-//	              },
-//	              {
-//	                "name": "removeComponents",
-//	                "type": [
-//	                  "array",
-//	                  {
-//	                    "count": "removedComponentCount",
-//	                    "type": [
-//	                      "container",
-//	                      [
-//	                        {
-//	                          "name": "type",
-//	                          "type": "SlotComponentType"
-//	                        }
-//	                      ]
-//	                    ]
-//	                  }
-//	                ]
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type Slot struct {
-	// "varint"
-	ItemCount pk.VarInt
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "itemCount",
-	//               "fields": {
-	//                 "0": "void"
-	//               },
-	//               "default": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "itemId",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "addedComponentCount",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "removedComponentCount",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "components",
-	//                     "type": [
-	//                       "array",
-	//                       {
-	//                         "count": "addedComponentCount",
-	//                         "type": "SlotComponent"
-	//                       }
-	//                     ]
-	//                   },
-	//                   {
-	//                     "name": "removeComponents",
-	//                     "type": [
-	//                       "array",
-	//                       {
-	//                         "count": "removedComponentCount",
-	//                         "type": [
-	//                           "container",
-	//                           [
-	//                             {
-	//                               "name": "type",
-	//                               "type": "SlotComponentType"
-	//                             }
-	//                           ]
-	//                         ]
-	//                       }
-	//                     ]
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	UnnamedType0002 pk.Field
-}
-
-func (t *Slot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ItemCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
-	}
-	// Switch field UnnamedType0002 based on itemCount
-	// Convert compareTo value to string for matching
-	compareValueUnnamedType0002 := fmt.Sprintf("%v", t.ItemCount)
-
-	switch compareValueUnnamedType0002 {
-	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 case 0")
-		}
-		t.UnnamedType0002 = &val
-	default:
-		var val SlotUnnamedType0002Default
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0002 default case")
-		}
-		t.UnnamedType0002 = &val
-	}
-
-	return totalBytes, nil
-}
-
-func (t Slot) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[Slot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ItemCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field UnnamedType0002 based on itemCount
-	if t.UnnamedType0002 != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0002.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0002 value does not implement WriteTo: %T", t.UnnamedType0002)
-		}
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "globalPos",
-//	      "type": "GlobalPos"
-//	    },
-//	    {
-//	      "name": "yaw",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "pitch",
+//	      "name": "power",
 //	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type RespawnData struct {
-	// "GlobalPos"
-	GlobalPos GlobalPos
+type ParticleDataEffect struct {
+	// "i32"
+	Color pk.Int
 	// "f32"
-	Yaw pk.Float
+	Power pk.Float
+}
+
+func (t *ParticleDataEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Color.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Color")
+	}
+	bytesRead, err = t.Power.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Power")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ParticleDataEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ParticleDataEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Color.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Power.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "target",
+//	      "type": "vec3f64"
+//	    },
+//	    {
+//	      "name": "color",
+//	      "type": "u8"
+//	    }
+//	  ]
+//	]
+type ParticleDataTrail struct {
+	// "vec3f64"
+	Target Vec3f64
+	// "u8"
+	Color pk.UnsignedByte
+}
+
+func (t *ParticleDataTrail) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Target.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Target")
+	}
+	bytesRead, err = t.Color.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Color")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ParticleDataTrail) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ParticleDataTrail.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Target.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Color.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "red",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "green",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "blue",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "scale",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type ParticleDataDust struct {
 	// "f32"
-	Pitch pk.Float
+	Red pk.Float
+	// "f32"
+	Green pk.Float
+	// "f32"
+	Blue pk.Float
+	// "f32"
+	Scale pk.Float
 }
 
-func (t *RespawnData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ParticleDataDust) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.GlobalPos.ReadFrom(r)
+	bytesRead, err = t.Red.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field GlobalPos")
+		return totalBytes, errors.Wrap(err, "failed to read field Red")
 	}
-	bytesRead, err = t.Yaw.ReadFrom(r)
+	bytesRead, err = t.Green.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
+		return totalBytes, errors.Wrap(err, "failed to read field Green")
 	}
-	bytesRead, err = t.Pitch.ReadFrom(r)
+	bytesRead, err = t.Blue.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
+		return totalBytes, errors.Wrap(err, "failed to read field Blue")
+	}
+	bytesRead, err = t.Scale.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Scale")
 	}
 
 	return totalBytes, nil
 }
 
-func (t RespawnData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ParticleDataDust) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[RespawnData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ParticleDataDust.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.GlobalPos.WriteTo(w)
+	bytesWritten, err = t.Red.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Yaw.WriteTo(w)
+	bytesWritten, err = t.Green.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Pitch.WriteTo(w)
+	bytesWritten, err = t.Blue.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Scale.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3102,66 +6011,50 @@ func (t RespawnData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "x",
+//	      "name": "color",
 //	      "type": "i32"
 //	    },
 //	    {
-//	      "name": "y",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "i32"
+//	      "name": "power",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type Vec3i32 struct {
+type ParticleDataInstantEffect struct {
 	// "i32"
-	X pk.Int
-	// "i32"
-	Y pk.Int
-	// "i32"
-	Z pk.Int
+	Color pk.Int
+	// "f32"
+	Power pk.Float
 }
 
-func (t *Vec3i32) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ParticleDataInstantEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.X.ReadFrom(r)
+	bytesRead, err = t.Color.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
+		return totalBytes, errors.Wrap(err, "failed to read field Color")
 	}
-	bytesRead, err = t.Y.ReadFrom(r)
+	bytesRead, err = t.Power.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
-	}
-	bytesRead, err = t.Z.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
+		return totalBytes, errors.Wrap(err, "failed to read field Power")
 	}
 
 	return totalBytes, nil
 }
 
-func (t Vec3i32) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ParticleDataInstantEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[Vec3i32.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ParticleDataInstantEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.X.WriteTo(w)
+	bytesWritten, err = t.Color.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Y.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Z.WriteTo(w)
+	bytesWritten, err = t.Power.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3174,66 +6067,34 @@ func (t Vec3i32) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "boundingBoxMin",
-//	      "type": "position"
-//	    },
-//	    {
-//	      "name": "boundingBoxMax",
-//	      "type": "position"
-//	    },
-//	    {
-//	      "name": "isStart",
-//	      "type": "bool"
+//	      "name": "power",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type DebugStructureInfoPiecesArrayType struct {
-	// "position"
-	BoundingBoxMin Position
-	// "position"
-	BoundingBoxMax Position
-	// "bool"
-	IsStart pk.Boolean
+type ParticleDataDragonBreath struct {
+	// "f32"
+	Power pk.Float
 }
 
-func (t *DebugStructureInfoPiecesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ParticleDataDragonBreath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.BoundingBoxMin.ReadFrom(r)
+	bytesRead, err = t.Power.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMin")
-	}
-	bytesRead, err = t.BoundingBoxMax.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMax")
-	}
-	bytesRead, err = t.IsStart.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field IsStart")
+		return totalBytes, errors.Wrap(err, "failed to read field Power")
 	}
 
 	return totalBytes, nil
 }
 
-func (t DebugStructureInfoPiecesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ParticleDataDragonBreath) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[DebugStructureInfoPiecesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ParticleDataDragonBreath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.BoundingBoxMin.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.BoundingBoxMax.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.IsStart.WriteTo(w)
+	bytesWritten, err = t.Power.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3246,194 +6107,130 @@ func (t DebugStructureInfoPiecesArrayType) WriteTo(w io.Writer) (totalBytes int6
 //	  "container",
 //	  [
 //	    {
-//	      "name": "boundingBoxMin",
-//	      "type": "position"
+//	      "name": "fromRed",
+//	      "type": "f32"
 //	    },
 //	    {
-//	      "name": "boundingBoxMax",
-//	      "type": "position"
+//	      "name": "fromGreen",
+//	      "type": "f32"
 //	    },
 //	    {
-//	      "name": "pieces",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "boundingBoxMin",
-//	                "type": "position"
-//	              },
-//	              {
-//	                "name": "boundingBoxMax",
-//	                "type": "position"
-//	              },
-//	              {
-//	                "name": "isStart",
-//	                "type": "bool"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
+//	      "name": "fromBlue",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "scale",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "toRed",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "toGreen",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "toBlue",
+//	      "type": "f32"
 //	    }
 //	  ]
 //	]
-type DebugStructureInfo struct {
-	// "position"
-	BoundingBoxMin Position
-	// "position"
-	BoundingBoxMax Position
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "boundingBoxMin",
-	//                     "type": "position"
-	//                   },
-	//                   {
-	//                     "name": "boundingBoxMax",
-	//                     "type": "position"
-	//                   },
-	//                   {
-	//                     "name": "isStart",
-	//                     "type": "bool"
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	Pieces models.Array[pk.VarInt, DebugStructureInfoPiecesArrayType]
+type ParticleDataDustColorTransition struct {
+	// "f32"
+	FromRed pk.Float
+	// "f32"
+	FromGreen pk.Float
+	// "f32"
+	FromBlue pk.Float
+	// "f32"
+	Scale pk.Float
+	// "f32"
+	ToRed pk.Float
+	// "f32"
+	ToGreen pk.Float
+	// "f32"
+	ToBlue pk.Float
 }
 
-func (t *DebugStructureInfo) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ParticleDataDustColorTransition) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.BoundingBoxMin.ReadFrom(r)
+	bytesRead, err = t.FromRed.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMin")
+		return totalBytes, errors.Wrap(err, "failed to read field FromRed")
 	}
-	bytesRead, err = t.BoundingBoxMax.ReadFrom(r)
+	bytesRead, err = t.FromGreen.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMax")
+		return totalBytes, errors.Wrap(err, "failed to read field FromGreen")
 	}
-	bytesRead, err = t.Pieces.ReadFrom(r)
+	bytesRead, err = t.FromBlue.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pieces")
+		return totalBytes, errors.Wrap(err, "failed to read field FromBlue")
+	}
+	bytesRead, err = t.Scale.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Scale")
+	}
+	bytesRead, err = t.ToRed.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ToRed")
+	}
+	bytesRead, err = t.ToGreen.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ToGreen")
+	}
+	bytesRead, err = t.ToBlue.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ToBlue")
 	}
 
 	return totalBytes, nil
 }
 
-func (t DebugStructureInfo) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ParticleDataDustColorTransition) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[DebugStructureInfo.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ParticleDataDustColorTransition.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.BoundingBoxMin.WriteTo(w)
+	bytesWritten, err = t.FromRed.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.BoundingBoxMax.WriteTo(w)
+	bytesWritten, err = t.FromGreen.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Pieces.WriteTo(w)
+	bytesWritten, err = t.FromBlue.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "uuid",
-//	      "type": "UUID"
-//	    },
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "properties",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "GameProfileProperty"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type GameProfile struct {
-	// "UUID"
-	Uuid pk.UUID
-	// "string"
-	Name pk.String
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "GameProfileProperty"
-	//             }
-	//           ]
-	Properties models.Array[pk.VarInt, GameProfileProperty]
-}
-
-func (t *GameProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Uuid.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
-	}
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Properties.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Properties")
-	}
-
-	return totalBytes, nil
-}
-
-func (t GameProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[GameProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Uuid.WriteTo(w)
+	bytesWritten, err = t.Scale.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Name.WriteTo(w)
+	bytesWritten, err = t.ToRed.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Properties.WriteTo(w)
+	bytesWritten, err = t.ToGreen.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ToBlue.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3655,438 +6452,6 @@ func (t ParticleDataVibration) WriteTo(w io.Writer) (totalBytes int64, err error
 		}
 	}
 	bytesWritten, err = t.Ticks.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "target",
-//	      "type": "vec3f64"
-//	    },
-//	    {
-//	      "name": "color",
-//	      "type": "u8"
-//	    }
-//	  ]
-//	]
-type ParticleDataTrail struct {
-	// "vec3f64"
-	Target Vec3f64
-	// "u8"
-	Color pk.UnsignedByte
-}
-
-func (t *ParticleDataTrail) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Target.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Target")
-	}
-	bytesRead, err = t.Color.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Color")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataTrail) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataTrail.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Target.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Color.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "fromRed",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "fromGreen",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "fromBlue",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "scale",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "toRed",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "toGreen",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "toBlue",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ParticleDataDustColorTransition struct {
-	// "f32"
-	FromRed pk.Float
-	// "f32"
-	FromGreen pk.Float
-	// "f32"
-	FromBlue pk.Float
-	// "f32"
-	Scale pk.Float
-	// "f32"
-	ToRed pk.Float
-	// "f32"
-	ToGreen pk.Float
-	// "f32"
-	ToBlue pk.Float
-}
-
-func (t *ParticleDataDustColorTransition) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.FromRed.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FromRed")
-	}
-	bytesRead, err = t.FromGreen.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FromGreen")
-	}
-	bytesRead, err = t.FromBlue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FromBlue")
-	}
-	bytesRead, err = t.Scale.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Scale")
-	}
-	bytesRead, err = t.ToRed.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ToRed")
-	}
-	bytesRead, err = t.ToGreen.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ToGreen")
-	}
-	bytesRead, err = t.ToBlue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ToBlue")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataDustColorTransition) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataDustColorTransition.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.FromRed.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.FromGreen.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.FromBlue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Scale.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ToRed.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ToGreen.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ToBlue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "power",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ParticleDataDragonBreath struct {
-	// "f32"
-	Power pk.Float
-}
-
-func (t *ParticleDataDragonBreath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Power.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Power")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataDragonBreath) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataDragonBreath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Power.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "color",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "power",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ParticleDataEffect struct {
-	// "i32"
-	Color pk.Int
-	// "f32"
-	Power pk.Float
-}
-
-func (t *ParticleDataEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Color.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Color")
-	}
-	bytesRead, err = t.Power.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Power")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Color.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Power.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "color",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "power",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ParticleDataInstantEffect struct {
-	// "i32"
-	Color pk.Int
-	// "f32"
-	Power pk.Float
-}
-
-func (t *ParticleDataInstantEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Color.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Color")
-	}
-	bytesRead, err = t.Power.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Power")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataInstantEffect) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataInstantEffect.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Color.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Power.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "red",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "green",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "blue",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "scale",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type ParticleDataDust struct {
-	// "f32"
-	Red pk.Float
-	// "f32"
-	Green pk.Float
-	// "f32"
-	Blue pk.Float
-	// "f32"
-	Scale pk.Float
-}
-
-func (t *ParticleDataDust) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Red.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Red")
-	}
-	bytesRead, err = t.Green.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Green")
-	}
-	bytesRead, err = t.Blue.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Blue")
-	}
-	bytesRead, err = t.Scale.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Scale")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ParticleDataDust) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ParticleDataDust.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Red.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Green.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Blue.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Scale.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -4788,13 +7153,14 @@ func (t *Particle) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Data = &val
 	case "firefly":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case firefly")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case firefly")
 		}
-		t.Data = &val
+		t.Data = &__void
 	case "flash":
 		var val pk.Int
 		bytesRead, err = val.ReadFrom(r)
@@ -4903,3181 +7269,127 @@ func (t Particle) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "properties",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "GameProfileProperty"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type GameProfileNameProp struct {
-	// "string"
-	Name pk.String
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "GameProfileProperty"
-	//             }
-	//           ]
-	Properties models.Array[pk.VarInt, GameProfileProperty]
-}
-
-func (t *GameProfileNameProp) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Properties.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Properties")
-	}
-
-	return totalBytes, nil
-}
-
-func (t GameProfileNameProp) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[GameProfileNameProp.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Properties.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "x",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "y",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type Vec3f struct {
-	// "f32"
-	X pk.Float
-	// "f32"
-	Y pk.Float
-	// "f32"
-	Z pk.Float
-}
-
-func (t *Vec3f) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.X.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
-	}
-	bytesRead, err = t.Y.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
-	}
-	bytesRead, err = t.Z.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
-	}
-
-	return totalBytes, nil
-}
-
-func (t Vec3f) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[Vec3f.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.X.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Y.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type IDSet struct {
-	// RegistryEntryHolderSet can hold either a single named tag or a list of numeric IDs
-	IsTagList bool
-	Tag       pk.String
-	IDs       models.Array[pk.VarInt, pk.VarInt]
-}
-
-func (r *IDSet) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint count - if 0, a single tag follows; otherwise IDs follow
-	var count pk.VarInt
-	n, err := count.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder set count")
-	}
-
-	if count == 0 {
-		// Tag representation - read a single tag
-		r.IsTagList = true
-		n, err = r.Tag.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder set tag")
-		}
-	} else {
-		// IDs list representation - count already read, now read count-1 more IDs
-		r.IsTagList = false
-		ary := make([]pk.VarInt, count)
-		ary[0] = pk.VarInt(count - 1)
-		for i := 1; i < int(count); i++ {
-			var id pk.VarInt
-			n, err := id.ReadFrom(reader)
-			totalBytes += n
-			if err != nil {
-				return totalBytes, errors.Wrapf(err, "failed to read registry entry holder set ID at index %d", i)
-			}
-			ary[i] = id
-		}
-		r.IDs.Ary.Ary = any(ary)
-	}
-
-	return totalBytes, nil
-}
-
-func (r IDSet) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsTagList {
-		// Write 0 followed by single tag
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set zero count for tag")
-		}
-		n, err = r.Tag.WriteTo(w)
-		totalBytes += n
-		return totalBytes, err
-	} else {
-		// Write IDs (with first ID + 1 as the "count")
-		idsAry, ok := r.IDs.Ary.Ary.([]pk.VarInt)
-		if !ok || len(idsAry) == 0 {
-			return totalBytes, nil
-		}
-		// Write first ID + 1
-		firstPlusOne := pk.VarInt(idsAry[0]) + 1
-		n, err := firstPlusOne.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set first ID + 1")
-		}
-		// Write remaining IDs
-		for i := 1; i < len(idsAry); i++ {
-			n, err := idsAry[i].WriteTo(w)
-			totalBytes += n
-			if err != nil {
-				return totalBytes, errors.Wrapf(err, "failed to write registry entry holder set ID at index %d", i)
-			}
-		}
-	}
-
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "reached",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "nextNodeIndex",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "target",
-//	      "type": "position"
-//	    },
-//	    {
-//	      "name": "nodes",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Node"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "debugData",
-//	      "type": "PathDebugData"
-//	    }
-//	  ]
-//	]
-type Path struct {
-	// "bool"
-	Reached pk.Boolean
-	// "i32"
-	NextNodeIndex pk.Int
-	// "position"
-	Target Position
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "Node"
-	//             }
-	//           ]
-	Nodes models.Array[pk.VarInt, Node]
-	// "PathDebugData"
-	DebugData PathDebugData
-}
-
-func (t *Path) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Reached.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Reached")
-	}
-	bytesRead, err = t.NextNodeIndex.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field NextNodeIndex")
-	}
-	bytesRead, err = t.Target.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Target")
-	}
-	bytesRead, err = t.Nodes.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Nodes")
-	}
-	bytesRead, err = t.DebugData.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DebugData")
-	}
-
-	return totalBytes, nil
-}
-
-func (t Path) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[Path.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Reached.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.NextNodeIndex.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Target.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Nodes.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DebugData.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
+//	      "name": "body",
 //	      "type": [
 //	        "option",
 //	        "string"
 //	      ]
 //	    },
 //	    {
-//	      "name": "uuid",
+//	      "name": "cape",
 //	      "type": [
 //	        "option",
-//	        "UUID"
+//	        "string"
 //	      ]
 //	    },
 //	    {
-//	      "name": "properties",
+//	      "name": "elytra",
 //	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "GameProfileProperty"
-//	        }
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "model",
+//	      "type": [
+//	        "option",
+//	        [
+//	          "mapper",
+//	          {
+//	            "type": "varint",
+//	            "mappings": {
+//	              "0": "wide",
+//	              "1": "slim"
+//	            }
+//	          }
+//	        ]
 //	      ]
 //	    }
 //	  ]
 //	]
-type PartialResolvableProfile struct {
+type PlayerSkinPatch struct {
 	// [
 	//             "option",
 	//             "string"
 	//           ]
-	Name models.Option[pk.String]
+	Body models.Option[pk.String]
 	// [
 	//             "option",
-	//             "UUID"
+	//             "string"
 	//           ]
-	Uuid models.Option[pk.UUID]
+	Cape models.Option[pk.String]
 	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": "GameProfileProperty"
-	//             }
+	//             "option",
+	//             "string"
 	//           ]
-	Properties models.Array[pk.VarInt, GameProfileProperty]
-}
-
-func (t *PartialResolvableProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Uuid.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
-	}
-	bytesRead, err = t.Properties.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Properties")
-	}
-
-	return totalBytes, nil
-}
-
-func (t PartialResolvableProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[PartialResolvableProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Uuid.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Properties.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "SlotComponentType"
-//	    }
-//	  ]
-//	]
-type UntrustedSlotUnnamedType0003DefaultRemoveComponentsArrayType struct {
-	// "SlotComponentType"
-	Type SlotComponentType
-}
-
-func (t *UntrustedSlotUnnamedType0003DefaultRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-
-	return totalBytes, nil
-}
-
-func (t UntrustedSlotUnnamedType0003DefaultRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[UntrustedSlotUnnamedType0003DefaultRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "itemId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "addedComponentCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "removedComponentCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "components",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "count": "addedComponentCount",
-//	          "type": "UntrustedSlotComponent"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "removeComponents",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "count": "removedComponentCount",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "type",
-//	                "type": "SlotComponentType"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type UntrustedSlotUnnamedType0003Default struct {
-	// "varint"
-	ItemId pk.VarInt
-	// "varint"
-	AddedComponentCount pk.VarInt
-	// "varint"
-	RemovedComponentCount pk.VarInt
+	Elytra models.Option[pk.String]
 	// [
-	//                       "array",
-	//                       {
-	//                         "count": "addedComponentCount",
-	//                         "type": "UntrustedSlotComponent"
-	//                       }
-	//                     ]
-	Components models.ExplicitCountArray[UntrustedSlotComponent]
-	// [
-	//                       "array",
-	//                       {
-	//                         "count": "removedComponentCount",
-	//                         "type": [
-	//                           "container",
-	//                           [
-	//                             {
-	//                               "name": "type",
-	//                               "type": "SlotComponentType"
-	//                             }
-	//                           ]
-	//                         ]
-	//                       }
-	//                     ]
-	RemoveComponents models.ExplicitCountArray[UntrustedSlotUnnamedType0003DefaultRemoveComponentsArrayType]
-}
-
-func (t *UntrustedSlotUnnamedType0003Default) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ItemId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
-	}
-	bytesRead, err = t.AddedComponentCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AddedComponentCount")
-	}
-	bytesRead, err = t.RemovedComponentCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RemovedComponentCount")
-	}
-	// Initialize ExplicitCountArray with count field name
-	t.Components.CountFieldName = "AddedComponentCount"
-	// Prepare parent context for explicit count array 'Components'
-	Components_ctx := models.NewParentContext()
-	Components_ctx.SetField("AddedComponentCount", t.AddedComponentCount)
-	t.Components.SetParentContext(Components_ctx)
-	bytesRead, err = t.Components.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Components")
-	}
-	// Initialize ExplicitCountArray with count field name
-	t.RemoveComponents.CountFieldName = "RemovedComponentCount"
-	// Prepare parent context for explicit count array 'RemoveComponents'
-	RemoveComponents_ctx := models.NewParentContext()
-	RemoveComponents_ctx.SetField("RemovedComponentCount", t.RemovedComponentCount)
-	t.RemoveComponents.SetParentContext(RemoveComponents_ctx)
-	bytesRead, err = t.RemoveComponents.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
-	}
-
-	return totalBytes, nil
-}
-
-func (t UntrustedSlotUnnamedType0003Default) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[UntrustedSlotUnnamedType0003Default.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ItemId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AddedComponentCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.RemovedComponentCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Components.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.RemoveComponents.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "itemCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "anon": true,
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "itemCount",
-//	          "fields": {
-//	            "0": "void",
-//	            "false": "void"
-//	          },
-//	          "default": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "itemId",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "addedComponentCount",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "removedComponentCount",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "components",
-//	                "type": [
-//	                  "array",
-//	                  {
-//	                    "count": "addedComponentCount",
-//	                    "type": "UntrustedSlotComponent"
-//	                  }
-//	                ]
-//	              },
-//	              {
-//	                "name": "removeComponents",
-//	                "type": [
-//	                  "array",
-//	                  {
-//	                    "count": "removedComponentCount",
-//	                    "type": [
-//	                      "container",
-//	                      [
-//	                        {
-//	                          "name": "type",
-//	                          "type": "SlotComponentType"
-//	                        }
-//	                      ]
-//	                    ]
-//	                  }
-//	                ]
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type UntrustedSlot struct {
-	// "varint"
-	ItemCount pk.VarInt
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "itemCount",
-	//               "fields": {
-	//                 "0": "void",
-	//                 "false": "void"
-	//               },
-	//               "default": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "itemId",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "addedComponentCount",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "removedComponentCount",
-	//                     "type": "varint"
-	//                   },
-	//                   {
-	//                     "name": "components",
-	//                     "type": [
-	//                       "array",
-	//                       {
-	//                         "count": "addedComponentCount",
-	//                         "type": "UntrustedSlotComponent"
-	//                       }
-	//                     ]
-	//                   },
-	//                   {
-	//                     "name": "removeComponents",
-	//                     "type": [
-	//                       "array",
-	//                       {
-	//                         "count": "removedComponentCount",
-	//                         "type": [
-	//                           "container",
-	//                           [
-	//                             {
-	//                               "name": "type",
-	//                               "type": "SlotComponentType"
-	//                             }
-	//                           ]
-	//                         ]
-	//                       }
-	//                     ]
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	UnnamedType0003 pk.Field
-}
-
-func (t *UntrustedSlot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ItemCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
-	}
-	// Switch field UnnamedType0003 based on itemCount
-	// Convert compareTo value to string for matching
-	compareValueUnnamedType0003 := fmt.Sprintf("%v", t.ItemCount)
-
-	switch compareValueUnnamedType0003 {
-	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0003 case 0")
-		}
-		t.UnnamedType0003 = &val
-	case "false":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0003 case false")
-		}
-		t.UnnamedType0003 = &val
-	default:
-		var val UntrustedSlotUnnamedType0003Default
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0003 default case")
-		}
-		t.UnnamedType0003 = &val
-	}
-
-	return totalBytes, nil
-}
-
-func (t UntrustedSlot) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[UntrustedSlot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ItemCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field UnnamedType0003 based on itemCount
-	if t.UnnamedType0003 != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0003.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0003 value does not implement WriteTo: %T", t.UnnamedType0003)
-		}
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "dimensionName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "location",
-//	      "type": "position"
-//	    }
-//	  ]
-//	]
-type GlobalPos struct {
-	// "string"
-	DimensionName pk.String
-	// "position"
-	Location Position
-}
-
-func (t *GlobalPos) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.DimensionName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
-	}
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-
-	return totalBytes, nil
-}
-
-func (t GlobalPos) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[GlobalPos.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.DimensionName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "x",
-//	      "type": "f64"
-//	    },
-//	    {
-//	      "name": "y",
-//	      "type": "f64"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "f64"
-//	    }
-//	  ]
-//	]
-type Vec3f64 struct {
-	// "f64"
-	X pk.Double
-	// "f64"
-	Y pk.Double
-	// "f64"
-	Z pk.Double
-}
-
-func (t *Vec3f64) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.X.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
-	}
-	bytesRead, err = t.Y.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
-	}
-	bytesRead, err = t.Z.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
-	}
-
-	return totalBytes, nil
-}
-
-func (t Vec3f64) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[Vec3f64.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.X.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Y.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "SlotComponentType"
-//	    },
-//	    {
-//	      "name": "data",
-//	      "type": "ByteArray"
-//	    }
-//	  ]
-//	]
-type UntrustedSlotComponent struct {
-	// "SlotComponentType"
-	Type SlotComponentType
-	// "ByteArray"
-	Data pk.ByteArray
-}
-
-func (t *UntrustedSlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.Data.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
-	}
-
-	return totalBytes, nil
-}
-
-func (t UntrustedSlotComponent) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[UntrustedSlotComponent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Data.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "SlotComponentType"
-//	    },
-//	    {
-//	      "name": "hash",
-//	      "type": "i32"
-//	    }
-//	  ]
-//	]
-type HashedSlotComponentsArrayType struct {
-	// "SlotComponentType"
-	Type SlotComponentType
-	// "i32"
-	Hash pk.Int
-}
-
-func (t *HashedSlotComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.Hash.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Hash")
-	}
-
-	return totalBytes, nil
-}
-
-func (t HashedSlotComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[HashedSlotComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Hash.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "SlotComponentType"
-//	    }
-//	  ]
-//	]
-type HashedSlotRemoveComponentsArrayType struct {
-	// "SlotComponentType"
-	Type SlotComponentType
-}
-
-func (t *HashedSlotRemoveComponentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-
-	return totalBytes, nil
-}
-
-func (t HashedSlotRemoveComponentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[HashedSlotRemoveComponentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "itemId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "itemCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "components",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "type",
-//	                "type": "SlotComponentType"
-//	              },
-//	              {
-//	                "name": "hash",
-//	                "type": "i32"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "removeComponents",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "type",
-//	                "type": "SlotComponentType"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type HashedSlot struct {
-	// "varint"
-	ItemId pk.VarInt
-	// "varint"
-	ItemCount pk.VarInt
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "type",
-	//                     "type": "SlotComponentType"
-	//                   },
-	//                   {
-	//                     "name": "hash",
-	//                     "type": "i32"
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	Components models.Array[pk.VarInt, HashedSlotComponentsArrayType]
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "type",
-	//                     "type": "SlotComponentType"
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	RemoveComponents models.Array[pk.VarInt, HashedSlotRemoveComponentsArrayType]
-}
-
-func (t *HashedSlot) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ItemId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemId")
-	}
-	bytesRead, err = t.ItemCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemCount")
-	}
-	bytesRead, err = t.Components.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Components")
-	}
-	bytesRead, err = t.RemoveComponents.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RemoveComponents")
-	}
-
-	return totalBytes, nil
-}
-
-func (t HashedSlot) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[HashedSlot.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ItemId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ItemCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Components.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.RemoveComponents.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "pos",
-//	      "type": "position"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueNeighborUpdates struct {
-	// "position"
-	Pos Position
-}
-
-func (t *DebugSubscriptionEventValueNeighborUpdates) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Pos.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pos")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueNeighborUpdates) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueNeighborUpdates.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Pos.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "event",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "pos",
-//	      "type": "vec3f64"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueGameEvents struct {
-	// "varint"
-	Event pk.VarInt
-	// "vec3f64"
-	Pos Vec3f64
-}
-
-func (t *DebugSubscriptionEventValueGameEvents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Event.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Event")
-	}
-	bytesRead, err = t.Pos.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pos")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueGameEvents) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueGameEvents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Event.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Pos.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "hivePos",
-//	      "type": [
-//	        "option",
-//	        "position"
-//	      ]
-//	    },
-//	    {
-//	      "name": "flowerPos",
-//	      "type": [
-//	        "option",
-//	        "position"
-//	      ]
-//	    },
-//	    {
-//	      "name": "travelTicks",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "blacklistedHives",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "position"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueBees struct {
-	// [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	HivePos models.Option[Position]
-	// [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	FlowerPos models.Option[Position]
-	// "varint"
-	TravelTicks pk.VarInt
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	BlacklistedHives models.Array[pk.VarInt, Position]
-}
-
-func (t *DebugSubscriptionEventValueBees) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.HivePos.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HivePos")
-	}
-	bytesRead, err = t.FlowerPos.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FlowerPos")
-	}
-	bytesRead, err = t.TravelTicks.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TravelTicks")
-	}
-	bytesRead, err = t.BlacklistedHives.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BlacklistedHives")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueBees) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueBees.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.HivePos.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.FlowerPos.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.TravelTicks.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.BlacklistedHives.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "attackTarget",
-//	      "type": [
-//	        "option",
-//	        "varint"
-//	      ]
-//	    },
-//	    {
-//	      "name": "jumpTarget",
-//	      "type": [
-//	        "option",
-//	        "position"
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueBreezes struct {
-	// [
-	//                         "option",
-	//                         "varint"
-	//                       ]
-	AttackTarget models.Option[pk.VarInt]
-	// [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	JumpTarget models.Option[Position]
-}
-
-func (t *DebugSubscriptionEventValueBreezes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.AttackTarget.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AttackTarget")
-	}
-	bytesRead, err = t.JumpTarget.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field JumpTarget")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueBreezes) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueBreezes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.AttackTarget.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.JumpTarget.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "index",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueRedstoneWireOrientations struct {
-	// "varint"
-	Index pk.VarInt
-}
-
-func (t *DebugSubscriptionEventValueRedstoneWireOrientations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Index.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Index")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueRedstoneWireOrientations) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueRedstoneWireOrientations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Index.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "path",
-//	      "type": "Path"
-//	    },
-//	    {
-//	      "name": "maxNodeDistance",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueEntityPaths struct {
-	// "Path"
-	Path Path
-	// "f32"
-	MaxNodeDistance pk.Float
-}
-
-func (t *DebugSubscriptionEventValueEntityPaths) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Path.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Path")
-	}
-	bytesRead, err = t.MaxNodeDistance.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MaxNodeDistance")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueEntityPaths) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueEntityPaths.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Path.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MaxNodeDistance.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueEntityBlockIntersections struct {
-	// "varint"
-	Id pk.VarInt
-}
-
-func (t *DebugSubscriptionEventValueEntityBlockIntersections) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueEntityBlockIntersections) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueEntityBlockIntersections.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "occupantCount",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "honeyLevel",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "sedated",
-//	      "type": "bool"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueBeeHives struct {
-	// "varint"
-	Type pk.VarInt
-	// "varint"
-	OccupantCount pk.VarInt
-	// "varint"
-	HoneyLevel pk.VarInt
-	// "bool"
-	Sedated pk.Boolean
-}
-
-func (t *DebugSubscriptionEventValueBeeHives) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.OccupantCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field OccupantCount")
-	}
-	bytesRead, err = t.HoneyLevel.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HoneyLevel")
-	}
-	bytesRead, err = t.Sedated.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Sedated")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueBeeHives) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueBeeHives.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.OccupantCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.HoneyLevel.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Sedated.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "pos",
-//	      "type": "position"
-//	    },
-//	    {
-//	      "name": "poiType",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "freeTicketCount",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValuePois struct {
-	// "position"
-	Pos Position
-	// "varint"
-	PoiType pk.VarInt
-	// "varint"
-	FreeTicketCount pk.VarInt
-}
-
-func (t *DebugSubscriptionEventValuePois) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Pos.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pos")
-	}
-	bytesRead, err = t.PoiType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field PoiType")
-	}
-	bytesRead, err = t.FreeTicketCount.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FreeTicketCount")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValuePois) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValuePois.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Pos.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.PoiType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.FreeTicketCount.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "listenerRadius",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueGameEventListeners struct {
-	// "varint"
-	ListenerRadius pk.VarInt
-}
-
-func (t *DebugSubscriptionEventValueGameEventListeners) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ListenerRadius.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ListenerRadius")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueGameEventListeners) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueGameEventListeners.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ListenerRadius.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "priority",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "running",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueGoalSelectors struct {
-	// "varint"
-	Priority pk.VarInt
-	// "bool"
-	Running pk.Boolean
-	// "string"
-	Name pk.String
-}
-
-func (t *DebugSubscriptionEventValueGoalSelectors) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Priority.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Priority")
-	}
-	bytesRead, err = t.Running.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Running")
-	}
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueGoalSelectors) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueGoalSelectors.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Priority.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Running.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "positions",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "position"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueRaids struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	Positions models.Array[pk.VarInt, Position]
-}
-
-func (t *DebugSubscriptionEventValueRaids) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Positions.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Positions")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueRaids) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueRaids.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Positions.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "structures",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "DebugStructureInfo"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueStructures struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "DebugStructureInfo"
-	//                         }
-	//                       ]
-	Structures models.Array[pk.VarInt, DebugStructureInfo]
-}
-
-func (t *DebugSubscriptionEventValueStructures) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Structures.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Structures")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueStructures) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueStructures.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Structures.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "profession",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "xp",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "health",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "maxHealth",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "inventory",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "wantsGolem",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "angerLevel",
-//	      "type": "i32"
-//	    },
-//	    {
-//	      "name": "activities",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "string"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "behaviors",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "string"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "memories",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "string"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "gossips",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "string"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "pois",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "position"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "potentialPois",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "position"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEventValueBrains struct {
-	// "string"
-	Name pk.String
-	// "string"
-	Profession pk.String
-	// "i32"
-	Xp pk.Int
-	// "f32"
-	Health pk.Float
-	// "f32"
-	MaxHealth pk.Float
-	// "string"
-	Inventory pk.String
-	// "bool"
-	WantsGolem pk.Boolean
-	// "i32"
-	AngerLevel pk.Int
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	Activities models.Array[pk.VarInt, pk.String]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	Behaviors models.Array[pk.VarInt, pk.String]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	Memories models.Array[pk.VarInt, pk.String]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	Gossips models.Array[pk.VarInt, pk.String]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	Pois models.Array[pk.VarInt, Position]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	PotentialPois models.Array[pk.VarInt, Position]
-}
-
-func (t *DebugSubscriptionEventValueBrains) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Profession.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Profession")
-	}
-	bytesRead, err = t.Xp.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Xp")
-	}
-	bytesRead, err = t.Health.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Health")
-	}
-	bytesRead, err = t.MaxHealth.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MaxHealth")
-	}
-	bytesRead, err = t.Inventory.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Inventory")
-	}
-	bytesRead, err = t.WantsGolem.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field WantsGolem")
-	}
-	bytesRead, err = t.AngerLevel.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AngerLevel")
-	}
-	bytesRead, err = t.Activities.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Activities")
-	}
-	bytesRead, err = t.Behaviors.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Behaviors")
-	}
-	bytesRead, err = t.Memories.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Memories")
-	}
-	bytesRead, err = t.Gossips.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Gossips")
-	}
-	bytesRead, err = t.Pois.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pois")
-	}
-	bytesRead, err = t.PotentialPois.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field PotentialPois")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DebugSubscriptionEventValueBrains) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DebugSubscriptionEventValueBrains.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Profession.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Xp.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Health.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MaxHealth.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Inventory.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.WantsGolem.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AngerLevel.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Activities.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Behaviors.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Memories.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Gossips.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Pois.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.PotentialPois.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "DebugSubscriptionDataType"
-//	    },
-//	    {
-//	      "name": "value",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "type",
-//	          "fields": {
-//	            "DedicatedServerTickTime": "void",
-//	            "VillageSections": "void",
-//	            "Bees": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "hivePos",
-//	                  "type": [
-//	                    "option",
-//	                    "position"
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "flowerPos",
-//	                  "type": [
-//	                    "option",
-//	                    "position"
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "travelTicks",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "blacklistedHives",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "position"
-//	                    }
-//	                  ]
-//	                }
-//	              ]
-//	            ],
-//	            "Brains": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "name",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "profession",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "xp",
-//	                  "type": "i32"
-//	                },
-//	                {
-//	                  "name": "health",
-//	                  "type": "f32"
-//	                },
-//	                {
-//	                  "name": "maxHealth",
-//	                  "type": "f32"
-//	                },
-//	                {
-//	                  "name": "inventory",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "wantsGolem",
-//	                  "type": "bool"
-//	                },
-//	                {
-//	                  "name": "angerLevel",
-//	                  "type": "i32"
-//	                },
-//	                {
-//	                  "name": "activities",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "string"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "behaviors",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "string"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "memories",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "string"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "gossips",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "string"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "pois",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "position"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "potentialPois",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "position"
-//	                    }
-//	                  ]
-//	                }
-//	              ]
-//	            ],
-//	            "Breezes": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "attackTarget",
-//	                  "type": [
-//	                    "option",
-//	                    "varint"
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "jumpTarget",
-//	                  "type": [
-//	                    "option",
-//	                    "position"
-//	                  ]
-//	                }
-//	              ]
-//	            ],
-//	            "GoalSelectors": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "priority",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "running",
-//	                  "type": "bool"
-//	                },
-//	                {
-//	                  "name": "name",
-//	                  "type": "string"
-//	                }
-//	              ]
-//	            ],
-//	            "EntityPaths": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "path",
-//	                  "type": "Path"
-//	                },
-//	                {
-//	                  "name": "maxNodeDistance",
-//	                  "type": "f32"
-//	                }
-//	              ]
-//	            ],
-//	            "EntityBlockIntersections": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "id",
-//	                  "type": "varint"
-//	                }
-//	              ]
-//	            ],
-//	            "BeeHives": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "type",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "occupantCount",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "honeyLevel",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "sedated",
-//	                  "type": "bool"
-//	                }
-//	              ]
-//	            ],
-//	            "Pois": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "pos",
-//	                  "type": "position"
-//	                },
-//	                {
-//	                  "name": "poiType",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "freeTicketCount",
-//	                  "type": "varint"
-//	                }
-//	              ]
-//	            ],
-//	            "RedstoneWireOrientations": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "index",
-//	                  "type": "varint"
-//	                }
-//	              ]
-//	            ],
-//	            "Raids": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "positions",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "position"
-//	                    }
-//	                  ]
-//	                }
-//	              ]
-//	            ],
-//	            "Structures": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "structures",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "DebugStructureInfo"
-//	                    }
-//	                  ]
-//	                }
-//	              ]
-//	            ],
-//	            "GameEventListeners": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "listenerRadius",
-//	                  "type": "varint"
-//	                }
-//	              ]
-//	            ],
-//	            "NeighborUpdates": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "pos",
-//	                  "type": "position"
-//	                }
-//	              ]
-//	            ],
-//	            "GameEvents": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "event",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "pos",
-//	                  "type": "vec3f64"
-//	                }
-//	              ]
-//	            ]
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DebugSubscriptionEvent struct {
-	// "DebugSubscriptionDataType"
-	Type DebugSubscriptionDataType
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "type",
-	//               "fields": {
-	//                 "DedicatedServerTickTime": "void",
-	//                 "VillageSections": "void",
-	//                 "Bees": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "hivePos",
-	//                       "type": [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "flowerPos",
-	//                       "type": [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "travelTicks",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "blacklistedHives",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "Brains": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "name",
-	//                       "type": "string"
-	//                     },
-	//                     {
-	//                       "name": "profession",
-	//                       "type": "string"
-	//                     },
-	//                     {
-	//                       "name": "xp",
-	//                       "type": "i32"
-	//                     },
-	//                     {
-	//                       "name": "health",
-	//                       "type": "f32"
-	//                     },
-	//                     {
-	//                       "name": "maxHealth",
-	//                       "type": "f32"
-	//                     },
-	//                     {
-	//                       "name": "inventory",
-	//                       "type": "string"
-	//                     },
-	//                     {
-	//                       "name": "wantsGolem",
-	//                       "type": "bool"
-	//                     },
-	//                     {
-	//                       "name": "angerLevel",
-	//                       "type": "i32"
-	//                     },
-	//                     {
-	//                       "name": "activities",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "behaviors",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "memories",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "gossips",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "string"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "pois",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "potentialPois",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "Breezes": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "attackTarget",
-	//                       "type": [
-	//                         "option",
-	//                         "varint"
-	//                       ]
-	//                     },
-	//                     {
-	//                       "name": "jumpTarget",
-	//                       "type": [
-	//                         "option",
-	//                         "position"
-	//                       ]
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "GoalSelectors": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "priority",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "running",
-	//                       "type": "bool"
-	//                     },
-	//                     {
-	//                       "name": "name",
-	//                       "type": "string"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "EntityPaths": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "path",
-	//                       "type": "Path"
-	//                     },
-	//                     {
-	//                       "name": "maxNodeDistance",
-	//                       "type": "f32"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "EntityBlockIntersections": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "id",
-	//                       "type": "varint"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "BeeHives": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "type",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "occupantCount",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "honeyLevel",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "sedated",
-	//                       "type": "bool"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "Pois": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "pos",
-	//                       "type": "position"
-	//                     },
-	//                     {
-	//                       "name": "poiType",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "freeTicketCount",
-	//                       "type": "varint"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "RedstoneWireOrientations": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "index",
-	//                       "type": "varint"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "Raids": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "positions",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "position"
-	//                         }
-	//                       ]
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "Structures": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "structures",
-	//                       "type": [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "DebugStructureInfo"
-	//                         }
-	//                       ]
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "GameEventListeners": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "listenerRadius",
-	//                       "type": "varint"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "NeighborUpdates": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "pos",
-	//                       "type": "position"
-	//                     }
-	//                   ]
-	//                 ],
-	//                 "GameEvents": [
-	//                   "container",
-	//                   [
-	//                     {
-	//                       "name": "event",
-	//                       "type": "varint"
-	//                     },
-	//                     {
-	//                       "name": "pos",
-	//                       "type": "vec3f64"
-	//                     }
-	//                   ]
-	//                 ]
+	//             "option",
+	//             [
+	//               "mapper",
+	//               {
+	//                 "type": "varint",
+	//                 "mappings": {
+	//                   "0": "wide",
+	//                   "1": "slim"
+	//                 }
 	//               }
-	//             }
+	//             ]
 	//           ]
-	Value pk.Field
+	Model models.Option[PlayerSkinPatchModel]
 }
 
-func (t *DebugSubscriptionEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *PlayerSkinPatch) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
+	bytesRead, err = t.Body.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
+		return totalBytes, errors.Wrap(err, "failed to read field Body")
 	}
-	// Switch field Value based on type
-	// Convert compareTo value to string for matching
-	compareValueValue := t.Type.Value
-
-	switch compareValueValue {
-	case "BeeHives":
-		var val DebugSubscriptionEventValueBeeHives
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case BeeHives")
-		}
-		t.Value = &val
-	case "Bees":
-		var val DebugSubscriptionEventValueBees
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Bees")
-		}
-		t.Value = &val
-	case "Brains":
-		var val DebugSubscriptionEventValueBrains
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Brains")
-		}
-		t.Value = &val
-	case "Breezes":
-		var val DebugSubscriptionEventValueBreezes
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Breezes")
-		}
-		t.Value = &val
-	case "DedicatedServerTickTime":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case DedicatedServerTickTime")
-		}
-		t.Value = &val
-	case "EntityBlockIntersections":
-		var val DebugSubscriptionEventValueEntityBlockIntersections
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case EntityBlockIntersections")
-		}
-		t.Value = &val
-	case "EntityPaths":
-		var val DebugSubscriptionEventValueEntityPaths
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case EntityPaths")
-		}
-		t.Value = &val
-	case "GameEventListeners":
-		var val DebugSubscriptionEventValueGameEventListeners
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GameEventListeners")
-		}
-		t.Value = &val
-	case "GameEvents":
-		var val DebugSubscriptionEventValueGameEvents
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GameEvents")
-		}
-		t.Value = &val
-	case "GoalSelectors":
-		var val DebugSubscriptionEventValueGoalSelectors
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GoalSelectors")
-		}
-		t.Value = &val
-	case "NeighborUpdates":
-		var val DebugSubscriptionEventValueNeighborUpdates
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case NeighborUpdates")
-		}
-		t.Value = &val
-	case "Pois":
-		var val DebugSubscriptionEventValuePois
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Pois")
-		}
-		t.Value = &val
-	case "Raids":
-		var val DebugSubscriptionEventValueRaids
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Raids")
-		}
-		t.Value = &val
-	case "RedstoneWireOrientations":
-		var val DebugSubscriptionEventValueRedstoneWireOrientations
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case RedstoneWireOrientations")
-		}
-		t.Value = &val
-	case "Structures":
-		var val DebugSubscriptionEventValueStructures
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Structures")
-		}
-		t.Value = &val
-	case "VillageSections":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Value case VillageSections")
-		}
-		t.Value = &val
-	default:
-		// Mapper-backed discriminator with no explicit data for this value: treat as void
-		var __void models.Void
-		t.Value = &__void
+	bytesRead, err = t.Cape.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Cape")
+	}
+	bytesRead, err = t.Elytra.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Elytra")
+	}
+	bytesRead, err = t.Model.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Model")
 	}
 
 	return totalBytes, nil
 }
 
-func (t DebugSubscriptionEvent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t PlayerSkinPatch) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[DebugSubscriptionEvent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[PlayerSkinPatch.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Type.WriteTo(w)
+	bytesWritten, err = t.Body.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field Value based on type
-	if t.Value != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Value.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Value value does not implement WriteTo: %T", t.Value)
-		}
+	bytesWritten, err = t.Cape.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Elytra.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Model.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -8143,969 +7455,102 @@ func (t Vec2f) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "x",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "y",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "w",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type Vec4f struct {
-	// "f32"
-	X pk.Float
-	// "f32"
-	Y pk.Float
-	// "f32"
-	Z pk.Float
-	// "f32"
-	W pk.Float
-}
-
-func (t *Vec4f) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.X.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
-	}
-	bytesRead, err = t.Y.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
-	}
-	bytesRead, err = t.Z.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
-	}
-	bytesRead, err = t.W.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field W")
-	}
-
-	return totalBytes, nil
-}
-
-func (t Vec4f) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[Vec4f.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.X.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Y.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.W.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "soundEvent",
-//	      "type": "ItemSoundHolder"
-//	    },
-//	    {
-//	      "name": "description",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "lengthInSeconds",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "comparatorOutput",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type JukeboxSongData struct {
-	// "ItemSoundHolder"
-	SoundEvent ItemSoundHolder
-	// "anonymousNbt"
-	Description models.AnonymousNBT
-	// "f32"
-	LengthInSeconds pk.Float
-	// "varint"
-	ComparatorOutput pk.VarInt
-}
-
-func (t *JukeboxSongData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.SoundEvent.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field SoundEvent")
-	}
-	bytesRead, err = t.Description.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Description")
-	}
-	bytesRead, err = t.LengthInSeconds.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field LengthInSeconds")
-	}
-	bytesRead, err = t.ComparatorOutput.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ComparatorOutput")
-	}
-
-	return totalBytes, nil
-}
-
-func (t JukeboxSongData) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[JukeboxSongData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.SoundEvent.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Description.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.LengthInSeconds.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ComparatorOutput.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-//
-type ChunkBlockEntityUnnamedType0005 struct {
-	X int64
-	Z int64
-}
-
-func (b *ChunkBlockEntityUnnamedType0005) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 4
-	totalBits += 4
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield ChunkBlockEntityUnnamedType0005 total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield ChunkBlockEntityUnnamedType0005")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract x (4 bits, signed=false)
-	x_mask := uint64((1 << 4) - 1)
-	x_value := (packed >> (totalBits - currentOffset - 4)) & x_mask
-	b.X = int64(x_value)
-	currentOffset += 4
-	// Extract z (4 bits, signed=false)
-	z_mask := uint64((1 << 4) - 1)
-	z_value := (packed >> (totalBits - currentOffset - 4)) & z_mask
-	b.Z = int64(z_value)
-	currentOffset += 4
-
-	return int64(nn), nil
-}
-
-func (b ChunkBlockEntityUnnamedType0005) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 4
-	totalBits += 4
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield ChunkBlockEntityUnnamedType0005 total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack x (4 bits)
-	x_value := uint64(b.X) & ((1 << 4) - 1)
-	packed |= x_value << (totalBits - currentOffset - 4)
-	currentOffset += 4
-	// Pack z (4 bits)
-	z_value := uint64(b.Z) & ((1 << 4) - 1)
-	packed |= z_value << (totalBits - currentOffset - 4)
-	currentOffset += 4
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "anon": true,
-//	      "type": [
-//	        "bitfield",
-//	        [
-//	          {
-//	            "name": "x",
-//	            "size": 4,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "z",
-//	            "size": 4,
-//	            "signed": false
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "y",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "type",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "nbtData",
-//	      "type": "anonOptionalNbt"
-//	    }
-//	  ]
-//	]
-type ChunkBlockEntity struct {
-	// [
-	//             "bitfield",
-	//             [
-	//               {
-	//                 "name": "x",
-	//                 "size": 4,
-	//                 "signed": false
-	//               },
-	//               {
-	//                 "name": "z",
-	//                 "size": 4,
-	//                 "signed": false
-	//               }
-	//             ]
-	//           ]
-	UnnamedType0005 ChunkBlockEntityUnnamedType0005
-	// "i16"
-	Y pk.Short
-	// "varint"
-	Type pk.VarInt
-	// "anonOptionalNbt"
-	NbtData models.AnonymousNBT
-}
-
-func (t *ChunkBlockEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.UnnamedType0005.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field UnnamedType0005")
-	}
-	bytesRead, err = t.Y.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
-	}
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.NbtData.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field NbtData")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChunkBlockEntity) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChunkBlockEntity.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.UnnamedType0005.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Y.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.NbtData.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "partial",
-//	            "1": "complete"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "anon": true,
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "type",
-//	          "fields": {
-//	            "partial": "PartialResolvableProfile",
-//	            "complete": "GameProfile"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "skinPatch",
-//	      "type": "PlayerSkinPatch"
-//	    }
-//	  ]
-//	]
-type ResolvableProfile struct {
-	// [
-	//             "mapper",
-	//             {
-	//               "type": "varint",
-	//               "mappings": {
-	//                 "0": "partial",
-	//                 "1": "complete"
-	//               }
-	//             }
-	//           ]
-	Type ResolvableProfileType
-	// [
-	//             "switch",
-	//             {
-	//               "compareTo": "type",
-	//               "fields": {
-	//                 "partial": "PartialResolvableProfile",
-	//                 "complete": "GameProfile"
-	//               }
-	//             }
-	//           ]
-	UnnamedType0006 pk.Field
-	// "PlayerSkinPatch"
-	SkinPatch PlayerSkinPatch
-}
-
-func (t *ResolvableProfile) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	// Switch field UnnamedType0006 based on type
-	// Convert compareTo value to string for matching
-	compareValueUnnamedType0006 := t.Type.Value
-
-	switch compareValueUnnamedType0006 {
-	case "complete":
-		var val GameProfile
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case complete")
-		}
-		t.UnnamedType0006 = &val
-	case "partial":
-		var val PartialResolvableProfile
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case partial")
-		}
-		t.UnnamedType0006 = &val
-	default:
-		// Mapper-backed discriminator with no explicit data for this value: treat as void
-		var __void models.Void
-		t.UnnamedType0006 = &__void
-	}
-
-	bytesRead, err = t.SkinPatch.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field SkinPatch")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ResolvableProfile) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ResolvableProfile.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field UnnamedType0006 based on type
-	if t.UnnamedType0006 != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0006.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0006 value does not implement WriteTo: %T", t.UnnamedType0006)
-		}
-	}
-	bytesWritten, err = t.SkinPatch.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "horizontalBlockingAngle",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "type",
-//	      "type": [
-//	        "option",
-//	        "IDSet"
-//	      ]
-//	    },
-//	    {
-//	      "name": "base",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "factor",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBlocksAttacksDamageReductionsArrayType struct {
-	// "f32"
-	HorizontalBlockingAngle pk.Float
-	// [
-	//                                   "option",
-	//                                   "IDSet"
-	//                                 ]
-	Type models.Option[IDSet]
-	// "f32"
-	Base pk.Float
-	// "f32"
-	Factor pk.Float
-}
-
-func (t *SlotComponentDataBlocksAttacksDamageReductionsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.HorizontalBlockingAngle.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HorizontalBlockingAngle")
-	}
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.Base.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Base")
-	}
-	bytesRead, err = t.Factor.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Factor")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBlocksAttacksDamageReductionsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBlocksAttacksDamageReductionsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.HorizontalBlockingAngle.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Base.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Factor.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "threshold",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "base",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "factor",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBlocksAttacksItemDamage struct {
-	// "f32"
-	Threshold pk.Float
-	// "f32"
-	Base pk.Float
-	// "f32"
-	Factor pk.Float
-}
-
-func (t *SlotComponentDataBlocksAttacksItemDamage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Threshold.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Threshold")
-	}
-	bytesRead, err = t.Base.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Base")
-	}
-	bytesRead, err = t.Factor.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Factor")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBlocksAttacksItemDamage) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBlocksAttacksItemDamage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Threshold.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Base.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Factor.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "blockDelaySeconds",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "disableCooldownScale",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "damageReductions",
+//	      "name": "openSet",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "horizontalBlockingAngle",
-//	                "type": "f32"
-//	              },
-//	              {
-//	                "name": "type",
-//	                "type": [
-//	                  "option",
-//	                  "IDSet"
-//	                ]
-//	              },
-//	              {
-//	                "name": "base",
-//	                "type": "f32"
-//	              },
-//	              {
-//	                "name": "factor",
-//	                "type": "f32"
-//	              }
-//	            ]
-//	          ]
+//	          "type": "Node"
 //	        }
 //	      ]
 //	    },
 //	    {
-//	      "name": "itemDamage",
-//	      "type": [
-//	        "container",
-//	        [
-//	          {
-//	            "name": "threshold",
-//	            "type": "f32"
-//	          },
-//	          {
-//	            "name": "base",
-//	            "type": "f32"
-//	          },
-//	          {
-//	            "name": "factor",
-//	            "type": "f32"
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
-//	      "name": "bypassedBy",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    },
-//	    {
-//	      "name": "blockSound",
-//	      "type": [
-//	        "option",
-//	        "ItemSoundHolder"
-//	      ]
-//	    },
-//	    {
-//	      "name": "disableSound",
-//	      "type": [
-//	        "option",
-//	        "ItemSoundHolder"
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBlocksAttacks struct {
-	// "f32"
-	BlockDelaySeconds pk.Float
-	// "f32"
-	DisableCooldownScale pk.Float
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": [
-	//                             "container",
-	//                             [
-	//                               {
-	//                                 "name": "horizontalBlockingAngle",
-	//                                 "type": "f32"
-	//                               },
-	//                               {
-	//                                 "name": "type",
-	//                                 "type": [
-	//                                   "option",
-	//                                   "IDSet"
-	//                                 ]
-	//                               },
-	//                               {
-	//                                 "name": "base",
-	//                                 "type": "f32"
-	//                               },
-	//                               {
-	//                                 "name": "factor",
-	//                                 "type": "f32"
-	//                               }
-	//                             ]
-	//                           ]
-	//                         }
-	//                       ]
-	DamageReductions models.Array[pk.VarInt, SlotComponentDataBlocksAttacksDamageReductionsArrayType]
-	// [
-	//                         "container",
-	//                         [
-	//                           {
-	//                             "name": "threshold",
-	//                             "type": "f32"
-	//                           },
-	//                           {
-	//                             "name": "base",
-	//                             "type": "f32"
-	//                           },
-	//                           {
-	//                             "name": "factor",
-	//                             "type": "f32"
-	//                           }
-	//                         ]
-	//                       ]
-	ItemDamage SlotComponentDataBlocksAttacksItemDamage
-	// [
-	//                         "option",
-	//                         "string"
-	//                       ]
-	BypassedBy models.Option[pk.String]
-	// [
-	//                         "option",
-	//                         "ItemSoundHolder"
-	//                       ]
-	BlockSound models.Option[ItemSoundHolder]
-	// [
-	//                         "option",
-	//                         "ItemSoundHolder"
-	//                       ]
-	DisableSound models.Option[ItemSoundHolder]
-}
-
-func (t *SlotComponentDataBlocksAttacks) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.BlockDelaySeconds.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BlockDelaySeconds")
-	}
-	bytesRead, err = t.DisableCooldownScale.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DisableCooldownScale")
-	}
-	bytesRead, err = t.DamageReductions.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DamageReductions")
-	}
-	bytesRead, err = t.ItemDamage.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ItemDamage")
-	}
-	bytesRead, err = t.BypassedBy.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BypassedBy")
-	}
-	bytesRead, err = t.BlockSound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field BlockSound")
-	}
-	bytesRead, err = t.DisableSound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DisableSound")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBlocksAttacks) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBlocksAttacks.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.BlockDelaySeconds.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DisableCooldownScale.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DamageReductions.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ItemDamage.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.BypassedBy.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.BlockSound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DisableSound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "contents",
+//	      "name": "closedSet",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": "Slot"
+//	          "type": "Node"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "targetNodes",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "Node"
 //	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataContainer struct {
+type PathDebugData struct {
 	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "Slot"
-	//                         }
-	//                       ]
-	Contents models.Array[pk.VarInt, Slot]
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "Node"
+	//             }
+	//           ]
+	OpenSet models.Array[pk.VarInt, Node]
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "Node"
+	//             }
+	//           ]
+	ClosedSet models.Array[pk.VarInt, Node]
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": "Node"
+	//             }
+	//           ]
+	TargetNodes models.Array[pk.VarInt, Node]
 }
 
-func (t *SlotComponentDataContainer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *PathDebugData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Contents.ReadFrom(r)
+	bytesRead, err = t.OpenSet.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Contents")
+		return totalBytes, errors.Wrap(err, "failed to read field OpenSet")
+	}
+	bytesRead, err = t.ClosedSet.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ClosedSet")
+	}
+	bytesRead, err = t.TargetNodes.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TargetNodes")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataContainer) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t PathDebugData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataContainer.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[PathDebugData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Contents.WriteTo(w)
+	bytesWritten, err = t.OpenSet.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ClosedSet.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TargetNodes.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -9124,17 +7569,29 @@ func (t SlotComponentDataContainer) WriteTo(w io.Writer) (totalBytes int64, err 
 //	    {
 //	      "name": "value",
 //	      "type": "string"
+//	    },
+//	    {
+//	      "name": "signature",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataBlockStatePropertiesArrayType struct {
+type GameProfileProperty struct {
 	// "string"
 	Name pk.String
 	// "string"
 	Value pk.String
+	// [
+	//             "option",
+	//             "string"
+	//           ]
+	Signature models.Option[pk.String]
 }
 
-func (t *SlotComponentDataBlockStatePropertiesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *GameProfileProperty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
@@ -9146,15 +7603,20 @@ func (t *SlotComponentDataBlockStatePropertiesArrayType) ReadFrom(r io.Reader) (
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Value")
 	}
+	bytesRead, err = t.Signature.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Signature")
+	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataBlockStatePropertiesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t GameProfileProperty) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataBlockStatePropertiesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[GameProfileProperty.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
@@ -9166,78 +7628,7 @@ func (t SlotComponentDataBlockStatePropertiesArrayType) WriteTo(w io.Writer) (to
 	if err != nil {
 		return totalBytes, err
 	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "properties",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "name",
-//	                "type": "string"
-//	              },
-//	              {
-//	                "name": "value",
-//	                "type": "string"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBlockState struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": [
-	//                             "container",
-	//                             [
-	//                               {
-	//                                 "name": "name",
-	//                                 "type": "string"
-	//                               },
-	//                               {
-	//                                 "name": "value",
-	//                                 "type": "string"
-	//                               }
-	//                             ]
-	//                           ]
-	//                         }
-	//                       ]
-	Properties models.Array[pk.VarInt, SlotComponentDataBlockStatePropertiesArrayType]
-}
-
-func (t *SlotComponentDataBlockState) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Properties.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Properties")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBlockState) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBlockState.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Properties.WriteTo(w)
+	bytesWritten, err = t.Signature.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -9250,50 +7641,365 @@ func (t SlotComponentDataBlockState) WriteTo(w io.Writer) (totalBytes int64, err
 //	  "container",
 //	  [
 //	    {
-//	      "name": "id",
+//	      "name": "effects",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemConsumeEffect"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataDeathProtection struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemConsumeEffect"
+	//                         }
+	//                       ]
+	Effects models.Array[pk.VarInt, ItemConsumeEffect]
+}
+
+func (t *SlotComponentDataDeathProtection) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effects")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataDeathProtection) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataDeathProtection.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effects.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
 //	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "level",
-//	      "type": "varint"
+//	      "name": "data",
+//	      "type": "anonymousNbt"
 //	    }
 //	  ]
 //	]
-type SlotComponentDataStoredEnchantmentsEnchantmentsArrayType struct {
+type SlotComponentDataEntityData struct {
 	// "varint"
-	Id pk.VarInt
-	// "varint"
-	Level pk.VarInt
+	Type pk.VarInt
+	// "anonymousNbt"
+	Data models.AnonymousNBT
 }
 
-func (t *SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataEntityData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
+	bytesRead, err = t.Type.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
-	bytesRead, err = t.Level.ReadFrom(r)
+	bytesRead, err = t.Data.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Level")
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataEntityData) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataStoredEnchantmentsEnchantmentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataEntityData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Id.WriteTo(w)
+	bytesWritten, err = t.Type.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Level.WriteTo(w)
+	bytesWritten, err = t.Data.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type SlotComponentDataJukeboxPlayableSongTrue struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         JukeboxSongData
+}
+
+func (r *SlotComponentDataJukeboxPlayableSongTrue) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r SlotComponentDataJukeboxPlayableSongTrue) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "hasHolder",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "song",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "hasHolder",
+//	          "fields": {
+//	            "true": [
+//	              "registryEntryHolder",
+//	              {
+//	                "baseName": "songId",
+//	                "otherwise": {
+//	                  "name": "data",
+//	                  "type": "JukeboxSongData"
+//	                }
+//	              }
+//	            ],
+//	            "false": "string"
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataJukeboxPlayable struct {
+	// "bool"
+	HasHolder pk.Boolean
+	// [
+	//                         "switch",
+	//                         {
+	//                           "compareTo": "hasHolder",
+	//                           "fields": {
+	//                             "true": [
+	//                               "registryEntryHolder",
+	//                               {
+	//                                 "baseName": "songId",
+	//                                 "otherwise": {
+	//                                   "name": "data",
+	//                                   "type": "JukeboxSongData"
+	//                                 }
+	//                               }
+	//                             ],
+	//                             "false": "string"
+	//                           }
+	//                         }
+	//                       ]
+	Song pk.Field
+}
+
+func (t *SlotComponentDataJukeboxPlayable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.HasHolder.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
+	}
+	// Switch field Song based on hasHolder
+	// Convert compareTo value to string for matching
+	compareValueSong := fmt.Sprintf("%v", t.HasHolder)
+
+	switch compareValueSong {
+	case "false":
+		var val pk.String
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Song case false")
+		}
+		t.Song = &val
+	case "true":
+		var val SlotComponentDataJukeboxPlayableSongTrue
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Song case true")
+		}
+		t.Song = &val
+	default:
+		// No explicit default; treat as void (no data)
+		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Song default void case")
+		}
+		t.Song = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataJukeboxPlayable) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataJukeboxPlayable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.HasHolder.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Song based on hasHolder
+	if t.Song != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Song.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Song value does not implement WriteTo: %T", t.Song)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "nbtData",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "ticksInHive",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "minTicksInHive",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBeesBeesArrayType struct {
+	// "anonymousNbt"
+	NbtData models.AnonymousNBT
+	// "varint"
+	TicksInHive pk.VarInt
+	// "varint"
+	MinTicksInHive pk.VarInt
+}
+
+func (t *SlotComponentDataBeesBeesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.NbtData.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field NbtData")
+	}
+	bytesRead, err = t.TicksInHive.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TicksInHive")
+	}
+	bytesRead, err = t.MinTicksInHive.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MinTicksInHive")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBeesBeesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBeesBeesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.NbtData.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TicksInHive.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MinTicksInHive.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -9306,7 +8012,7 @@ func (t SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) WriteTo(w io.W
 //	  "container",
 //	  [
 //	    {
-//	      "name": "enchantments",
+//	      "name": "bees",
 //	      "type": [
 //	        "array",
 //	        {
@@ -9315,11 +8021,15 @@ func (t SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) WriteTo(w io.W
 //	            "container",
 //	            [
 //	              {
-//	                "name": "id",
+//	                "name": "nbtData",
+//	                "type": "anonymousNbt"
+//	              },
+//	              {
+//	                "name": "ticksInHive",
 //	                "type": "varint"
 //	              },
 //	              {
-//	                "name": "level",
+//	                "name": "minTicksInHive",
 //	                "type": "varint"
 //	              }
 //	            ]
@@ -9329,7 +8039,7 @@ func (t SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) WriteTo(w io.W
 //	    }
 //	  ]
 //	]
-type SlotComponentDataStoredEnchantments struct {
+type SlotComponentDataBees struct {
 	// [
 	//                         "array",
 	//                         {
@@ -9338,38 +8048,783 @@ type SlotComponentDataStoredEnchantments struct {
 	//                             "container",
 	//                             [
 	//                               {
-	//                                 "name": "id",
+	//                                 "name": "nbtData",
+	//                                 "type": "anonymousNbt"
+	//                               },
+	//                               {
+	//                                 "name": "ticksInHive",
 	//                                 "type": "varint"
 	//                               },
 	//                               {
-	//                                 "name": "level",
+	//                                 "name": "minTicksInHive",
 	//                                 "type": "varint"
 	//                               }
 	//                             ]
 	//                           ]
 	//                         }
 	//                       ]
-	Enchantments models.Array[pk.VarInt, SlotComponentDataStoredEnchantmentsEnchantmentsArrayType]
+	Bees models.Array[pk.VarInt, SlotComponentDataBeesBeesArrayType]
 }
 
-func (t *SlotComponentDataStoredEnchantments) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataBees) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Enchantments.ReadFrom(r)
+	bytesRead, err = t.Bees.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Enchantments")
+		return totalBytes, errors.Wrap(err, "failed to read field Bees")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataStoredEnchantments) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataBees) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataStoredEnchantments.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataBees.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Enchantments.WriteTo(w)
+	bytesWritten, err = t.Bees.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "rawTitle",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "filteredTitle",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "author",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "generation",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "pages",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemWrittenBookPage"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "resolved",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataWrittenBookContent struct {
+	// "string"
+	RawTitle pk.String
+	// [
+	//                         "option",
+	//                         "string"
+	//                       ]
+	FilteredTitle models.Option[pk.String]
+	// "string"
+	Author pk.String
+	// "varint"
+	Generation pk.VarInt
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemWrittenBookPage"
+	//                         }
+	//                       ]
+	Pages models.Array[pk.VarInt, ItemWrittenBookPage]
+	// "bool"
+	Resolved pk.Boolean
+}
+
+func (t *SlotComponentDataWrittenBookContent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.RawTitle.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field RawTitle")
+	}
+	bytesRead, err = t.FilteredTitle.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FilteredTitle")
+	}
+	bytesRead, err = t.Author.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Author")
+	}
+	bytesRead, err = t.Generation.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Generation")
+	}
+	bytesRead, err = t.Pages.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pages")
+	}
+	bytesRead, err = t.Resolved.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Resolved")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataWrittenBookContent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataWrittenBookContent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.RawTitle.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FilteredTitle.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Author.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Generation.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pages.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Resolved.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type SlotComponentDataChickenVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         pk.String
+}
+
+func (r *SlotComponentDataChickenVariant) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r SlotComponentDataChickenVariant) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+type SlotComponentDataInstrumentDataTrue struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         InstrumentData
+}
+
+func (r *SlotComponentDataInstrumentDataTrue) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r SlotComponentDataInstrumentDataTrue) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "hasHolder",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "data",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "hasHolder",
+//	          "fields": {
+//	            "true": [
+//	              "registryEntryHolder",
+//	              {
+//	                "baseName": "instrumentId",
+//	                "otherwise": {
+//	                  "name": "data",
+//	                  "type": "InstrumentData"
+//	                }
+//	              }
+//	            ],
+//	            "false": "string"
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataInstrument struct {
+	// "bool"
+	HasHolder pk.Boolean
+	// [
+	//                         "switch",
+	//                         {
+	//                           "compareTo": "hasHolder",
+	//                           "fields": {
+	//                             "true": [
+	//                               "registryEntryHolder",
+	//                               {
+	//                                 "baseName": "instrumentId",
+	//                                 "otherwise": {
+	//                                   "name": "data",
+	//                                   "type": "InstrumentData"
+	//                                 }
+	//                               }
+	//                             ],
+	//                             "false": "string"
+	//                           }
+	//                         }
+	//                       ]
+	Data pk.Field
+}
+
+func (t *SlotComponentDataInstrument) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.HasHolder.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
+	}
+	// Switch field Data based on hasHolder
+	// Convert compareTo value to string for matching
+	compareValueData := fmt.Sprintf("%v", t.HasHolder)
+
+	switch compareValueData {
+	case "false":
+		var val pk.String
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case false")
+		}
+		t.Data = &val
+	case "true":
+		var val SlotComponentDataInstrumentDataTrue
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case true")
+		}
+		t.Data = &val
+	default:
+		// No explicit default; treat as void (no data)
+		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data default void case")
+		}
+		t.Data = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataInstrument) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataInstrument.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.HasHolder.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Data based on hasHolder
+	if t.Data != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Data.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Data value does not implement WriteTo: %T", t.Data)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "slot",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "main_hand",
+//	            "1": "off_hand",
+//	            "2": "feet",
+//	            "3": "legs",
+//	            "4": "chest",
+//	            "5": "head",
+//	            "6": "body",
+//	            "7": "saddle"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "sound",
+//	      "type": "ItemSoundHolder"
+//	    },
+//	    {
+//	      "name": "model",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "cameraOverlay",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "allowedEntities",
+//	      "type": [
+//	        "option",
+//	        "IDSet"
+//	      ]
+//	    },
+//	    {
+//	      "name": "dispensable",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "swappable",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "damageable",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "equipOnInteract",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "shearable",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "shearingSound",
+//	      "type": "ItemSoundHolder"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataEquippable struct {
+	// [
+	//                         "mapper",
+	//                         {
+	//                           "type": "varint",
+	//                           "mappings": {
+	//                             "0": "main_hand",
+	//                             "1": "off_hand",
+	//                             "2": "feet",
+	//                             "3": "legs",
+	//                             "4": "chest",
+	//                             "5": "head",
+	//                             "6": "body",
+	//                             "7": "saddle"
+	//                           }
+	//                         }
+	//                       ]
+	Slot SlotComponentDataEquippableSlot
+	// "ItemSoundHolder"
+	Sound ItemSoundHolder
+	// [
+	//                         "option",
+	//                         "string"
+	//                       ]
+	Model models.Option[pk.String]
+	// [
+	//                         "option",
+	//                         "string"
+	//                       ]
+	CameraOverlay models.Option[pk.String]
+	// [
+	//                         "option",
+	//                         "IDSet"
+	//                       ]
+	AllowedEntities models.Option[IDSet]
+	// "bool"
+	Dispensable pk.Boolean
+	// "bool"
+	Swappable pk.Boolean
+	// "bool"
+	Damageable pk.Boolean
+	// "bool"
+	EquipOnInteract pk.Boolean
+	// "bool"
+	Shearable pk.Boolean
+	// "ItemSoundHolder"
+	ShearingSound ItemSoundHolder
+}
+
+func (t *SlotComponentDataEquippable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Slot.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Slot")
+	}
+	bytesRead, err = t.Sound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sound")
+	}
+	bytesRead, err = t.Model.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Model")
+	}
+	bytesRead, err = t.CameraOverlay.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CameraOverlay")
+	}
+	bytesRead, err = t.AllowedEntities.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AllowedEntities")
+	}
+	bytesRead, err = t.Dispensable.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Dispensable")
+	}
+	bytesRead, err = t.Swappable.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Swappable")
+	}
+	bytesRead, err = t.Damageable.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Damageable")
+	}
+	bytesRead, err = t.EquipOnInteract.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field EquipOnInteract")
+	}
+	bytesRead, err = t.Shearable.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Shearable")
+	}
+	bytesRead, err = t.ShearingSound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ShearingSound")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataEquippable) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataEquippable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Slot.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Sound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Model.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CameraOverlay.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AllowedEntities.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Dispensable.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Swappable.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Damageable.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.EquipOnInteract.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Shearable.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ShearingSound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pages",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemBookPage"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataWritableBookContent struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemBookPage"
+	//                         }
+	//                       ]
+	Pages models.Array[pk.VarInt, ItemBookPage]
+}
+
+func (t *SlotComponentDataWritableBookContent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pages.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pages")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataWritableBookContent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataWritableBookContent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pages.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "layers",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "BannerPatternLayer"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBannerPatterns struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "BannerPatternLayer"
+	//                         }
+	//                       ]
+	Layers models.Array[pk.VarInt, BannerPatternLayer]
+}
+
+func (t *SlotComponentDataBannerPatterns) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Layers.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Layers")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBannerPatterns) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBannerPatterns.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Layers.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -9662,238 +9117,56 @@ func (t SlotComponentDataTrim) WriteTo(w io.Writer) (totalBytes int64, err error
 //	  "container",
 //	  [
 //	    {
-//	      "name": "layers",
+//	      "name": "globalPosition",
 //	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "BannerPatternLayer"
-//	        }
+//	        "option",
+//	        "GlobalPos"
 //	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBannerPatterns struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "BannerPatternLayer"
-	//                         }
-	//                       ]
-	Layers models.Array[pk.VarInt, BannerPatternLayer]
-}
-
-func (t *SlotComponentDataBannerPatterns) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Layers.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Layers")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBannerPatterns) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBannerPatterns.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Layers.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "contents",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Slot"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBundleContents struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "Slot"
-	//                         }
-	//                       ]
-	Contents models.Array[pk.VarInt, Slot]
-}
-
-func (t *SlotComponentDataBundleContents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Contents.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Contents")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBundleContents) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBundleContents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Contents.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "flightDuration",
-//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "explosions",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemFireworkExplosion"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataFireworks struct {
-	// "varint"
-	FlightDuration pk.VarInt
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemFireworkExplosion"
-	//                         }
-	//                       ]
-	Explosions models.Array[pk.VarInt, ItemFireworkExplosion]
-}
-
-func (t *SlotComponentDataFireworks) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.FlightDuration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FlightDuration")
-	}
-	bytesRead, err = t.Explosions.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Explosions")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataFireworks) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataFireworks.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.FlightDuration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Explosions.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "nutrition",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "saturationModifier",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "canAlwaysEat",
+//	      "name": "tracked",
 //	      "type": "bool"
 //	    }
 //	  ]
 //	]
-type SlotComponentDataFood struct {
-	// "varint"
-	Nutrition pk.VarInt
-	// "f32"
-	SaturationModifier pk.Float
+type SlotComponentDataLodestoneTracker struct {
+	// [
+	//                         "option",
+	//                         "GlobalPos"
+	//                       ]
+	GlobalPosition models.Option[GlobalPos]
 	// "bool"
-	CanAlwaysEat pk.Boolean
+	Tracked pk.Boolean
 }
 
-func (t *SlotComponentDataFood) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataLodestoneTracker) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Nutrition.ReadFrom(r)
+	bytesRead, err = t.GlobalPosition.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Nutrition")
+		return totalBytes, errors.Wrap(err, "failed to read field GlobalPosition")
 	}
-	bytesRead, err = t.SaturationModifier.ReadFrom(r)
+	bytesRead, err = t.Tracked.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field SaturationModifier")
-	}
-	bytesRead, err = t.CanAlwaysEat.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CanAlwaysEat")
+		return totalBytes, errors.Wrap(err, "failed to read field Tracked")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataFood) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataLodestoneTracker) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataFood.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataLodestoneTracker.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Nutrition.WriteTo(w)
+	bytesWritten, err = t.GlobalPosition.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.SaturationModifier.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CanAlwaysEat.WriteTo(w)
+	bytesWritten, err = t.Tracked.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -9906,172 +9179,110 @@ func (t SlotComponentDataFood) WriteTo(w io.Writer) (totalBytes int64, err error
 //	  "container",
 //	  [
 //	    {
-//	      "name": "seconds",
+//	      "name": "consume_seconds",
 //	      "type": "f32"
 //	    },
 //	    {
-//	      "name": "cooldownGroup",
+//	      "name": "animation",
 //	      "type": [
-//	        "option",
-//	        "string"
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "none",
+//	            "1": "eat",
+//	            "2": "drink",
+//	            "3": "block",
+//	            "4": "bow",
+//	            "5": "spear",
+//	            "6": "crossbow",
+//	            "7": "spyglass",
+//	            "8": "toot_horn",
+//	            "9": "brush",
+//	            "10": "bundle"
+//	          }
+//	        }
 //	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataUseCooldown struct {
-	// "f32"
-	Seconds pk.Float
-	// [
-	//                         "option",
-	//                         "string"
-	//                       ]
-	CooldownGroup models.Option[pk.String]
-}
-
-func (t *SlotComponentDataUseCooldown) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Seconds.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Seconds")
-	}
-	bytesRead, err = t.CooldownGroup.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CooldownGroup")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataUseCooldown) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataUseCooldown.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Seconds.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CooldownGroup.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "effect",
-//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "duration",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataSuspiciousStewEffectsEffectsArrayType struct {
-	// "varint"
-	Effect pk.VarInt
-	// "varint"
-	Duration pk.VarInt
-}
-
-func (t *SlotComponentDataSuspiciousStewEffectsEffectsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Effect.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effect")
-	}
-	bytesRead, err = t.Duration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Duration")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataSuspiciousStewEffectsEffectsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataSuspiciousStewEffectsEffectsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Effect.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Duration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
+//	      "name": "sound",
+//	      "type": "ItemSoundHolder"
+//	    },
+//	    {
+//	      "name": "makes_particles",
+//	      "type": "bool"
+//	    },
 //	    {
 //	      "name": "effects",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "effect",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "duration",
-//	                "type": "varint"
-//	              }
-//	            ]
-//	          ]
+//	          "type": "ItemConsumeEffect"
 //	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataSuspiciousStewEffects struct {
+type SlotComponentDataConsumable struct {
+	// "f32"
+	ConsumeSeconds pk.Float
+	// [
+	//                         "mapper",
+	//                         {
+	//                           "type": "varint",
+	//                           "mappings": {
+	//                             "0": "none",
+	//                             "1": "eat",
+	//                             "2": "drink",
+	//                             "3": "block",
+	//                             "4": "bow",
+	//                             "5": "spear",
+	//                             "6": "crossbow",
+	//                             "7": "spyglass",
+	//                             "8": "toot_horn",
+	//                             "9": "brush",
+	//                             "10": "bundle"
+	//                           }
+	//                         }
+	//                       ]
+	Animation SlotComponentDataConsumableAnimation
+	// "ItemSoundHolder"
+	Sound ItemSoundHolder
+	// "bool"
+	MakesParticles pk.Boolean
 	// [
 	//                         "array",
 	//                         {
 	//                           "countType": "varint",
-	//                           "type": [
-	//                             "container",
-	//                             [
-	//                               {
-	//                                 "name": "effect",
-	//                                 "type": "varint"
-	//                               },
-	//                               {
-	//                                 "name": "duration",
-	//                                 "type": "varint"
-	//                               }
-	//                             ]
-	//                           ]
+	//                           "type": "ItemConsumeEffect"
 	//                         }
 	//                       ]
-	Effects models.Array[pk.VarInt, SlotComponentDataSuspiciousStewEffectsEffectsArrayType]
+	Effects models.Array[pk.VarInt, ItemConsumeEffect]
 }
 
-func (t *SlotComponentDataSuspiciousStewEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataConsumable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
+	bytesRead, err = t.ConsumeSeconds.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ConsumeSeconds")
+	}
+	bytesRead, err = t.Animation.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Animation")
+	}
+	bytesRead, err = t.Sound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sound")
+	}
+	bytesRead, err = t.MakesParticles.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MakesParticles")
+	}
 	bytesRead, err = t.Effects.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
@@ -10081,12 +9292,32 @@ func (t *SlotComponentDataSuspiciousStewEffects) ReadFrom(r io.Reader) (totalByt
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataSuspiciousStewEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataConsumable) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataSuspiciousStewEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataConsumable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
+	bytesWritten, err = t.ConsumeSeconds.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Animation.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Sound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MakesParticles.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
 	bytesWritten, err = t.Effects.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
@@ -10095,65 +9326,13 @@ func (t SlotComponentDataSuspiciousStewEffects) WriteTo(w io.Writer) (totalBytes
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "pages",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemBookPage"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataWritableBookContent struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemBookPage"
-	//                         }
-	//                       ]
-	Pages models.Array[pk.VarInt, ItemBookPage]
-}
-
-func (t *SlotComponentDataWritableBookContent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Pages.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pages")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataWritableBookContent) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataWritableBookContent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Pages.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type SlotComponentDataChickenVariant struct {
+type SlotComponentDataProvidesTrimMaterialMaterialTrue struct {
 	IsRegistryID bool
 	RegistryID   pk.VarInt
-	Data         pk.String
+	Data         ArmorTrimMaterial
 }
 
-func (r *SlotComponentDataChickenVariant) ReadFrom(reader io.Reader) (int64, error) {
+func (r *SlotComponentDataProvidesTrimMaterialMaterialTrue) ReadFrom(reader io.Reader) (int64, error) {
 	var totalBytes int64
 
 	// Read the varint - it's either a registry ID or 0 (indicating data follows)
@@ -10181,7 +9360,7 @@ func (r *SlotComponentDataChickenVariant) ReadFrom(reader io.Reader) (int64, err
 	return totalBytes, nil
 }
 
-func (r SlotComponentDataChickenVariant) WriteTo(w io.Writer) (int64, error) {
+func (r SlotComponentDataProvidesTrimMaterialMaterialTrue) WriteTo(w io.Writer) (int64, error) {
 	var totalBytes int64
 
 	if r.IsRegistryID {
@@ -10212,234 +9391,229 @@ func (r SlotComponentDataChickenVariant) WriteTo(w io.Writer) (int64, error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "projectiles",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "Slot"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataChargedProjectiles struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "Slot"
-	//                         }
-	//                       ]
-	Projectiles models.Array[pk.VarInt, Slot]
-}
-
-func (t *SlotComponentDataChargedProjectiles) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Projectiles.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Projectiles")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataChargedProjectiles) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataChargedProjectiles.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Projectiles.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "varint"
+//	      "name": "hasHolder",
+//	      "type": "bool"
 //	    },
 //	    {
-//	      "name": "data",
-//	      "type": "anonymousNbt"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBlockEntityData struct {
-	// "varint"
-	Type pk.VarInt
-	// "anonymousNbt"
-	Data models.AnonymousNBT
-}
-
-func (t *SlotComponentDataBlockEntityData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.Data.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBlockEntityData) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBlockEntityData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Data.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "level",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataEnchantmentsEnchantmentsArrayType struct {
-	// "varint"
-	Id pk.VarInt
-	// "varint"
-	Level pk.VarInt
-}
-
-func (t *SlotComponentDataEnchantmentsEnchantmentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
-	}
-	bytesRead, err = t.Level.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Level")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataEnchantmentsEnchantmentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataEnchantmentsEnchantmentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Level.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "enchantments",
+//	      "name": "material",
 //	      "type": [
-//	        "array",
+//	        "switch",
 //	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
+//	          "compareTo": "hasHolder",
+//	          "fields": {
+//	            "true": [
+//	              "registryEntryHolder",
 //	              {
-//	                "name": "id",
-//	                "type": "varint"
-//	              },
-//	              {
-//	                "name": "level",
-//	                "type": "varint"
+//	                "baseName": "materialId",
+//	                "otherwise": {
+//	                  "name": "data",
+//	                  "type": "ArmorTrimMaterial"
+//	                }
 //	              }
-//	            ]
-//	          ]
+//	            ],
+//	            "false": "string"
+//	          }
 //	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataEnchantments struct {
+type SlotComponentDataProvidesTrimMaterial struct {
+	// "bool"
+	HasHolder pk.Boolean
 	// [
-	//                         "array",
+	//                         "switch",
 	//                         {
-	//                           "countType": "varint",
-	//                           "type": [
-	//                             "container",
-	//                             [
+	//                           "compareTo": "hasHolder",
+	//                           "fields": {
+	//                             "true": [
+	//                               "registryEntryHolder",
 	//                               {
-	//                                 "name": "id",
-	//                                 "type": "varint"
-	//                               },
-	//                               {
-	//                                 "name": "level",
-	//                                 "type": "varint"
+	//                                 "baseName": "materialId",
+	//                                 "otherwise": {
+	//                                   "name": "data",
+	//                                   "type": "ArmorTrimMaterial"
+	//                                 }
 	//                               }
-	//                             ]
-	//                           ]
+	//                             ],
+	//                             "false": "string"
+	//                           }
 	//                         }
 	//                       ]
-	Enchantments models.Array[pk.VarInt, SlotComponentDataEnchantmentsEnchantmentsArrayType]
+	Material pk.Field
 }
 
-func (t *SlotComponentDataEnchantments) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataProvidesTrimMaterial) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Enchantments.ReadFrom(r)
+	bytesRead, err = t.HasHolder.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Enchantments")
+		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
+	}
+	// Switch field Material based on hasHolder
+	// Convert compareTo value to string for matching
+	compareValueMaterial := fmt.Sprintf("%v", t.HasHolder)
+
+	switch compareValueMaterial {
+	case "false":
+		var val pk.String
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Material case false")
+		}
+		t.Material = &val
+	case "true":
+		var val SlotComponentDataProvidesTrimMaterialMaterialTrue
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Material case true")
+		}
+		t.Material = &val
+	default:
+		// No explicit default; treat as void (no data)
+		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
+		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Material default void case")
+		}
+		t.Material = &__void
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataEnchantments) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataProvidesTrimMaterial) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataEnchantments.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataProvidesTrimMaterial.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Enchantments.WriteTo(w)
+	bytesWritten, err = t.HasHolder.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Material based on hasHolder
+	if t.Material != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Material.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Material value does not implement WriteTo: %T", t.Material)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "predicates",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemBlockPredicate"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataCanPlaceOn struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemBlockPredicate"
+	//                         }
+	//                       ]
+	Predicates models.Array[pk.VarInt, ItemBlockPredicate]
+}
+
+func (t *SlotComponentDataCanPlaceOn) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Predicates.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Predicates")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataCanPlaceOn) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataCanPlaceOn.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Predicates.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "predicates",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemBlockPredicate"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataCanBreak struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemBlockPredicate"
+	//                         }
+	//                       ]
+	Predicates models.Array[pk.VarInt, ItemBlockPredicate]
+}
+
+func (t *SlotComponentDataCanBreak) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Predicates.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Predicates")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataCanBreak) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataCanBreak.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Predicates.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -10960,6 +10134,218 @@ func (t SlotComponentDataAttributeModifiers) WriteTo(w io.Writer) (totalBytes in
 //	  "container",
 //	  [
 //	    {
+//	      "name": "flightDuration",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "explosions",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ItemFireworkExplosion"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataFireworks struct {
+	// "varint"
+	FlightDuration pk.VarInt
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "ItemFireworkExplosion"
+	//                         }
+	//                       ]
+	Explosions models.Array[pk.VarInt, ItemFireworkExplosion]
+}
+
+func (t *SlotComponentDataFireworks) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.FlightDuration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FlightDuration")
+	}
+	bytesRead, err = t.Explosions.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Explosions")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataFireworks) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataFireworks.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.FlightDuration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Explosions.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "items",
+//	      "type": "IDSet"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataRepairable struct {
+	// "IDSet"
+	Items IDSet
+}
+
+func (t *SlotComponentDataRepairable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Items.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Items")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataRepairable) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataRepairable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Items.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "projectiles",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "Slot"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataChargedProjectiles struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "Slot"
+	//                         }
+	//                       ]
+	Projectiles models.Array[pk.VarInt, Slot]
+}
+
+func (t *SlotComponentDataChargedProjectiles) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Projectiles.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Projectiles")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataChargedProjectiles) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataChargedProjectiles.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Projectiles.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "decorations",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "varint"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataPotDecorations struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "varint"
+	//                         }
+	//                       ]
+	Decorations models.Array[pk.VarInt, pk.VarInt]
+}
+
+func (t *SlotComponentDataPotDecorations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Decorations.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Decorations")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataPotDecorations) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataPotDecorations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Decorations.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "floats",
 //	      "type": [
 //	        "array",
@@ -11091,13 +10477,627 @@ func (t SlotComponentDataCustomModelData) WriteTo(w io.Writer) (totalBytes int64
 	return totalBytes, nil
 }
 
-type SlotComponentDataInstrumentDataTrue struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         InstrumentData
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "nutrition",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "saturationModifier",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "canAlwaysEat",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataFood struct {
+	// "varint"
+	Nutrition pk.VarInt
+	// "f32"
+	SaturationModifier pk.Float
+	// "bool"
+	CanAlwaysEat pk.Boolean
 }
 
-func (r *SlotComponentDataInstrumentDataTrue) ReadFrom(reader io.Reader) (int64, error) {
+func (t *SlotComponentDataFood) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Nutrition.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Nutrition")
+	}
+	bytesRead, err = t.SaturationModifier.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field SaturationModifier")
+	}
+	bytesRead, err = t.CanAlwaysEat.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CanAlwaysEat")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataFood) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataFood.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Nutrition.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.SaturationModifier.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CanAlwaysEat.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "level",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataStoredEnchantmentsEnchantmentsArrayType struct {
+	// "varint"
+	Id pk.VarInt
+	// "varint"
+	Level pk.VarInt
+}
+
+func (t *SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+	bytesRead, err = t.Level.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Level")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataStoredEnchantmentsEnchantmentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataStoredEnchantmentsEnchantmentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Level.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "enchantments",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "id",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "level",
+//	                "type": "varint"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataStoredEnchantments struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": [
+	//                             "container",
+	//                             [
+	//                               {
+	//                                 "name": "id",
+	//                                 "type": "varint"
+	//                               },
+	//                               {
+	//                                 "name": "level",
+	//                                 "type": "varint"
+	//                               }
+	//                             ]
+	//                           ]
+	//                         }
+	//                       ]
+	Enchantments models.Array[pk.VarInt, SlotComponentDataStoredEnchantmentsEnchantmentsArrayType]
+}
+
+func (t *SlotComponentDataStoredEnchantments) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Enchantments.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Enchantments")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataStoredEnchantments) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataStoredEnchantments.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Enchantments.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "horizontalBlockingAngle",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "option",
+//	        "IDSet"
+//	      ]
+//	    },
+//	    {
+//	      "name": "base",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "factor",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBlocksAttacksDamageReductionsArrayType struct {
+	// "f32"
+	HorizontalBlockingAngle pk.Float
+	// [
+	//                                   "option",
+	//                                   "IDSet"
+	//                                 ]
+	Type models.Option[IDSet]
+	// "f32"
+	Base pk.Float
+	// "f32"
+	Factor pk.Float
+}
+
+func (t *SlotComponentDataBlocksAttacksDamageReductionsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.HorizontalBlockingAngle.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HorizontalBlockingAngle")
+	}
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.Base.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Base")
+	}
+	bytesRead, err = t.Factor.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Factor")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBlocksAttacksDamageReductionsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBlocksAttacksDamageReductionsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.HorizontalBlockingAngle.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Base.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Factor.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "threshold",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "base",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "factor",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBlocksAttacksItemDamage struct {
+	// "f32"
+	Threshold pk.Float
+	// "f32"
+	Base pk.Float
+	// "f32"
+	Factor pk.Float
+}
+
+func (t *SlotComponentDataBlocksAttacksItemDamage) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Threshold.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Threshold")
+	}
+	bytesRead, err = t.Base.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Base")
+	}
+	bytesRead, err = t.Factor.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Factor")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBlocksAttacksItemDamage) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBlocksAttacksItemDamage.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Threshold.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Base.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Factor.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "blockDelaySeconds",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "disableCooldownScale",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "damageReductions",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "horizontalBlockingAngle",
+//	                "type": "f32"
+//	              },
+//	              {
+//	                "name": "type",
+//	                "type": [
+//	                  "option",
+//	                  "IDSet"
+//	                ]
+//	              },
+//	              {
+//	                "name": "base",
+//	                "type": "f32"
+//	              },
+//	              {
+//	                "name": "factor",
+//	                "type": "f32"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "itemDamage",
+//	      "type": [
+//	        "container",
+//	        [
+//	          {
+//	            "name": "threshold",
+//	            "type": "f32"
+//	          },
+//	          {
+//	            "name": "base",
+//	            "type": "f32"
+//	          },
+//	          {
+//	            "name": "factor",
+//	            "type": "f32"
+//	          }
+//	        ]
+//	      ]
+//	    },
+//	    {
+//	      "name": "bypassedBy",
+//	      "type": [
+//	        "option",
+//	        "string"
+//	      ]
+//	    },
+//	    {
+//	      "name": "blockSound",
+//	      "type": [
+//	        "option",
+//	        "ItemSoundHolder"
+//	      ]
+//	    },
+//	    {
+//	      "name": "disableSound",
+//	      "type": [
+//	        "option",
+//	        "ItemSoundHolder"
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBlocksAttacks struct {
+	// "f32"
+	BlockDelaySeconds pk.Float
+	// "f32"
+	DisableCooldownScale pk.Float
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": [
+	//                             "container",
+	//                             [
+	//                               {
+	//                                 "name": "horizontalBlockingAngle",
+	//                                 "type": "f32"
+	//                               },
+	//                               {
+	//                                 "name": "type",
+	//                                 "type": [
+	//                                   "option",
+	//                                   "IDSet"
+	//                                 ]
+	//                               },
+	//                               {
+	//                                 "name": "base",
+	//                                 "type": "f32"
+	//                               },
+	//                               {
+	//                                 "name": "factor",
+	//                                 "type": "f32"
+	//                               }
+	//                             ]
+	//                           ]
+	//                         }
+	//                       ]
+	DamageReductions models.Array[pk.VarInt, SlotComponentDataBlocksAttacksDamageReductionsArrayType]
+	// [
+	//                         "container",
+	//                         [
+	//                           {
+	//                             "name": "threshold",
+	//                             "type": "f32"
+	//                           },
+	//                           {
+	//                             "name": "base",
+	//                             "type": "f32"
+	//                           },
+	//                           {
+	//                             "name": "factor",
+	//                             "type": "f32"
+	//                           }
+	//                         ]
+	//                       ]
+	ItemDamage SlotComponentDataBlocksAttacksItemDamage
+	// [
+	//                         "option",
+	//                         "string"
+	//                       ]
+	BypassedBy models.Option[pk.String]
+	// [
+	//                         "option",
+	//                         "ItemSoundHolder"
+	//                       ]
+	BlockSound models.Option[ItemSoundHolder]
+	// [
+	//                         "option",
+	//                         "ItemSoundHolder"
+	//                       ]
+	DisableSound models.Option[ItemSoundHolder]
+}
+
+func (t *SlotComponentDataBlocksAttacks) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.BlockDelaySeconds.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BlockDelaySeconds")
+	}
+	bytesRead, err = t.DisableCooldownScale.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DisableCooldownScale")
+	}
+	bytesRead, err = t.DamageReductions.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DamageReductions")
+	}
+	bytesRead, err = t.ItemDamage.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ItemDamage")
+	}
+	bytesRead, err = t.BypassedBy.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BypassedBy")
+	}
+	bytesRead, err = t.BlockSound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BlockSound")
+	}
+	bytesRead, err = t.DisableSound.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DisableSound")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBlocksAttacks) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBlocksAttacks.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.BlockDelaySeconds.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DisableCooldownScale.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DamageReductions.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ItemDamage.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BypassedBy.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BlockSound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DisableSound.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type SlotComponentDataPaintingVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         EntityMetadataPaintingVariant
+}
+
+func (r *SlotComponentDataPaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
 	var totalBytes int64
 
 	// Read the varint - it's either a registry ID or 0 (indicating data follows)
@@ -11125,7 +11125,7 @@ func (r *SlotComponentDataInstrumentDataTrue) ReadFrom(reader io.Reader) (int64,
 	return totalBytes, nil
 }
 
-func (r SlotComponentDataInstrumentDataTrue) WriteTo(w io.Writer) (int64, error) {
+func (r SlotComponentDataPaintingVariant) WriteTo(w io.Writer) (int64, error) {
 	var totalBytes int64
 
 	if r.IsRegistryID {
@@ -11156,128 +11156,115 @@ func (r SlotComponentDataInstrumentDataTrue) WriteTo(w io.Writer) (int64, error)
 //	  "container",
 //	  [
 //	    {
-//	      "name": "hasHolder",
-//	      "type": "bool"
+//	      "name": "potionId",
+//	      "type": [
+//	        "option",
+//	        "varint"
+//	      ]
 //	    },
 //	    {
-//	      "name": "data",
+//	      "name": "customColor",
 //	      "type": [
-//	        "switch",
+//	        "option",
+//	        "i32"
+//	      ]
+//	    },
+//	    {
+//	      "name": "customEffects",
+//	      "type": [
+//	        "array",
 //	        {
-//	          "compareTo": "hasHolder",
-//	          "fields": {
-//	            "true": [
-//	              "registryEntryHolder",
-//	              {
-//	                "baseName": "instrumentId",
-//	                "otherwise": {
-//	                  "name": "data",
-//	                  "type": "InstrumentData"
-//	                }
-//	              }
-//	            ],
-//	            "false": "string"
-//	          }
+//	          "countType": "varint",
+//	          "type": "ItemPotionEffect"
 //	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "customName",
+//	      "type": [
+//	        "option",
+//	        "string"
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataInstrument struct {
-	// "bool"
-	HasHolder pk.Boolean
+type SlotComponentDataPotionContents struct {
 	// [
-	//                         "switch",
+	//                         "option",
+	//                         "varint"
+	//                       ]
+	PotionId models.Option[pk.VarInt]
+	// [
+	//                         "option",
+	//                         "i32"
+	//                       ]
+	CustomColor models.Option[pk.Int]
+	// [
+	//                         "array",
 	//                         {
-	//                           "compareTo": "hasHolder",
-	//                           "fields": {
-	//                             "true": [
-	//                               "registryEntryHolder",
-	//                               {
-	//                                 "baseName": "instrumentId",
-	//                                 "otherwise": {
-	//                                   "name": "data",
-	//                                   "type": "InstrumentData"
-	//                                 }
-	//                               }
-	//                             ],
-	//                             "false": "string"
-	//                           }
+	//                           "countType": "varint",
+	//                           "type": "ItemPotionEffect"
 	//                         }
 	//                       ]
-	Data pk.Field
+	CustomEffects models.Array[pk.VarInt, ItemPotionEffect]
+	// [
+	//                         "option",
+	//                         "string"
+	//                       ]
+	CustomName models.Option[pk.String]
 }
 
-func (t *SlotComponentDataInstrument) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataPotionContents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.HasHolder.ReadFrom(r)
+	bytesRead, err = t.PotionId.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
+		return totalBytes, errors.Wrap(err, "failed to read field PotionId")
 	}
-	// Switch field Data based on hasHolder
-	// Convert compareTo value to string for matching
-	compareValueData := fmt.Sprintf("%v", t.HasHolder)
-
-	switch compareValueData {
-	case "false":
-		var val pk.String
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case false")
-		}
-		t.Data = &val
-	case "true":
-		var val SlotComponentDataInstrumentDataTrue
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case true")
-		}
-		t.Data = &val
-	default:
-		// No explicit default; treat as void (no data)
-		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
-		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data default void case")
-		}
-		t.Data = &__void
+	bytesRead, err = t.CustomColor.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CustomColor")
+	}
+	bytesRead, err = t.CustomEffects.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CustomEffects")
+	}
+	bytesRead, err = t.CustomName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CustomName")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataInstrument) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataPotionContents) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataInstrument.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataPotionContents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.HasHolder.WriteTo(w)
+	bytesWritten, err = t.PotionId.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field Data based on hasHolder
-	if t.Data != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Data.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Data value does not implement WriteTo: %T", t.Data)
-		}
+	bytesWritten, err = t.CustomColor.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CustomEffects.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CustomName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -11515,29 +11502,109 @@ func (t SlotComponentDataTool) WriteTo(w io.Writer) (totalBytes int64, err error
 //	  "container",
 //	  [
 //	    {
+//	      "name": "effect",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "duration",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataSuspiciousStewEffectsEffectsArrayType struct {
+	// "varint"
+	Effect pk.VarInt
+	// "varint"
+	Duration pk.VarInt
+}
+
+func (t *SlotComponentDataSuspiciousStewEffectsEffectsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Effect.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Effect")
+	}
+	bytesRead, err = t.Duration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Duration")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataSuspiciousStewEffectsEffectsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataSuspiciousStewEffectsEffectsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Effect.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Duration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "effects",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": "ItemConsumeEffect"
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "effect",
+//	                "type": "varint"
+//	              },
+//	              {
+//	                "name": "duration",
+//	                "type": "varint"
+//	              }
+//	            ]
+//	          ]
 //	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataDeathProtection struct {
+type SlotComponentDataSuspiciousStewEffects struct {
 	// [
 	//                         "array",
 	//                         {
 	//                           "countType": "varint",
-	//                           "type": "ItemConsumeEffect"
+	//                           "type": [
+	//                             "container",
+	//                             [
+	//                               {
+	//                                 "name": "effect",
+	//                                 "type": "varint"
+	//                               },
+	//                               {
+	//                                 "name": "duration",
+	//                                 "type": "varint"
+	//                               }
+	//                             ]
+	//                           ]
 	//                         }
 	//                       ]
-	Effects models.Array[pk.VarInt, ItemConsumeEffect]
+	Effects models.Array[pk.VarInt, SlotComponentDataSuspiciousStewEffectsEffectsArrayType]
 }
 
-func (t *SlotComponentDataDeathProtection) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataSuspiciousStewEffects) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Effects.ReadFrom(r)
 	totalBytes += bytesRead
@@ -11548,11 +11615,11 @@ func (t *SlotComponentDataDeathProtection) ReadFrom(r io.Reader) (totalBytes int
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataDeathProtection) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataSuspiciousStewEffects) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataDeathProtection.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataSuspiciousStewEffects.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Effects.WriteTo(w)
 	totalBytes += bytesWritten
@@ -11567,50 +11634,50 @@ func (t SlotComponentDataDeathProtection) WriteTo(w io.Writer) (totalBytes int64
 //	  "container",
 //	  [
 //	    {
-//	      "name": "type",
-//	      "type": "varint"
+//	      "name": "name",
+//	      "type": "string"
 //	    },
 //	    {
-//	      "name": "data",
-//	      "type": "anonymousNbt"
+//	      "name": "value",
+//	      "type": "string"
 //	    }
 //	  ]
 //	]
-type SlotComponentDataEntityData struct {
-	// "varint"
-	Type pk.VarInt
-	// "anonymousNbt"
-	Data models.AnonymousNBT
+type SlotComponentDataBlockStatePropertiesArrayType struct {
+	// "string"
+	Name pk.String
+	// "string"
+	Value pk.String
 }
 
-func (t *SlotComponentDataEntityData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataBlockStatePropertiesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
+	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
 	}
-	bytesRead, err = t.Data.ReadFrom(r)
+	bytesRead, err = t.Value.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
+		return totalBytes, errors.Wrap(err, "failed to read field Value")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataEntityData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataBlockStatePropertiesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataEntityData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataBlockStatePropertiesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Type.WriteTo(w)
+	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Data.WriteTo(w)
+	bytesWritten, err = t.Value.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -11623,141 +11690,7 @@ func (t SlotComponentDataEntityData) WriteTo(w io.Writer) (totalBytes int64, err
 //	  "container",
 //	  [
 //	    {
-//	      "name": "globalPosition",
-//	      "type": [
-//	        "option",
-//	        "GlobalPos"
-//	      ]
-//	    },
-//	    {
-//	      "name": "tracked",
-//	      "type": "bool"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataLodestoneTracker struct {
-	// [
-	//                         "option",
-	//                         "GlobalPos"
-	//                       ]
-	GlobalPosition models.Option[GlobalPos]
-	// "bool"
-	Tracked pk.Boolean
-}
-
-func (t *SlotComponentDataLodestoneTracker) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.GlobalPosition.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field GlobalPosition")
-	}
-	bytesRead, err = t.Tracked.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tracked")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataLodestoneTracker) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataLodestoneTracker.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.GlobalPosition.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tracked.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "nbtData",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "ticksInHive",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "minTicksInHive",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataBeesBeesArrayType struct {
-	// "anonymousNbt"
-	NbtData models.AnonymousNBT
-	// "varint"
-	TicksInHive pk.VarInt
-	// "varint"
-	MinTicksInHive pk.VarInt
-}
-
-func (t *SlotComponentDataBeesBeesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.NbtData.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field NbtData")
-	}
-	bytesRead, err = t.TicksInHive.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TicksInHive")
-	}
-	bytesRead, err = t.MinTicksInHive.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MinTicksInHive")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataBeesBeesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataBeesBeesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.NbtData.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.TicksInHive.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MinTicksInHive.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "bees",
+//	      "name": "properties",
 //	      "type": [
 //	        "array",
 //	        {
@@ -11766,15 +11699,143 @@ func (t SlotComponentDataBeesBeesArrayType) WriteTo(w io.Writer) (totalBytes int
 //	            "container",
 //	            [
 //	              {
-//	                "name": "nbtData",
-//	                "type": "anonymousNbt"
+//	                "name": "name",
+//	                "type": "string"
 //	              },
 //	              {
-//	                "name": "ticksInHive",
+//	                "name": "value",
+//	                "type": "string"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBlockState struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": [
+	//                             "container",
+	//                             [
+	//                               {
+	//                                 "name": "name",
+	//                                 "type": "string"
+	//                               },
+	//                               {
+	//                                 "name": "value",
+	//                                 "type": "string"
+	//                               }
+	//                             ]
+	//                           ]
+	//                         }
+	//                       ]
+	Properties models.Array[pk.VarInt, SlotComponentDataBlockStatePropertiesArrayType]
+}
+
+func (t *SlotComponentDataBlockState) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Properties.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Properties")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBlockState) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBlockState.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Properties.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "level",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataEnchantmentsEnchantmentsArrayType struct {
+	// "varint"
+	Id pk.VarInt
+	// "varint"
+	Level pk.VarInt
+}
+
+func (t *SlotComponentDataEnchantmentsEnchantmentsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+	bytesRead, err = t.Level.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Level")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataEnchantmentsEnchantmentsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataEnchantmentsEnchantmentsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Level.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "enchantments",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "id",
 //	                "type": "varint"
 //	              },
 //	              {
-//	                "name": "minTicksInHive",
+//	                "name": "level",
 //	                "type": "varint"
 //	              }
 //	            ]
@@ -11784,7 +11845,7 @@ func (t SlotComponentDataBeesBeesArrayType) WriteTo(w io.Writer) (totalBytes int
 //	    }
 //	  ]
 //	]
-type SlotComponentDataBees struct {
+type SlotComponentDataEnchantments struct {
 	// [
 	//                         "array",
 	//                         {
@@ -11793,146 +11854,38 @@ type SlotComponentDataBees struct {
 	//                             "container",
 	//                             [
 	//                               {
-	//                                 "name": "nbtData",
-	//                                 "type": "anonymousNbt"
-	//                               },
-	//                               {
-	//                                 "name": "ticksInHive",
+	//                                 "name": "id",
 	//                                 "type": "varint"
 	//                               },
 	//                               {
-	//                                 "name": "minTicksInHive",
+	//                                 "name": "level",
 	//                                 "type": "varint"
 	//                               }
 	//                             ]
 	//                           ]
 	//                         }
 	//                       ]
-	Bees models.Array[pk.VarInt, SlotComponentDataBeesBeesArrayType]
+	Enchantments models.Array[pk.VarInt, SlotComponentDataEnchantmentsEnchantmentsArrayType]
 }
 
-func (t *SlotComponentDataBees) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataEnchantments) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Bees.ReadFrom(r)
+	bytesRead, err = t.Enchantments.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Bees")
+		return totalBytes, errors.Wrap(err, "failed to read field Enchantments")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataBees) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataEnchantments) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataBees.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataEnchantments.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Bees.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "predicates",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemBlockPredicate"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataCanPlaceOn struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemBlockPredicate"
-	//                         }
-	//                       ]
-	Predicates models.Array[pk.VarInt, ItemBlockPredicate]
-}
-
-func (t *SlotComponentDataCanPlaceOn) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Predicates.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Predicates")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataCanPlaceOn) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataCanPlaceOn.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Predicates.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "predicates",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemBlockPredicate"
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataCanBreak struct {
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemBlockPredicate"
-	//                         }
-	//                       ]
-	Predicates models.Array[pk.VarInt, ItemBlockPredicate]
-}
-
-func (t *SlotComponentDataCanBreak) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Predicates.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Predicates")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataCanBreak) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataCanBreak.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Predicates.WriteTo(w)
+	bytesWritten, err = t.Enchantments.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -12001,444 +11954,105 @@ func (t SlotComponentDataWeapon) WriteTo(w io.Writer) (totalBytes int64, err err
 //	  "container",
 //	  [
 //	    {
-//	      "name": "potionId",
-//	      "type": [
-//	        "option",
-//	        "varint"
-//	      ]
-//	    },
-//	    {
-//	      "name": "customColor",
-//	      "type": [
-//	        "option",
-//	        "i32"
-//	      ]
-//	    },
-//	    {
-//	      "name": "customEffects",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemPotionEffect"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "customName",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataPotionContents struct {
-	// [
-	//                         "option",
-	//                         "varint"
-	//                       ]
-	PotionId models.Option[pk.VarInt]
-	// [
-	//                         "option",
-	//                         "i32"
-	//                       ]
-	CustomColor models.Option[pk.Int]
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemPotionEffect"
-	//                         }
-	//                       ]
-	CustomEffects models.Array[pk.VarInt, ItemPotionEffect]
-	// [
-	//                         "option",
-	//                         "string"
-	//                       ]
-	CustomName models.Option[pk.String]
-}
-
-func (t *SlotComponentDataPotionContents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.PotionId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field PotionId")
-	}
-	bytesRead, err = t.CustomColor.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CustomColor")
-	}
-	bytesRead, err = t.CustomEffects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CustomEffects")
-	}
-	bytesRead, err = t.CustomName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CustomName")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataPotionContents) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataPotionContents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.PotionId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CustomColor.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CustomEffects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CustomName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "rawTitle",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "filteredTitle",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    },
-//	    {
-//	      "name": "author",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "generation",
+//	      "name": "type",
 //	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "pages",
+//	      "name": "data",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type SlotComponentDataBlockEntityData struct {
+	// "varint"
+	Type pk.VarInt
+	// "anonymousNbt"
+	Data models.AnonymousNBT
+}
+
+func (t *SlotComponentDataBlockEntityData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.Data.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SlotComponentDataBlockEntityData) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SlotComponentDataBlockEntityData.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Data.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "contents",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": "ItemWrittenBookPage"
+//	          "type": "Slot"
 //	        }
 //	      ]
-//	    },
-//	    {
-//	      "name": "resolved",
-//	      "type": "bool"
 //	    }
 //	  ]
 //	]
-type SlotComponentDataWrittenBookContent struct {
-	// "string"
-	RawTitle pk.String
-	// [
-	//                         "option",
-	//                         "string"
-	//                       ]
-	FilteredTitle models.Option[pk.String]
-	// "string"
-	Author pk.String
-	// "varint"
-	Generation pk.VarInt
+type SlotComponentDataBundleContents struct {
 	// [
 	//                         "array",
 	//                         {
 	//                           "countType": "varint",
-	//                           "type": "ItemWrittenBookPage"
+	//                           "type": "Slot"
 	//                         }
 	//                       ]
-	Pages models.Array[pk.VarInt, ItemWrittenBookPage]
-	// "bool"
-	Resolved pk.Boolean
+	Contents models.Array[pk.VarInt, Slot]
 }
 
-func (t *SlotComponentDataWrittenBookContent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataBundleContents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.RawTitle.ReadFrom(r)
+	bytesRead, err = t.Contents.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field RawTitle")
-	}
-	bytesRead, err = t.FilteredTitle.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field FilteredTitle")
-	}
-	bytesRead, err = t.Author.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Author")
-	}
-	bytesRead, err = t.Generation.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Generation")
-	}
-	bytesRead, err = t.Pages.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pages")
-	}
-	bytesRead, err = t.Resolved.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Resolved")
+		return totalBytes, errors.Wrap(err, "failed to read field Contents")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataWrittenBookContent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataBundleContents) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataWrittenBookContent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataBundleContents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.RawTitle.WriteTo(w)
+	bytesWritten, err = t.Contents.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
-	}
-	bytesWritten, err = t.FilteredTitle.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Author.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Generation.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Pages.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Resolved.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type SlotComponentDataProvidesTrimMaterialMaterialTrue struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         ArmorTrimMaterial
-}
-
-func (r *SlotComponentDataProvidesTrimMaterialMaterialTrue) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r SlotComponentDataProvidesTrimMaterialMaterialTrue) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "hasHolder",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "material",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "hasHolder",
-//	          "fields": {
-//	            "true": [
-//	              "registryEntryHolder",
-//	              {
-//	                "baseName": "materialId",
-//	                "otherwise": {
-//	                  "name": "data",
-//	                  "type": "ArmorTrimMaterial"
-//	                }
-//	              }
-//	            ],
-//	            "false": "string"
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataProvidesTrimMaterial struct {
-	// "bool"
-	HasHolder pk.Boolean
-	// [
-	//                         "switch",
-	//                         {
-	//                           "compareTo": "hasHolder",
-	//                           "fields": {
-	//                             "true": [
-	//                               "registryEntryHolder",
-	//                               {
-	//                                 "baseName": "materialId",
-	//                                 "otherwise": {
-	//                                   "name": "data",
-	//                                   "type": "ArmorTrimMaterial"
-	//                                 }
-	//                               }
-	//                             ],
-	//                             "false": "string"
-	//                           }
-	//                         }
-	//                       ]
-	Material pk.Field
-}
-
-func (t *SlotComponentDataProvidesTrimMaterial) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.HasHolder.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
-	}
-	// Switch field Material based on hasHolder
-	// Convert compareTo value to string for matching
-	compareValueMaterial := fmt.Sprintf("%v", t.HasHolder)
-
-	switch compareValueMaterial {
-	case "false":
-		var val pk.String
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Material case false")
-		}
-		t.Material = &val
-	case "true":
-		var val SlotComponentDataProvidesTrimMaterialMaterialTrue
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Material case true")
-		}
-		t.Material = &val
-	default:
-		// No explicit default; treat as void (no data)
-		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
-		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Material default void case")
-		}
-		t.Material = &__void
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataProvidesTrimMaterial) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataProvidesTrimMaterial.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.HasHolder.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field Material based on hasHolder
-	if t.Material != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Material.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Material value does not implement WriteTo: %T", t.Material)
-		}
 	}
 	return totalBytes, nil
 }
@@ -12448,685 +12062,56 @@ func (t SlotComponentDataProvidesTrimMaterial) WriteTo(w io.Writer) (totalBytes 
 //	  "container",
 //	  [
 //	    {
-//	      "name": "consume_seconds",
+//	      "name": "seconds",
 //	      "type": "f32"
 //	    },
 //	    {
-//	      "name": "animation",
+//	      "name": "cooldownGroup",
 //	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "none",
-//	            "1": "eat",
-//	            "2": "drink",
-//	            "3": "block",
-//	            "4": "bow",
-//	            "5": "spear",
-//	            "6": "crossbow",
-//	            "7": "spyglass",
-//	            "8": "toot_horn",
-//	            "9": "brush",
-//	            "10": "bundle"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "sound",
-//	      "type": "ItemSoundHolder"
-//	    },
-//	    {
-//	      "name": "makes_particles",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "effects",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ItemConsumeEffect"
-//	        }
+//	        "option",
+//	        "string"
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataConsumable struct {
+type SlotComponentDataUseCooldown struct {
 	// "f32"
-	ConsumeSeconds pk.Float
-	// [
-	//                         "mapper",
-	//                         {
-	//                           "type": "varint",
-	//                           "mappings": {
-	//                             "0": "none",
-	//                             "1": "eat",
-	//                             "2": "drink",
-	//                             "3": "block",
-	//                             "4": "bow",
-	//                             "5": "spear",
-	//                             "6": "crossbow",
-	//                             "7": "spyglass",
-	//                             "8": "toot_horn",
-	//                             "9": "brush",
-	//                             "10": "bundle"
-	//                           }
-	//                         }
-	//                       ]
-	Animation SlotComponentDataConsumableAnimation
-	// "ItemSoundHolder"
-	Sound ItemSoundHolder
-	// "bool"
-	MakesParticles pk.Boolean
-	// [
-	//                         "array",
-	//                         {
-	//                           "countType": "varint",
-	//                           "type": "ItemConsumeEffect"
-	//                         }
-	//                       ]
-	Effects models.Array[pk.VarInt, ItemConsumeEffect]
-}
-
-func (t *SlotComponentDataConsumable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ConsumeSeconds.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ConsumeSeconds")
-	}
-	bytesRead, err = t.Animation.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Animation")
-	}
-	bytesRead, err = t.Sound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Sound")
-	}
-	bytesRead, err = t.MakesParticles.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MakesParticles")
-	}
-	bytesRead, err = t.Effects.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Effects")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataConsumable) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataConsumable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ConsumeSeconds.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Animation.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Sound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MakesParticles.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Effects.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type SlotComponentDataPaintingVariant struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         EntityMetadataPaintingVariant
-}
-
-func (r *SlotComponentDataPaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r SlotComponentDataPaintingVariant) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "items",
-//	      "type": "IDSet"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataRepairable struct {
-	// "IDSet"
-	Items IDSet
-}
-
-func (t *SlotComponentDataRepairable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Items.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Items")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataRepairable) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataRepairable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Items.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type SlotComponentDataJukeboxPlayableSongTrue struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         JukeboxSongData
-}
-
-func (r *SlotComponentDataJukeboxPlayableSongTrue) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r SlotComponentDataJukeboxPlayableSongTrue) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "hasHolder",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "song",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "hasHolder",
-//	          "fields": {
-//	            "true": [
-//	              "registryEntryHolder",
-//	              {
-//	                "baseName": "songId",
-//	                "otherwise": {
-//	                  "name": "data",
-//	                  "type": "JukeboxSongData"
-//	                }
-//	              }
-//	            ],
-//	            "false": "string"
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type SlotComponentDataJukeboxPlayable struct {
-	// "bool"
-	HasHolder pk.Boolean
-	// [
-	//                         "switch",
-	//                         {
-	//                           "compareTo": "hasHolder",
-	//                           "fields": {
-	//                             "true": [
-	//                               "registryEntryHolder",
-	//                               {
-	//                                 "baseName": "songId",
-	//                                 "otherwise": {
-	//                                   "name": "data",
-	//                                   "type": "JukeboxSongData"
-	//                                 }
-	//                               }
-	//                             ],
-	//                             "false": "string"
-	//                           }
-	//                         }
-	//                       ]
-	Song pk.Field
-}
-
-func (t *SlotComponentDataJukeboxPlayable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.HasHolder.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field HasHolder")
-	}
-	// Switch field Song based on hasHolder
-	// Convert compareTo value to string for matching
-	compareValueSong := fmt.Sprintf("%v", t.HasHolder)
-
-	switch compareValueSong {
-	case "false":
-		var val pk.String
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Song case false")
-		}
-		t.Song = &val
-	case "true":
-		var val SlotComponentDataJukeboxPlayableSongTrue
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Song case true")
-		}
-		t.Song = &val
-	default:
-		// No explicit default; treat as void (no data)
-		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
-		// Using Buffer.ReadFrom() here would call io.ReadAll() and consume ALL remaining data, breaking array parsing
-		var __void models.Void
-		bytesRead, err = __void.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Song default void case")
-		}
-		t.Song = &__void
-	}
-
-	return totalBytes, nil
-}
-
-func (t SlotComponentDataJukeboxPlayable) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SlotComponentDataJukeboxPlayable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.HasHolder.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field Song based on hasHolder
-	if t.Song != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Song.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Song value does not implement WriteTo: %T", t.Song)
-		}
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "slot",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "main_hand",
-//	            "1": "off_hand",
-//	            "2": "feet",
-//	            "3": "legs",
-//	            "4": "chest",
-//	            "5": "head",
-//	            "6": "body",
-//	            "7": "saddle"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "sound",
-//	      "type": "ItemSoundHolder"
-//	    },
-//	    {
-//	      "name": "model",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    },
-//	    {
-//	      "name": "cameraOverlay",
-//	      "type": [
-//	        "option",
-//	        "string"
-//	      ]
-//	    },
-//	    {
-//	      "name": "allowedEntities",
-//	      "type": [
-//	        "option",
-//	        "IDSet"
-//	      ]
-//	    },
-//	    {
-//	      "name": "dispensable",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "swappable",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "damageable",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "equipOnInteract",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "shearable",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "shearingSound",
-//	      "type": "ItemSoundHolder"
-//	    }
-//	  ]
-//	]
-type SlotComponentDataEquippable struct {
-	// [
-	//                         "mapper",
-	//                         {
-	//                           "type": "varint",
-	//                           "mappings": {
-	//                             "0": "main_hand",
-	//                             "1": "off_hand",
-	//                             "2": "feet",
-	//                             "3": "legs",
-	//                             "4": "chest",
-	//                             "5": "head",
-	//                             "6": "body",
-	//                             "7": "saddle"
-	//                           }
-	//                         }
-	//                       ]
-	Slot SlotComponentDataEquippableSlot
-	// "ItemSoundHolder"
-	Sound ItemSoundHolder
+	Seconds pk.Float
 	// [
 	//                         "option",
 	//                         "string"
 	//                       ]
-	Model models.Option[pk.String]
-	// [
-	//                         "option",
-	//                         "string"
-	//                       ]
-	CameraOverlay models.Option[pk.String]
-	// [
-	//                         "option",
-	//                         "IDSet"
-	//                       ]
-	AllowedEntities models.Option[IDSet]
-	// "bool"
-	Dispensable pk.Boolean
-	// "bool"
-	Swappable pk.Boolean
-	// "bool"
-	Damageable pk.Boolean
-	// "bool"
-	EquipOnInteract pk.Boolean
-	// "bool"
-	Shearable pk.Boolean
-	// "ItemSoundHolder"
-	ShearingSound ItemSoundHolder
+	CooldownGroup models.Option[pk.String]
 }
 
-func (t *SlotComponentDataEquippable) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataUseCooldown) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Slot.ReadFrom(r)
+	bytesRead, err = t.Seconds.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Slot")
+		return totalBytes, errors.Wrap(err, "failed to read field Seconds")
 	}
-	bytesRead, err = t.Sound.ReadFrom(r)
+	bytesRead, err = t.CooldownGroup.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Sound")
-	}
-	bytesRead, err = t.Model.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Model")
-	}
-	bytesRead, err = t.CameraOverlay.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CameraOverlay")
-	}
-	bytesRead, err = t.AllowedEntities.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AllowedEntities")
-	}
-	bytesRead, err = t.Dispensable.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Dispensable")
-	}
-	bytesRead, err = t.Swappable.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Swappable")
-	}
-	bytesRead, err = t.Damageable.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Damageable")
-	}
-	bytesRead, err = t.EquipOnInteract.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field EquipOnInteract")
-	}
-	bytesRead, err = t.Shearable.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Shearable")
-	}
-	bytesRead, err = t.ShearingSound.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ShearingSound")
+		return totalBytes, errors.Wrap(err, "failed to read field CooldownGroup")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataEquippable) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataUseCooldown) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataEquippable.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataUseCooldown.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Slot.WriteTo(w)
+	bytesWritten, err = t.Seconds.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Sound.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Model.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CameraOverlay.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AllowedEntities.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Dispensable.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Swappable.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Damageable.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.EquipOnInteract.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Shearable.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ShearingSound.WriteTo(w)
+	bytesWritten, err = t.CooldownGroup.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -13139,46 +12124,46 @@ func (t SlotComponentDataEquippable) WriteTo(w io.Writer) (totalBytes int64, err
 //	  "container",
 //	  [
 //	    {
-//	      "name": "decorations",
+//	      "name": "contents",
 //	      "type": [
 //	        "array",
 //	        {
 //	          "countType": "varint",
-//	          "type": "varint"
+//	          "type": "Slot"
 //	        }
 //	      ]
 //	    }
 //	  ]
 //	]
-type SlotComponentDataPotDecorations struct {
+type SlotComponentDataContainer struct {
 	// [
 	//                         "array",
 	//                         {
 	//                           "countType": "varint",
-	//                           "type": "varint"
+	//                           "type": "Slot"
 	//                         }
 	//                       ]
-	Decorations models.Array[pk.VarInt, pk.VarInt]
+	Contents models.Array[pk.VarInt, Slot]
 }
 
-func (t *SlotComponentDataPotDecorations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *SlotComponentDataContainer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Decorations.ReadFrom(r)
+	bytesRead, err = t.Contents.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Decorations")
+		return totalBytes, errors.Wrap(err, "failed to read field Contents")
 	}
 
 	return totalBytes, nil
 }
 
-func (t SlotComponentDataPotDecorations) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t SlotComponentDataContainer) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[SlotComponentDataPotDecorations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[SlotComponentDataContainer.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Decorations.WriteTo(w)
+	bytesWritten, err = t.Contents.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -15616,13 +14601,14 @@ func (t *SlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Data = &val
 	case "creative_slot_lock":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case creative_slot_lock")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case creative_slot_lock")
 		}
-		t.Data = &val
+		t.Data = &__void
 	case "custom_data":
 		var val models.AnonymousNBT
 		bytesRead, err = val.ReadFrom(r)
@@ -15768,13 +14754,14 @@ func (t *SlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Data = &val
 	case "glider":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case glider")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case glider")
 		}
-		t.Data = &val
+		t.Data = &__void
 	case "horse/variant":
 		var val pk.VarInt
 		bytesRead, err = val.ReadFrom(r)
@@ -15792,13 +14779,14 @@ func (t *SlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Data = &val
 	case "intangible_projectile":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case intangible_projectile")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case intangible_projectile")
 		}
-		t.Data = &val
+		t.Data = &__void
 	case "item_model":
 		var val pk.String
 		bytesRead, err = val.ReadFrom(r)
@@ -16136,13 +15124,14 @@ func (t *SlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Data = &val
 	case "unbreakable":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case unbreakable")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Data case unbreakable")
 		}
-		t.Data = &val
+		t.Data = &__void
 	case "use_cooldown":
 		var val SlotComponentDataUseCooldown
 		bytesRead, err = val.ReadFrom(r)
@@ -16259,163 +15248,2391 @@ func (t SlotComponent) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	  "container",
 //	  [
 //	    {
-//	      "name": "z",
-//	      "type": "i32"
+//	      "name": "boundingBoxMin",
+//	      "type": "position"
 //	    },
 //	    {
-//	      "name": "x",
-//	      "type": "i32"
+//	      "name": "boundingBoxMax",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "isStart",
+//	      "type": "bool"
 //	    }
 //	  ]
 //	]
-type PackedChunkPos struct {
-	// "i32"
-	Z pk.Int
-	// "i32"
-	X pk.Int
+type DebugStructureInfoPiecesArrayType struct {
+	// "position"
+	BoundingBoxMin Position
+	// "position"
+	BoundingBoxMax Position
+	// "bool"
+	IsStart pk.Boolean
 }
 
-func (t *PackedChunkPos) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *DebugStructureInfoPiecesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Z.ReadFrom(r)
+	bytesRead, err = t.BoundingBoxMin.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
+		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMin")
 	}
+	bytesRead, err = t.BoundingBoxMax.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMax")
+	}
+	bytesRead, err = t.IsStart.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field IsStart")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugStructureInfoPiecesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugStructureInfoPiecesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.BoundingBoxMin.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BoundingBoxMax.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.IsStart.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "boundingBoxMin",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "boundingBoxMax",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "pieces",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "boundingBoxMin",
+//	                "type": "position"
+//	              },
+//	              {
+//	                "name": "boundingBoxMax",
+//	                "type": "position"
+//	              },
+//	              {
+//	                "name": "isStart",
+//	                "type": "bool"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugStructureInfo struct {
+	// "position"
+	BoundingBoxMin Position
+	// "position"
+	BoundingBoxMax Position
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "boundingBoxMin",
+	//                     "type": "position"
+	//                   },
+	//                   {
+	//                     "name": "boundingBoxMax",
+	//                     "type": "position"
+	//                   },
+	//                   {
+	//                     "name": "isStart",
+	//                     "type": "bool"
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	Pieces models.Array[pk.VarInt, DebugStructureInfoPiecesArrayType]
+}
+
+func (t *DebugStructureInfo) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.BoundingBoxMin.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMin")
+	}
+	bytesRead, err = t.BoundingBoxMax.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BoundingBoxMax")
+	}
+	bytesRead, err = t.Pieces.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pieces")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugStructureInfo) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugStructureInfo.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.BoundingBoxMin.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BoundingBoxMax.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pieces.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "SlotComponentType"
+//	    },
+//	    {
+//	      "name": "data",
+//	      "type": "ByteArray"
+//	    }
+//	  ]
+//	]
+type UntrustedSlotComponent struct {
+	// "SlotComponentType"
+	Type SlotComponentType
+	// "ByteArray"
+	Data pk.ByteArray
+}
+
+func (t *UntrustedSlotComponent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.Data.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
+	}
+
+	return totalBytes, nil
+}
+
+func (t UntrustedSlotComponent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[UntrustedSlotComponent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Data.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "x",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "y",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type Vec3f struct {
+	// "f32"
+	X pk.Float
+	// "f32"
+	Y pk.Float
+	// "f32"
+	Z pk.Float
+}
+
+func (t *Vec3f) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
 	bytesRead, err = t.X.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field X")
 	}
+	bytesRead, err = t.Y.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
+	}
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
 
 	return totalBytes, nil
 }
 
-func (t PackedChunkPos) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t Vec3f) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[PackedChunkPos.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[Vec3f.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
 	bytesWritten, err = t.X.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
+	bytesWritten, err = t.Y.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Z.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
 	return totalBytes, nil
 }
 
+// Protodef: [
 //
-type Position struct {
-	X int64
-	Z int64
-	Y int64
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "occupantCount",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "honeyLevel",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "sedated",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueBeeHives struct {
+	// "varint"
+	Type pk.VarInt
+	// "varint"
+	OccupantCount pk.VarInt
+	// "varint"
+	HoneyLevel pk.VarInt
+	// "bool"
+	Sedated pk.Boolean
 }
 
-func (b *Position) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 26
-	totalBits += 26
-	totalBits += 12
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield Position total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
+func (t *DebugSubscriptionEventValueBeeHives) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
 	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield Position")
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	bytesRead, err = t.OccupantCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field OccupantCount")
+	}
+	bytesRead, err = t.HoneyLevel.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HoneyLevel")
+	}
+	bytesRead, err = t.Sedated.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Sedated")
 	}
 
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract x (26 bits, signed=true)
-	x_mask := uint64((1 << 26) - 1)
-	x_value := (packed >> (totalBits - currentOffset - 26)) & x_mask
-	// Sign extend if negative
-	if x_value&(1<<(26-1)) != 0 {
-		// Sign extend by converting to signed and back
-		signBit := uint64(1) << 26
-		x_value = x_value - signBit
-	}
-	b.X = int64(x_value)
-	currentOffset += 26
-	// Extract z (26 bits, signed=true)
-	z_mask := uint64((1 << 26) - 1)
-	z_value := (packed >> (totalBits - currentOffset - 26)) & z_mask
-	// Sign extend if negative
-	if z_value&(1<<(26-1)) != 0 {
-		// Sign extend by converting to signed and back
-		signBit := uint64(1) << 26
-		z_value = z_value - signBit
-	}
-	b.Z = int64(z_value)
-	currentOffset += 26
-	// Extract y (12 bits, signed=true)
-	y_mask := uint64((1 << 12) - 1)
-	y_value := (packed >> (totalBits - currentOffset - 12)) & y_mask
-	// Sign extend if negative
-	if y_value&(1<<(12-1)) != 0 {
-		// Sign extend by converting to signed and back
-		signBit := uint64(1) << 12
-		y_value = y_value - signBit
-	}
-	b.Y = int64(y_value)
-	currentOffset += 12
-
-	return int64(nn), nil
+	return totalBytes, nil
 }
 
-func (b Position) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 26
-	totalBits += 26
-	totalBits += 12
+func (t DebugSubscriptionEventValueBeeHives) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
 
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield Position total size %d is not a multiple of 8", totalBits)
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueBeeHives.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.OccupantCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.HoneyLevel.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Sedated.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pos",
+//	      "type": "position"
+//	    },
+//	    {
+//	      "name": "poiType",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "freeTicketCount",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValuePois struct {
+	// "position"
+	Pos Position
+	// "varint"
+	PoiType pk.VarInt
+	// "varint"
+	FreeTicketCount pk.VarInt
+}
+
+func (t *DebugSubscriptionEventValuePois) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
+	}
+	bytesRead, err = t.PoiType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field PoiType")
+	}
+	bytesRead, err = t.FreeTicketCount.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FreeTicketCount")
 	}
 
-	numBytes := totalBits / 8
+	return totalBytes, nil
+}
 
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack x (26 bits)
-	x_value := uint64(b.X) & ((1 << 26) - 1)
-	packed |= x_value << (totalBits - currentOffset - 26)
-	currentOffset += 26
-	// Pack z (26 bits)
-	z_value := uint64(b.Z) & ((1 << 26) - 1)
-	packed |= z_value << (totalBits - currentOffset - 26)
-	currentOffset += 26
-	// Pack y (12 bits)
-	y_value := uint64(b.Y) & ((1 << 12) - 1)
-	packed |= y_value << (totalBits - currentOffset - 12)
-	currentOffset += 12
+func (t DebugSubscriptionEventValuePois) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
 
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValuePois.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.PoiType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FreeTicketCount.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "event",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "pos",
+//	      "type": "vec3f64"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueGameEvents struct {
+	// "varint"
+	Event pk.VarInt
+	// "vec3f64"
+	Pos Vec3f64
+}
+
+func (t *DebugSubscriptionEventValueGameEvents) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Event.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Event")
+	}
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
 	}
 
-	nn, err := w.Write(data)
-	return int64(nn), err
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueGameEvents) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueGameEvents.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Event.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "hivePos",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    },
+//	    {
+//	      "name": "flowerPos",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    },
+//	    {
+//	      "name": "travelTicks",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "blacklistedHives",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueBees struct {
+	// [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	HivePos models.Option[Position]
+	// [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	FlowerPos models.Option[Position]
+	// "varint"
+	TravelTicks pk.VarInt
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	BlacklistedHives models.Array[pk.VarInt, Position]
+}
+
+func (t *DebugSubscriptionEventValueBees) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.HivePos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field HivePos")
+	}
+	bytesRead, err = t.FlowerPos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field FlowerPos")
+	}
+	bytesRead, err = t.TravelTicks.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TravelTicks")
+	}
+	bytesRead, err = t.BlacklistedHives.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field BlacklistedHives")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueBees) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueBees.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.HivePos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.FlowerPos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TravelTicks.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.BlacklistedHives.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "profession",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "xp",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "health",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "maxHealth",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "inventory",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "wantsGolem",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "angerLevel",
+//	      "type": "i32"
+//	    },
+//	    {
+//	      "name": "activities",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "behaviors",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "memories",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "gossips",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "string"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "pois",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "potentialPois",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueBrains struct {
+	// "string"
+	Name pk.String
+	// "string"
+	Profession pk.String
+	// "i32"
+	Xp pk.Int
+	// "f32"
+	Health pk.Float
+	// "f32"
+	MaxHealth pk.Float
+	// "string"
+	Inventory pk.String
+	// "bool"
+	WantsGolem pk.Boolean
+	// "i32"
+	AngerLevel pk.Int
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	Activities models.Array[pk.VarInt, pk.String]
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	Behaviors models.Array[pk.VarInt, pk.String]
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	Memories models.Array[pk.VarInt, pk.String]
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	Gossips models.Array[pk.VarInt, pk.String]
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	Pois models.Array[pk.VarInt, Position]
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	PotentialPois models.Array[pk.VarInt, Position]
+}
+
+func (t *DebugSubscriptionEventValueBrains) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Profession.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Profession")
+	}
+	bytesRead, err = t.Xp.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Xp")
+	}
+	bytesRead, err = t.Health.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Health")
+	}
+	bytesRead, err = t.MaxHealth.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MaxHealth")
+	}
+	bytesRead, err = t.Inventory.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Inventory")
+	}
+	bytesRead, err = t.WantsGolem.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field WantsGolem")
+	}
+	bytesRead, err = t.AngerLevel.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AngerLevel")
+	}
+	bytesRead, err = t.Activities.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Activities")
+	}
+	bytesRead, err = t.Behaviors.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Behaviors")
+	}
+	bytesRead, err = t.Memories.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Memories")
+	}
+	bytesRead, err = t.Gossips.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Gossips")
+	}
+	bytesRead, err = t.Pois.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pois")
+	}
+	bytesRead, err = t.PotentialPois.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field PotentialPois")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueBrains) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueBrains.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Profession.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Xp.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Health.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MaxHealth.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Inventory.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.WantsGolem.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AngerLevel.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Activities.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Behaviors.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Memories.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Gossips.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Pois.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.PotentialPois.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "priority",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "running",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueGoalSelectors struct {
+	// "varint"
+	Priority pk.VarInt
+	// "bool"
+	Running pk.Boolean
+	// "string"
+	Name pk.String
+}
+
+func (t *DebugSubscriptionEventValueGoalSelectors) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Priority.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Priority")
+	}
+	bytesRead, err = t.Running.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Running")
+	}
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueGoalSelectors) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueGoalSelectors.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Priority.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Running.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "path",
+//	      "type": "Path"
+//	    },
+//	    {
+//	      "name": "maxNodeDistance",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueEntityPaths struct {
+	// "Path"
+	Path Path
+	// "f32"
+	MaxNodeDistance pk.Float
+}
+
+func (t *DebugSubscriptionEventValueEntityPaths) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Path.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Path")
+	}
+	bytesRead, err = t.MaxNodeDistance.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MaxNodeDistance")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueEntityPaths) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueEntityPaths.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Path.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MaxNodeDistance.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "positions",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "position"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueRaids struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	Positions models.Array[pk.VarInt, Position]
+}
+
+func (t *DebugSubscriptionEventValueRaids) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Positions.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Positions")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueRaids) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueRaids.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Positions.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "structures",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "DebugStructureInfo"
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueStructures struct {
+	// [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "DebugStructureInfo"
+	//                         }
+	//                       ]
+	Structures models.Array[pk.VarInt, DebugStructureInfo]
+}
+
+func (t *DebugSubscriptionEventValueStructures) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Structures.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Structures")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueStructures) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueStructures.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Structures.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "listenerRadius",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueGameEventListeners struct {
+	// "varint"
+	ListenerRadius pk.VarInt
+}
+
+func (t *DebugSubscriptionEventValueGameEventListeners) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ListenerRadius.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ListenerRadius")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueGameEventListeners) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueGameEventListeners.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ListenerRadius.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pos",
+//	      "type": "position"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueNeighborUpdates struct {
+	// "position"
+	Pos Position
+}
+
+func (t *DebugSubscriptionEventValueNeighborUpdates) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pos.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pos")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueNeighborUpdates) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueNeighborUpdates.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pos.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "attackTarget",
+//	      "type": [
+//	        "option",
+//	        "varint"
+//	      ]
+//	    },
+//	    {
+//	      "name": "jumpTarget",
+//	      "type": [
+//	        "option",
+//	        "position"
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueBreezes struct {
+	// [
+	//                         "option",
+	//                         "varint"
+	//                       ]
+	AttackTarget models.Option[pk.VarInt]
+	// [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	JumpTarget models.Option[Position]
+}
+
+func (t *DebugSubscriptionEventValueBreezes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.AttackTarget.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AttackTarget")
+	}
+	bytesRead, err = t.JumpTarget.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field JumpTarget")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueBreezes) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueBreezes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.AttackTarget.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.JumpTarget.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "index",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueRedstoneWireOrientations struct {
+	// "varint"
+	Index pk.VarInt
+}
+
+func (t *DebugSubscriptionEventValueRedstoneWireOrientations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Index.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Index")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueRedstoneWireOrientations) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueRedstoneWireOrientations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Index.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEventValueEntityBlockIntersections struct {
+	// "varint"
+	Id pk.VarInt
+}
+
+func (t *DebugSubscriptionEventValueEntityBlockIntersections) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEventValueEntityBlockIntersections) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEventValueEntityBlockIntersections.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "type",
+//	      "type": "DebugSubscriptionDataType"
+//	    },
+//	    {
+//	      "name": "value",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "type",
+//	          "fields": {
+//	            "DedicatedServerTickTime": "void",
+//	            "VillageSections": "void",
+//	            "Bees": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "hivePos",
+//	                  "type": [
+//	                    "option",
+//	                    "position"
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "flowerPos",
+//	                  "type": [
+//	                    "option",
+//	                    "position"
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "travelTicks",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "blacklistedHives",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "position"
+//	                    }
+//	                  ]
+//	                }
+//	              ]
+//	            ],
+//	            "Brains": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "name",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "profession",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "xp",
+//	                  "type": "i32"
+//	                },
+//	                {
+//	                  "name": "health",
+//	                  "type": "f32"
+//	                },
+//	                {
+//	                  "name": "maxHealth",
+//	                  "type": "f32"
+//	                },
+//	                {
+//	                  "name": "inventory",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "wantsGolem",
+//	                  "type": "bool"
+//	                },
+//	                {
+//	                  "name": "angerLevel",
+//	                  "type": "i32"
+//	                },
+//	                {
+//	                  "name": "activities",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "string"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "behaviors",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "string"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "memories",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "string"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "gossips",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "string"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "pois",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "position"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "potentialPois",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "position"
+//	                    }
+//	                  ]
+//	                }
+//	              ]
+//	            ],
+//	            "Breezes": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "attackTarget",
+//	                  "type": [
+//	                    "option",
+//	                    "varint"
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "jumpTarget",
+//	                  "type": [
+//	                    "option",
+//	                    "position"
+//	                  ]
+//	                }
+//	              ]
+//	            ],
+//	            "GoalSelectors": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "priority",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "running",
+//	                  "type": "bool"
+//	                },
+//	                {
+//	                  "name": "name",
+//	                  "type": "string"
+//	                }
+//	              ]
+//	            ],
+//	            "EntityPaths": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "path",
+//	                  "type": "Path"
+//	                },
+//	                {
+//	                  "name": "maxNodeDistance",
+//	                  "type": "f32"
+//	                }
+//	              ]
+//	            ],
+//	            "EntityBlockIntersections": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "id",
+//	                  "type": "varint"
+//	                }
+//	              ]
+//	            ],
+//	            "BeeHives": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "type",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "occupantCount",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "honeyLevel",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "sedated",
+//	                  "type": "bool"
+//	                }
+//	              ]
+//	            ],
+//	            "Pois": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "pos",
+//	                  "type": "position"
+//	                },
+//	                {
+//	                  "name": "poiType",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "freeTicketCount",
+//	                  "type": "varint"
+//	                }
+//	              ]
+//	            ],
+//	            "RedstoneWireOrientations": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "index",
+//	                  "type": "varint"
+//	                }
+//	              ]
+//	            ],
+//	            "Raids": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "positions",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "position"
+//	                    }
+//	                  ]
+//	                }
+//	              ]
+//	            ],
+//	            "Structures": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "structures",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "DebugStructureInfo"
+//	                    }
+//	                  ]
+//	                }
+//	              ]
+//	            ],
+//	            "GameEventListeners": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "listenerRadius",
+//	                  "type": "varint"
+//	                }
+//	              ]
+//	            ],
+//	            "NeighborUpdates": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "pos",
+//	                  "type": "position"
+//	                }
+//	              ]
+//	            ],
+//	            "GameEvents": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "event",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "pos",
+//	                  "type": "vec3f64"
+//	                }
+//	              ]
+//	            ]
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DebugSubscriptionEvent struct {
+	// "DebugSubscriptionDataType"
+	Type DebugSubscriptionDataType
+	// [
+	//             "switch",
+	//             {
+	//               "compareTo": "type",
+	//               "fields": {
+	//                 "DedicatedServerTickTime": "void",
+	//                 "VillageSections": "void",
+	//                 "Bees": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "hivePos",
+	//                       "type": [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "flowerPos",
+	//                       "type": [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "travelTicks",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "blacklistedHives",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "Brains": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "name",
+	//                       "type": "string"
+	//                     },
+	//                     {
+	//                       "name": "profession",
+	//                       "type": "string"
+	//                     },
+	//                     {
+	//                       "name": "xp",
+	//                       "type": "i32"
+	//                     },
+	//                     {
+	//                       "name": "health",
+	//                       "type": "f32"
+	//                     },
+	//                     {
+	//                       "name": "maxHealth",
+	//                       "type": "f32"
+	//                     },
+	//                     {
+	//                       "name": "inventory",
+	//                       "type": "string"
+	//                     },
+	//                     {
+	//                       "name": "wantsGolem",
+	//                       "type": "bool"
+	//                     },
+	//                     {
+	//                       "name": "angerLevel",
+	//                       "type": "i32"
+	//                     },
+	//                     {
+	//                       "name": "activities",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "behaviors",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "memories",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "gossips",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "string"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "pois",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "potentialPois",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "Breezes": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "attackTarget",
+	//                       "type": [
+	//                         "option",
+	//                         "varint"
+	//                       ]
+	//                     },
+	//                     {
+	//                       "name": "jumpTarget",
+	//                       "type": [
+	//                         "option",
+	//                         "position"
+	//                       ]
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "GoalSelectors": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "priority",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "running",
+	//                       "type": "bool"
+	//                     },
+	//                     {
+	//                       "name": "name",
+	//                       "type": "string"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "EntityPaths": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "path",
+	//                       "type": "Path"
+	//                     },
+	//                     {
+	//                       "name": "maxNodeDistance",
+	//                       "type": "f32"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "EntityBlockIntersections": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "id",
+	//                       "type": "varint"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "BeeHives": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "type",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "occupantCount",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "honeyLevel",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "sedated",
+	//                       "type": "bool"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "Pois": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "pos",
+	//                       "type": "position"
+	//                     },
+	//                     {
+	//                       "name": "poiType",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "freeTicketCount",
+	//                       "type": "varint"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "RedstoneWireOrientations": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "index",
+	//                       "type": "varint"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "Raids": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "positions",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "position"
+	//                         }
+	//                       ]
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "Structures": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "structures",
+	//                       "type": [
+	//                         "array",
+	//                         {
+	//                           "countType": "varint",
+	//                           "type": "DebugStructureInfo"
+	//                         }
+	//                       ]
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "GameEventListeners": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "listenerRadius",
+	//                       "type": "varint"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "NeighborUpdates": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "pos",
+	//                       "type": "position"
+	//                     }
+	//                   ]
+	//                 ],
+	//                 "GameEvents": [
+	//                   "container",
+	//                   [
+	//                     {
+	//                       "name": "event",
+	//                       "type": "varint"
+	//                     },
+	//                     {
+	//                       "name": "pos",
+	//                       "type": "vec3f64"
+	//                     }
+	//                   ]
+	//                 ]
+	//               }
+	//             }
+	//           ]
+	Value pk.Field
+}
+
+func (t *DebugSubscriptionEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	// Switch field Value based on type
+	// Convert compareTo value to string for matching
+	compareValueValue := t.Type.Value
+
+	switch compareValueValue {
+	case "BeeHives":
+		var val DebugSubscriptionEventValueBeeHives
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case BeeHives")
+		}
+		t.Value = &val
+	case "Bees":
+		var val DebugSubscriptionEventValueBees
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Bees")
+		}
+		t.Value = &val
+	case "Brains":
+		var val DebugSubscriptionEventValueBrains
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Brains")
+		}
+		t.Value = &val
+	case "Breezes":
+		var val DebugSubscriptionEventValueBreezes
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Breezes")
+		}
+		t.Value = &val
+	case "DedicatedServerTickTime":
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Value case DedicatedServerTickTime")
+		}
+		t.Value = &__void
+	case "EntityBlockIntersections":
+		var val DebugSubscriptionEventValueEntityBlockIntersections
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case EntityBlockIntersections")
+		}
+		t.Value = &val
+	case "EntityPaths":
+		var val DebugSubscriptionEventValueEntityPaths
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case EntityPaths")
+		}
+		t.Value = &val
+	case "GameEventListeners":
+		var val DebugSubscriptionEventValueGameEventListeners
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GameEventListeners")
+		}
+		t.Value = &val
+	case "GameEvents":
+		var val DebugSubscriptionEventValueGameEvents
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GameEvents")
+		}
+		t.Value = &val
+	case "GoalSelectors":
+		var val DebugSubscriptionEventValueGoalSelectors
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case GoalSelectors")
+		}
+		t.Value = &val
+	case "NeighborUpdates":
+		var val DebugSubscriptionEventValueNeighborUpdates
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case NeighborUpdates")
+		}
+		t.Value = &val
+	case "Pois":
+		var val DebugSubscriptionEventValuePois
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Pois")
+		}
+		t.Value = &val
+	case "Raids":
+		var val DebugSubscriptionEventValueRaids
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Raids")
+		}
+		t.Value = &val
+	case "RedstoneWireOrientations":
+		var val DebugSubscriptionEventValueRedstoneWireOrientations
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case RedstoneWireOrientations")
+		}
+		t.Value = &val
+	case "Structures":
+		var val DebugSubscriptionEventValueStructures
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Value case Structures")
+		}
+		t.Value = &val
+	case "VillageSections":
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Value case VillageSections")
+		}
+		t.Value = &__void
+	default:
+		// Mapper-backed discriminator with no explicit data for this value: treat as void
+		var __void models.Void
+		t.Value = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t DebugSubscriptionEvent) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DebugSubscriptionEvent.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Value based on type
+	if t.Value != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Value.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Value value does not implement WriteTo: %T", t.Value)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "x",
+//	      "type": "f64"
+//	    },
+//	    {
+//	      "name": "y",
+//	      "type": "f64"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "f64"
+//	    }
+//	  ]
+//	]
+type Vec3f64 struct {
+	// "f64"
+	X pk.Double
+	// "f64"
+	Y pk.Double
+	// "f64"
+	Z pk.Double
+}
+
+func (t *Vec3f64) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.X.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field X")
+	}
+	bytesRead, err = t.Y.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
+	}
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
+
+	return totalBytes, nil
+}
+
+func (t Vec3f64) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[Vec3f64.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.X.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Y.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Z.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type IDSet struct {
+	// RegistryEntryHolderSet can hold either a single named tag or a list of numeric IDs
+	IsTagList bool
+	Tag       pk.String
+	IDs       models.Array[pk.VarInt, pk.VarInt]
+}
+
+func (r *IDSet) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint count - if 0, a single tag follows; otherwise IDs follow
+	var count pk.VarInt
+	n, err := count.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder set count")
+	}
+
+	if count == 0 {
+		// Tag representation - read a single tag
+		r.IsTagList = true
+		n, err = r.Tag.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder set tag")
+		}
+	} else {
+		// IDs list representation - count already read, now read count-1 more IDs
+		r.IsTagList = false
+		ary := make([]pk.VarInt, count)
+		ary[0] = pk.VarInt(count - 1)
+		for i := 1; i < int(count); i++ {
+			var id pk.VarInt
+			n, err := id.ReadFrom(reader)
+			totalBytes += n
+			if err != nil {
+				return totalBytes, errors.Wrapf(err, "failed to read registry entry holder set ID at index %d", i)
+			}
+			ary[i] = id
+		}
+		r.IDs.Ary.Ary = any(ary)
+	}
+
+	return totalBytes, nil
+}
+
+func (r IDSet) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsTagList {
+		// Write 0 followed by single tag
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set zero count for tag")
+		}
+		n, err = r.Tag.WriteTo(w)
+		totalBytes += n
+		return totalBytes, err
+	} else {
+		// Write IDs (with first ID + 1 as the "count")
+		idsAry, ok := r.IDs.Ary.Ary.([]pk.VarInt)
+		if !ok || len(idsAry) == 0 {
+			return totalBytes, nil
+		}
+		// Write first ID + 1
+		firstPlusOne := pk.VarInt(idsAry[0]) + 1
+		n, err := firstPlusOne.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder set first ID + 1")
+		}
+		// Write remaining IDs
+		for i := 1; i < len(idsAry); i++ {
+			n, err := idsAry[i].WriteTo(w)
+			totalBytes += n
+			if err != nil {
+				return totalBytes, errors.Wrapf(err, "failed to write registry entry holder set ID at index %d", i)
+			}
+		}
+	}
+
+	return totalBytes, nil
 }

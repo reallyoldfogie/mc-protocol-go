@@ -73,8 +73,8 @@ func (p *UpdateViewPosition) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateViewPosition) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ChunkX"] = p.ChunkX
-	fields["ChunkZ"] = p.ChunkZ
+	fields["ChunkX"] = &p.ChunkX
+	fields["ChunkZ"] = &p.ChunkZ
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *UpdateViewPosition) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateViewPosition) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ChunkX"]; ok {
-		p.ChunkX = val.(pk.VarInt)
+		p.ChunkX = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ChunkZ"]; ok {
-		p.ChunkZ = val.(pk.VarInt)
+		p.ChunkZ = *val.(*pk.VarInt)
 	}
 }
 

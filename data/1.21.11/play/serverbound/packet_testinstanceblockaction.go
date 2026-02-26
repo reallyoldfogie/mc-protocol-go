@@ -151,9 +151,9 @@ func (p *TestInstanceBlockAction) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TestInstanceBlockAction) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Pos"] = p.Pos
-	fields["Action"] = p.Action
-	fields["Data"] = p.Data
+	fields["Pos"] = &p.Pos
+	fields["Action"] = &p.Action
+	fields["Data"] = &p.Data
 	return fields
 }
 
@@ -164,15 +164,14 @@ func (p *TestInstanceBlockAction) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TestInstanceBlockAction) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Pos"]; ok {
-		p.Pos = val.(basetypes.Position)
+		p.Pos = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.VarInt)
+		p.Action = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(TestInstanceBlockActionData)
+		p.Data = *val.(*TestInstanceBlockActionData)
 	}
 }
 

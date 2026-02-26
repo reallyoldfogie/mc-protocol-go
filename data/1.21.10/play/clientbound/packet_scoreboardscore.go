@@ -196,11 +196,11 @@ func (p *ScoreboardScore) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ScoreboardScore) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ItemName"] = p.ItemName
-	fields["ScoreName"] = p.ScoreName
-	fields["Value"] = p.Value
-	fields["DisplayName"] = p.DisplayName
-	fields["NumberFormat"] = p.NumberFormat
+	fields["ItemName"] = &p.ItemName
+	fields["ScoreName"] = &p.ScoreName
+	fields["Value"] = &p.Value
+	fields["DisplayName"] = &p.DisplayName
+	fields["NumberFormat"] = &p.NumberFormat
 	fields["Styling"] = p.Styling
 	return fields
 }
@@ -212,21 +212,20 @@ func (p *ScoreboardScore) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ScoreboardScore) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ItemName"]; ok {
-		p.ItemName = val.(pk.String)
+		p.ItemName = *val.(*pk.String)
 	}
 	if val, ok := fields["ScoreName"]; ok {
-		p.ScoreName = val.(pk.String)
+		p.ScoreName = *val.(*pk.String)
 	}
 	if val, ok := fields["Value"]; ok {
-		p.Value = val.(pk.VarInt)
+		p.Value = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["DisplayName"]; ok {
-		p.DisplayName = val.(models.Option[models.AnonymousNBT])
+		p.DisplayName = *val.(*models.Option[models.AnonymousNBT])
 	}
 	if val, ok := fields["NumberFormat"]; ok {
-		p.NumberFormat = val.(models.Option[pk.VarInt])
+		p.NumberFormat = *val.(*models.Option[pk.VarInt])
 	}
 	if val, ok := fields["Styling"]; ok {
 		p.Styling = val.(pk.Field)

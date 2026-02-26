@@ -81,9 +81,9 @@ func (p *Experience) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Experience) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ExperienceBar"] = p.ExperienceBar
-	fields["Level"] = p.Level
-	fields["TotalExperience"] = p.TotalExperience
+	fields["ExperienceBar"] = &p.ExperienceBar
+	fields["Level"] = &p.Level
+	fields["TotalExperience"] = &p.TotalExperience
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *Experience) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Experience) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ExperienceBar"]; ok {
-		p.ExperienceBar = val.(pk.Float)
+		p.ExperienceBar = *val.(*pk.Float)
 	}
 	if val, ok := fields["Level"]; ok {
-		p.Level = val.(pk.VarInt)
+		p.Level = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["TotalExperience"]; ok {
-		p.TotalExperience = val.(pk.VarInt)
+		p.TotalExperience = *val.(*pk.VarInt)
 	}
 }
 

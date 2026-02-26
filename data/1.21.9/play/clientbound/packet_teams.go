@@ -365,7 +365,7 @@ type Teams struct {
 	//                   "default": "void"
 	//                 }
 	//               ]
-	UnnamedType0008 pk.Field
+	UnnamedType0007 pk.Field
 	// [
 	//                 "switch",
 	//                 {
@@ -421,7 +421,7 @@ func (p *Teams) Marshal() pk.Packet {
 		p.packetID,
 		&p.Team,
 		&p.Mode,
-		p.UnnamedType0008,
+		p.UnnamedType0007,
 		p.Players)
 }
 
@@ -445,35 +445,36 @@ func (p *Teams) Scan(packet pk.Packet) error {
 	if err != nil {
 		return fmt.Errorf("scanning packet field[Mode] error: %w", err)
 	}
-	// Switch field UnnamedType0008 based on mode
+	// Switch field UnnamedType0007 based on mode
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0008 := p.Mode.Value
+	compareValueUnnamedType0007 := p.Mode.Value
 
-	switch compareValueUnnamedType0008 {
+	switch compareValueUnnamedType0007 {
 	case "add":
-		var val TeamsUnnamedType0008Add
+		var val TeamsUnnamedType0007Add
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0008] case add")
+			return errors.Wrap(err, "scanning packet field[UnnamedType0007] case add")
 		}
-		p.UnnamedType0008 = &val
+		p.UnnamedType0007 = &val
 	case "change":
-		var val TeamsUnnamedType0008Change
+		var val TeamsUnnamedType0007Change
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0008] case change")
+			return errors.Wrap(err, "scanning packet field[UnnamedType0007] case change")
 		}
-		p.UnnamedType0008 = &val
+		p.UnnamedType0007 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0008] default case")
+			return errors.Wrap(err, "failed to read void switch field UnnamedType0007 default case")
 		}
-		p.UnnamedType0008 = &val
+		p.UnnamedType0007 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -506,13 +507,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Players] default case")
+			return errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		p.Players = &val
+		p.Players = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -527,9 +529,9 @@ func (p *Teams) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Team"] = p.Team
-	fields["Mode"] = p.Mode
-	fields["UnnamedType0008"] = p.UnnamedType0008
+	fields["Team"] = &p.Team
+	fields["Mode"] = &p.Mode
+	fields["UnnamedType0007"] = p.UnnamedType0007
 	fields["Players"] = p.Players
 	return fields
 }
@@ -541,15 +543,14 @@ func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Teams) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Team"]; ok {
-		p.Team = val.(pk.String)
+		p.Team = *val.(*pk.String)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(TeamsMode)
+		p.Mode = *val.(*TeamsMode)
 	}
-	if val, ok := fields["UnnamedType0008"]; ok {
-		p.UnnamedType0008 = val.(pk.Field)
+	if val, ok := fields["UnnamedType0007"]; ok {
+		p.UnnamedType0007 = val.(pk.Field)
 	}
 	if val, ok := fields["Players"]; ok {
 		p.Players = val.(pk.Field)
@@ -585,18 +586,18 @@ func (p *Teams) SetMode(val TeamsMode) {
 	p.Mode = val
 }
 
-// GetUnnamedType0008 returns the UnnamedType0008 field value.
+// GetUnnamedType0007 returns the UnnamedType0007 field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *Teams) GetUnnamedType0008() pk.Field {
-	return p.UnnamedType0008
+func (p *Teams) GetUnnamedType0007() pk.Field {
+	return p.UnnamedType0007
 }
 
-// SetUnnamedType0008 sets the UnnamedType0008 field value.
+// SetUnnamedType0007 sets the UnnamedType0007 field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *Teams) SetUnnamedType0008(val pk.Field) {
-	p.UnnamedType0008 = val
+func (p *Teams) SetUnnamedType0007(val pk.Field) {
+	p.UnnamedType0007 = val
 }
 
 // GetPlayers returns the Players field value.
@@ -625,35 +626,36 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Mode")
 	}
-	// Switch field UnnamedType0008 based on mode
+	// Switch field UnnamedType0007 based on mode
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0008 := t.Mode.Value
+	compareValueUnnamedType0007 := t.Mode.Value
 
-	switch compareValueUnnamedType0008 {
+	switch compareValueUnnamedType0007 {
 	case "add":
-		var val TeamsUnnamedType0008Add
+		var val TeamsUnnamedType0007Add
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0008 case add")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0007 case add")
 		}
-		t.UnnamedType0008 = &val
+		t.UnnamedType0007 = &val
 	case "change":
-		var val TeamsUnnamedType0008Change
+		var val TeamsUnnamedType0007Change
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0008 case change")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0007 case change")
 		}
-		t.UnnamedType0008 = &val
+		t.UnnamedType0007 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0008 default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0007 default case")
 		}
-		t.UnnamedType0008 = &val
+		t.UnnamedType0007 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -686,13 +688,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Players default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		t.Players = &val
+		t.Players = &__void
 	}
 
 	return totalBytes, nil
@@ -714,10 +717,10 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0008 based on mode
-	if t.UnnamedType0008 != nil {
+	// Switch field UnnamedType0007 based on mode
+	if t.UnnamedType0007 != nil {
 		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0008.(interface {
+		if writer, ok := t.UnnamedType0007.(interface {
 			WriteTo(io.Writer) (int64, error)
 		}); ok {
 			bytesWritten, err = writer.WriteTo(w)
@@ -727,7 +730,7 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 			}
 		} else {
 			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0008 value does not implement WriteTo: %T", t.UnnamedType0008)
+			return totalBytes, fmt.Errorf("switch field UnnamedType0007 value does not implement WriteTo: %T", t.UnnamedType0007)
 		}
 	}
 	// Switch field Players based on mode
@@ -749,17 +752,17 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-// TeamsUnnamedType0008AddFlagsBitflags provides named accessors over a bitflag field.
-type TeamsUnnamedType0008AddFlagsBitflags struct {
+// TeamsUnnamedType0007ChangeFlagsBitflags provides named accessors over a bitflag field.
+type TeamsUnnamedType0007ChangeFlagsBitflags struct {
 	pk.UnsignedByte
 }
 
-func (bf TeamsUnnamedType0008AddFlagsBitflags) FriendlyFire() bool {
+func (bf TeamsUnnamedType0007ChangeFlagsBitflags) FriendlyFire() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 0)) != 0
 }
 
-func (bf *TeamsUnnamedType0008AddFlagsBitflags) SetFriendlyFire(value bool) {
+func (bf *TeamsUnnamedType0007ChangeFlagsBitflags) SetFriendlyFire(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 0)
@@ -768,12 +771,12 @@ func (bf *TeamsUnnamedType0008AddFlagsBitflags) SetFriendlyFire(value bool) {
 	}
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
-func (bf TeamsUnnamedType0008AddFlagsBitflags) SeeFriendlyInvisible() bool {
+func (bf TeamsUnnamedType0007ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 1)) != 0
 }
 
-func (bf *TeamsUnnamedType0008AddFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
+func (bf *TeamsUnnamedType0007ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 1)
@@ -848,7 +851,7 @@ func (bf *TeamsUnnamedType0008AddFlagsBitflags) SetSeeFriendlyInvisible(value bo
 //	    }
 //	  ]
 //	]
-type TeamsUnnamedType0008Add struct {
+type TeamsUnnamedType0007Change struct {
 	// "anonymousNbt"
 	Name models.AnonymousNBT
 	// [
@@ -861,7 +864,7 @@ type TeamsUnnamedType0008Add struct {
 	//                               ]
 	//                             }
 	//                           ]
-	Flags TeamsUnnamedType0008AddFlagsBitflags
+	Flags TeamsUnnamedType0007ChangeFlagsBitflags
 	// [
 	//                             "mapper",
 	//                             {
@@ -874,7 +877,7 @@ type TeamsUnnamedType0008Add struct {
 	//                               }
 	//                             }
 	//                           ]
-	NameTagVisibility TeamsUnnamedType0008AddNameTagVisibility
+	NameTagVisibility TeamsUnnamedType0007ChangeNameTagVisibility
 	// [
 	//                             "mapper",
 	//                             {
@@ -887,7 +890,7 @@ type TeamsUnnamedType0008Add struct {
 	//                               }
 	//                             }
 	//                           ]
-	CollisionRule TeamsUnnamedType0008AddCollisionRule
+	CollisionRule TeamsUnnamedType0007ChangeCollisionRule
 	// "varint"
 	Formatting pk.VarInt
 	// "anonymousNbt"
@@ -896,7 +899,7 @@ type TeamsUnnamedType0008Add struct {
 	Suffix models.AnonymousNBT
 }
 
-func (t *TeamsUnnamedType0008Add) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *TeamsUnnamedType0007Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
@@ -937,11 +940,11 @@ func (t *TeamsUnnamedType0008Add) ReadFrom(r io.Reader) (totalBytes int64, err e
 	return totalBytes, nil
 }
 
-func (t TeamsUnnamedType0008Add) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t TeamsUnnamedType0007Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[TeamsUnnamedType0008Add.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[TeamsUnnamedType0007Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
@@ -981,17 +984,17 @@ func (t TeamsUnnamedType0008Add) WriteTo(w io.Writer) (totalBytes int64, err err
 	return totalBytes, nil
 }
 
-// TeamsUnnamedType0008ChangeFlagsBitflags provides named accessors over a bitflag field.
-type TeamsUnnamedType0008ChangeFlagsBitflags struct {
+// TeamsUnnamedType0007AddFlagsBitflags provides named accessors over a bitflag field.
+type TeamsUnnamedType0007AddFlagsBitflags struct {
 	pk.UnsignedByte
 }
 
-func (bf TeamsUnnamedType0008ChangeFlagsBitflags) FriendlyFire() bool {
+func (bf TeamsUnnamedType0007AddFlagsBitflags) FriendlyFire() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 0)) != 0
 }
 
-func (bf *TeamsUnnamedType0008ChangeFlagsBitflags) SetFriendlyFire(value bool) {
+func (bf *TeamsUnnamedType0007AddFlagsBitflags) SetFriendlyFire(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 0)
@@ -1000,12 +1003,12 @@ func (bf *TeamsUnnamedType0008ChangeFlagsBitflags) SetFriendlyFire(value bool) {
 	}
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
-func (bf TeamsUnnamedType0008ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
+func (bf TeamsUnnamedType0007AddFlagsBitflags) SeeFriendlyInvisible() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 1)) != 0
 }
 
-func (bf *TeamsUnnamedType0008ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
+func (bf *TeamsUnnamedType0007AddFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 1)
@@ -1080,7 +1083,7 @@ func (bf *TeamsUnnamedType0008ChangeFlagsBitflags) SetSeeFriendlyInvisible(value
 //	    }
 //	  ]
 //	]
-type TeamsUnnamedType0008Change struct {
+type TeamsUnnamedType0007Add struct {
 	// "anonymousNbt"
 	Name models.AnonymousNBT
 	// [
@@ -1093,7 +1096,7 @@ type TeamsUnnamedType0008Change struct {
 	//                               ]
 	//                             }
 	//                           ]
-	Flags TeamsUnnamedType0008ChangeFlagsBitflags
+	Flags TeamsUnnamedType0007AddFlagsBitflags
 	// [
 	//                             "mapper",
 	//                             {
@@ -1106,7 +1109,7 @@ type TeamsUnnamedType0008Change struct {
 	//                               }
 	//                             }
 	//                           ]
-	NameTagVisibility TeamsUnnamedType0008ChangeNameTagVisibility
+	NameTagVisibility TeamsUnnamedType0007AddNameTagVisibility
 	// [
 	//                             "mapper",
 	//                             {
@@ -1119,7 +1122,7 @@ type TeamsUnnamedType0008Change struct {
 	//                               }
 	//                             }
 	//                           ]
-	CollisionRule TeamsUnnamedType0008ChangeCollisionRule
+	CollisionRule TeamsUnnamedType0007AddCollisionRule
 	// "varint"
 	Formatting pk.VarInt
 	// "anonymousNbt"
@@ -1128,7 +1131,7 @@ type TeamsUnnamedType0008Change struct {
 	Suffix models.AnonymousNBT
 }
 
-func (t *TeamsUnnamedType0008Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *TeamsUnnamedType0007Add) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
@@ -1169,11 +1172,11 @@ func (t *TeamsUnnamedType0008Change) ReadFrom(r io.Reader) (totalBytes int64, er
 	return totalBytes, nil
 }
 
-func (t TeamsUnnamedType0008Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t TeamsUnnamedType0007Add) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[TeamsUnnamedType0008Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[TeamsUnnamedType0007Add.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten

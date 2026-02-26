@@ -156,6 +156,8 @@
 
 	func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models.PacketMarshaller, error) {
 	switch id {
+		case 0: // Play.Clientbound[{0}] = generator.packetData{Name:"models.Void", ID:0, Hex:"0X00", StructName:"", ProtoTypeName:"models.Void", AltName:"ClientboundBundleDelimiter"}
+				return models.NewVoid(), nil
 		case 1: // Play.Clientbound[{1}] = generator.packetData{Name:"SpawnEntity", ID:1, Hex:"0X01", StructName:"SpawnEntity", ProtoTypeName:"packet_spawn_entity", AltName:"ClientboundAddEntity"}
 				return play_clientbound.NewSpawnEntity(), nil
 		case 2: // Play.Clientbound[{2}] = generator.packetData{Name:"Animation", ID:2, Hex:"0X02", StructName:"Animation", ProtoTypeName:"packet_animation", AltName:"ClientboundAnimate"}
@@ -184,11 +186,11 @@
 				return play_clientbound.NewChunkBiomes(), nil
 		case 14: // Play.Clientbound[{14}] = generator.packetData{Name:"ClearTitles", ID:14, Hex:"0X0E", StructName:"ClearTitles", ProtoTypeName:"packet_clear_titles", AltName:""}
 				return play_clientbound.NewClearTitles(), nil
-		case 15: // Play.Clientbound[{15}] = generator.packetData{Name:"TabComplete", ID:15, Hex:"0X0F", StructName:"", ProtoTypeName:"packet_tab_complete", AltName:"ClientboundCommandSuggestions"}
+		case 15: // Play.Clientbound[{15}] = generator.packetData{Name:"TabComplete", ID:15, Hex:"0X0F", StructName:"TabComplete", ProtoTypeName:"packet_tab_complete", AltName:"ClientboundCommandSuggestions"}
 				return play_clientbound.NewTabComplete(), nil
 		case 16: // Play.Clientbound[{16}] = generator.packetData{Name:"DeclareCommands", ID:16, Hex:"0X10", StructName:"DeclareCommands", ProtoTypeName:"packet_declare_commands", AltName:"ClientboundCommands"}
 				return play_clientbound.NewDeclareCommands(), nil
-		case 17: // Play.Clientbound[{17}] = generator.packetData{Name:"CloseWindow", ID:17, Hex:"0X11", StructName:"", ProtoTypeName:"packet_close_window", AltName:"ClientboundContainerClose"}
+		case 17: // Play.Clientbound[{17}] = generator.packetData{Name:"CloseWindow", ID:17, Hex:"0X11", StructName:"CloseWindow", ProtoTypeName:"packet_close_window", AltName:"ClientboundContainerClose"}
 				return play_clientbound.NewCloseWindow(), nil
 		case 18: // Play.Clientbound[{18}] = generator.packetData{Name:"WindowItems", ID:18, Hex:"0X12", StructName:"WindowItems", ProtoTypeName:"packet_window_items", AltName:"ClientboundContainerSetContent"}
 				return play_clientbound.NewWindowItems(), nil
@@ -266,7 +268,7 @@
 				return play_clientbound.NewMoveMinecart(), nil
 		case 54: // Play.Clientbound[{54}] = generator.packetData{Name:"EntityLook", ID:54, Hex:"0X36", StructName:"EntityLook", ProtoTypeName:"packet_entity_look", AltName:"ClientboundMoveEntityRot"}
 				return play_clientbound.NewEntityLook(), nil
-		case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"VehicleMove", ID:55, Hex:"0X37", StructName:"", ProtoTypeName:"packet_vehicle_move", AltName:"ClientboundMoveVehicle"}
+		case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"VehicleMove", ID:55, Hex:"0X37", StructName:"VehicleMove", ProtoTypeName:"packet_vehicle_move", AltName:"ClientboundMoveVehicle"}
 				return play_clientbound.NewVehicleMove(), nil
 		case 56: // Play.Clientbound[{56}] = generator.packetData{Name:"OpenBook", ID:56, Hex:"0X38", StructName:"OpenBook", ProtoTypeName:"packet_open_book", AltName:""}
 				return play_clientbound.NewOpenBook(), nil
@@ -280,7 +282,7 @@
 				return play_clientbound.NewPingResponse(), nil
 		case 61: // Play.Clientbound[{61}] = generator.packetData{Name:"CraftRecipeResponse", ID:61, Hex:"0X3D", StructName:"CraftRecipeResponse", ProtoTypeName:"packet_craft_recipe_response", AltName:"ClientboundPlaceGhostRecipe"}
 				return play_clientbound.NewCraftRecipeResponse(), nil
-		case 62: // Play.Clientbound[{62}] = generator.packetData{Name:"Abilities", ID:62, Hex:"0X3E", StructName:"", ProtoTypeName:"packet_abilities", AltName:"ClientboundPlayerAbilities"}
+		case 62: // Play.Clientbound[{62}] = generator.packetData{Name:"Abilities", ID:62, Hex:"0X3E", StructName:"Abilities", ProtoTypeName:"packet_abilities", AltName:"ClientboundPlayerAbilities"}
 				return play_clientbound.NewAbilities(), nil
 		case 63: // Play.Clientbound[{63}] = generator.packetData{Name:"PlayerChat", ID:63, Hex:"0X3F", StructName:"PlayerChat", ProtoTypeName:"packet_player_chat", AltName:""}
 				return play_clientbound.NewPlayerChat(), nil
@@ -296,7 +298,7 @@
 				return play_clientbound.NewPlayerInfo(), nil
 		case 69: // Play.Clientbound[{69}] = generator.packetData{Name:"FacePlayer", ID:69, Hex:"0X45", StructName:"FacePlayer", ProtoTypeName:"packet_face_player", AltName:"ClientboundPlayerLookAt"}
 				return play_clientbound.NewFacePlayer(), nil
-		case 70: // Play.Clientbound[{70}] = generator.packetData{Name:"Position", ID:70, Hex:"0X46", StructName:"", ProtoTypeName:"packet_position", AltName:"ClientboundPlayerPosition"}
+		case 70: // Play.Clientbound[{70}] = generator.packetData{Name:"Position", ID:70, Hex:"0X46", StructName:"Position", ProtoTypeName:"packet_position", AltName:"ClientboundPlayerPosition"}
 				return play_clientbound.NewPosition(), nil
 		case 71: // Play.Clientbound[{71}] = generator.packetData{Name:"PlayerRotation", ID:71, Hex:"0X47", StructName:"PlayerRotation", ProtoTypeName:"packet_player_rotation", AltName:""}
 				return play_clientbound.NewPlayerRotation(), nil
@@ -366,7 +368,7 @@
 				return play_clientbound.NewExperience(), nil
 		case 102: // Play.Clientbound[{102}] = generator.packetData{Name:"UpdateHealth", ID:102, Hex:"0X66", StructName:"UpdateHealth", ProtoTypeName:"packet_update_health", AltName:"ClientboundSetHealth"}
 				return play_clientbound.NewUpdateHealth(), nil
-		case 103: // Play.Clientbound[{103}] = generator.packetData{Name:"HeldItemSlot", ID:103, Hex:"0X67", StructName:"", ProtoTypeName:"packet_held_item_slot", AltName:"ClientboundSetHeldSlot"}
+		case 103: // Play.Clientbound[{103}] = generator.packetData{Name:"HeldItemSlot", ID:103, Hex:"0X67", StructName:"HeldItemSlot", ProtoTypeName:"packet_held_item_slot", AltName:"ClientboundSetHeldSlot"}
 				return play_clientbound.NewHeldItemSlot(), nil
 		case 104: // Play.Clientbound[{104}] = generator.packetData{Name:"ScoreboardObjective", ID:104, Hex:"0X68", StructName:"ScoreboardObjective", ProtoTypeName:"packet_scoreboard_objective", AltName:"ClientboundSetObjective"}
 				return play_clientbound.NewScoreboardObjective(), nil
@@ -428,7 +430,7 @@
 				return play_clientbound.NewEntityEffect(), nil
 		case 131: // Play.Clientbound[{131}] = generator.packetData{Name:"DeclareRecipes", ID:131, Hex:"0X83", StructName:"DeclareRecipes", ProtoTypeName:"packet_declare_recipes", AltName:"ClientboundUpdateRecipes"}
 				return play_clientbound.NewDeclareRecipes(), nil
-		case 132: // Play.Clientbound[{132}] = generator.packetData{Name:"Tags", ID:132, Hex:"0X84", StructName:"Tags", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
+		case 132: // Play.Clientbound[{132}] = generator.packetData{Name:"Tags", ID:132, Hex:"0X84", StructName:"", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
 				return play_clientbound.NewTags(), nil
 		case 133: // Play.Clientbound[{133}] = generator.packetData{Name:"SetProjectilePower", ID:133, Hex:"0X85", StructName:"SetProjectilePower", ProtoTypeName:"packet_set_projectile_power", AltName:"ClientboundProjectilePower"}
 				return play_clientbound.NewSetProjectilePower(), nil
@@ -446,7 +448,7 @@
 				pkt := basetypes.NewCommonClearDialog()
 				pkt.SetPacketID(137)
 				return pkt, nil
-		case 138: // Play.Clientbound[{138}] = generator.packetData{Name:"ShowDialog", ID:138, Hex:"0X8A", StructName:"ShowDialog", ProtoTypeName:"packet_show_dialog", AltName:""}
+		case 138: // Play.Clientbound[{138}] = generator.packetData{Name:"ShowDialog", ID:138, Hex:"0X8A", StructName:"", ProtoTypeName:"packet_show_dialog", AltName:""}
 				return play_clientbound.NewShowDialog(), nil
 		
 		default:

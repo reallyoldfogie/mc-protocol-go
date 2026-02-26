@@ -73,8 +73,8 @@ func (p *LoginStart) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *LoginStart) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Username"] = p.Username
-	fields["PlayerUUID"] = p.PlayerUUID
+	fields["Username"] = &p.Username
+	fields["PlayerUUID"] = &p.PlayerUUID
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *LoginStart) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *LoginStart) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Username"]; ok {
-		p.Username = val.(pk.String)
+		p.Username = *val.(*pk.String)
 	}
 	if val, ok := fields["PlayerUUID"]; ok {
-		p.PlayerUUID = val.(pk.UUID)
+		p.PlayerUUID = *val.(*pk.UUID)
 	}
 }
 

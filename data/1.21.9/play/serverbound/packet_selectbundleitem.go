@@ -73,8 +73,8 @@ func (p *SelectBundleItem) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SelectBundleItem) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["SlotId"] = p.SlotId
-	fields["SelectedItemIndex"] = p.SelectedItemIndex
+	fields["SlotId"] = &p.SlotId
+	fields["SelectedItemIndex"] = &p.SelectedItemIndex
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *SelectBundleItem) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SelectBundleItem) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["SlotId"]; ok {
-		p.SlotId = val.(pk.VarInt)
+		p.SlotId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SelectedItemIndex"]; ok {
-		p.SelectedItemIndex = val.(pk.VarInt)
+		p.SelectedItemIndex = *val.(*pk.VarInt)
 	}
 }
 

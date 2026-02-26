@@ -81,8 +81,8 @@ func (p *TestInstanceBlockStatus) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TestInstanceBlockStatus) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Status"] = p.Status
-	fields["Size"] = p.Size
+	fields["Status"] = &p.Status
+	fields["Size"] = &p.Size
 	return fields
 }
 
@@ -93,12 +93,11 @@ func (p *TestInstanceBlockStatus) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TestInstanceBlockStatus) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Status"]; ok {
-		p.Status = val.(models.AnonymousNBT)
+		p.Status = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["Size"]; ok {
-		p.Size = val.(models.Option[basetypes.Vec3i])
+		p.Size = *val.(*models.Option[basetypes.Vec3i])
 	}
 }
 

@@ -89,10 +89,10 @@ func (p *PlayerRotation) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PlayerRotation) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Yaw"] = p.Yaw
-	fields["RelativeYaw"] = p.RelativeYaw
-	fields["Pitch"] = p.Pitch
-	fields["RelativePitch"] = p.RelativePitch
+	fields["Yaw"] = &p.Yaw
+	fields["RelativeYaw"] = &p.RelativeYaw
+	fields["Pitch"] = &p.Pitch
+	fields["RelativePitch"] = &p.RelativePitch
 	return fields
 }
 
@@ -103,18 +103,17 @@ func (p *PlayerRotation) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PlayerRotation) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Float)
+		p.Yaw = *val.(*pk.Float)
 	}
 	if val, ok := fields["RelativeYaw"]; ok {
-		p.RelativeYaw = val.(pk.Boolean)
+		p.RelativeYaw = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Float)
+		p.Pitch = *val.(*pk.Float)
 	}
 	if val, ok := fields["RelativePitch"]; ok {
-		p.RelativePitch = val.(pk.Boolean)
+		p.RelativePitch = *val.(*pk.Boolean)
 	}
 }
 

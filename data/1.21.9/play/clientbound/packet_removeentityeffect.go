@@ -73,8 +73,8 @@ func (p *RemoveEntityEffect) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *RemoveEntityEffect) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["EffectId"] = p.EffectId
+	fields["EntityId"] = &p.EntityId
+	fields["EffectId"] = &p.EffectId
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *RemoveEntityEffect) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *RemoveEntityEffect) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["EffectId"]; ok {
-		p.EffectId = val.(pk.VarInt)
+		p.EffectId = *val.(*pk.VarInt)
 	}
 }
 

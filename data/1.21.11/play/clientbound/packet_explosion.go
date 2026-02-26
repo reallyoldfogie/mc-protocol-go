@@ -133,13 +133,13 @@ func (p *Explosion) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Center"] = p.Center
-	fields["Radius"] = p.Radius
-	fields["BlockCount"] = p.BlockCount
-	fields["PlayerKnockback"] = p.PlayerKnockback
-	fields["ExplosionParticle"] = p.ExplosionParticle
-	fields["Sound"] = p.Sound
-	fields["BlockParticles"] = p.BlockParticles
+	fields["Center"] = &p.Center
+	fields["Radius"] = &p.Radius
+	fields["BlockCount"] = &p.BlockCount
+	fields["PlayerKnockback"] = &p.PlayerKnockback
+	fields["ExplosionParticle"] = &p.ExplosionParticle
+	fields["Sound"] = &p.Sound
+	fields["BlockParticles"] = &p.BlockParticles
 	return fields
 }
 
@@ -150,27 +150,26 @@ func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Explosion) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Center"]; ok {
-		p.Center = val.(basetypes.Vec3f64)
+		p.Center = *val.(*basetypes.Vec3f64)
 	}
 	if val, ok := fields["Radius"]; ok {
-		p.Radius = val.(pk.Float)
+		p.Radius = *val.(*pk.Float)
 	}
 	if val, ok := fields["BlockCount"]; ok {
-		p.BlockCount = val.(pk.Int)
+		p.BlockCount = *val.(*pk.Int)
 	}
 	if val, ok := fields["PlayerKnockback"]; ok {
-		p.PlayerKnockback = val.(models.Option[basetypes.Vec3f64])
+		p.PlayerKnockback = *val.(*models.Option[basetypes.Vec3f64])
 	}
 	if val, ok := fields["ExplosionParticle"]; ok {
-		p.ExplosionParticle = val.(basetypes.Particle)
+		p.ExplosionParticle = *val.(*basetypes.Particle)
 	}
 	if val, ok := fields["Sound"]; ok {
-		p.Sound = val.(basetypes.ItemSoundHolder)
+		p.Sound = *val.(*basetypes.ItemSoundHolder)
 	}
 	if val, ok := fields["BlockParticles"]; ok {
-		p.BlockParticles = val.(models.Array[pk.VarInt, ExplosionParticleEntry])
+		p.BlockParticles = *val.(*models.Array[pk.VarInt, ExplosionParticleEntry])
 	}
 }
 

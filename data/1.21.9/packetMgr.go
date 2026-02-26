@@ -274,7 +274,7 @@
 				return play_clientbound.NewOpenWindow(), nil
 		case 58: // Play.Clientbound[{58}] = generator.packetData{Name:"OpenSignEntity", ID:58, Hex:"0X3A", StructName:"OpenSignEntity", ProtoTypeName:"packet_open_sign_entity", AltName:"ClientboundOpenSignEditor"}
 				return play_clientbound.NewOpenSignEntity(), nil
-		case 59: // Play.Clientbound[{59}] = generator.packetData{Name:"Ping", ID:59, Hex:"0X3B", StructName:"Ping", ProtoTypeName:"packet_ping", AltName:""}
+		case 59: // Play.Clientbound[{59}] = generator.packetData{Name:"Ping", ID:59, Hex:"0X3B", StructName:"", ProtoTypeName:"packet_ping", AltName:""}
 				return play_clientbound.NewPing(), nil
 		case 60: // Play.Clientbound[{60}] = generator.packetData{Name:"PingResponse", ID:60, Hex:"0X3C", StructName:"PingResponse", ProtoTypeName:"packet_ping_response", AltName:"ClientboundPongResponse"}
 				return play_clientbound.NewPingResponse(), nil

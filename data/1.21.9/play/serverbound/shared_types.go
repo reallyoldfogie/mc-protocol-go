@@ -44,12 +44,6 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type TestInstanceBlockActionDataTest = models.Option[pk.String]
-
-type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
-
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
-
 // Protodef: [
 //
 //	  "container",
@@ -116,12 +110,6 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
-
-type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
-
-type EditBookTitle = models.Option[pk.String]
-
 type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
 
 // Protodef: [
@@ -187,3 +175,15 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 }
 
 type WindowClickCursorItem = models.Option[basetypes.HashedSlot]
+
+type EditBookTitle = models.Option[pk.String]
+
+type TestInstanceBlockActionDataTest = models.Option[pk.String]
+
+type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
+
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
+
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]

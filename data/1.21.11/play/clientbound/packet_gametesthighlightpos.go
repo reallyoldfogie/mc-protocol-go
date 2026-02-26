@@ -74,8 +74,8 @@ func (p *GameTestHighlightPos) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *GameTestHighlightPos) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["AbsolutePos"] = p.AbsolutePos
-	fields["RelativePos"] = p.RelativePos
+	fields["AbsolutePos"] = &p.AbsolutePos
+	fields["RelativePos"] = &p.RelativePos
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *GameTestHighlightPos) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *GameTestHighlightPos) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["AbsolutePos"]; ok {
-		p.AbsolutePos = val.(basetypes.Position)
+		p.AbsolutePos = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["RelativePos"]; ok {
-		p.RelativePos = val.(basetypes.Position)
+		p.RelativePos = *val.(*basetypes.Position)
 	}
 }
 

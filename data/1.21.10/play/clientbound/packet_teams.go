@@ -529,8 +529,8 @@ func (p *Teams) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Team"] = p.Team
-	fields["Mode"] = p.Mode
+	fields["Team"] = &p.Team
+	fields["Mode"] = &p.Mode
 	fields["UnnamedType0008"] = p.UnnamedType0008
 	fields["Players"] = p.Players
 	return fields
@@ -543,12 +543,11 @@ func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Teams) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Team"]; ok {
-		p.Team = val.(pk.String)
+		p.Team = *val.(*pk.String)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(TeamsMode)
+		p.Mode = *val.(*TeamsMode)
 	}
 	if val, ok := fields["UnnamedType0008"]; ok {
 		p.UnnamedType0008 = val.(pk.Field)

@@ -403,11 +403,11 @@ func (p *Map) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Map) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ItemDamage"] = p.ItemDamage
-	fields["Scale"] = p.Scale
-	fields["Locked"] = p.Locked
-	fields["Icons"] = p.Icons
-	fields["Columns"] = p.Columns
+	fields["ItemDamage"] = &p.ItemDamage
+	fields["Scale"] = &p.Scale
+	fields["Locked"] = &p.Locked
+	fields["Icons"] = &p.Icons
+	fields["Columns"] = &p.Columns
 	fields["Rows"] = p.Rows
 	fields["X"] = p.X
 	fields["Y"] = p.Y
@@ -422,21 +422,20 @@ func (p *Map) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Map) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ItemDamage"]; ok {
-		p.ItemDamage = val.(pk.VarInt)
+		p.ItemDamage = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Scale"]; ok {
-		p.Scale = val.(pk.Byte)
+		p.Scale = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Locked"]; ok {
-		p.Locked = val.(pk.Boolean)
+		p.Locked = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["Icons"]; ok {
-		p.Icons = val.(models.Option[MapIcons])
+		p.Icons = *val.(*models.Option[MapIcons])
 	}
 	if val, ok := fields["Columns"]; ok {
-		p.Columns = val.(pk.UnsignedByte)
+		p.Columns = *val.(*pk.UnsignedByte)
 	}
 	if val, ok := fields["Rows"]; ok {
 		p.Rows = val.(pk.Field)

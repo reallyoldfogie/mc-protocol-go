@@ -78,7 +78,7 @@ func (p *EntityDestroy) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntityDestroy) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityIds"] = p.EntityIds
+	fields["EntityIds"] = &p.EntityIds
 	return fields
 }
 
@@ -89,9 +89,8 @@ func (p *EntityDestroy) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntityDestroy) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityIds"]; ok {
-		p.EntityIds = val.(models.Array[pk.VarInt, pk.VarInt])
+		p.EntityIds = *val.(*models.Array[pk.VarInt, pk.VarInt])
 	}
 }
 

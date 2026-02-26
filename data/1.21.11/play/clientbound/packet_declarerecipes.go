@@ -158,8 +158,8 @@ func (p *DeclareRecipes) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *DeclareRecipes) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Recipes"] = p.Recipes
-	fields["StoneCutterRecipes"] = p.StoneCutterRecipes
+	fields["Recipes"] = &p.Recipes
+	fields["StoneCutterRecipes"] = &p.StoneCutterRecipes
 	return fields
 }
 
@@ -170,12 +170,11 @@ func (p *DeclareRecipes) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *DeclareRecipes) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Recipes"]; ok {
-		p.Recipes = val.(models.Array[pk.VarInt, DeclareRecipesRecipesArrayType])
+		p.Recipes = *val.(*models.Array[pk.VarInt, DeclareRecipesRecipesArrayType])
 	}
 	if val, ok := fields["StoneCutterRecipes"]; ok {
-		p.StoneCutterRecipes = val.(models.Array[pk.VarInt, DeclareRecipesStoneCutterRecipesArrayType])
+		p.StoneCutterRecipes = *val.(*models.Array[pk.VarInt, DeclareRecipesStoneCutterRecipesArrayType])
 	}
 }
 

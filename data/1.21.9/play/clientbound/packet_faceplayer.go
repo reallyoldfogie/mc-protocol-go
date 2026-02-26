@@ -177,13 +177,14 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 		}
 		p.EntityId = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[EntityId] default case")
+			return errors.Wrap(err, "failed to read void switch field EntityId default case")
 		}
-		p.EntityId = &val
+		p.EntityId = &__void
 	}
 
 	// Switch field EntityFeetEyes based on isEntity
@@ -200,13 +201,14 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 		}
 		p.EntityFeetEyes = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[EntityFeetEyes] default case")
+			return errors.Wrap(err, "failed to read void switch field EntityFeetEyes default case")
 		}
-		p.EntityFeetEyes = &val
+		p.EntityFeetEyes = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -221,11 +223,11 @@ func (p *FacePlayer) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *FacePlayer) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["FeetEyes"] = p.FeetEyes
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["IsEntity"] = p.IsEntity
+	fields["FeetEyes"] = &p.FeetEyes
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["IsEntity"] = &p.IsEntity
 	fields["EntityId"] = p.EntityId
 	fields["EntityFeetEyes"] = p.EntityFeetEyes
 	return fields
@@ -238,21 +240,20 @@ func (p *FacePlayer) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *FacePlayer) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["FeetEyes"]; ok {
-		p.FeetEyes = val.(pk.VarInt)
+		p.FeetEyes = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["IsEntity"]; ok {
-		p.IsEntity = val.(pk.Boolean)
+		p.IsEntity = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["EntityId"]; ok {
 		p.EntityId = val.(pk.Field)
@@ -402,13 +403,14 @@ func (t *FacePlayer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.EntityId = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field EntityId default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field EntityId default case")
 		}
-		t.EntityId = &val
+		t.EntityId = &__void
 	}
 
 	// Switch field EntityFeetEyes based on isEntity
@@ -425,13 +427,14 @@ func (t *FacePlayer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.EntityFeetEyes = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field EntityFeetEyes default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field EntityFeetEyes default case")
 		}
-		t.EntityFeetEyes = &val
+		t.EntityFeetEyes = &__void
 	}
 
 	return totalBytes, nil

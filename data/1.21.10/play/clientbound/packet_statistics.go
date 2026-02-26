@@ -110,7 +110,7 @@ func (p *Statistics) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Statistics) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Entries"] = p.Entries
+	fields["Entries"] = &p.Entries
 	return fields
 }
 
@@ -121,9 +121,8 @@ func (p *Statistics) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Statistics) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Entries"]; ok {
-		p.Entries = val.(models.Array[pk.VarInt, StatisticsEntriesArrayType])
+		p.Entries = *val.(*models.Array[pk.VarInt, StatisticsEntriesArrayType])
 	}
 }
 

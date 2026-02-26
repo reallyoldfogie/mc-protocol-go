@@ -124,8 +124,8 @@ func (p *MultiBlockChange) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *MultiBlockChange) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ChunkCoordinates"] = p.ChunkCoordinates
-	fields["Records"] = p.Records
+	fields["ChunkCoordinates"] = &p.ChunkCoordinates
+	fields["Records"] = &p.Records
 	return fields
 }
 
@@ -136,12 +136,11 @@ func (p *MultiBlockChange) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *MultiBlockChange) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ChunkCoordinates"]; ok {
-		p.ChunkCoordinates = val.(MultiBlockChangeChunkCoordinates)
+		p.ChunkCoordinates = *val.(*MultiBlockChangeChunkCoordinates)
 	}
 	if val, ok := fields["Records"]; ok {
-		p.Records = val.(models.Array[pk.VarInt, pk.VarInt])
+		p.Records = *val.(*models.Array[pk.VarInt, pk.VarInt])
 	}
 }
 

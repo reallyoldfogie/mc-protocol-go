@@ -10,355 +10,6 @@ import (
 	"log"
 )
 
-type CommonRemoveResourcePackUuid = models.Option[pk.UUID]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "uuid",
-//	      "type": [
-//	        "option",
-//	        "UUID"
-//	      ]
-//	    }
-//	  ]
-//	]
-type CommonRemoveResourcePack struct {
-	packetID int32
-	// [
-	//             "option",
-	//             "UUID"
-	//           ]
-	Uuid models.Option[pk.UUID]
-}
-
-// NewCommonRemoveResourcePack creates a new CommonRemoveResourcePack packet with the correct packet ID.
-func NewCommonRemoveResourcePack() *CommonRemoveResourcePack {
-	return &CommonRemoveResourcePack{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonRemoveResourcePack) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonRemoveResourcePack) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonRemoveResourcePack) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID,
-		&p.Uuid)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonRemoveResourcePack) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan(
-		&p.Uuid)
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonRemoveResourcePack) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	fields["Uuid"] = p.Uuid
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonRemoveResourcePack) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Uuid"]; ok {
-		p.Uuid = val.(models.Option[pk.UUID])
-	}
-}
-
-// Typed field accessor methods for version-specific type-safe access
-// GetUuid returns the Uuid field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonRemoveResourcePack) GetUuid() models.Option[pk.UUID] {
-	return p.Uuid
-}
-
-// SetUuid sets the Uuid field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonRemoveResourcePack) SetUuid(val models.Option[pk.UUID]) {
-	p.Uuid = val
-}
-
-func (t *CommonRemoveResourcePack) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Uuid.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommonRemoveResourcePack) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommonRemoveResourcePack.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Uuid.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  []
-//	]
-type CommonClearDialog struct {
-	packetID int32
-}
-
-// NewCommonClearDialog creates a new CommonClearDialog packet with the correct packet ID.
-func NewCommonClearDialog() *CommonClearDialog {
-	return &CommonClearDialog{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonClearDialog) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonClearDialog) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonClearDialog) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonClearDialog) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan()
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonClearDialog) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonClearDialog) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-}
-
-// Typed field accessor methods for version-specific type-safe access
-func (t *CommonClearDialog) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	return 0, nil
-}
-
-func (t CommonClearDialog) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	return 0, nil
-}
-
-type CommonCustomClickActionNbt = models.Option[models.AnonymousNBT]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "id",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "nbt",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    }
-//	  ]
-//	]
-type CommonCustomClickAction struct {
-	packetID int32
-	// "string"
-	Id pk.String
-	// [
-	//             "option",
-	//             "anonymousNbt"
-	//           ]
-	Nbt models.Option[models.AnonymousNBT]
-}
-
-// NewCommonCustomClickAction creates a new CommonCustomClickAction packet with the correct packet ID.
-func NewCommonCustomClickAction() *CommonCustomClickAction {
-	return &CommonCustomClickAction{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonCustomClickAction) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonCustomClickAction) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonCustomClickAction) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID,
-		&p.Id,
-		&p.Nbt)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonCustomClickAction) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan(
-		&p.Id,
-		&p.Nbt)
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonCustomClickAction) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	fields["Id"] = p.Id
-	fields["Nbt"] = p.Nbt
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonCustomClickAction) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Id"]; ok {
-		p.Id = val.(pk.String)
-	}
-	if val, ok := fields["Nbt"]; ok {
-		p.Nbt = val.(models.Option[models.AnonymousNBT])
-	}
-}
-
-// Typed field accessor methods for version-specific type-safe access
-// GetId returns the Id field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCustomClickAction) GetId() pk.String {
-	return p.Id
-}
-
-// SetId sets the Id field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCustomClickAction) SetId(val pk.String) {
-	p.Id = val
-}
-
-// GetNbt returns the Nbt field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCustomClickAction) GetNbt() models.Option[models.AnonymousNBT] {
-	return p.Nbt
-}
-
-// SetNbt sets the Nbt field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCustomClickAction) SetNbt(val models.Option[models.AnonymousNBT]) {
-	p.Nbt = val
-}
-
-func (t *CommonCustomClickAction) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Id.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Id")
-	}
-	bytesRead, err = t.Nbt.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Nbt")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommonCustomClickAction) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommonCustomClickAction.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Id.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Nbt.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type CommonCookieResponseValue = models.Option[pk.ByteArray]
-
 // Protodef: [
 //
 //	  "container",
@@ -369,117 +20,18 @@ type CommonCookieResponseValue = models.Option[pk.ByteArray]
 //	    },
 //	    {
 //	      "name": "value",
-//	      "type": [
-//	        "option",
-//	        "ByteArray"
-//	      ]
+//	      "type": "string"
 //	    }
 //	  ]
 //	]
-type CommonCookieResponse struct {
-	packetID int32
+type CommonCustomReportDetailsDetailsArrayType struct {
 	// "string"
 	Key pk.String
-	// [
-	//             "option",
-	//             "ByteArray"
-	//           ]
-	Value models.Option[pk.ByteArray]
+	// "string"
+	Value pk.String
 }
 
-// NewCommonCookieResponse creates a new CommonCookieResponse packet with the correct packet ID.
-func NewCommonCookieResponse() *CommonCookieResponse {
-	return &CommonCookieResponse{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonCookieResponse) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonCookieResponse) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonCookieResponse) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID,
-		&p.Key,
-		&p.Value)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonCookieResponse) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan(
-		&p.Key,
-		&p.Value)
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonCookieResponse) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	fields["Key"] = p.Key
-	fields["Value"] = p.Value
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonCookieResponse) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Key"]; ok {
-		p.Key = val.(pk.String)
-	}
-	if val, ok := fields["Value"]; ok {
-		p.Value = val.(models.Option[pk.ByteArray])
-	}
-}
-
-// Typed field accessor methods for version-specific type-safe access
-// GetKey returns the Key field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCookieResponse) GetKey() pk.String {
-	return p.Key
-}
-
-// SetKey sets the Key field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCookieResponse) SetKey(val pk.String) {
-	p.Key = val
-}
-
-// GetValue returns the Value field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCookieResponse) GetValue() models.Option[pk.ByteArray] {
-	return p.Value
-}
-
-// SetValue sets the Value field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCookieResponse) SetValue(val models.Option[pk.ByteArray]) {
-	p.Value = val
-}
-
-func (t *CommonCookieResponse) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommonCustomReportDetailsDetailsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
 	totalBytes += bytesRead
@@ -495,11 +47,11 @@ func (t *CommonCookieResponse) ReadFrom(r io.Reader) (totalBytes int64, err erro
 	return totalBytes, nil
 }
 
-func (t CommonCookieResponse) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommonCustomReportDetailsDetailsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommonCookieResponse.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommonCustomReportDetailsDetailsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Key.WriteTo(w)
 	totalBytes += bytesWritten
@@ -507,6 +59,611 @@ func (t CommonCookieResponse) WriteTo(w io.Writer) (totalBytes int64, err error)
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Value.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "details",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": [
+//	            "container",
+//	            [
+//	              {
+//	                "name": "key",
+//	                "type": "string"
+//	              },
+//	              {
+//	                "name": "value",
+//	                "type": "string"
+//	              }
+//	            ]
+//	          ]
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type CommonCustomReportDetails struct {
+	packetID int32
+	// [
+	//             "array",
+	//             {
+	//               "countType": "varint",
+	//               "type": [
+	//                 "container",
+	//                 [
+	//                   {
+	//                     "name": "key",
+	//                     "type": "string"
+	//                   },
+	//                   {
+	//                     "name": "value",
+	//                     "type": "string"
+	//                   }
+	//                 ]
+	//               ]
+	//             }
+	//           ]
+	Details models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType]
+}
+
+// NewCommonCustomReportDetails creates a new CommonCustomReportDetails packet with the correct packet ID.
+func NewCommonCustomReportDetails() *CommonCustomReportDetails {
+	return &CommonCustomReportDetails{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonCustomReportDetails) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonCustomReportDetails) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonCustomReportDetails) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Details)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonCustomReportDetails) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Details)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonCustomReportDetails) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Details"] = &p.Details
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonCustomReportDetails) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Details"]; ok {
+		p.Details = *val.(*models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType])
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetDetails returns the Details field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCustomReportDetails) GetDetails() models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType] {
+	return p.Details
+}
+
+// SetDetails sets the Details field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCustomReportDetails) SetDetails(val models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType]) {
+	p.Details = val
+}
+
+func (t *CommonCustomReportDetails) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Details.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Details")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommonCustomReportDetails) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommonCustomReportDetails.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Details.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type CommonSettingsParticleStatus struct {
+	Value string
+}
+
+var CommonSettingsParticleStatusMappings = map[int64]string{
+	0: "all",
+	1: "decreased",
+	2: "minimal",
+}
+
+func (m *CommonSettingsParticleStatus) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read CommonSettingsParticleStatus key")
+	}
+
+	value, ok := CommonSettingsParticleStatusMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m CommonSettingsParticleStatus) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range CommonSettingsParticleStatusMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown CommonSettingsParticleStatus value: %s", m.Value)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "locale",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "viewDistance",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "chatFlags",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "chatColors",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "skinParts",
+//	      "type": "u8"
+//	    },
+//	    {
+//	      "name": "mainHand",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "enableTextFiltering",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "enableServerListing",
+//	      "type": "bool"
+//	    },
+//	    {
+//	      "name": "particleStatus",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "all",
+//	            "1": "decreased",
+//	            "2": "minimal"
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type CommonSettings struct {
+	packetID int32
+	// "string"
+	Locale pk.String
+	// "i8"
+	ViewDistance pk.Byte
+	// "varint"
+	ChatFlags pk.VarInt
+	// "bool"
+	ChatColors pk.Boolean
+	// "u8"
+	SkinParts pk.UnsignedByte
+	// "varint"
+	MainHand pk.VarInt
+	// "bool"
+	EnableTextFiltering pk.Boolean
+	// "bool"
+	EnableServerListing pk.Boolean
+	// [
+	//             "mapper",
+	//             {
+	//               "type": "varint",
+	//               "mappings": {
+	//                 "0": "all",
+	//                 "1": "decreased",
+	//                 "2": "minimal"
+	//               }
+	//             }
+	//           ]
+	ParticleStatus CommonSettingsParticleStatus
+}
+
+// NewCommonSettings creates a new CommonSettings packet with the correct packet ID.
+func NewCommonSettings() *CommonSettings {
+	return &CommonSettings{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonSettings) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonSettings) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonSettings) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Locale,
+		&p.ViewDistance,
+		&p.ChatFlags,
+		&p.ChatColors,
+		&p.SkinParts,
+		&p.MainHand,
+		&p.EnableTextFiltering,
+		&p.EnableServerListing,
+		&p.ParticleStatus)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonSettings) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Locale,
+		&p.ViewDistance,
+		&p.ChatFlags,
+		&p.ChatColors,
+		&p.SkinParts,
+		&p.MainHand,
+		&p.EnableTextFiltering,
+		&p.EnableServerListing,
+		&p.ParticleStatus)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonSettings) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Locale"] = &p.Locale
+	fields["ViewDistance"] = &p.ViewDistance
+	fields["ChatFlags"] = &p.ChatFlags
+	fields["ChatColors"] = &p.ChatColors
+	fields["SkinParts"] = &p.SkinParts
+	fields["MainHand"] = &p.MainHand
+	fields["EnableTextFiltering"] = &p.EnableTextFiltering
+	fields["EnableServerListing"] = &p.EnableServerListing
+	fields["ParticleStatus"] = &p.ParticleStatus
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonSettings) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Locale"]; ok {
+		p.Locale = *val.(*pk.String)
+	}
+	if val, ok := fields["ViewDistance"]; ok {
+		p.ViewDistance = *val.(*pk.Byte)
+	}
+	if val, ok := fields["ChatFlags"]; ok {
+		p.ChatFlags = *val.(*pk.VarInt)
+	}
+	if val, ok := fields["ChatColors"]; ok {
+		p.ChatColors = *val.(*pk.Boolean)
+	}
+	if val, ok := fields["SkinParts"]; ok {
+		p.SkinParts = *val.(*pk.UnsignedByte)
+	}
+	if val, ok := fields["MainHand"]; ok {
+		p.MainHand = *val.(*pk.VarInt)
+	}
+	if val, ok := fields["EnableTextFiltering"]; ok {
+		p.EnableTextFiltering = *val.(*pk.Boolean)
+	}
+	if val, ok := fields["EnableServerListing"]; ok {
+		p.EnableServerListing = *val.(*pk.Boolean)
+	}
+	if val, ok := fields["ParticleStatus"]; ok {
+		p.ParticleStatus = *val.(*CommonSettingsParticleStatus)
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetLocale returns the Locale field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetLocale() pk.String {
+	return p.Locale
+}
+
+// SetLocale sets the Locale field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetLocale(val pk.String) {
+	p.Locale = val
+}
+
+// GetViewDistance returns the ViewDistance field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetViewDistance() pk.Byte {
+	return p.ViewDistance
+}
+
+// SetViewDistance sets the ViewDistance field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetViewDistance(val pk.Byte) {
+	p.ViewDistance = val
+}
+
+// GetChatFlags returns the ChatFlags field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetChatFlags() pk.VarInt {
+	return p.ChatFlags
+}
+
+// SetChatFlags sets the ChatFlags field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetChatFlags(val pk.VarInt) {
+	p.ChatFlags = val
+}
+
+// GetChatColors returns the ChatColors field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetChatColors() pk.Boolean {
+	return p.ChatColors
+}
+
+// SetChatColors sets the ChatColors field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetChatColors(val pk.Boolean) {
+	p.ChatColors = val
+}
+
+// GetSkinParts returns the SkinParts field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetSkinParts() pk.UnsignedByte {
+	return p.SkinParts
+}
+
+// SetSkinParts sets the SkinParts field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetSkinParts(val pk.UnsignedByte) {
+	p.SkinParts = val
+}
+
+// GetMainHand returns the MainHand field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetMainHand() pk.VarInt {
+	return p.MainHand
+}
+
+// SetMainHand sets the MainHand field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetMainHand(val pk.VarInt) {
+	p.MainHand = val
+}
+
+// GetEnableTextFiltering returns the EnableTextFiltering field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetEnableTextFiltering() pk.Boolean {
+	return p.EnableTextFiltering
+}
+
+// SetEnableTextFiltering sets the EnableTextFiltering field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetEnableTextFiltering(val pk.Boolean) {
+	p.EnableTextFiltering = val
+}
+
+// GetEnableServerListing returns the EnableServerListing field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetEnableServerListing() pk.Boolean {
+	return p.EnableServerListing
+}
+
+// SetEnableServerListing sets the EnableServerListing field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetEnableServerListing(val pk.Boolean) {
+	p.EnableServerListing = val
+}
+
+// GetParticleStatus returns the ParticleStatus field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonSettings) GetParticleStatus() CommonSettingsParticleStatus {
+	return p.ParticleStatus
+}
+
+// SetParticleStatus sets the ParticleStatus field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonSettings) SetParticleStatus(val CommonSettingsParticleStatus) {
+	p.ParticleStatus = val
+}
+
+func (t *CommonSettings) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Locale.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Locale")
+	}
+	bytesRead, err = t.ViewDistance.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ViewDistance")
+	}
+	bytesRead, err = t.ChatFlags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ChatFlags")
+	}
+	bytesRead, err = t.ChatColors.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ChatColors")
+	}
+	bytesRead, err = t.SkinParts.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field SkinParts")
+	}
+	bytesRead, err = t.MainHand.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field MainHand")
+	}
+	bytesRead, err = t.EnableTextFiltering.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field EnableTextFiltering")
+	}
+	bytesRead, err = t.EnableServerListing.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field EnableServerListing")
+	}
+	bytesRead, err = t.ParticleStatus.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ParticleStatus")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommonSettings) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommonSettings.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Locale.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ViewDistance.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ChatFlags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ChatColors.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.SkinParts.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.MainHand.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.EnableTextFiltering.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.EnableServerListing.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ParticleStatus.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -578,8 +735,8 @@ func (p *CommonStoreCookie) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CommonStoreCookie) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Key"] = p.Key
-	fields["Value"] = p.Value
+	fields["Key"] = &p.Key
+	fields["Value"] = &p.Value
 	return fields
 }
 
@@ -590,12 +747,11 @@ func (p *CommonStoreCookie) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CommonStoreCookie) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Key"]; ok {
-		p.Key = val.(pk.String)
+		p.Key = *val.(*pk.String)
 	}
 	if val, ok := fields["Value"]; ok {
-		p.Value = val.(pk.ByteArray)
+		p.Value = *val.(*pk.ByteArray)
 	}
 }
 
@@ -835,7 +991,7 @@ func (p *CommonSelectKnownPacks) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CommonSelectKnownPacks) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Packs"] = p.Packs
+	fields["Packs"] = &p.Packs
 	return fields
 }
 
@@ -846,9 +1002,8 @@ func (p *CommonSelectKnownPacks) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CommonSelectKnownPacks) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Packs"]; ok {
-		p.Packs = val.(models.Array[pk.VarInt, CommonSelectKnownPacksPacksArrayType])
+		p.Packs = *val.(*models.Array[pk.VarInt, CommonSelectKnownPacksPacksArrayType])
 	}
 }
 
@@ -885,464 +1040,6 @@ func (t CommonSelectKnownPacks) WriteTo(w io.Writer) (totalBytes int64, err erro
 		log.Printf("[CommonSelectKnownPacks.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Packs.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type CommonSettingsParticleStatus struct {
-	Value string
-}
-
-var CommonSettingsParticleStatusMappings = map[int64]string{
-	0: "all",
-	1: "decreased",
-	2: "minimal",
-}
-
-func (m *CommonSettingsParticleStatus) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read CommonSettingsParticleStatus key")
-	}
-
-	value, ok := CommonSettingsParticleStatusMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m CommonSettingsParticleStatus) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range CommonSettingsParticleStatusMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown CommonSettingsParticleStatus value: %s", m.Value)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "locale",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "viewDistance",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "chatFlags",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "chatColors",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "skinParts",
-//	      "type": "u8"
-//	    },
-//	    {
-//	      "name": "mainHand",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "enableTextFiltering",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "enableServerListing",
-//	      "type": "bool"
-//	    },
-//	    {
-//	      "name": "particleStatus",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "all",
-//	            "1": "decreased",
-//	            "2": "minimal"
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type CommonSettings struct {
-	packetID int32
-	// "string"
-	Locale pk.String
-	// "i8"
-	ViewDistance pk.Byte
-	// "varint"
-	ChatFlags pk.VarInt
-	// "bool"
-	ChatColors pk.Boolean
-	// "u8"
-	SkinParts pk.UnsignedByte
-	// "varint"
-	MainHand pk.VarInt
-	// "bool"
-	EnableTextFiltering pk.Boolean
-	// "bool"
-	EnableServerListing pk.Boolean
-	// [
-	//             "mapper",
-	//             {
-	//               "type": "varint",
-	//               "mappings": {
-	//                 "0": "all",
-	//                 "1": "decreased",
-	//                 "2": "minimal"
-	//               }
-	//             }
-	//           ]
-	ParticleStatus CommonSettingsParticleStatus
-}
-
-// NewCommonSettings creates a new CommonSettings packet with the correct packet ID.
-func NewCommonSettings() *CommonSettings {
-	return &CommonSettings{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonSettings) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonSettings) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonSettings) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID,
-		&p.Locale,
-		&p.ViewDistance,
-		&p.ChatFlags,
-		&p.ChatColors,
-		&p.SkinParts,
-		&p.MainHand,
-		&p.EnableTextFiltering,
-		&p.EnableServerListing,
-		&p.ParticleStatus)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonSettings) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan(
-		&p.Locale,
-		&p.ViewDistance,
-		&p.ChatFlags,
-		&p.ChatColors,
-		&p.SkinParts,
-		&p.MainHand,
-		&p.EnableTextFiltering,
-		&p.EnableServerListing,
-		&p.ParticleStatus)
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonSettings) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	fields["Locale"] = p.Locale
-	fields["ViewDistance"] = p.ViewDistance
-	fields["ChatFlags"] = p.ChatFlags
-	fields["ChatColors"] = p.ChatColors
-	fields["SkinParts"] = p.SkinParts
-	fields["MainHand"] = p.MainHand
-	fields["EnableTextFiltering"] = p.EnableTextFiltering
-	fields["EnableServerListing"] = p.EnableServerListing
-	fields["ParticleStatus"] = p.ParticleStatus
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonSettings) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Locale"]; ok {
-		p.Locale = val.(pk.String)
-	}
-	if val, ok := fields["ViewDistance"]; ok {
-		p.ViewDistance = val.(pk.Byte)
-	}
-	if val, ok := fields["ChatFlags"]; ok {
-		p.ChatFlags = val.(pk.VarInt)
-	}
-	if val, ok := fields["ChatColors"]; ok {
-		p.ChatColors = val.(pk.Boolean)
-	}
-	if val, ok := fields["SkinParts"]; ok {
-		p.SkinParts = val.(pk.UnsignedByte)
-	}
-	if val, ok := fields["MainHand"]; ok {
-		p.MainHand = val.(pk.VarInt)
-	}
-	if val, ok := fields["EnableTextFiltering"]; ok {
-		p.EnableTextFiltering = val.(pk.Boolean)
-	}
-	if val, ok := fields["EnableServerListing"]; ok {
-		p.EnableServerListing = val.(pk.Boolean)
-	}
-	if val, ok := fields["ParticleStatus"]; ok {
-		p.ParticleStatus = val.(CommonSettingsParticleStatus)
-	}
-}
-
-// Typed field accessor methods for version-specific type-safe access
-// GetLocale returns the Locale field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetLocale() pk.String {
-	return p.Locale
-}
-
-// SetLocale sets the Locale field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetLocale(val pk.String) {
-	p.Locale = val
-}
-
-// GetViewDistance returns the ViewDistance field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetViewDistance() pk.Byte {
-	return p.ViewDistance
-}
-
-// SetViewDistance sets the ViewDistance field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetViewDistance(val pk.Byte) {
-	p.ViewDistance = val
-}
-
-// GetChatFlags returns the ChatFlags field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetChatFlags() pk.VarInt {
-	return p.ChatFlags
-}
-
-// SetChatFlags sets the ChatFlags field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetChatFlags(val pk.VarInt) {
-	p.ChatFlags = val
-}
-
-// GetChatColors returns the ChatColors field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetChatColors() pk.Boolean {
-	return p.ChatColors
-}
-
-// SetChatColors sets the ChatColors field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetChatColors(val pk.Boolean) {
-	p.ChatColors = val
-}
-
-// GetSkinParts returns the SkinParts field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetSkinParts() pk.UnsignedByte {
-	return p.SkinParts
-}
-
-// SetSkinParts sets the SkinParts field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetSkinParts(val pk.UnsignedByte) {
-	p.SkinParts = val
-}
-
-// GetMainHand returns the MainHand field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetMainHand() pk.VarInt {
-	return p.MainHand
-}
-
-// SetMainHand sets the MainHand field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetMainHand(val pk.VarInt) {
-	p.MainHand = val
-}
-
-// GetEnableTextFiltering returns the EnableTextFiltering field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetEnableTextFiltering() pk.Boolean {
-	return p.EnableTextFiltering
-}
-
-// SetEnableTextFiltering sets the EnableTextFiltering field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetEnableTextFiltering(val pk.Boolean) {
-	p.EnableTextFiltering = val
-}
-
-// GetEnableServerListing returns the EnableServerListing field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetEnableServerListing() pk.Boolean {
-	return p.EnableServerListing
-}
-
-// SetEnableServerListing sets the EnableServerListing field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetEnableServerListing(val pk.Boolean) {
-	p.EnableServerListing = val
-}
-
-// GetParticleStatus returns the ParticleStatus field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonSettings) GetParticleStatus() CommonSettingsParticleStatus {
-	return p.ParticleStatus
-}
-
-// SetParticleStatus sets the ParticleStatus field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonSettings) SetParticleStatus(val CommonSettingsParticleStatus) {
-	p.ParticleStatus = val
-}
-
-func (t *CommonSettings) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Locale.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Locale")
-	}
-	bytesRead, err = t.ViewDistance.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ViewDistance")
-	}
-	bytesRead, err = t.ChatFlags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ChatFlags")
-	}
-	bytesRead, err = t.ChatColors.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ChatColors")
-	}
-	bytesRead, err = t.SkinParts.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field SkinParts")
-	}
-	bytesRead, err = t.MainHand.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field MainHand")
-	}
-	bytesRead, err = t.EnableTextFiltering.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field EnableTextFiltering")
-	}
-	bytesRead, err = t.EnableServerListing.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field EnableServerListing")
-	}
-	bytesRead, err = t.ParticleStatus.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ParticleStatus")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommonSettings) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommonSettings.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Locale.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ViewDistance.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ChatFlags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ChatColors.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.SkinParts.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.MainHand.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.EnableTextFiltering.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.EnableServerListing.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ParticleStatus.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -1674,7 +1371,7 @@ func (p *CommonServerLinks) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CommonServerLinks) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Links"] = p.Links
+	fields["Links"] = &p.Links
 	return fields
 }
 
@@ -1685,9 +1382,8 @@ func (p *CommonServerLinks) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CommonServerLinks) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Links"]; ok {
-		p.Links = val.(models.Array[pk.VarInt, CommonServerLinksLinksArrayType])
+		p.Links = *val.(*models.Array[pk.VarInt, CommonServerLinksLinksArrayType])
 	}
 }
 
@@ -1734,49 +1430,40 @@ func (t CommonServerLinks) WriteTo(w io.Writer) (totalBytes int64, err error) {
 // Protodef: [
 //
 //	  "container",
-//	  [
-//	    {
-//	      "name": "cookie",
-//	      "type": "string"
-//	    }
-//	  ]
+//	  []
 //	]
-type CommonCookieRequest struct {
+type CommonClearDialog struct {
 	packetID int32
-	// "string"
-	Cookie pk.String
 }
 
-// NewCommonCookieRequest creates a new CommonCookieRequest packet with the correct packet ID.
-func NewCommonCookieRequest() *CommonCookieRequest {
-	return &CommonCookieRequest{packetID: 0}
+// NewCommonClearDialog creates a new CommonClearDialog packet with the correct packet ID.
+func NewCommonClearDialog() *CommonClearDialog {
+	return &CommonClearDialog{packetID: 0}
 }
 
 // PacketID returns the protocol ID for this packet type.
-func (p *CommonCookieRequest) PacketID() int32 {
+func (p *CommonClearDialog) PacketID() int32 {
 	return p.packetID
 }
 
 // SetPacketID sets the protocol ID for this packet type.
 // This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonCookieRequest) SetPacketID(id int32) {
+func (p *CommonClearDialog) SetPacketID(id int32) {
 	p.packetID = id
 }
 
 // Marshal serializes the packet into wire format.
-func (p *CommonCookieRequest) Marshal() pk.Packet {
+func (p *CommonClearDialog) Marshal() pk.Packet {
 	return pk.Marshal(
-		p.packetID,
-		&p.Cookie)
+		p.packetID)
 }
 
 // Scan deserializes a wire-format packet into this struct.
-func (p *CommonCookieRequest) Scan(packet pk.Packet) error {
+func (p *CommonClearDialog) Scan(packet pk.Packet) error {
 	if packet.ID != p.packetID {
 		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
 	}
-	return packet.Scan(
-		&p.Cookie)
+	return packet.Scan()
 }
 
 // GetFields returns a map of all packet fields for version-agnostic access.
@@ -1785,9 +1472,8 @@ func (p *CommonCookieRequest) Scan(packet pk.Packet) error {
 //
 // For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonCookieRequest) GetFields() map[string]pk.FieldEncoder {
+func (p *CommonClearDialog) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Cookie"] = p.Cookie
 	return fields
 }
 
@@ -1797,107 +1483,72 @@ func (p *CommonCookieRequest) GetFields() map[string]pk.FieldEncoder {
 //
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonCookieRequest) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Cookie"]; ok {
-		p.Cookie = val.(pk.String)
-	}
+func (p *CommonClearDialog) SetFields(fields map[string]pk.FieldEncoder) {
 }
 
 // Typed field accessor methods for version-specific type-safe access
-// GetCookie returns the Cookie field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCookieRequest) GetCookie() pk.String {
-	return p.Cookie
+func (t *CommonClearDialog) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	return 0, nil
 }
 
-// SetCookie sets the Cookie field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCookieRequest) SetCookie(val pk.String) {
-	p.Cookie = val
+func (t CommonClearDialog) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	return 0, nil
 }
 
-func (t *CommonCookieRequest) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Cookie.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Cookie")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommonCookieRequest) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommonCookieRequest.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Cookie.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
+type CommonRemoveResourcePackUuid = models.Option[pk.UUID]
 
 // Protodef: [
 //
 //	  "container",
 //	  [
 //	    {
-//	      "name": "host",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "port",
-//	      "type": "varint"
+//	      "name": "uuid",
+//	      "type": [
+//	        "option",
+//	        "UUID"
+//	      ]
 //	    }
 //	  ]
 //	]
-type CommonTransfer struct {
+type CommonRemoveResourcePack struct {
 	packetID int32
-	// "string"
-	Host pk.String
-	// "varint"
-	Port pk.VarInt
+	// [
+	//             "option",
+	//             "UUID"
+	//           ]
+	Uuid models.Option[pk.UUID]
 }
 
-// NewCommonTransfer creates a new CommonTransfer packet with the correct packet ID.
-func NewCommonTransfer() *CommonTransfer {
-	return &CommonTransfer{packetID: 0}
+// NewCommonRemoveResourcePack creates a new CommonRemoveResourcePack packet with the correct packet ID.
+func NewCommonRemoveResourcePack() *CommonRemoveResourcePack {
+	return &CommonRemoveResourcePack{packetID: 0}
 }
 
 // PacketID returns the protocol ID for this packet type.
-func (p *CommonTransfer) PacketID() int32 {
+func (p *CommonRemoveResourcePack) PacketID() int32 {
 	return p.packetID
 }
 
 // SetPacketID sets the protocol ID for this packet type.
 // This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonTransfer) SetPacketID(id int32) {
+func (p *CommonRemoveResourcePack) SetPacketID(id int32) {
 	p.packetID = id
 }
 
 // Marshal serializes the packet into wire format.
-func (p *CommonTransfer) Marshal() pk.Packet {
+func (p *CommonRemoveResourcePack) Marshal() pk.Packet {
 	return pk.Marshal(
 		p.packetID,
-		&p.Host,
-		&p.Port)
+		&p.Uuid)
 }
 
 // Scan deserializes a wire-format packet into this struct.
-func (p *CommonTransfer) Scan(packet pk.Packet) error {
+func (p *CommonRemoveResourcePack) Scan(packet pk.Packet) error {
 	if packet.ID != p.packetID {
 		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
 	}
 	return packet.Scan(
-		&p.Host,
-		&p.Port)
+		&p.Uuid)
 }
 
 // GetFields returns a map of all packet fields for version-agnostic access.
@@ -1906,10 +1557,9 @@ func (p *CommonTransfer) Scan(packet pk.Packet) error {
 //
 // For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonTransfer) GetFields() map[string]pk.FieldEncoder {
+func (p *CommonRemoveResourcePack) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Host"] = p.Host
-	fields["Port"] = p.Port
+	fields["Uuid"] = &p.Uuid
 	return fields
 }
 
@@ -1919,73 +1569,45 @@ func (p *CommonTransfer) GetFields() map[string]pk.FieldEncoder {
 //
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonTransfer) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Host"]; ok {
-		p.Host = val.(pk.String)
-	}
-	if val, ok := fields["Port"]; ok {
-		p.Port = val.(pk.VarInt)
+func (p *CommonRemoveResourcePack) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Uuid"]; ok {
+		p.Uuid = *val.(*models.Option[pk.UUID])
 	}
 }
 
 // Typed field accessor methods for version-specific type-safe access
-// GetHost returns the Host field value.
+// GetUuid returns the Uuid field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonTransfer) GetHost() pk.String {
-	return p.Host
+func (p *CommonRemoveResourcePack) GetUuid() models.Option[pk.UUID] {
+	return p.Uuid
 }
 
-// SetHost sets the Host field value.
+// SetUuid sets the Uuid field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonTransfer) SetHost(val pk.String) {
-	p.Host = val
+func (p *CommonRemoveResourcePack) SetUuid(val models.Option[pk.UUID]) {
+	p.Uuid = val
 }
 
-// GetPort returns the Port field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonTransfer) GetPort() pk.VarInt {
-	return p.Port
-}
-
-// SetPort sets the Port field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonTransfer) SetPort(val pk.VarInt) {
-	p.Port = val
-}
-
-func (t *CommonTransfer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommonRemoveResourcePack) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Host.ReadFrom(r)
+	bytesRead, err = t.Uuid.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Host")
-	}
-	bytesRead, err = t.Port.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Port")
+		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommonTransfer) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommonRemoveResourcePack) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommonTransfer.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommonRemoveResourcePack.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Host.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Port.WriteTo(w)
+	bytesWritten, err = t.Uuid.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -2089,11 +1711,11 @@ func (p *CommonAddResourcePack) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CommonAddResourcePack) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Uuid"] = p.Uuid
-	fields["Url"] = p.Url
-	fields["Hash"] = p.Hash
-	fields["Forced"] = p.Forced
-	fields["PromptMessage"] = p.PromptMessage
+	fields["Uuid"] = &p.Uuid
+	fields["Url"] = &p.Url
+	fields["Hash"] = &p.Hash
+	fields["Forced"] = &p.Forced
+	fields["PromptMessage"] = &p.PromptMessage
 	return fields
 }
 
@@ -2104,21 +1726,20 @@ func (p *CommonAddResourcePack) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CommonAddResourcePack) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Uuid"]; ok {
-		p.Uuid = val.(pk.UUID)
+		p.Uuid = *val.(*pk.UUID)
 	}
 	if val, ok := fields["Url"]; ok {
-		p.Url = val.(pk.String)
+		p.Url = *val.(*pk.String)
 	}
 	if val, ok := fields["Hash"]; ok {
-		p.Hash = val.(pk.String)
+		p.Hash = *val.(*pk.String)
 	}
 	if val, ok := fields["Forced"]; ok {
-		p.Forced = val.(pk.Boolean)
+		p.Forced = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["PromptMessage"]; ok {
-		p.PromptMessage = val.(models.Option[models.AnonymousNBT])
+		p.PromptMessage = *val.(*models.Option[models.AnonymousNBT])
 	}
 }
 
@@ -2263,23 +1884,539 @@ func (t CommonAddResourcePack) WriteTo(w io.Writer) (totalBytes int64, err error
 //	  "container",
 //	  [
 //	    {
+//	      "name": "host",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "port",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type CommonTransfer struct {
+	packetID int32
+	// "string"
+	Host pk.String
+	// "varint"
+	Port pk.VarInt
+}
+
+// NewCommonTransfer creates a new CommonTransfer packet with the correct packet ID.
+func NewCommonTransfer() *CommonTransfer {
+	return &CommonTransfer{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonTransfer) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonTransfer) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonTransfer) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Host,
+		&p.Port)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonTransfer) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Host,
+		&p.Port)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonTransfer) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Host"] = &p.Host
+	fields["Port"] = &p.Port
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonTransfer) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Host"]; ok {
+		p.Host = *val.(*pk.String)
+	}
+	if val, ok := fields["Port"]; ok {
+		p.Port = *val.(*pk.VarInt)
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetHost returns the Host field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonTransfer) GetHost() pk.String {
+	return p.Host
+}
+
+// SetHost sets the Host field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonTransfer) SetHost(val pk.String) {
+	p.Host = val
+}
+
+// GetPort returns the Port field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonTransfer) GetPort() pk.VarInt {
+	return p.Port
+}
+
+// SetPort sets the Port field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonTransfer) SetPort(val pk.VarInt) {
+	p.Port = val
+}
+
+func (t *CommonTransfer) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Host.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Host")
+	}
+	bytesRead, err = t.Port.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Port")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommonTransfer) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommonTransfer.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Host.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Port.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type CommonCustomClickActionNbt = models.Option[models.AnonymousNBT]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "id",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "nbt",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    }
+//	  ]
+//	]
+type CommonCustomClickAction struct {
+	packetID int32
+	// "string"
+	Id pk.String
+	// [
+	//             "option",
+	//             "anonymousNbt"
+	//           ]
+	Nbt models.Option[models.AnonymousNBT]
+}
+
+// NewCommonCustomClickAction creates a new CommonCustomClickAction packet with the correct packet ID.
+func NewCommonCustomClickAction() *CommonCustomClickAction {
+	return &CommonCustomClickAction{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonCustomClickAction) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonCustomClickAction) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonCustomClickAction) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Id,
+		&p.Nbt)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonCustomClickAction) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Id,
+		&p.Nbt)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonCustomClickAction) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Id"] = &p.Id
+	fields["Nbt"] = &p.Nbt
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonCustomClickAction) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Id"]; ok {
+		p.Id = *val.(*pk.String)
+	}
+	if val, ok := fields["Nbt"]; ok {
+		p.Nbt = *val.(*models.Option[models.AnonymousNBT])
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetId returns the Id field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCustomClickAction) GetId() pk.String {
+	return p.Id
+}
+
+// SetId sets the Id field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCustomClickAction) SetId(val pk.String) {
+	p.Id = val
+}
+
+// GetNbt returns the Nbt field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCustomClickAction) GetNbt() models.Option[models.AnonymousNBT] {
+	return p.Nbt
+}
+
+// SetNbt sets the Nbt field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCustomClickAction) SetNbt(val models.Option[models.AnonymousNBT]) {
+	p.Nbt = val
+}
+
+func (t *CommonCustomClickAction) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Id.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Id")
+	}
+	bytesRead, err = t.Nbt.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Nbt")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommonCustomClickAction) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommonCustomClickAction.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Id.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Nbt.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "cookie",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommonCookieRequest struct {
+	packetID int32
+	// "string"
+	Cookie pk.String
+}
+
+// NewCommonCookieRequest creates a new CommonCookieRequest packet with the correct packet ID.
+func NewCommonCookieRequest() *CommonCookieRequest {
+	return &CommonCookieRequest{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonCookieRequest) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonCookieRequest) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonCookieRequest) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Cookie)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonCookieRequest) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Cookie)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonCookieRequest) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Cookie"] = &p.Cookie
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonCookieRequest) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Cookie"]; ok {
+		p.Cookie = *val.(*pk.String)
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetCookie returns the Cookie field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCookieRequest) GetCookie() pk.String {
+	return p.Cookie
+}
+
+// SetCookie sets the Cookie field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCookieRequest) SetCookie(val pk.String) {
+	p.Cookie = val
+}
+
+func (t *CommonCookieRequest) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Cookie.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Cookie")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommonCookieRequest) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommonCookieRequest.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Cookie.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type CommonCookieResponseValue = models.Option[pk.ByteArray]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "key",
 //	      "type": "string"
 //	    },
 //	    {
 //	      "name": "value",
-//	      "type": "string"
+//	      "type": [
+//	        "option",
+//	        "ByteArray"
+//	      ]
 //	    }
 //	  ]
 //	]
-type CommonCustomReportDetailsDetailsArrayType struct {
+type CommonCookieResponse struct {
+	packetID int32
 	// "string"
 	Key pk.String
-	// "string"
-	Value pk.String
+	// [
+	//             "option",
+	//             "ByteArray"
+	//           ]
+	Value models.Option[pk.ByteArray]
 }
 
-func (t *CommonCustomReportDetailsDetailsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+// NewCommonCookieResponse creates a new CommonCookieResponse packet with the correct packet ID.
+func NewCommonCookieResponse() *CommonCookieResponse {
+	return &CommonCookieResponse{packetID: 0}
+}
+
+// PacketID returns the protocol ID for this packet type.
+func (p *CommonCookieResponse) PacketID() int32 {
+	return p.packetID
+}
+
+// SetPacketID sets the protocol ID for this packet type.
+// This is used when the same packet structure is reused across multiple stages with different IDs.
+func (p *CommonCookieResponse) SetPacketID(id int32) {
+	p.packetID = id
+}
+
+// Marshal serializes the packet into wire format.
+func (p *CommonCookieResponse) Marshal() pk.Packet {
+	return pk.Marshal(
+		p.packetID,
+		&p.Key,
+		&p.Value)
+}
+
+// Scan deserializes a wire-format packet into this struct.
+func (p *CommonCookieResponse) Scan(packet pk.Packet) error {
+	if packet.ID != p.packetID {
+		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
+	}
+	return packet.Scan(
+		&p.Key,
+		&p.Value)
+}
+
+// GetFields returns a map of all packet fields for version-agnostic access.
+// Use this when you need to access fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
+func (p *CommonCookieResponse) GetFields() map[string]pk.FieldEncoder {
+	fields := map[string]pk.FieldEncoder{}
+	fields["Key"] = &p.Key
+	fields["Value"] = &p.Value
+	return fields
+}
+
+// SetFields updates packet fields from a map for version-agnostic access.
+// Use this when you need to set fields dynamically or when working with version-specific types
+// that don't have stable cross-version interfaces.
+//
+// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
+// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
+func (p *CommonCookieResponse) SetFields(fields map[string]pk.FieldEncoder) {
+	if val, ok := fields["Key"]; ok {
+		p.Key = *val.(*pk.String)
+	}
+	if val, ok := fields["Value"]; ok {
+		p.Value = *val.(*models.Option[pk.ByteArray])
+	}
+}
+
+// Typed field accessor methods for version-specific type-safe access
+// GetKey returns the Key field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCookieResponse) GetKey() pk.String {
+	return p.Key
+}
+
+// SetKey sets the Key field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCookieResponse) SetKey(val pk.String) {
+	p.Key = val
+}
+
+// GetValue returns the Value field value.
+// Note: This method returns the actual field type, which may be version-specific.
+// For version-agnostic access, use GetFields() or check for typed interfaces.
+func (p *CommonCookieResponse) GetValue() models.Option[pk.ByteArray] {
+	return p.Value
+}
+
+// SetValue sets the Value field value.
+// Note: This method accepts the actual field type, which may be version-specific.
+// For version-agnostic access, use SetFields() or check for typed interfaces.
+func (p *CommonCookieResponse) SetValue(val models.Option[pk.ByteArray]) {
+	p.Value = val
+}
+
+func (t *CommonCookieResponse) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
 	totalBytes += bytesRead
@@ -2295,11 +2432,11 @@ func (t *CommonCustomReportDetailsDetailsArrayType) ReadFrom(r io.Reader) (total
 	return totalBytes, nil
 }
 
-func (t CommonCustomReportDetailsDetailsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommonCookieResponse) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommonCustomReportDetailsDetailsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommonCookieResponse.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Key.WriteTo(w)
 	totalBytes += bytesWritten
@@ -2307,155 +2444,6 @@ func (t CommonCustomReportDetailsDetailsArrayType) WriteTo(w io.Writer) (totalBy
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Value.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "details",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": [
-//	            "container",
-//	            [
-//	              {
-//	                "name": "key",
-//	                "type": "string"
-//	              },
-//	              {
-//	                "name": "value",
-//	                "type": "string"
-//	              }
-//	            ]
-//	          ]
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type CommonCustomReportDetails struct {
-	packetID int32
-	// [
-	//             "array",
-	//             {
-	//               "countType": "varint",
-	//               "type": [
-	//                 "container",
-	//                 [
-	//                   {
-	//                     "name": "key",
-	//                     "type": "string"
-	//                   },
-	//                   {
-	//                     "name": "value",
-	//                     "type": "string"
-	//                   }
-	//                 ]
-	//               ]
-	//             }
-	//           ]
-	Details models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType]
-}
-
-// NewCommonCustomReportDetails creates a new CommonCustomReportDetails packet with the correct packet ID.
-func NewCommonCustomReportDetails() *CommonCustomReportDetails {
-	return &CommonCustomReportDetails{packetID: 0}
-}
-
-// PacketID returns the protocol ID for this packet type.
-func (p *CommonCustomReportDetails) PacketID() int32 {
-	return p.packetID
-}
-
-// SetPacketID sets the protocol ID for this packet type.
-// This is used when the same packet structure is reused across multiple stages with different IDs.
-func (p *CommonCustomReportDetails) SetPacketID(id int32) {
-	p.packetID = id
-}
-
-// Marshal serializes the packet into wire format.
-func (p *CommonCustomReportDetails) Marshal() pk.Packet {
-	return pk.Marshal(
-		p.packetID,
-		&p.Details)
-}
-
-// Scan deserializes a wire-format packet into this struct.
-func (p *CommonCustomReportDetails) Scan(packet pk.Packet) error {
-	if packet.ID != p.packetID {
-		return fmt.Errorf("packet ID mismatch: expected %d, got %d", p.packetID, packet.ID)
-	}
-	return packet.Scan(
-		&p.Details)
-}
-
-// GetFields returns a map of all packet fields for version-agnostic access.
-// Use this when you need to access fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed getter methods (e.g., GetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
-func (p *CommonCustomReportDetails) GetFields() map[string]pk.FieldEncoder {
-	fields := map[string]pk.FieldEncoder{}
-	fields["Details"] = p.Details
-	return fields
-}
-
-// SetFields updates packet fields from a map for version-agnostic access.
-// Use this when you need to set fields dynamically or when working with version-specific types
-// that don't have stable cross-version interfaces.
-//
-// For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
-// For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
-func (p *CommonCustomReportDetails) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
-	if val, ok := fields["Details"]; ok {
-		p.Details = val.(models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType])
-	}
-}
-
-// Typed field accessor methods for version-specific type-safe access
-// GetDetails returns the Details field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CommonCustomReportDetails) GetDetails() models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType] {
-	return p.Details
-}
-
-// SetDetails sets the Details field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CommonCustomReportDetails) SetDetails(val models.Array[pk.VarInt, CommonCustomReportDetailsDetailsArrayType]) {
-	p.Details = val
-}
-
-func (t *CommonCustomReportDetails) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Details.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Details")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommonCustomReportDetails) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommonCustomReportDetails.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Details.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

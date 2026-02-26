@@ -121,14 +121,14 @@ func (p *InitializeWorldBorder) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *InitializeWorldBorder) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["X"] = p.X
-	fields["Z"] = p.Z
-	fields["OldDiameter"] = p.OldDiameter
-	fields["NewDiameter"] = p.NewDiameter
-	fields["Speed"] = p.Speed
-	fields["PortalTeleportBoundary"] = p.PortalTeleportBoundary
-	fields["WarningBlocks"] = p.WarningBlocks
-	fields["WarningTime"] = p.WarningTime
+	fields["X"] = &p.X
+	fields["Z"] = &p.Z
+	fields["OldDiameter"] = &p.OldDiameter
+	fields["NewDiameter"] = &p.NewDiameter
+	fields["Speed"] = &p.Speed
+	fields["PortalTeleportBoundary"] = &p.PortalTeleportBoundary
+	fields["WarningBlocks"] = &p.WarningBlocks
+	fields["WarningTime"] = &p.WarningTime
 	return fields
 }
 
@@ -139,30 +139,29 @@ func (p *InitializeWorldBorder) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *InitializeWorldBorder) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["OldDiameter"]; ok {
-		p.OldDiameter = val.(pk.Double)
+		p.OldDiameter = *val.(*pk.Double)
 	}
 	if val, ok := fields["NewDiameter"]; ok {
-		p.NewDiameter = val.(pk.Double)
+		p.NewDiameter = *val.(*pk.Double)
 	}
 	if val, ok := fields["Speed"]; ok {
-		p.Speed = val.(pk.VarInt)
+		p.Speed = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["PortalTeleportBoundary"]; ok {
-		p.PortalTeleportBoundary = val.(pk.VarInt)
+		p.PortalTeleportBoundary = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["WarningBlocks"]; ok {
-		p.WarningBlocks = val.(pk.VarInt)
+		p.WarningBlocks = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["WarningTime"]; ok {
-		p.WarningTime = val.(pk.VarInt)
+		p.WarningTime = *val.(*pk.VarInt)
 	}
 }
 

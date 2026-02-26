@@ -384,8 +384,8 @@ func (p *BossBar) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *BossBar) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityUUID"] = p.EntityUUID
-	fields["Action"] = p.Action
+	fields["EntityUUID"] = &p.EntityUUID
+	fields["Action"] = &p.Action
 	fields["Title"] = p.Title
 	fields["Health"] = p.Health
 	fields["Color"] = p.Color
@@ -401,12 +401,11 @@ func (p *BossBar) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *BossBar) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityUUID"]; ok {
-		p.EntityUUID = val.(pk.UUID)
+		p.EntityUUID = *val.(*pk.UUID)
 	}
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.VarInt)
+		p.Action = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Title"]; ok {
 		p.Title = val.(pk.Field)

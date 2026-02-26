@@ -132,10 +132,10 @@ func (p *TabComplete) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TabComplete) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["TransactionId"] = p.TransactionId
-	fields["Start"] = p.Start
-	fields["Length"] = p.Length
-	fields["Matches"] = p.Matches
+	fields["TransactionId"] = &p.TransactionId
+	fields["Start"] = &p.Start
+	fields["Length"] = &p.Length
+	fields["Matches"] = &p.Matches
 	return fields
 }
 
@@ -146,18 +146,17 @@ func (p *TabComplete) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TabComplete) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["TransactionId"]; ok {
-		p.TransactionId = val.(pk.VarInt)
+		p.TransactionId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Start"]; ok {
-		p.Start = val.(pk.VarInt)
+		p.Start = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Length"]; ok {
-		p.Length = val.(pk.VarInt)
+		p.Length = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Matches"]; ok {
-		p.Matches = val.(models.Array[pk.VarInt, TabCompleteMatchesArrayType])
+		p.Matches = *val.(*models.Array[pk.VarInt, TabCompleteMatchesArrayType])
 	}
 }
 

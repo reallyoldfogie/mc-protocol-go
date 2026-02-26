@@ -419,8 +419,8 @@ func (p *ScoreboardObjective) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ScoreboardObjective) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Name"] = p.Name
-	fields["Action"] = p.Action
+	fields["Name"] = &p.Name
+	fields["Action"] = &p.Action
 	fields["DisplayText"] = p.DisplayText
 	fields["Type"] = p.Type
 	fields["NumberFormat"] = p.NumberFormat
@@ -435,12 +435,11 @@ func (p *ScoreboardObjective) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ScoreboardObjective) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Name"]; ok {
-		p.Name = val.(pk.String)
+		p.Name = *val.(*pk.String)
 	}
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.Byte)
+		p.Action = *val.(*pk.Byte)
 	}
 	if val, ok := fields["DisplayText"]; ok {
 		p.DisplayText = val.(pk.Field)

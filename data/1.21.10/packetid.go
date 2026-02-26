@@ -238,7 +238,7 @@ func (p Packets) ServerboundConfigToString(id models.ServerboundPacketID) string
 func (p Packets) GetClientboundPacketID(name string) models.ClientboundPacketID {
 	switch name {
 	
-	case "ClientboundVoid", "ClientboundBundleDelimiter": 
+	case "Clientboundmodels.Void", "ClientboundBundleDelimiter": 
 		return ClientboundVoid // 0 0X00 
 	case "ClientboundSpawnEntity", "ClientboundAddEntity": 
 		return ClientboundSpawnEntity // 1 0X01 

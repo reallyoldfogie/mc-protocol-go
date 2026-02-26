@@ -130,15 +130,15 @@ func (p *BlockPlace) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *BlockPlace) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Hand"] = p.Hand
-	fields["Location"] = p.Location
-	fields["Direction"] = p.Direction
-	fields["CursorX"] = p.CursorX
-	fields["CursorY"] = p.CursorY
-	fields["CursorZ"] = p.CursorZ
-	fields["InsideBlock"] = p.InsideBlock
-	fields["WorldBorderHit"] = p.WorldBorderHit
-	fields["Sequence"] = p.Sequence
+	fields["Hand"] = &p.Hand
+	fields["Location"] = &p.Location
+	fields["Direction"] = &p.Direction
+	fields["CursorX"] = &p.CursorX
+	fields["CursorY"] = &p.CursorY
+	fields["CursorZ"] = &p.CursorZ
+	fields["InsideBlock"] = &p.InsideBlock
+	fields["WorldBorderHit"] = &p.WorldBorderHit
+	fields["Sequence"] = &p.Sequence
 	return fields
 }
 
@@ -149,33 +149,32 @@ func (p *BlockPlace) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *BlockPlace) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Hand"]; ok {
-		p.Hand = val.(pk.VarInt)
+		p.Hand = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Direction"]; ok {
-		p.Direction = val.(pk.VarInt)
+		p.Direction = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["CursorX"]; ok {
-		p.CursorX = val.(pk.Float)
+		p.CursorX = *val.(*pk.Float)
 	}
 	if val, ok := fields["CursorY"]; ok {
-		p.CursorY = val.(pk.Float)
+		p.CursorY = *val.(*pk.Float)
 	}
 	if val, ok := fields["CursorZ"]; ok {
-		p.CursorZ = val.(pk.Float)
+		p.CursorZ = *val.(*pk.Float)
 	}
 	if val, ok := fields["InsideBlock"]; ok {
-		p.InsideBlock = val.(pk.Boolean)
+		p.InsideBlock = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["WorldBorderHit"]; ok {
-		p.WorldBorderHit = val.(pk.Boolean)
+		p.WorldBorderHit = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["Sequence"]; ok {
-		p.Sequence = val.(pk.VarInt)
+		p.Sequence = *val.(*pk.VarInt)
 	}
 }
 

@@ -170,13 +170,13 @@ func (p *ChatCommandSigned) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChatCommandSigned) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Command"] = p.Command
-	fields["Timestamp"] = p.Timestamp
-	fields["Salt"] = p.Salt
-	fields["ArgumentSignatures"] = p.ArgumentSignatures
-	fields["MessageCount"] = p.MessageCount
-	fields["Acknowledged"] = p.Acknowledged
-	fields["Checksum"] = p.Checksum
+	fields["Command"] = &p.Command
+	fields["Timestamp"] = &p.Timestamp
+	fields["Salt"] = &p.Salt
+	fields["ArgumentSignatures"] = &p.ArgumentSignatures
+	fields["MessageCount"] = &p.MessageCount
+	fields["Acknowledged"] = &p.Acknowledged
+	fields["Checksum"] = &p.Checksum
 	return fields
 }
 
@@ -187,27 +187,26 @@ func (p *ChatCommandSigned) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChatCommandSigned) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Command"]; ok {
-		p.Command = val.(pk.String)
+		p.Command = *val.(*pk.String)
 	}
 	if val, ok := fields["Timestamp"]; ok {
-		p.Timestamp = val.(pk.Long)
+		p.Timestamp = *val.(*pk.Long)
 	}
 	if val, ok := fields["Salt"]; ok {
-		p.Salt = val.(pk.Long)
+		p.Salt = *val.(*pk.Long)
 	}
 	if val, ok := fields["ArgumentSignatures"]; ok {
-		p.ArgumentSignatures = val.(models.Array[pk.VarInt, ChatCommandSignedArgumentSignaturesArrayType])
+		p.ArgumentSignatures = *val.(*models.Array[pk.VarInt, ChatCommandSignedArgumentSignaturesArrayType])
 	}
 	if val, ok := fields["MessageCount"]; ok {
-		p.MessageCount = val.(pk.VarInt)
+		p.MessageCount = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Acknowledged"]; ok {
-		p.Acknowledged = val.(models.FixedBuffer3)
+		p.Acknowledged = *val.(*models.FixedBuffer3)
 	}
 	if val, ok := fields["Checksum"]; ok {
-		p.Checksum = val.(pk.Byte)
+		p.Checksum = *val.(*pk.Byte)
 	}
 }
 

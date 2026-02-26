@@ -89,10 +89,10 @@ func (p *EntityLook) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntityLook) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["Yaw"] = p.Yaw
-	fields["Pitch"] = p.Pitch
-	fields["OnGround"] = p.OnGround
+	fields["EntityId"] = &p.EntityId
+	fields["Yaw"] = &p.Yaw
+	fields["Pitch"] = &p.Pitch
+	fields["OnGround"] = &p.OnGround
 	return fields
 }
 
@@ -103,18 +103,17 @@ func (p *EntityLook) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntityLook) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Byte)
+		p.Yaw = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Byte)
+		p.Pitch = *val.(*pk.Byte)
 	}
 	if val, ok := fields["OnGround"]; ok {
-		p.OnGround = val.(pk.Boolean)
+		p.OnGround = *val.(*pk.Boolean)
 	}
 }
 

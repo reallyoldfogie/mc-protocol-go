@@ -1644,7 +1644,7 @@ func (p *{{$container.Name}}) Scan(packet pk.Packet) error {
 func (p *{{$container.Name}}) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
 	{{- range $container.Fields}}
-	fields["{{.Name}}"] = {{if eq .Type.TypeName "pk.Field"}}p.{{.Name}}{{else}}p.{{.Name}}{{end}}
+	fields["{{.Name}}"] = {{if eq .Type.TypeName "pk.Field"}}p.{{.Name}}{{else}}&p.{{.Name}}{{end}}
 	{{- end}}
 	return fields
 }
@@ -1655,10 +1655,9 @@ func (p *{{$container.Name}}) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *{{$container.Name}}) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("{{.Name}}\n")
 	{{- range $container.Fields}}
 	if val, ok := fields["{{.Name}}"]; ok {
-		p.{{.Name}} = val.({{resolveFieldType $container .}})
+		{{if eq .Type.TypeName "pk.Field"}}p.{{.Name}} = val.(pk.Field){{else}}p.{{.Name}} = *val.(*{{resolveFieldType $container .}}){{end}}
 	}
 	{{- end}}
 }
@@ -4586,6 +4585,72 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 				field.Type.Name = field.Type.TypeName
 			}
 		}
+
+		// Post-processing: Ensure comparison fields are included for optional switches
+		// This handles cases where a container has an optional switch that references a compareTo field
+		if container != nil {
+			for _, field := range container.Fields {
+				if field.Type != nil && field.Type.TypeName == "pk.Field" && field.Type.Extras != nil {
+					// This is a switch field (wrapped in pk.Field for optional switches)
+					if sw, ok := field.Type.Extras.(*datatypes.Switch); ok && sw.CompareTo != "" {
+						// Get the comparison field name
+						compareFieldName := getCompareToFieldName(sw)
+						if compareFieldName != "" {
+							// Check if this field exists in container.Fields
+							fieldExists := false
+							for _, f := range container.Fields {
+								if toIdentifier(f.Name) == compareFieldName {
+									fieldExists = true
+									break
+								}
+							}
+
+							// If field doesn't exist, try to infer and add it
+							if !fieldExists {
+								fmt.Printf("DEBUG [comparison-field]: Container '%s' is missing comparison field '%s' for optional switch '%s'\n",
+									t.Name, compareFieldName, field.Name)
+
+								// Infer the type from the switch cases (most common type)
+								// This is a heuristic - we look at the first non-void case to guess the type
+								inferredType := "pk.VarInt" // Default assumption
+								for _, caseType := range sw.Fields {
+									if caseType != nil && caseType.TypeName != "" && caseType.TypeName != "models.Void" && caseType.TypeName != "struct{}" {
+										// Use toNative to get the actual Go type
+										nativeType := toNative(caseType.TypeName, caseType, baseTypes, isGeneratingBaseTypes)
+										if nativeType != caseType.TypeName && nativeType != "models.Void" {
+											inferredType = nativeType
+											break
+										}
+									}
+								}
+
+								// Create a new field for the comparison
+								newField := &datatypes.ContainerField{
+									Name: compareFieldName,
+									Type: &datatypes.Type{
+										Name:     compareFieldName,
+										TypeName: inferredType,
+										Comment:  "// Inferred comparison field for switch '" + field.Name + "'",
+									},
+									Anon: false,
+								}
+
+								// Insert at the beginning of the fields (before the switch field)
+								// so it's read first
+								newFields := make([]*datatypes.ContainerField, 0, len(container.Fields)+1)
+								newFields = append(newFields, newField)
+								newFields = append(newFields, container.Fields...)
+								container.Fields = newFields
+
+								fmt.Printf("DEBUG [comparison-field]: Added inferred comparison field '%s' with type '%s'\n",
+									compareFieldName, inferredType)
+							}
+						}
+					}
+				}
+			}
+		}
+
 		types = append(types, t)
 	} else if array, ok := isArray(t); ok {
 		fmt.Println(array.GetName())

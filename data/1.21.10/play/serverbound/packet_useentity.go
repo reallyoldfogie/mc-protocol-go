@@ -307,13 +307,13 @@ func (p *UseEntity) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UseEntity) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Target"] = p.Target
-	fields["Mouse"] = p.Mouse
+	fields["Target"] = &p.Target
+	fields["Mouse"] = &p.Mouse
 	fields["X"] = p.X
 	fields["Y"] = p.Y
 	fields["Z"] = p.Z
 	fields["Hand"] = p.Hand
-	fields["Sneaking"] = p.Sneaking
+	fields["Sneaking"] = &p.Sneaking
 	return fields
 }
 
@@ -324,12 +324,11 @@ func (p *UseEntity) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UseEntity) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Target"]; ok {
-		p.Target = val.(pk.VarInt)
+		p.Target = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Mouse"]; ok {
-		p.Mouse = val.(pk.VarInt)
+		p.Mouse = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
 		p.X = val.(pk.Field)
@@ -344,7 +343,7 @@ func (p *UseEntity) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Hand = val.(pk.Field)
 	}
 	if val, ok := fields["Sneaking"]; ok {
-		p.Sneaking = val.(pk.Boolean)
+		p.Sneaking = *val.(*pk.Boolean)
 	}
 }
 

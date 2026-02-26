@@ -109,9 +109,9 @@ func (p *EntityAction) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntityAction) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["ActionId"] = p.ActionId
-	fields["JumpBoost"] = p.JumpBoost
+	fields["EntityId"] = &p.EntityId
+	fields["ActionId"] = &p.ActionId
+	fields["JumpBoost"] = &p.JumpBoost
 	return fields
 }
 
@@ -122,15 +122,14 @@ func (p *EntityAction) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntityAction) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ActionId"]; ok {
-		p.ActionId = val.(EntityActionActionId)
+		p.ActionId = *val.(*EntityActionActionId)
 	}
 	if val, ok := fields["JumpBoost"]; ok {
-		p.JumpBoost = val.(pk.VarInt)
+		p.JumpBoost = *val.(*pk.VarInt)
 	}
 }
 

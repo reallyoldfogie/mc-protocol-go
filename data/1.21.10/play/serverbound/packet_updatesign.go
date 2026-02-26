@@ -106,12 +106,12 @@ func (p *UpdateSign) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateSign) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["IsFrontText"] = p.IsFrontText
-	fields["Text1"] = p.Text1
-	fields["Text2"] = p.Text2
-	fields["Text3"] = p.Text3
-	fields["Text4"] = p.Text4
+	fields["Location"] = &p.Location
+	fields["IsFrontText"] = &p.IsFrontText
+	fields["Text1"] = &p.Text1
+	fields["Text2"] = &p.Text2
+	fields["Text3"] = &p.Text3
+	fields["Text4"] = &p.Text4
 	return fields
 }
 
@@ -122,24 +122,23 @@ func (p *UpdateSign) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateSign) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["IsFrontText"]; ok {
-		p.IsFrontText = val.(pk.Boolean)
+		p.IsFrontText = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["Text1"]; ok {
-		p.Text1 = val.(pk.String)
+		p.Text1 = *val.(*pk.String)
 	}
 	if val, ok := fields["Text2"]; ok {
-		p.Text2 = val.(pk.String)
+		p.Text2 = *val.(*pk.String)
 	}
 	if val, ok := fields["Text3"]; ok {
-		p.Text3 = val.(pk.String)
+		p.Text3 = *val.(*pk.String)
 	}
 	if val, ok := fields["Text4"]; ok {
-		p.Text4 = val.(pk.String)
+		p.Text4 = *val.(*pk.String)
 	}
 }
 

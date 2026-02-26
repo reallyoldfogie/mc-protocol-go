@@ -105,12 +105,12 @@ func (p *PositionLook) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PositionLook) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Yaw"] = p.Yaw
-	fields["Pitch"] = p.Pitch
-	fields["Flags"] = p.Flags
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Yaw"] = &p.Yaw
+	fields["Pitch"] = &p.Pitch
+	fields["Flags"] = &p.Flags
 	return fields
 }
 
@@ -121,24 +121,23 @@ func (p *PositionLook) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PositionLook) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Float)
+		p.Yaw = *val.(*pk.Float)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Float)
+		p.Pitch = *val.(*pk.Float)
 	}
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(MovementFlags)
+		p.Flags = *val.(*MovementFlags)
 	}
 }
 

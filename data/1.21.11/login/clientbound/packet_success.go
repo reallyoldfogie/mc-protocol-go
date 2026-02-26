@@ -132,9 +132,9 @@ func (p *Success) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Success) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Uuid"] = p.Uuid
-	fields["Username"] = p.Username
-	fields["Properties"] = p.Properties
+	fields["Uuid"] = &p.Uuid
+	fields["Username"] = &p.Username
+	fields["Properties"] = &p.Properties
 	return fields
 }
 
@@ -145,15 +145,14 @@ func (p *Success) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Success) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Uuid"]; ok {
-		p.Uuid = val.(pk.UUID)
+		p.Uuid = *val.(*pk.UUID)
 	}
 	if val, ok := fields["Username"]; ok {
-		p.Username = val.(pk.String)
+		p.Username = *val.(*pk.String)
 	}
 	if val, ok := fields["Properties"]; ok {
-		p.Properties = val.(models.Array[pk.VarInt, SuccessPropertiesArrayType])
+		p.Properties = *val.(*models.Array[pk.VarInt, SuccessPropertiesArrayType])
 	}
 }
 
