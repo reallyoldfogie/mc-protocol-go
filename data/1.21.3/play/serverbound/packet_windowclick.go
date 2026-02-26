@@ -151,13 +151,13 @@ func (p *WindowClick) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *WindowClick) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["StateId"] = p.StateId
-	fields["Slot"] = p.Slot
-	fields["MouseButton"] = p.MouseButton
-	fields["Mode"] = p.Mode
-	fields["ChangedSlots"] = p.ChangedSlots
-	fields["CursorItem"] = p.CursorItem
+	fields["WindowId"] = &p.WindowId
+	fields["StateId"] = &p.StateId
+	fields["Slot"] = &p.Slot
+	fields["MouseButton"] = &p.MouseButton
+	fields["Mode"] = &p.Mode
+	fields["ChangedSlots"] = &p.ChangedSlots
+	fields["CursorItem"] = &p.CursorItem
 	return fields
 }
 
@@ -168,27 +168,26 @@ func (p *WindowClick) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *WindowClick) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["StateId"]; ok {
-		p.StateId = val.(pk.VarInt)
+		p.StateId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Slot"]; ok {
-		p.Slot = val.(pk.Short)
+		p.Slot = *val.(*pk.Short)
 	}
 	if val, ok := fields["MouseButton"]; ok {
-		p.MouseButton = val.(pk.Byte)
+		p.MouseButton = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(pk.VarInt)
+		p.Mode = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ChangedSlots"]; ok {
-		p.ChangedSlots = val.(models.Array[pk.VarInt, WindowClickChangedSlotsArrayType])
+		p.ChangedSlots = *val.(*models.Array[pk.VarInt, WindowClickChangedSlotsArrayType])
 	}
 	if val, ok := fields["CursorItem"]; ok {
-		p.CursorItem = val.(basetypes.Slot)
+		p.CursorItem = *val.(*basetypes.Slot)
 	}
 }
 

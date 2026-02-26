@@ -65,7 +65,7 @@ func (p *Camera) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Camera) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["CameraId"] = p.CameraId
+	fields["CameraId"] = &p.CameraId
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *Camera) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Camera) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["CameraId"]; ok {
-		p.CameraId = val.(pk.VarInt)
+		p.CameraId = *val.(*pk.VarInt)
 	}
 }
 

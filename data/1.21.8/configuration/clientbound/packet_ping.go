@@ -65,7 +65,7 @@ func (p *Ping) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Ping) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Id"] = p.Id
+	fields["Id"] = &p.Id
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *Ping) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Ping) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Id"]; ok {
-		p.Id = val.(pk.Int)
+		p.Id = *val.(*pk.Int)
 	}
 }
 

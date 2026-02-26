@@ -66,7 +66,7 @@ func (p *Disconnect) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Disconnect) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Reason"] = p.Reason
+	fields["Reason"] = &p.Reason
 	return fields
 }
 
@@ -77,9 +77,8 @@ func (p *Disconnect) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Disconnect) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Reason"]; ok {
-		p.Reason = val.(models.AnonymousNBT)
+		p.Reason = *val.(*models.AnonymousNBT)
 	}
 }
 

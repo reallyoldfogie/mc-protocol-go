@@ -121,14 +121,14 @@ func (p *RecipeBookSettings) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *RecipeBookSettings) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["CraftingGuiOpen"] = p.CraftingGuiOpen
-	fields["CraftingFilteringCraftable"] = p.CraftingFilteringCraftable
-	fields["SmeltingGuiOpen"] = p.SmeltingGuiOpen
-	fields["SmeltingFilteringCraftable"] = p.SmeltingFilteringCraftable
-	fields["BlastGuiOpen"] = p.BlastGuiOpen
-	fields["BlastFilteringCraftable"] = p.BlastFilteringCraftable
-	fields["SmokerGuiOpen"] = p.SmokerGuiOpen
-	fields["SmokerFilteringCraftable"] = p.SmokerFilteringCraftable
+	fields["CraftingGuiOpen"] = &p.CraftingGuiOpen
+	fields["CraftingFilteringCraftable"] = &p.CraftingFilteringCraftable
+	fields["SmeltingGuiOpen"] = &p.SmeltingGuiOpen
+	fields["SmeltingFilteringCraftable"] = &p.SmeltingFilteringCraftable
+	fields["BlastGuiOpen"] = &p.BlastGuiOpen
+	fields["BlastFilteringCraftable"] = &p.BlastFilteringCraftable
+	fields["SmokerGuiOpen"] = &p.SmokerGuiOpen
+	fields["SmokerFilteringCraftable"] = &p.SmokerFilteringCraftable
 	return fields
 }
 
@@ -139,30 +139,29 @@ func (p *RecipeBookSettings) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *RecipeBookSettings) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["CraftingGuiOpen"]; ok {
-		p.CraftingGuiOpen = val.(pk.Boolean)
+		p.CraftingGuiOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["CraftingFilteringCraftable"]; ok {
-		p.CraftingFilteringCraftable = val.(pk.Boolean)
+		p.CraftingFilteringCraftable = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmeltingGuiOpen"]; ok {
-		p.SmeltingGuiOpen = val.(pk.Boolean)
+		p.SmeltingGuiOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmeltingFilteringCraftable"]; ok {
-		p.SmeltingFilteringCraftable = val.(pk.Boolean)
+		p.SmeltingFilteringCraftable = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["BlastGuiOpen"]; ok {
-		p.BlastGuiOpen = val.(pk.Boolean)
+		p.BlastGuiOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["BlastFilteringCraftable"]; ok {
-		p.BlastFilteringCraftable = val.(pk.Boolean)
+		p.BlastFilteringCraftable = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmokerGuiOpen"]; ok {
-		p.SmokerGuiOpen = val.(pk.Boolean)
+		p.SmokerGuiOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmokerFilteringCraftable"]; ok {
-		p.SmokerFilteringCraftable = val.(pk.Boolean)
+		p.SmokerFilteringCraftable = *val.(*pk.Boolean)
 	}
 }
 

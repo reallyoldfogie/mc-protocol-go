@@ -74,8 +74,8 @@ func (p *EntityMetadata) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntityMetadata) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["Metadata"] = p.Metadata
+	fields["EntityId"] = &p.EntityId
+	fields["Metadata"] = &p.Metadata
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *EntityMetadata) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntityMetadata) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Metadata"]; ok {
-		p.Metadata = val.(basetypes.EntityMetadata)
+		p.Metadata = *val.(*basetypes.EntityMetadata)
 	}
 }
 

@@ -81,9 +81,9 @@ func (p *UpdateTime) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateTime) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Age"] = p.Age
-	fields["Time"] = p.Time
-	fields["TickDayTime"] = p.TickDayTime
+	fields["Age"] = &p.Age
+	fields["Time"] = &p.Time
+	fields["TickDayTime"] = &p.TickDayTime
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *UpdateTime) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateTime) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Age"]; ok {
-		p.Age = val.(pk.Long)
+		p.Age = *val.(*pk.Long)
 	}
 	if val, ok := fields["Time"]; ok {
-		p.Time = val.(pk.Long)
+		p.Time = *val.(*pk.Long)
 	}
 	if val, ok := fields["TickDayTime"]; ok {
-		p.TickDayTime = val.(pk.Boolean)
+		p.TickDayTime = *val.(*pk.Boolean)
 	}
 }
 

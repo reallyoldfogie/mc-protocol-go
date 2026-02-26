@@ -52,97 +52,6 @@ func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
 }
 
-type SlotComponentType struct {
-	Value string
-}
-
-var SlotComponentTypeMappings = map[int64]string{
-	0:  "custom_data",
-	1:  "max_stack_size",
-	10: "can_place_on",
-	11: "can_break",
-	12: "attribute_modifiers",
-	13: "custom_model_data",
-	14: "hide_additional_tooltip",
-	15: "hide_tooltip",
-	16: "repair_cost",
-	17: "creative_slot_lock",
-	18: "enchantment_glint_override",
-	19: "intangible_projectile",
-	2:  "max_damage",
-	20: "food",
-	21: "fire_resistant",
-	22: "tool",
-	23: "stored_enchantments",
-	24: "dyed_color",
-	25: "map_color",
-	26: "map_id",
-	27: "map_decorations",
-	28: "map_post_processing",
-	29: "charged_projectiles",
-	3:  "damage",
-	30: "bundle_contents",
-	31: "potion_contents",
-	32: "suspicious_stew_effects",
-	33: "writable_book_content",
-	34: "written_book_content",
-	35: "trim",
-	36: "debug_stick_state",
-	37: "entity_data",
-	38: "bucket_entity_data",
-	39: "block_entity_data",
-	4:  "unbreakable",
-	40: "instrument",
-	41: "ominous_bottle_amplifier",
-	42: "jukebox_playable",
-	43: "recipes",
-	44: "lodestone_tracker",
-	45: "firework_explosion",
-	46: "fireworks",
-	47: "profile",
-	48: "note_block_sound",
-	49: "banner_patterns",
-	5:  "custom_name",
-	50: "base_color",
-	51: "pot_decorations",
-	52: "container",
-	53: "block_state",
-	54: "bees",
-	55: "lock",
-	56: "container_loot",
-	6:  "item_name",
-	7:  "lore",
-	8:  "rarity",
-	9:  "enchantments",
-}
-
-func (m *SlotComponentType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentType key")
-	}
-
-	value, ok := SlotComponentTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
-}
-
 type ServerLinkType struct {
 	Value string
 }
@@ -483,4 +392,95 @@ func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
+}
+
+type SlotComponentType struct {
+	Value string
+}
+
+var SlotComponentTypeMappings = map[int64]string{
+	0:  "custom_data",
+	1:  "max_stack_size",
+	10: "can_place_on",
+	11: "can_break",
+	12: "attribute_modifiers",
+	13: "custom_model_data",
+	14: "hide_additional_tooltip",
+	15: "hide_tooltip",
+	16: "repair_cost",
+	17: "creative_slot_lock",
+	18: "enchantment_glint_override",
+	19: "intangible_projectile",
+	2:  "max_damage",
+	20: "food",
+	21: "fire_resistant",
+	22: "tool",
+	23: "stored_enchantments",
+	24: "dyed_color",
+	25: "map_color",
+	26: "map_id",
+	27: "map_decorations",
+	28: "map_post_processing",
+	29: "charged_projectiles",
+	3:  "damage",
+	30: "bundle_contents",
+	31: "potion_contents",
+	32: "suspicious_stew_effects",
+	33: "writable_book_content",
+	34: "written_book_content",
+	35: "trim",
+	36: "debug_stick_state",
+	37: "entity_data",
+	38: "bucket_entity_data",
+	39: "block_entity_data",
+	4:  "unbreakable",
+	40: "instrument",
+	41: "ominous_bottle_amplifier",
+	42: "jukebox_playable",
+	43: "recipes",
+	44: "lodestone_tracker",
+	45: "firework_explosion",
+	46: "fireworks",
+	47: "profile",
+	48: "note_block_sound",
+	49: "banner_patterns",
+	5:  "custom_name",
+	50: "base_color",
+	51: "pot_decorations",
+	52: "container",
+	53: "block_state",
+	54: "bees",
+	55: "lock",
+	56: "container_loot",
+	6:  "item_name",
+	7:  "lore",
+	8:  "rarity",
+	9:  "enchantments",
+}
+
+func (m *SlotComponentType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentType key")
+	}
+
+	value, ok := SlotComponentTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
 }

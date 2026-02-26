@@ -321,8 +321,8 @@ func (p *TrackedWaypoint) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TrackedWaypoint) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Operation"] = p.Operation
-	fields["Waypoint"] = p.Waypoint
+	fields["Operation"] = &p.Operation
+	fields["Waypoint"] = &p.Waypoint
 	return fields
 }
 
@@ -333,12 +333,11 @@ func (p *TrackedWaypoint) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TrackedWaypoint) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Operation"]; ok {
-		p.Operation = val.(TrackedWaypointOperation)
+		p.Operation = *val.(*TrackedWaypointOperation)
 	}
 	if val, ok := fields["Waypoint"]; ok {
-		p.Waypoint = val.(TrackedWaypointWaypoint)
+		p.Waypoint = *val.(*TrackedWaypointWaypoint)
 	}
 }
 

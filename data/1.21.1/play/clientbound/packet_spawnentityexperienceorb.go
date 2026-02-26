@@ -97,11 +97,11 @@ func (p *SpawnEntityExperienceOrb) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SpawnEntityExperienceOrb) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Count"] = p.Count
+	fields["EntityId"] = &p.EntityId
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Count"] = &p.Count
 	return fields
 }
 
@@ -112,21 +112,20 @@ func (p *SpawnEntityExperienceOrb) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SpawnEntityExperienceOrb) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Count"]; ok {
-		p.Count = val.(pk.Short)
+		p.Count = *val.(*pk.Short)
 	}
 }
 

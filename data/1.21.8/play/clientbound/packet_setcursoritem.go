@@ -66,7 +66,7 @@ func (p *SetCursorItem) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetCursorItem) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Contents"] = p.Contents
+	fields["Contents"] = &p.Contents
 	return fields
 }
 
@@ -77,9 +77,8 @@ func (p *SetCursorItem) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetCursorItem) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Contents"]; ok {
-		p.Contents = val.(basetypes.Slot)
+		p.Contents = *val.(*basetypes.Slot)
 	}
 }
 

@@ -260,7 +260,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewOpenWindow(), nil
 	case 54: // Play.Clientbound[{54}] = generator.packetData{Name:"OpenSignEntity", ID:54, Hex:"0X36", StructName:"OpenSignEntity", ProtoTypeName:"packet_open_sign_entity", AltName:"ClientboundOpenSignEditor"}
 		return play_clientbound.NewOpenSignEntity(), nil
-	case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"Ping", ID:55, Hex:"0X37", StructName:"Ping", ProtoTypeName:"packet_ping", AltName:""}
+	case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"Ping", ID:55, Hex:"0X37", StructName:"", ProtoTypeName:"packet_ping", AltName:""}
 		return play_clientbound.NewPing(), nil
 	case 56: // Play.Clientbound[{56}] = generator.packetData{Name:"PingResponse", ID:56, Hex:"0X38", StructName:"PingResponse", ProtoTypeName:"packet_ping_response", AltName:"ClientboundPongResponse"}
 		return play_clientbound.NewPingResponse(), nil
@@ -412,7 +412,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewEntityEffect(), nil
 	case 126: // Play.Clientbound[{126}] = generator.packetData{Name:"DeclareRecipes", ID:126, Hex:"0X7E", StructName:"DeclareRecipes", ProtoTypeName:"packet_declare_recipes", AltName:"ClientboundUpdateRecipes"}
 		return play_clientbound.NewDeclareRecipes(), nil
-	case 127: // Play.Clientbound[{127}] = generator.packetData{Name:"Tags", ID:127, Hex:"0X7F", StructName:"Tags", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
+	case 127: // Play.Clientbound[{127}] = generator.packetData{Name:"Tags", ID:127, Hex:"0X7F", StructName:"", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
 		return play_clientbound.NewTags(), nil
 	case 128: // Play.Clientbound[{128}] = generator.packetData{Name:"SetProjectilePower", ID:128, Hex:"0X80", StructName:"SetProjectilePower", ProtoTypeName:"packet_set_projectile_power", AltName:"ClientboundProjectilePower"}
 		return play_clientbound.NewSetProjectilePower(), nil

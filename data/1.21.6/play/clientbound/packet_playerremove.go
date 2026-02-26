@@ -78,7 +78,7 @@ func (p *PlayerRemove) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PlayerRemove) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Players"] = p.Players
+	fields["Players"] = &p.Players
 	return fields
 }
 
@@ -89,9 +89,8 @@ func (p *PlayerRemove) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PlayerRemove) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Players"]; ok {
-		p.Players = val.(models.Array[pk.VarInt, pk.UUID])
+		p.Players = *val.(*models.Array[pk.VarInt, pk.UUID])
 	}
 }
 

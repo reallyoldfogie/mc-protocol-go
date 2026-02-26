@@ -74,8 +74,8 @@ func (p *EnchantItem) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EnchantItem) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["Enchantment"] = p.Enchantment
+	fields["WindowId"] = &p.WindowId
+	fields["Enchantment"] = &p.Enchantment
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *EnchantItem) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EnchantItem) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["Enchantment"]; ok {
-		p.Enchantment = val.(pk.Byte)
+		p.Enchantment = *val.(*pk.Byte)
 	}
 }
 

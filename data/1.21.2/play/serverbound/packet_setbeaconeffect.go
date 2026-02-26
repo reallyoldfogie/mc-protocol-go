@@ -86,8 +86,8 @@ func (p *SetBeaconEffect) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetBeaconEffect) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["PrimaryEffect"] = p.PrimaryEffect
-	fields["SecondaryEffect"] = p.SecondaryEffect
+	fields["PrimaryEffect"] = &p.PrimaryEffect
+	fields["SecondaryEffect"] = &p.SecondaryEffect
 	return fields
 }
 
@@ -98,12 +98,11 @@ func (p *SetBeaconEffect) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetBeaconEffect) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["PrimaryEffect"]; ok {
-		p.PrimaryEffect = val.(models.Option[pk.VarInt])
+		p.PrimaryEffect = *val.(*models.Option[pk.VarInt])
 	}
 	if val, ok := fields["SecondaryEffect"]; ok {
-		p.SecondaryEffect = val.(models.Option[pk.VarInt])
+		p.SecondaryEffect = *val.(*models.Option[pk.VarInt])
 	}
 }
 

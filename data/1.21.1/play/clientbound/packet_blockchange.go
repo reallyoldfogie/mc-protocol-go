@@ -74,8 +74,8 @@ func (p *BlockChange) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *BlockChange) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["Type"] = p.Type
+	fields["Location"] = &p.Location
+	fields["Type"] = &p.Type
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *BlockChange) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *BlockChange) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Type"]; ok {
-		p.Type = val.(pk.VarInt)
+		p.Type = *val.(*pk.VarInt)
 	}
 }
 

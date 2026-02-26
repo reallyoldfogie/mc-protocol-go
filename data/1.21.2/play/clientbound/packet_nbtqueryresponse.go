@@ -74,8 +74,8 @@ func (p *NbtQueryResponse) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *NbtQueryResponse) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["TransactionId"] = p.TransactionId
-	fields["Nbt"] = p.Nbt
+	fields["TransactionId"] = &p.TransactionId
+	fields["Nbt"] = &p.Nbt
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *NbtQueryResponse) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *NbtQueryResponse) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["TransactionId"]; ok {
-		p.TransactionId = val.(pk.VarInt)
+		p.TransactionId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Nbt"]; ok {
-		p.Nbt = val.(models.AnonymousNBT)
+		p.Nbt = *val.(*models.AnonymousNBT)
 	}
 }
 

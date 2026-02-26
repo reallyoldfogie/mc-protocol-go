@@ -490,8 +490,8 @@ func (p *PlayerInfo) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PlayerInfo) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Action"] = p.Action
-	fields["Data"] = p.Data
+	fields["Action"] = &p.Action
+	fields["Data"] = &p.Data
 	return fields
 }
 
@@ -502,12 +502,11 @@ func (p *PlayerInfo) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PlayerInfo) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(PlayerInfoActionBitflags)
+		p.Action = *val.(*PlayerInfoActionBitflags)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(models.Array[pk.VarInt, PlayerInfoDataArrayType])
+		p.Data = *val.(*models.Array[pk.VarInt, PlayerInfoDataArrayType])
 	}
 }
 

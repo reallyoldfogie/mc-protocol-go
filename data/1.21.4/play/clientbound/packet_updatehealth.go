@@ -81,9 +81,9 @@ func (p *UpdateHealth) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateHealth) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Health"] = p.Health
-	fields["Food"] = p.Food
-	fields["FoodSaturation"] = p.FoodSaturation
+	fields["Health"] = &p.Health
+	fields["Food"] = &p.Food
+	fields["FoodSaturation"] = &p.FoodSaturation
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *UpdateHealth) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateHealth) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Health"]; ok {
-		p.Health = val.(pk.Float)
+		p.Health = *val.(*pk.Float)
 	}
 	if val, ok := fields["Food"]; ok {
-		p.Food = val.(pk.VarInt)
+		p.Food = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["FoodSaturation"]; ok {
-		p.FoodSaturation = val.(pk.Float)
+		p.FoodSaturation = *val.(*pk.Float)
 	}
 }
 

@@ -234,8 +234,8 @@ func (p *RecipeBookAdd) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *RecipeBookAdd) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Entries"] = p.Entries
-	fields["Replace"] = p.Replace
+	fields["Entries"] = &p.Entries
+	fields["Replace"] = &p.Replace
 	return fields
 }
 
@@ -246,12 +246,11 @@ func (p *RecipeBookAdd) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *RecipeBookAdd) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Entries"]; ok {
-		p.Entries = val.(models.Array[pk.VarInt, RecipeBookAddEntriesArrayType])
+		p.Entries = *val.(*models.Array[pk.VarInt, RecipeBookAddEntriesArrayType])
 	}
 	if val, ok := fields["Replace"]; ok {
-		p.Replace = val.(pk.Boolean)
+		p.Replace = *val.(*pk.Boolean)
 	}
 }
 

@@ -103,10 +103,10 @@ func (p *WindowItems) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *WindowItems) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["StateId"] = p.StateId
-	fields["Items"] = p.Items
-	fields["CarriedItem"] = p.CarriedItem
+	fields["WindowId"] = &p.WindowId
+	fields["StateId"] = &p.StateId
+	fields["Items"] = &p.Items
+	fields["CarriedItem"] = &p.CarriedItem
 	return fields
 }
 
@@ -117,18 +117,17 @@ func (p *WindowItems) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *WindowItems) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["StateId"]; ok {
-		p.StateId = val.(pk.VarInt)
+		p.StateId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Items"]; ok {
-		p.Items = val.(models.Array[pk.VarInt, basetypes.Slot])
+		p.Items = *val.(*models.Array[pk.VarInt, basetypes.Slot])
 	}
 	if val, ok := fields["CarriedItem"]; ok {
-		p.CarriedItem = val.(basetypes.Slot)
+		p.CarriedItem = *val.(*basetypes.Slot)
 	}
 }
 

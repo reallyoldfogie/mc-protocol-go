@@ -158,17 +158,17 @@ func (p *Login) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Login) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["IsHardcore"] = p.IsHardcore
-	fields["WorldNames"] = p.WorldNames
-	fields["MaxPlayers"] = p.MaxPlayers
-	fields["ViewDistance"] = p.ViewDistance
-	fields["SimulationDistance"] = p.SimulationDistance
-	fields["ReducedDebugInfo"] = p.ReducedDebugInfo
-	fields["EnableRespawnScreen"] = p.EnableRespawnScreen
-	fields["DoLimitedCrafting"] = p.DoLimitedCrafting
-	fields["WorldState"] = p.WorldState
-	fields["EnforcesSecureChat"] = p.EnforcesSecureChat
+	fields["EntityId"] = &p.EntityId
+	fields["IsHardcore"] = &p.IsHardcore
+	fields["WorldNames"] = &p.WorldNames
+	fields["MaxPlayers"] = &p.MaxPlayers
+	fields["ViewDistance"] = &p.ViewDistance
+	fields["SimulationDistance"] = &p.SimulationDistance
+	fields["ReducedDebugInfo"] = &p.ReducedDebugInfo
+	fields["EnableRespawnScreen"] = &p.EnableRespawnScreen
+	fields["DoLimitedCrafting"] = &p.DoLimitedCrafting
+	fields["WorldState"] = &p.WorldState
+	fields["EnforcesSecureChat"] = &p.EnforcesSecureChat
 	return fields
 }
 
@@ -179,39 +179,38 @@ func (p *Login) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Login) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.Int)
+		p.EntityId = *val.(*pk.Int)
 	}
 	if val, ok := fields["IsHardcore"]; ok {
-		p.IsHardcore = val.(pk.Boolean)
+		p.IsHardcore = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["WorldNames"]; ok {
-		p.WorldNames = val.(models.Array[pk.VarInt, pk.String])
+		p.WorldNames = *val.(*models.Array[pk.VarInt, pk.String])
 	}
 	if val, ok := fields["MaxPlayers"]; ok {
-		p.MaxPlayers = val.(pk.VarInt)
+		p.MaxPlayers = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ViewDistance"]; ok {
-		p.ViewDistance = val.(pk.VarInt)
+		p.ViewDistance = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SimulationDistance"]; ok {
-		p.SimulationDistance = val.(pk.VarInt)
+		p.SimulationDistance = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ReducedDebugInfo"]; ok {
-		p.ReducedDebugInfo = val.(pk.Boolean)
+		p.ReducedDebugInfo = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["EnableRespawnScreen"]; ok {
-		p.EnableRespawnScreen = val.(pk.Boolean)
+		p.EnableRespawnScreen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["DoLimitedCrafting"]; ok {
-		p.DoLimitedCrafting = val.(pk.Boolean)
+		p.DoLimitedCrafting = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["WorldState"]; ok {
-		p.WorldState = val.(SpawnInfo)
+		p.WorldState = *val.(*SpawnInfo)
 	}
 	if val, ok := fields["EnforcesSecureChat"]; ok {
-		p.EnforcesSecureChat = val.(pk.Boolean)
+		p.EnforcesSecureChat = *val.(*pk.Boolean)
 	}
 }
 

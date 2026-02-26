@@ -113,13 +113,13 @@ func (p *EntityTeleport) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntityTeleport) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Yaw"] = p.Yaw
-	fields["Pitch"] = p.Pitch
-	fields["OnGround"] = p.OnGround
+	fields["EntityId"] = &p.EntityId
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Yaw"] = &p.Yaw
+	fields["Pitch"] = &p.Pitch
+	fields["OnGround"] = &p.OnGround
 	return fields
 }
 
@@ -130,27 +130,26 @@ func (p *EntityTeleport) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntityTeleport) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Byte)
+		p.Yaw = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Byte)
+		p.Pitch = *val.(*pk.Byte)
 	}
 	if val, ok := fields["OnGround"]; ok {
-		p.OnGround = val.(pk.Boolean)
+		p.OnGround = *val.(*pk.Boolean)
 	}
 }
 

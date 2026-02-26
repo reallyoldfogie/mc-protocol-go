@@ -65,7 +65,7 @@ func (p *ClearTitles) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ClearTitles) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Reset"] = p.Reset
+	fields["Reset"] = &p.Reset
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *ClearTitles) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ClearTitles) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Reset"]; ok {
-		p.Reset = val.(pk.Boolean)
+		p.Reset = *val.(*pk.Boolean)
 	}
 }
 

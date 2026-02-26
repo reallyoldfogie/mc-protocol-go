@@ -8,44 +8,6 @@ import (
 	"io"
 )
 
-type UpdateStructureBlockFlags struct {
-	Value string
-}
-
-var UpdateStructureBlockFlagsMappings = map[int64]string{
-	0: "ignore_entities",
-	1: "show_air",
-	2: "show_bounding_box",
-	3: "strict",
-}
-
-func (m *UpdateStructureBlockFlags) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.UnsignedByte
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read UpdateStructureBlockFlags key")
-	}
-
-	value, ok := UpdateStructureBlockFlagsMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m UpdateStructureBlockFlags) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range UpdateStructureBlockFlagsMappings {
-		if v == m.Value {
-			key := pk.UnsignedByte(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown UpdateStructureBlockFlags value: %s", m.Value)
-}
-
 type PacketName struct {
 	Value string
 }
@@ -142,4 +104,42 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
+}
+
+type UpdateStructureBlockFlags struct {
+	Value string
+}
+
+var UpdateStructureBlockFlagsMappings = map[int64]string{
+	0: "ignore_entities",
+	1: "show_air",
+	2: "show_bounding_box",
+	3: "strict",
+}
+
+func (m *UpdateStructureBlockFlags) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.UnsignedByte
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read UpdateStructureBlockFlags key")
+	}
+
+	value, ok := UpdateStructureBlockFlagsMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m UpdateStructureBlockFlags) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range UpdateStructureBlockFlagsMappings {
+		if v == m.Value {
+			key := pk.UnsignedByte(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown UpdateStructureBlockFlags value: %s", m.Value)
 }

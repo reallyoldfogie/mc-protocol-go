@@ -106,12 +106,12 @@ func (p *EntitySoundEffect) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EntitySoundEffect) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Sound"] = p.Sound
-	fields["SoundCategory"] = p.SoundCategory
-	fields["EntityId"] = p.EntityId
-	fields["Volume"] = p.Volume
-	fields["Pitch"] = p.Pitch
-	fields["Seed"] = p.Seed
+	fields["Sound"] = &p.Sound
+	fields["SoundCategory"] = &p.SoundCategory
+	fields["EntityId"] = &p.EntityId
+	fields["Volume"] = &p.Volume
+	fields["Pitch"] = &p.Pitch
+	fields["Seed"] = &p.Seed
 	return fields
 }
 
@@ -122,24 +122,23 @@ func (p *EntitySoundEffect) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EntitySoundEffect) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Sound"]; ok {
-		p.Sound = val.(basetypes.ItemSoundHolder)
+		p.Sound = *val.(*basetypes.ItemSoundHolder)
 	}
 	if val, ok := fields["SoundCategory"]; ok {
-		p.SoundCategory = val.(basetypes.SoundSource)
+		p.SoundCategory = *val.(*basetypes.SoundSource)
 	}
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Volume"]; ok {
-		p.Volume = val.(pk.Float)
+		p.Volume = *val.(*pk.Float)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Float)
+		p.Pitch = *val.(*pk.Float)
 	}
 	if val, ok := fields["Seed"]; ok {
-		p.Seed = val.(pk.Long)
+		p.Seed = *val.(*pk.Long)
 	}
 }
 

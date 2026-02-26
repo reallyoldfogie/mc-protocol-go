@@ -81,9 +81,9 @@ func (p *RecipeBook) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *RecipeBook) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["BookId"] = p.BookId
-	fields["BookOpen"] = p.BookOpen
-	fields["FilterActive"] = p.FilterActive
+	fields["BookId"] = &p.BookId
+	fields["BookOpen"] = &p.BookOpen
+	fields["FilterActive"] = &p.FilterActive
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *RecipeBook) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *RecipeBook) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["BookId"]; ok {
-		p.BookId = val.(pk.VarInt)
+		p.BookId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["BookOpen"]; ok {
-		p.BookOpen = val.(pk.Boolean)
+		p.BookOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["FilterActive"]; ok {
-		p.FilterActive = val.(pk.Boolean)
+		p.FilterActive = *val.(*pk.Boolean)
 	}
 }
 

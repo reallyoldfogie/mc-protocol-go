@@ -174,13 +174,14 @@ func (p *ScoreboardScore) Scan(packet pk.Packet) error {
 		}
 		p.Styling = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Styling] default case")
+			return errors.Wrap(err, "failed to read void switch field Styling default case")
 		}
-		p.Styling = &val
+		p.Styling = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -195,11 +196,11 @@ func (p *ScoreboardScore) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ScoreboardScore) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ItemName"] = p.ItemName
-	fields["ScoreName"] = p.ScoreName
-	fields["Value"] = p.Value
-	fields["DisplayName"] = p.DisplayName
-	fields["NumberFormat"] = p.NumberFormat
+	fields["ItemName"] = &p.ItemName
+	fields["ScoreName"] = &p.ScoreName
+	fields["Value"] = &p.Value
+	fields["DisplayName"] = &p.DisplayName
+	fields["NumberFormat"] = &p.NumberFormat
 	fields["Styling"] = p.Styling
 	return fields
 }
@@ -211,21 +212,20 @@ func (p *ScoreboardScore) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ScoreboardScore) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ItemName"]; ok {
-		p.ItemName = val.(pk.String)
+		p.ItemName = *val.(*pk.String)
 	}
 	if val, ok := fields["ScoreName"]; ok {
-		p.ScoreName = val.(pk.String)
+		p.ScoreName = *val.(*pk.String)
 	}
 	if val, ok := fields["Value"]; ok {
-		p.Value = val.(pk.VarInt)
+		p.Value = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["DisplayName"]; ok {
-		p.DisplayName = val.(models.Option[models.AnonymousNBT])
+		p.DisplayName = *val.(*models.Option[models.AnonymousNBT])
 	}
 	if val, ok := fields["NumberFormat"]; ok {
-		p.NumberFormat = val.(models.Option[pk.VarInt])
+		p.NumberFormat = *val.(*models.Option[pk.VarInt])
 	}
 	if val, ok := fields["Styling"]; ok {
 		p.Styling = val.(pk.Field)
@@ -366,13 +366,14 @@ func (t *ScoreboardScore) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Styling = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Styling default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Styling default case")
 		}
-		t.Styling = &val
+		t.Styling = &__void
 	}
 
 	return totalBytes, nil

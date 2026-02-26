@@ -82,9 +82,9 @@ func (p *OpenWindow) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *OpenWindow) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["InventoryType"] = p.InventoryType
-	fields["WindowTitle"] = p.WindowTitle
+	fields["WindowId"] = &p.WindowId
+	fields["InventoryType"] = &p.InventoryType
+	fields["WindowTitle"] = &p.WindowTitle
 	return fields
 }
 
@@ -95,15 +95,14 @@ func (p *OpenWindow) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *OpenWindow) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(pk.VarInt)
+		p.WindowId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["InventoryType"]; ok {
-		p.InventoryType = val.(pk.VarInt)
+		p.InventoryType = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["WindowTitle"]; ok {
-		p.WindowTitle = val.(models.AnonymousNBT)
+		p.WindowTitle = *val.(*models.AnonymousNBT)
 	}
 }
 

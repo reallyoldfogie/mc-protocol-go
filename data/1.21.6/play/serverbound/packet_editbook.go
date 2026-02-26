@@ -100,9 +100,9 @@ func (p *EditBook) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EditBook) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Hand"] = p.Hand
-	fields["Pages"] = p.Pages
-	fields["Title"] = p.Title
+	fields["Hand"] = &p.Hand
+	fields["Pages"] = &p.Pages
+	fields["Title"] = &p.Title
 	return fields
 }
 
@@ -113,15 +113,14 @@ func (p *EditBook) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EditBook) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Hand"]; ok {
-		p.Hand = val.(pk.VarInt)
+		p.Hand = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Pages"]; ok {
-		p.Pages = val.(models.Array[pk.VarInt, pk.String])
+		p.Pages = *val.(*models.Array[pk.VarInt, pk.String])
 	}
 	if val, ok := fields["Title"]; ok {
-		p.Title = val.(models.Option[pk.String])
+		p.Title = *val.(*models.Option[pk.String])
 	}
 }
 

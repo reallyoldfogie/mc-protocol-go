@@ -90,10 +90,10 @@ func (p *WorldEvent) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *WorldEvent) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EffectId"] = p.EffectId
-	fields["Location"] = p.Location
-	fields["Data"] = p.Data
-	fields["Global"] = p.Global
+	fields["EffectId"] = &p.EffectId
+	fields["Location"] = &p.Location
+	fields["Data"] = &p.Data
+	fields["Global"] = &p.Global
 	return fields
 }
 
@@ -104,18 +104,17 @@ func (p *WorldEvent) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *WorldEvent) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EffectId"]; ok {
-		p.EffectId = val.(pk.Int)
+		p.EffectId = *val.(*pk.Int)
 	}
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(pk.Int)
+		p.Data = *val.(*pk.Int)
 	}
 	if val, ok := fields["Global"]; ok {
-		p.Global = val.(pk.Boolean)
+		p.Global = *val.(*pk.Boolean)
 	}
 }
 

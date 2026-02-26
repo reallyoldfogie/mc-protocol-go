@@ -65,7 +65,7 @@ func (p *ChunkBatchReceived) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChunkBatchReceived) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ChunksPerTick"] = p.ChunksPerTick
+	fields["ChunksPerTick"] = &p.ChunksPerTick
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *ChunkBatchReceived) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChunkBatchReceived) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ChunksPerTick"]; ok {
-		p.ChunksPerTick = val.(pk.Float)
+		p.ChunksPerTick = *val.(*pk.Float)
 	}
 }
 

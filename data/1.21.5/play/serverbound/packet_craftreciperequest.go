@@ -82,9 +82,9 @@ func (p *CraftRecipeRequest) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CraftRecipeRequest) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["RecipeId"] = p.RecipeId
-	fields["MakeAll"] = p.MakeAll
+	fields["WindowId"] = &p.WindowId
+	fields["RecipeId"] = &p.RecipeId
+	fields["MakeAll"] = &p.MakeAll
 	return fields
 }
 
@@ -95,15 +95,14 @@ func (p *CraftRecipeRequest) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CraftRecipeRequest) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["RecipeId"]; ok {
-		p.RecipeId = val.(pk.VarInt)
+		p.RecipeId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["MakeAll"]; ok {
-		p.MakeAll = val.(pk.Boolean)
+		p.MakeAll = *val.(*pk.Boolean)
 	}
 }
 

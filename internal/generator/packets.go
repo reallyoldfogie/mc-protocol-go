@@ -3674,9 +3674,9 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 					// Copy the type
 					if field.Type != nil {
 						fieldCopy.Type = &datatypes.Type{
-							Name:           field.Type.Name,
-							TypeName:       field.Type.TypeName,
-							Comment:        field.Type.Comment,
+							Name:          field.Type.Name,
+							TypeName:      field.Type.TypeName,
+							Comment:       field.Type.Comment,
 							RawDefinition: field.Type.RawDefinition,
 						}
 						// Deep copy Extras if present (for complex types)

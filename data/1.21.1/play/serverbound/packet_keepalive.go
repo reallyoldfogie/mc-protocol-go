@@ -65,7 +65,7 @@ func (p *KeepAlive) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *KeepAlive) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["KeepAliveId"] = p.KeepAliveId
+	fields["KeepAliveId"] = &p.KeepAliveId
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *KeepAlive) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *KeepAlive) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["KeepAliveId"]; ok {
-		p.KeepAliveId = val.(pk.Long)
+		p.KeepAliveId = *val.(*pk.Long)
 	}
 }
 

@@ -685,13 +685,14 @@ func (t *Packet) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Params = &val
 	case "bundle_delimiter":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Params case bundle_delimiter")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Params case bundle_delimiter")
 		}
-		t.Params = &val
+		t.Params = &__void
 	case "camera":
 		var val Camera
 		bytesRead, err = val.ReadFrom(r)

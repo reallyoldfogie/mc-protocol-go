@@ -73,8 +73,8 @@ func (p *AttachEntity) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *AttachEntity) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["VehicleId"] = p.VehicleId
+	fields["EntityId"] = &p.EntityId
+	fields["VehicleId"] = &p.VehicleId
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *AttachEntity) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *AttachEntity) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.Int)
+		p.EntityId = *val.(*pk.Int)
 	}
 	if val, ok := fields["VehicleId"]; ok {
-		p.VehicleId = val.(pk.Int)
+		p.VehicleId = *val.(*pk.Int)
 	}
 }
 

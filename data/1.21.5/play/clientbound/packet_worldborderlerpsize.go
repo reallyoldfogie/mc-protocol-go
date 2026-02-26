@@ -81,9 +81,9 @@ func (p *WorldBorderLerpSize) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *WorldBorderLerpSize) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["OldDiameter"] = p.OldDiameter
-	fields["NewDiameter"] = p.NewDiameter
-	fields["Speed"] = p.Speed
+	fields["OldDiameter"] = &p.OldDiameter
+	fields["NewDiameter"] = &p.NewDiameter
+	fields["Speed"] = &p.Speed
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *WorldBorderLerpSize) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *WorldBorderLerpSize) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["OldDiameter"]; ok {
-		p.OldDiameter = val.(pk.Double)
+		p.OldDiameter = *val.(*pk.Double)
 	}
 	if val, ok := fields["NewDiameter"]; ok {
-		p.NewDiameter = val.(pk.Double)
+		p.NewDiameter = *val.(*pk.Double)
 	}
 	if val, ok := fields["Speed"]; ok {
-		p.Speed = val.(pk.VarInt)
+		p.Speed = *val.(*pk.VarInt)
 	}
 }
 

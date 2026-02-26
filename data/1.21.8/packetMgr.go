@@ -204,7 +204,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewSetCooldown(), nil
 	case 23: // Play.Clientbound[{23}] = generator.packetData{Name:"ChatSuggestions", ID:23, Hex:"0X17", StructName:"ChatSuggestions", ProtoTypeName:"packet_chat_suggestions", AltName:"ClientboundCustomChatCompletions"}
 		return play_clientbound.NewChatSuggestions(), nil
-	case 24: // Play.Clientbound[{24}] = generator.packetData{Name:"CustomPayload", ID:24, Hex:"0X18", StructName:"", ProtoTypeName:"packet_custom_payload", AltName:""}
+	case 24: // Play.Clientbound[{24}] = generator.packetData{Name:"CustomPayload", ID:24, Hex:"0X18", StructName:"CustomPayload", ProtoTypeName:"packet_custom_payload", AltName:""}
 		return play_clientbound.NewCustomPayload(), nil
 	case 25: // Play.Clientbound[{25}] = generator.packetData{Name:"DamageEvent", ID:25, Hex:"0X19", StructName:"DamageEvent", ProtoTypeName:"packet_damage_event", AltName:""}
 		return play_clientbound.NewDamageEvent(), nil
@@ -232,7 +232,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewHurtAnimation(), nil
 	case 37: // Play.Clientbound[{37}] = generator.packetData{Name:"InitializeWorldBorder", ID:37, Hex:"0X25", StructName:"InitializeWorldBorder", ProtoTypeName:"packet_initialize_world_border", AltName:"ClientboundInitializeBorder"}
 		return play_clientbound.NewInitializeWorldBorder(), nil
-	case 38: // Play.Clientbound[{38}] = generator.packetData{Name:"KeepAlive", ID:38, Hex:"0X26", StructName:"", ProtoTypeName:"packet_keep_alive", AltName:""}
+	case 38: // Play.Clientbound[{38}] = generator.packetData{Name:"KeepAlive", ID:38, Hex:"0X26", StructName:"KeepAlive", ProtoTypeName:"packet_keep_alive", AltName:""}
 		return play_clientbound.NewKeepAlive(), nil
 	case 39: // Play.Clientbound[{39}] = generator.packetData{Name:"MapChunk", ID:39, Hex:"0X27", StructName:"MapChunk", ProtoTypeName:"packet_map_chunk", AltName:"ClientboundLevelChunkWithLight"}
 		return play_clientbound.NewMapChunk(), nil
@@ -418,7 +418,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewEntityEffect(), nil
 	case 126: // Play.Clientbound[{126}] = generator.packetData{Name:"DeclareRecipes", ID:126, Hex:"0X7E", StructName:"DeclareRecipes", ProtoTypeName:"packet_declare_recipes", AltName:"ClientboundUpdateRecipes"}
 		return play_clientbound.NewDeclareRecipes(), nil
-	case 127: // Play.Clientbound[{127}] = generator.packetData{Name:"Tags", ID:127, Hex:"0X7F", StructName:"", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
+	case 127: // Play.Clientbound[{127}] = generator.packetData{Name:"Tags", ID:127, Hex:"0X7F", StructName:"Tags", ProtoTypeName:"packet_tags", AltName:"ClientboundUpdateTags"}
 		return play_clientbound.NewTags(), nil
 	case 128: // Play.Clientbound[{128}] = generator.packetData{Name:"SetProjectilePower", ID:128, Hex:"0X80", StructName:"SetProjectilePower", ProtoTypeName:"packet_set_projectile_power", AltName:"ClientboundProjectilePower"}
 		return play_clientbound.NewSetProjectilePower(), nil
@@ -436,7 +436,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		pkt := basetypes.NewCommonClearDialog()
 		pkt.SetPacketID(132)
 		return pkt, nil
-	case 133: // Play.Clientbound[{133}] = generator.packetData{Name:"ShowDialog", ID:133, Hex:"0X85", StructName:"", ProtoTypeName:"packet_show_dialog", AltName:""}
+	case 133: // Play.Clientbound[{133}] = generator.packetData{Name:"ShowDialog", ID:133, Hex:"0X85", StructName:"ShowDialog", ProtoTypeName:"packet_show_dialog", AltName:""}
 		return play_clientbound.NewShowDialog(), nil
 
 	default:

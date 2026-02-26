@@ -73,8 +73,8 @@ func (p *SetCooldown) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetCooldown) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["CooldownGroup"] = p.CooldownGroup
-	fields["CooldownTicks"] = p.CooldownTicks
+	fields["CooldownGroup"] = &p.CooldownGroup
+	fields["CooldownTicks"] = &p.CooldownTicks
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *SetCooldown) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetCooldown) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["CooldownGroup"]; ok {
-		p.CooldownGroup = val.(pk.String)
+		p.CooldownGroup = *val.(*pk.String)
 	}
 	if val, ok := fields["CooldownTicks"]; ok {
-		p.CooldownTicks = val.(pk.VarInt)
+		p.CooldownTicks = *val.(*pk.VarInt)
 	}
 }
 

@@ -86,8 +86,8 @@ func (p *ChatSuggestions) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChatSuggestions) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Action"] = p.Action
-	fields["Entries"] = p.Entries
+	fields["Action"] = &p.Action
+	fields["Entries"] = &p.Entries
 	return fields
 }
 
@@ -98,12 +98,11 @@ func (p *ChatSuggestions) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChatSuggestions) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.VarInt)
+		p.Action = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Entries"]; ok {
-		p.Entries = val.(models.Array[pk.VarInt, pk.String])
+		p.Entries = *val.(*models.Array[pk.VarInt, pk.String])
 	}
 }
 

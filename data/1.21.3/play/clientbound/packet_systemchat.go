@@ -74,8 +74,8 @@ func (p *SystemChat) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SystemChat) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Content"] = p.Content
-	fields["IsActionBar"] = p.IsActionBar
+	fields["Content"] = &p.Content
+	fields["IsActionBar"] = &p.IsActionBar
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *SystemChat) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SystemChat) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Content"]; ok {
-		p.Content = val.(models.AnonymousNBT)
+		p.Content = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["IsActionBar"]; ok {
-		p.IsActionBar = val.(pk.Boolean)
+		p.IsActionBar = *val.(*pk.Boolean)
 	}
 }
 

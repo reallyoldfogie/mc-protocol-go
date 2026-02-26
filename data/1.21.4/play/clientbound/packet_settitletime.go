@@ -81,9 +81,9 @@ func (p *SetTitleTime) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetTitleTime) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["FadeIn"] = p.FadeIn
-	fields["Stay"] = p.Stay
-	fields["FadeOut"] = p.FadeOut
+	fields["FadeIn"] = &p.FadeIn
+	fields["Stay"] = &p.Stay
+	fields["FadeOut"] = &p.FadeOut
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *SetTitleTime) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetTitleTime) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["FadeIn"]; ok {
-		p.FadeIn = val.(pk.Int)
+		p.FadeIn = *val.(*pk.Int)
 	}
 	if val, ok := fields["Stay"]; ok {
-		p.Stay = val.(pk.Int)
+		p.Stay = *val.(*pk.Int)
 	}
 	if val, ok := fields["FadeOut"]; ok {
-		p.FadeOut = val.(pk.Int)
+		p.FadeOut = *val.(*pk.Int)
 	}
 }
 

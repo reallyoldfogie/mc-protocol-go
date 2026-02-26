@@ -132,12 +132,12 @@ func (p *ChatMessage) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChatMessage) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Message"] = p.Message
-	fields["Timestamp"] = p.Timestamp
-	fields["Salt"] = p.Salt
-	fields["Signature"] = p.Signature
-	fields["Offset"] = p.Offset
-	fields["Acknowledged"] = p.Acknowledged
+	fields["Message"] = &p.Message
+	fields["Timestamp"] = &p.Timestamp
+	fields["Salt"] = &p.Salt
+	fields["Signature"] = &p.Signature
+	fields["Offset"] = &p.Offset
+	fields["Acknowledged"] = &p.Acknowledged
 	return fields
 }
 
@@ -148,24 +148,23 @@ func (p *ChatMessage) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChatMessage) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Message"]; ok {
-		p.Message = val.(pk.String)
+		p.Message = *val.(*pk.String)
 	}
 	if val, ok := fields["Timestamp"]; ok {
-		p.Timestamp = val.(pk.Long)
+		p.Timestamp = *val.(*pk.Long)
 	}
 	if val, ok := fields["Salt"]; ok {
-		p.Salt = val.(pk.Long)
+		p.Salt = *val.(*pk.Long)
 	}
 	if val, ok := fields["Signature"]; ok {
-		p.Signature = val.(models.Option[models.FixedBuffer256])
+		p.Signature = *val.(*models.Option[models.FixedBuffer256])
 	}
 	if val, ok := fields["Offset"]; ok {
-		p.Offset = val.(pk.VarInt)
+		p.Offset = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Acknowledged"]; ok {
-		p.Acknowledged = val.(models.FixedBuffer3)
+		p.Acknowledged = *val.(*models.FixedBuffer3)
 	}
 }
 

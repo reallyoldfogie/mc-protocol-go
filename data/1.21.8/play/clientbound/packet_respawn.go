@@ -73,8 +73,8 @@ func (p *Respawn) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Respawn) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WorldState"] = p.WorldState
-	fields["CopyMetadata"] = p.CopyMetadata
+	fields["WorldState"] = &p.WorldState
+	fields["CopyMetadata"] = &p.CopyMetadata
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *Respawn) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Respawn) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WorldState"]; ok {
-		p.WorldState = val.(SpawnInfo)
+		p.WorldState = *val.(*SpawnInfo)
 	}
 	if val, ok := fields["CopyMetadata"]; ok {
-		p.CopyMetadata = val.(pk.UnsignedByte)
+		p.CopyMetadata = *val.(*pk.UnsignedByte)
 	}
 }
 

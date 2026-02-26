@@ -90,10 +90,10 @@ func (p *SetSlot) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SetSlot) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["StateId"] = p.StateId
-	fields["Slot"] = p.Slot
-	fields["Item"] = p.Item
+	fields["WindowId"] = &p.WindowId
+	fields["StateId"] = &p.StateId
+	fields["Slot"] = &p.Slot
+	fields["Item"] = &p.Item
 	return fields
 }
 
@@ -104,18 +104,17 @@ func (p *SetSlot) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SetSlot) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["StateId"]; ok {
-		p.StateId = val.(pk.VarInt)
+		p.StateId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Slot"]; ok {
-		p.Slot = val.(pk.Short)
+		p.Slot = *val.(*pk.Short)
 	}
 	if val, ok := fields["Item"]; ok {
-		p.Item = val.(basetypes.Slot)
+		p.Item = *val.(*basetypes.Slot)
 	}
 }
 

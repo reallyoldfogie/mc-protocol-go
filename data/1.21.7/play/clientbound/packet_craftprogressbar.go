@@ -82,9 +82,9 @@ func (p *CraftProgressBar) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *CraftProgressBar) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["Property"] = p.Property
-	fields["Value"] = p.Value
+	fields["WindowId"] = &p.WindowId
+	fields["Property"] = &p.Property
+	fields["Value"] = &p.Value
 	return fields
 }
 
@@ -95,15 +95,14 @@ func (p *CraftProgressBar) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *CraftProgressBar) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["Property"]; ok {
-		p.Property = val.(pk.Short)
+		p.Property = *val.(*pk.Short)
 	}
 	if val, ok := fields["Value"]; ok {
-		p.Value = val.(pk.Short)
+		p.Value = *val.(*pk.Short)
 	}
 }
 

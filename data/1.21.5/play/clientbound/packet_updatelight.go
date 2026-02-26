@@ -218,14 +218,14 @@ func (p *UpdateLight) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateLight) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ChunkX"] = p.ChunkX
-	fields["ChunkZ"] = p.ChunkZ
-	fields["SkyLightMask"] = p.SkyLightMask
-	fields["BlockLightMask"] = p.BlockLightMask
-	fields["EmptySkyLightMask"] = p.EmptySkyLightMask
-	fields["EmptyBlockLightMask"] = p.EmptyBlockLightMask
-	fields["SkyLight"] = p.SkyLight
-	fields["BlockLight"] = p.BlockLight
+	fields["ChunkX"] = &p.ChunkX
+	fields["ChunkZ"] = &p.ChunkZ
+	fields["SkyLightMask"] = &p.SkyLightMask
+	fields["BlockLightMask"] = &p.BlockLightMask
+	fields["EmptySkyLightMask"] = &p.EmptySkyLightMask
+	fields["EmptyBlockLightMask"] = &p.EmptyBlockLightMask
+	fields["SkyLight"] = &p.SkyLight
+	fields["BlockLight"] = &p.BlockLight
 	return fields
 }
 
@@ -236,30 +236,29 @@ func (p *UpdateLight) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateLight) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ChunkX"]; ok {
-		p.ChunkX = val.(pk.VarInt)
+		p.ChunkX = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ChunkZ"]; ok {
-		p.ChunkZ = val.(pk.VarInt)
+		p.ChunkZ = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SkyLightMask"]; ok {
-		p.SkyLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.SkyLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["BlockLightMask"]; ok {
-		p.BlockLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.BlockLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["EmptySkyLightMask"]; ok {
-		p.EmptySkyLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.EmptySkyLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["EmptyBlockLightMask"]; ok {
-		p.EmptyBlockLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.EmptyBlockLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["SkyLight"]; ok {
-		p.SkyLight = val.(models.Array[pk.VarInt, UpdateLightSkyLightArrayType])
+		p.SkyLight = *val.(*models.Array[pk.VarInt, UpdateLightSkyLightArrayType])
 	}
 	if val, ok := fields["BlockLight"]; ok {
-		p.BlockLight = val.(models.Array[pk.VarInt, UpdateLightBlockLightArrayType])
+		p.BlockLight = *val.(*models.Array[pk.VarInt, UpdateLightBlockLightArrayType])
 	}
 }
 

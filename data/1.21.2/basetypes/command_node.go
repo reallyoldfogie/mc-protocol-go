@@ -253,21 +253,19 @@ func (m CommandNodeExtraNodeData2Parser) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2Parser value: %s", m.Value)
 }
 
-type CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags struct {
-	Unused     int64
-	MaxPresent int64
-	MinPresent int64
+type CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder struct {
+	Unused        int64
+	AllowMultiple int64
 }
 
-func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.Reader) (int64, error) {
+func (b *CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) ReadFrom(r io.Reader) (int64, error) {
 	// Calculate total bits and bytes needed
 	totalBits := 0
-	totalBits += 6
-	totalBits += 1
+	totalBits += 7
 	totalBits += 1
 
 	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
 	}
 
 	numBytes := totalBits / 8
@@ -275,7 +273,7 @@ func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.R
 
 	nn, err := io.ReadFull(r, data)
 	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags")
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder")
 	}
 
 	// Convert bytes to uint64 (big-endian)
@@ -286,34 +284,28 @@ func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.R
 
 	// Extract bit fields
 	currentOffset := 0
-	// Extract unused (6 bits, signed=false)
-	unused_mask := uint64((1 << 6) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	// Extract unused (7 bits, signed=false)
+	unused_mask := uint64((1 << 7) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 7)) & unused_mask
 	b.Unused = int64(unused_value)
-	currentOffset += 6
-	// Extract max_present (1 bits, signed=false)
-	max_present_mask := uint64((1 << 1) - 1)
-	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
-	b.MaxPresent = int64(max_present_value)
-	currentOffset += 1
-	// Extract min_present (1 bits, signed=false)
-	min_present_mask := uint64((1 << 1) - 1)
-	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
-	b.MinPresent = int64(min_present_value)
+	currentOffset += 7
+	// Extract allowMultiple (1 bits, signed=false)
+	allowMultiple_mask := uint64((1 << 1) - 1)
+	allowMultiple_value := (packed >> (totalBits - currentOffset - 1)) & allowMultiple_mask
+	b.AllowMultiple = int64(allowMultiple_value)
 	currentOffset += 1
 
 	return int64(nn), nil
 }
 
-func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Writer) (int64, error) {
+func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Writer) (int64, error) {
 	// Calculate total bits and bytes needed
 	totalBits := 0
-	totalBits += 6
-	totalBits += 1
+	totalBits += 7
 	totalBits += 1
 
 	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
 	}
 
 	numBytes := totalBits / 8
@@ -321,17 +313,13 @@ func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Wri
 	// Pack bit fields into uint64
 	var packed uint64
 	currentOffset := 0
-	// Pack unused (6 bits)
-	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 6)
-	currentOffset += 6
-	// Pack max_present (1 bits)
-	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
-	packed |= max_present_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-	// Pack min_present (1 bits)
-	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
-	packed |= min_present_value << (totalBits - currentOffset - 1)
+	// Pack unused (7 bits)
+	unused_value := uint64(b.Unused) & ((1 << 7) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 7)
+	currentOffset += 7
+	// Pack allowMultiple (1 bits)
+	allowMultiple_value := uint64(b.AllowMultiple) & ((1 << 1) - 1)
+	packed |= allowMultiple_value << (totalBits - currentOffset - 1)
 	currentOffset += 1
 
 	// Convert uint64 to bytes (big-endian)
@@ -349,200 +337,37 @@ func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Wri
 //	  "container",
 //	  [
 //	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitfield",
-//	        [
-//	          {
-//	            "name": "unused",
-//	            "size": 6,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "max_present",
-//	            "size": 1,
-//	            "signed": false
-//	          },
-//	          {
-//	            "name": "min_present",
-//	            "size": 1,
-//	            "signed": false
-//	          }
-//	        ]
-//	      ]
-//	    },
-//	    {
 //	      "name": "min",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/min_present",
-//	          "fields": {
-//	            "1": "f32"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "max",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "flags/max_present",
-//	          "fields": {
-//	            "1": "f32"
-//	          },
-//	          "default": "void"
-//	        }
-//	      ]
+//	      "type": "i32"
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesBrigadierFloat struct {
-	// [
-	//                                     "bitfield",
-	//                                     [
-	//                                       {
-	//                                         "name": "unused",
-	//                                         "size": 6,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "max_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       },
-	//                                       {
-	//                                         "name": "min_present",
-	//                                         "size": 1,
-	//                                         "signed": false
-	//                                       }
-	//                                     ]
-	//                                   ]
-	Flags CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/min_present",
-	//                                       "fields": {
-	//                                         "1": "f32"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Min pk.Field
-	// [
-	//                                     "switch",
-	//                                     {
-	//                                       "compareTo": "flags/max_present",
-	//                                       "fields": {
-	//                                         "1": "f32"
-	//                                       },
-	//                                       "default": "void"
-	//                                     }
-	//                                   ]
-	Max pk.Field
+type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
+	// "i32"
+	Min pk.Int
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesBrigadierFloat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Flags.ReadFrom(r)
+	bytesRead, err = t.Min.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-	// Switch field Min based on flags/min_present
-	// Check bitflag member
-	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
-
-	switch compareValueMin {
-	case "1":
-		var val pk.Float
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
-		}
-		t.Min = &val
-	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min default case")
-		}
-		t.Min = &val
-	}
-
-	// Switch field Max based on flags/max_present
-	// Check bitflag member
-	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
-
-	switch compareValueMax {
-	case "1":
-		var val pk.Float
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
-		}
-		t.Max = &val
-	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max default case")
-		}
-		t.Max = &val
+		return totalBytes, errors.Wrap(err, "failed to read field Min")
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesBrigadierFloat) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierFloat.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Flags.WriteTo(w)
+	bytesWritten, err = t.Min.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
-	}
-	// Switch field Min based on flags/min_present
-	if t.Min != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Min.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
-		}
-	}
-	// Switch field Max based on flags/max_present
-	if t.Max != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Max.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
-		}
 	}
 	return totalBytes, nil
 }
@@ -760,13 +585,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierInteger) ReadFrom(r io.Read
 		}
 		t.Min = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
 		}
-		t.Min = &val
+		t.Min = &__void
 	}
 
 	// Switch field Max based on flags/max_present
@@ -783,13 +609,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierInteger) ReadFrom(r io.Read
 		}
 		t.Max = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
 		}
-		t.Max = &val
+		t.Max = &__void
 	}
 
 	return totalBytes, nil
@@ -837,6 +664,83 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierInteger) WriteTo(w io.Writer
 			// Not a void case and doesn't implement WriteTo
 			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
 		}
+	}
+	return totalBytes, nil
+}
+
+type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
+	Value string
+}
+
+var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
+	0: "SINGLE_WORD",
+	1: "QUOTABLE_PHRASE",
+	2: "GREEDY_PHRASE",
+}
+
+func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
+	}
+
+	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "registry",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesMinecraftResource struct {
+	// "string"
+	Registry pk.String
+}
+
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResource) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Registry.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResource.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Registry.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
 	}
 	return totalBytes, nil
 }
@@ -932,85 +836,6 @@ func (b CommandNodeExtraNodeData2PropertiesMinecraftEntity) WriteTo(w io.Writer)
 	return int64(nn), err
 }
 
-type CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder struct {
-	Unused        int64
-	AllowMultiple int64
-}
-
-func (b *CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 7
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (7 bits, signed=false)
-	unused_mask := uint64((1 << 7) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 7)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 7
-	// Extract allowMultiple (1 bits, signed=false)
-	allowMultiple_mask := uint64((1 << 1) - 1)
-	allowMultiple_value := (packed >> (totalBits - currentOffset - 1)) & allowMultiple_mask
-	b.AllowMultiple = int64(allowMultiple_value)
-	currentOffset += 1
-
-	return int64(nn), nil
-}
-
-func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 7
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (7 bits)
-	unused_value := uint64(b.Unused) & ((1 << 7) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 7)
-	currentOffset += 7
-	// Pack allowMultiple (1 bits)
-	allowMultiple_value := uint64(b.AllowMultiple) & ((1 << 1) - 1)
-	packed |= allowMultiple_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
 // Protodef: [
 //
 //	  "container",
@@ -1051,82 +876,298 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.
 	return totalBytes, nil
 }
 
+type CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags struct {
+	Unused     int64
+	MaxPresent int64
+	MinPresent int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (6 bits, signed=false)
+	unused_mask := uint64((1 << 6) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 6
+	// Extract max_present (1 bits, signed=false)
+	max_present_mask := uint64((1 << 1) - 1)
+	max_present_value := (packed >> (totalBits - currentOffset - 1)) & max_present_mask
+	b.MaxPresent = int64(max_present_value)
+	currentOffset += 1
+	// Extract min_present (1 bits, signed=false)
+	min_present_mask := uint64((1 << 1) - 1)
+	min_present_value := (packed >> (totalBits - currentOffset - 1)) & min_present_mask
+	b.MinPresent = int64(min_present_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (6 bits)
+	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 6)
+	currentOffset += 6
+	// Pack max_present (1 bits)
+	max_present_value := uint64(b.MaxPresent) & ((1 << 1) - 1)
+	packed |= max_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+	// Pack min_present (1 bits)
+	min_present_value := uint64(b.MinPresent) & ((1 << 1) - 1)
+	packed |= min_present_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
 // Protodef: [
 //
 //	  "container",
 //	  [
 //	    {
-//	      "name": "registry",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
-	// "string"
-	Registry pk.String
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
+//	      "name": "flags",
+//	      "type": [
+//	        "bitfield",
+//	        [
+//	          {
+//	            "name": "unused",
+//	            "size": 6,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "max_present",
+//	            "size": 1,
+//	            "signed": false
+//	          },
+//	          {
+//	            "name": "min_present",
+//	            "size": 1,
+//	            "signed": false
+//	          }
+//	        ]
+//	      ]
+//	    },
 //	    {
-//	      "name": "registry",
-//	      "type": "string"
+//	      "name": "min",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/min_present",
+//	          "fields": {
+//	            "1": "f32"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "max",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "flags/max_present",
+//	          "fields": {
+//	            "1": "f32"
+//	          },
+//	          "default": "void"
+//	        }
+//	      ]
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceKey struct {
-	// "string"
-	Registry pk.String
+type CommandNodeExtraNodeData2PropertiesBrigadierFloat struct {
+	// [
+	//                                     "bitfield",
+	//                                     [
+	//                                       {
+	//                                         "name": "unused",
+	//                                         "size": 6,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "max_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       },
+	//                                       {
+	//                                         "name": "min_present",
+	//                                         "size": 1,
+	//                                         "signed": false
+	//                                       }
+	//                                     ]
+	//                                   ]
+	Flags CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/min_present",
+	//                                       "fields": {
+	//                                         "1": "f32"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Min pk.Field
+	// [
+	//                                     "switch",
+	//                                     {
+	//                                       "compareTo": "flags/max_present",
+	//                                       "fields": {
+	//                                         "1": "f32"
+	//                                       },
+	//                                       "default": "void"
+	//                                     }
+	//                                   ]
+	Max pk.Field
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesBrigadierFloat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
+	bytesRead, err = t.Flags.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+	// Switch field Min based on flags/min_present
+	// Check bitflag member
+	compareValueMin := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'min_present' */, false)
+
+	switch compareValueMin {
+	case "1":
+		var val pk.Float
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Min case 1")
+		}
+		t.Min = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
+		}
+		t.Min = &__void
+	}
+
+	// Switch field Max based on flags/max_present
+	// Check bitflag member
+	compareValueMax := fmt.Sprintf("%v" /* TODO: Unknown bitflag member 'max_present' */, false)
+
+	switch compareValueMax {
+	case "1":
+		var val pk.Float
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Max case 1")
+		}
+		t.Max = &val
+	default:
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
+		}
+		t.Max = &__void
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesBrigadierFloat) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesBrigadierFloat.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
+	bytesWritten, err = t.Flags.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
+	}
+	// Switch field Min based on flags/min_present
+	if t.Min != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Min.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Min value does not implement WriteTo: %T", t.Min)
+		}
+	}
+	// Switch field Max based on flags/max_present
+	if t.Max != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Max.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Max value does not implement WriteTo: %T", t.Max)
+		}
 	}
 	return totalBytes, nil
 }
@@ -1344,13 +1385,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierDouble) ReadFrom(r io.Reade
 		}
 		t.Min = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
 		}
-		t.Min = &val
+		t.Min = &__void
 	}
 
 	// Switch field Max based on flags/max_present
@@ -1367,13 +1409,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierDouble) ReadFrom(r io.Reade
 		}
 		t.Max = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
 		}
-		t.Max = &val
+		t.Max = &__void
 	}
 
 	return totalBytes, nil
@@ -1423,43 +1466,6 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierDouble) WriteTo(w io.Writer)
 		}
 	}
 	return totalBytes, nil
-}
-
-type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
-	Value string
-}
-
-var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
-	0: "SINGLE_WORD",
-	1: "QUOTABLE_PHRASE",
-	2: "GREEDY_PHRASE",
-}
-
-func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
-	}
-
-	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
 }
 
 type CommandNodeExtraNodeData2PropertiesBrigadierLongFlags struct {
@@ -1675,13 +1681,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierLong) ReadFrom(r io.Reader)
 		}
 		t.Min = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Min default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Min default case")
 		}
-		t.Min = &val
+		t.Min = &__void
 	}
 
 	// Switch field Max based on flags/max_present
@@ -1698,13 +1705,14 @@ func (t *CommandNodeExtraNodeData2PropertiesBrigadierLong) ReadFrom(r io.Reader)
 		}
 		t.Max = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Max default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Max default case")
 		}
-		t.Max = &val
+		t.Max = &__void
 	}
 
 	return totalBytes, nil
@@ -1761,34 +1769,34 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierLong) WriteTo(w io.Writer) (
 //	  "container",
 //	  [
 //	    {
-//	      "name": "min",
-//	      "type": "i32"
+//	      "name": "registry",
+//	      "type": "string"
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
-	// "i32"
-	Min pk.Int
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceKey struct {
+	// "string"
+	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Min.ReadFrom(r)
+	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Min")
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
 	}
 
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.Min.WriteTo(w)
+	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -1806,12 +1814,12 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResource struct {
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
 	// "string"
 	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResource) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
@@ -1822,11 +1830,11 @@ func (t *CommandNodeExtraNodeData2PropertiesMinecraftResource) ReadFrom(r io.Rea
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResource.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
@@ -2279,6 +2287,7 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Write
 //	  ]
 //	]
 type CommandNodeExtraNodeData2 struct {
+	Flags pk.VarInt
 	// "string"
 	Name pk.String
 	// [
@@ -2720,6 +2729,11 @@ func (t CommandNodeExtraNodeData2) WriteTo(w io.Writer) (int64, error) {
 
 func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx models.ParentContext) (totalBytes int64, err error) {
 	var bytesRead int64
+	bytesRead, err = t.Flags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Flags with parent context")
+	}
 	bytesRead, err = t.Name.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
@@ -2735,13 +2749,14 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 
 	switch compareValueProperties {
 	case "brigadier:bool":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case brigadier:bool with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case brigadier:bool")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "brigadier:double":
 		var val CommandNodeExtraNodeData2PropertiesBrigadierDouble
 		bytesRead, err = val.ReadFrom(r)
@@ -2783,69 +2798,77 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:angle":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:angle with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:angle")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:block_pos":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:block_pos with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:block_pos")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:block_predicate":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:block_predicate with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:block_predicate")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:block_state":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:block_state with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:block_state")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:color":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:color with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:color")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:column_pos":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:column_pos with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:column_pos")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:component":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:component with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:component")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:dimension":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:dimension with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:dimension")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:entity":
 		var val CommandNodeExtraNodeData2PropertiesMinecraftEntity
 		bytesRead, err = val.ReadFrom(r)
@@ -2855,141 +2878,158 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:entity_anchor":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:entity_anchor with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:entity_anchor")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:float_range":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:float_range with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:float_range")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:function":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:function with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:function")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:game_profile":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:game_profile with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:game_profile")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:gamemode":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:gamemode with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:gamemode")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:heightmap":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:heightmap with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:heightmap")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:int_range":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:int_range with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:int_range")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:item_predicate":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:item_predicate with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:item_predicate")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:item_slot":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:item_slot with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:item_slot")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:item_stack":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:item_stack with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:item_stack")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:message":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:message with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:message")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:nbt":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:nbt with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:nbt")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:nbt_path":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:nbt_path with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:nbt_path")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:objective":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:objective with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:objective")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:objective_criteria":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:objective_criteria with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:objective_criteria")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:operation":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:operation with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:operation")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:particle":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:particle with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:particle")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:resource":
 		var val CommandNodeExtraNodeData2PropertiesMinecraftResource
 		bytesRead, err = val.ReadFrom(r)
@@ -3007,13 +3047,14 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:resource_location":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:resource_location with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:resource_location")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:resource_or_tag":
 		var val CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag
 		bytesRead, err = val.ReadFrom(r)
@@ -3031,13 +3072,14 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:rotation":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:rotation with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:rotation")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:score_holder":
 		var val CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder
 		bytesRead, err = val.ReadFrom(r)
@@ -3047,45 +3089,50 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:scoreboard_slot":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:scoreboard_slot with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:scoreboard_slot")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:swizzle":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:swizzle with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:swizzle")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:team":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:team with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:team")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:template_mirror":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:template_mirror with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:template_mirror")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:template_rotation":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:template_rotation with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:template_rotation")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:time":
 		var val CommandNodeExtraNodeData2PropertiesMinecraftTime
 		bytesRead, err = val.ReadFrom(r)
@@ -3095,29 +3142,32 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.Properties = &val
 	case "minecraft:uuid":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:uuid with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:uuid")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:vec2":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:vec2 with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:vec2")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	case "minecraft:vec3":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Properties case minecraft:vec3 with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Properties case minecraft:vec3")
 		}
-		t.Properties = &val
+		t.Properties = &__void
 	default:
 		// Mapper-backed discriminator with no explicit data for this value: treat as void
 		var __void models.Void
@@ -3137,13 +3187,13 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 		}
 		t.SuggestionType = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field SuggestionType default case with parent context")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field SuggestionType default case")
 		}
-		t.SuggestionType = &val
+		t.SuggestionType = &__void
 	}
 
 	return totalBytes, nil
@@ -4228,13 +4278,14 @@ func (t *CommandNode) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.RedirectNode = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field RedirectNode default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field RedirectNode default case")
 		}
-		t.RedirectNode = &val
+		t.RedirectNode = &__void
 	}
 
 	// Switch field ExtraNodeData based on flags/command_node_type
@@ -4243,13 +4294,14 @@ func (t *CommandNode) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueExtraNodeData {
 	case "0":
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field ExtraNodeData case 0")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field ExtraNodeData case 0")
 		}
-		t.ExtraNodeData = &val
+		t.ExtraNodeData = &__void
 	case "1":
 		var val CommandNodeExtraNodeData1
 		bytesRead, err = val.ReadFrom(r)

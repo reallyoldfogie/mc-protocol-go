@@ -317,12 +317,12 @@ func (p *TradeList) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TradeList) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["WindowId"] = p.WindowId
-	fields["Trades"] = p.Trades
-	fields["VillagerLevel"] = p.VillagerLevel
-	fields["Experience"] = p.Experience
-	fields["IsRegularVillager"] = p.IsRegularVillager
-	fields["CanRestock"] = p.CanRestock
+	fields["WindowId"] = &p.WindowId
+	fields["Trades"] = &p.Trades
+	fields["VillagerLevel"] = &p.VillagerLevel
+	fields["Experience"] = &p.Experience
+	fields["IsRegularVillager"] = &p.IsRegularVillager
+	fields["CanRestock"] = &p.CanRestock
 	return fields
 }
 
@@ -333,24 +333,23 @@ func (p *TradeList) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TradeList) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["WindowId"]; ok {
-		p.WindowId = val.(basetypes.ContainerID)
+		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["Trades"]; ok {
-		p.Trades = val.(models.Array[pk.VarInt, TradeListTradesArrayType])
+		p.Trades = *val.(*models.Array[pk.VarInt, TradeListTradesArrayType])
 	}
 	if val, ok := fields["VillagerLevel"]; ok {
-		p.VillagerLevel = val.(pk.VarInt)
+		p.VillagerLevel = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Experience"]; ok {
-		p.Experience = val.(pk.VarInt)
+		p.Experience = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["IsRegularVillager"]; ok {
-		p.IsRegularVillager = val.(pk.Boolean)
+		p.IsRegularVillager = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["CanRestock"]; ok {
-		p.CanRestock = val.(pk.Boolean)
+		p.CanRestock = *val.(*pk.Boolean)
 	}
 }
 

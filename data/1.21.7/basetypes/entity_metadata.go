@@ -144,77 +144,67 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 
 type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "pitch",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "yaw",
-//	      "type": "f32"
-//	    },
-//	    {
-//	      "name": "roll",
-//	      "type": "f32"
-//	    }
-//	  ]
-//	]
-type EntityMetadataEntryValueRotations struct {
-	// "f32"
-	Pitch pk.Float
-	// "f32"
-	Yaw pk.Float
-	// "f32"
-	Roll pk.Float
+type EntityMetadataEntryValuePaintingVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         EntityMetadataPaintingVariant
 }
 
-func (t *EntityMetadataEntryValueRotations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Pitch.ReadFrom(r)
-	totalBytes += bytesRead
+func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
 	}
-	bytesRead, err = t.Yaw.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
-	}
-	bytesRead, err = t.Roll.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Roll")
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
 	}
 
 	return totalBytes, nil
 }
 
-func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
+func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
 
-	defer func() {
-		log.Printf("[EntityMetadataEntryValueRotations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Pitch.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
 	}
-	bytesWritten, err = t.Yaw.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Roll.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
+
 	return totalBytes, nil
 }
+
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
 
 type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
 
@@ -350,69 +340,79 @@ func (r EntityMetadataEntryValueChickenVariant) WriteTo(w io.Writer) (int64, err
 	return totalBytes, nil
 }
 
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "pitch",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "yaw",
+//	      "type": "f32"
+//	    },
+//	    {
+//	      "name": "roll",
+//	      "type": "f32"
+//	    }
+//	  ]
+//	]
+type EntityMetadataEntryValueRotations struct {
+	// "f32"
+	Pitch pk.Float
+	// "f32"
+	Yaw pk.Float
+	// "f32"
+	Roll pk.Float
+}
+
+func (t *EntityMetadataEntryValueRotations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Pitch.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
+	}
+	bytesRead, err = t.Yaw.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
+	}
+	bytesRead, err = t.Roll.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Roll")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityMetadataEntryValueRotations.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Pitch.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Yaw.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Roll.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
 
 type EntityMetadataEntryValueOptionalGlobalPos = models.Option[pk.String]
-
-type EntityMetadataEntryValuePaintingVariant struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         EntityMetadataPaintingVariant
-}
-
-func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
 
 // Protodef: [
 //

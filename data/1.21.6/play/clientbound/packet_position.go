@@ -138,16 +138,16 @@ func (p *Position) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Position) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["TeleportId"] = p.TeleportId
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Dx"] = p.Dx
-	fields["Dy"] = p.Dy
-	fields["Dz"] = p.Dz
-	fields["Yaw"] = p.Yaw
-	fields["Pitch"] = p.Pitch
-	fields["Flags"] = p.Flags
+	fields["TeleportId"] = &p.TeleportId
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Dx"] = &p.Dx
+	fields["Dy"] = &p.Dy
+	fields["Dz"] = &p.Dz
+	fields["Yaw"] = &p.Yaw
+	fields["Pitch"] = &p.Pitch
+	fields["Flags"] = &p.Flags
 	return fields
 }
 
@@ -158,36 +158,35 @@ func (p *Position) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Position) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["TeleportId"]; ok {
-		p.TeleportId = val.(pk.VarInt)
+		p.TeleportId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Dx"]; ok {
-		p.Dx = val.(pk.Double)
+		p.Dx = *val.(*pk.Double)
 	}
 	if val, ok := fields["Dy"]; ok {
-		p.Dy = val.(pk.Double)
+		p.Dy = *val.(*pk.Double)
 	}
 	if val, ok := fields["Dz"]; ok {
-		p.Dz = val.(pk.Double)
+		p.Dz = *val.(*pk.Double)
 	}
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Float)
+		p.Yaw = *val.(*pk.Float)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Float)
+		p.Pitch = *val.(*pk.Float)
 	}
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(PositionUpdateRelatives)
+		p.Flags = *val.(*PositionUpdateRelatives)
 	}
 }
 

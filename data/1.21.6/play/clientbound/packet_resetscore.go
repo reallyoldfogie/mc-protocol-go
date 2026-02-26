@@ -80,8 +80,8 @@ func (p *ResetScore) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ResetScore) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityName"] = p.EntityName
-	fields["ObjectiveName"] = p.ObjectiveName
+	fields["EntityName"] = &p.EntityName
+	fields["ObjectiveName"] = &p.ObjectiveName
 	return fields
 }
 
@@ -92,12 +92,11 @@ func (p *ResetScore) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ResetScore) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityName"]; ok {
-		p.EntityName = val.(pk.String)
+		p.EntityName = *val.(*pk.String)
 	}
 	if val, ok := fields["ObjectiveName"]; ok {
-		p.ObjectiveName = val.(models.Option[pk.String])
+		p.ObjectiveName = *val.(*models.Option[pk.String])
 	}
 }
 

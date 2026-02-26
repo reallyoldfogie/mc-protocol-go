@@ -90,10 +90,10 @@ func (p *UpdateCommandBlock) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateCommandBlock) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["Command"] = p.Command
-	fields["Mode"] = p.Mode
-	fields["Flags"] = p.Flags
+	fields["Location"] = &p.Location
+	fields["Command"] = &p.Command
+	fields["Mode"] = &p.Mode
+	fields["Flags"] = &p.Flags
 	return fields
 }
 
@@ -104,18 +104,17 @@ func (p *UpdateCommandBlock) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateCommandBlock) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Command"]; ok {
-		p.Command = val.(pk.String)
+		p.Command = *val.(*pk.String)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(pk.VarInt)
+		p.Mode = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(pk.UnsignedByte)
+		p.Flags = *val.(*pk.UnsignedByte)
 	}
 }
 

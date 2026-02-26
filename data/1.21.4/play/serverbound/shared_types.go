@@ -44,12 +44,6 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
-
-type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
-
-type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
-
 // Protodef: [
 //
 //	  "container",
@@ -105,6 +99,14 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 	}
 	return totalBytes, nil
 }
+
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
+
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
+type EditBookTitle = models.Option[pk.String]
 
 // Protodef: [
 //
@@ -171,5 +173,3 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	}
 	return totalBytes, nil
 }
-
-type EditBookTitle = models.Option[pk.String]

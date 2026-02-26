@@ -87,8 +87,8 @@ func (p *DeclareCommands) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *DeclareCommands) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Nodes"] = p.Nodes
-	fields["RootIndex"] = p.RootIndex
+	fields["Nodes"] = &p.Nodes
+	fields["RootIndex"] = &p.RootIndex
 	return fields
 }
 
@@ -99,12 +99,11 @@ func (p *DeclareCommands) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *DeclareCommands) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Nodes"]; ok {
-		p.Nodes = val.(models.Array[pk.VarInt, basetypes.CommandNode])
+		p.Nodes = *val.(*models.Array[pk.VarInt, basetypes.CommandNode])
 	}
 	if val, ok := fields["RootIndex"]; ok {
-		p.RootIndex = val.(pk.VarInt)
+		p.RootIndex = *val.(*pk.VarInt)
 	}
 }
 

@@ -265,17 +265,17 @@ func (p *MapChunk) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *MapChunk) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["X"] = p.X
-	fields["Z"] = p.Z
-	fields["Heightmaps"] = p.Heightmaps
-	fields["ChunkData"] = p.ChunkData
-	fields["BlockEntities"] = p.BlockEntities
-	fields["SkyLightMask"] = p.SkyLightMask
-	fields["BlockLightMask"] = p.BlockLightMask
-	fields["EmptySkyLightMask"] = p.EmptySkyLightMask
-	fields["EmptyBlockLightMask"] = p.EmptyBlockLightMask
-	fields["SkyLight"] = p.SkyLight
-	fields["BlockLight"] = p.BlockLight
+	fields["X"] = &p.X
+	fields["Z"] = &p.Z
+	fields["Heightmaps"] = &p.Heightmaps
+	fields["ChunkData"] = &p.ChunkData
+	fields["BlockEntities"] = &p.BlockEntities
+	fields["SkyLightMask"] = &p.SkyLightMask
+	fields["BlockLightMask"] = &p.BlockLightMask
+	fields["EmptySkyLightMask"] = &p.EmptySkyLightMask
+	fields["EmptyBlockLightMask"] = &p.EmptyBlockLightMask
+	fields["SkyLight"] = &p.SkyLight
+	fields["BlockLight"] = &p.BlockLight
 	return fields
 }
 
@@ -286,39 +286,38 @@ func (p *MapChunk) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *MapChunk) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Int)
+		p.X = *val.(*pk.Int)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Int)
+		p.Z = *val.(*pk.Int)
 	}
 	if val, ok := fields["Heightmaps"]; ok {
-		p.Heightmaps = val.(models.AnonymousNBT)
+		p.Heightmaps = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["ChunkData"]; ok {
-		p.ChunkData = val.(pk.ByteArray)
+		p.ChunkData = *val.(*pk.ByteArray)
 	}
 	if val, ok := fields["BlockEntities"]; ok {
-		p.BlockEntities = val.(models.Array[pk.VarInt, basetypes.ChunkBlockEntity])
+		p.BlockEntities = *val.(*models.Array[pk.VarInt, basetypes.ChunkBlockEntity])
 	}
 	if val, ok := fields["SkyLightMask"]; ok {
-		p.SkyLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.SkyLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["BlockLightMask"]; ok {
-		p.BlockLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.BlockLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["EmptySkyLightMask"]; ok {
-		p.EmptySkyLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.EmptySkyLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["EmptyBlockLightMask"]; ok {
-		p.EmptyBlockLightMask = val.(models.Array[pk.VarInt, pk.Long])
+		p.EmptyBlockLightMask = *val.(*models.Array[pk.VarInt, pk.Long])
 	}
 	if val, ok := fields["SkyLight"]; ok {
-		p.SkyLight = val.(models.Array[pk.VarInt, MapChunkSkyLightArrayType])
+		p.SkyLight = *val.(*models.Array[pk.VarInt, MapChunkSkyLightArrayType])
 	}
 	if val, ok := fields["BlockLight"]; ok {
-		p.BlockLight = val.(models.Array[pk.VarInt, MapChunkBlockLightArrayType])
+		p.BlockLight = *val.(*models.Array[pk.VarInt, MapChunkBlockLightArrayType])
 	}
 }
 

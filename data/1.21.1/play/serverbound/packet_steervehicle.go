@@ -81,9 +81,9 @@ func (p *SteerVehicle) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SteerVehicle) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Sideways"] = p.Sideways
-	fields["Forward"] = p.Forward
-	fields["Jump"] = p.Jump
+	fields["Sideways"] = &p.Sideways
+	fields["Forward"] = &p.Forward
+	fields["Jump"] = &p.Jump
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *SteerVehicle) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SteerVehicle) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Sideways"]; ok {
-		p.Sideways = val.(pk.Float)
+		p.Sideways = *val.(*pk.Float)
 	}
 	if val, ok := fields["Forward"]; ok {
-		p.Forward = val.(pk.Float)
+		p.Forward = *val.(*pk.Float)
 	}
 	if val, ok := fields["Jump"]; ok {
-		p.Jump = val.(pk.UnsignedByte)
+		p.Jump = *val.(*pk.UnsignedByte)
 	}
 }
 

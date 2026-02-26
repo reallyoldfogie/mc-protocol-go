@@ -89,10 +89,10 @@ func (p *RecipeBookSettings) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *RecipeBookSettings) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Crafting"] = p.Crafting
-	fields["Furnace"] = p.Furnace
-	fields["Blast"] = p.Blast
-	fields["Smoker"] = p.Smoker
+	fields["Crafting"] = &p.Crafting
+	fields["Furnace"] = &p.Furnace
+	fields["Blast"] = &p.Blast
+	fields["Smoker"] = &p.Smoker
 	return fields
 }
 
@@ -103,18 +103,17 @@ func (p *RecipeBookSettings) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *RecipeBookSettings) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Crafting"]; ok {
-		p.Crafting = val.(RecipeBookSetting)
+		p.Crafting = *val.(*RecipeBookSetting)
 	}
 	if val, ok := fields["Furnace"]; ok {
-		p.Furnace = val.(RecipeBookSetting)
+		p.Furnace = *val.(*RecipeBookSetting)
 	}
 	if val, ok := fields["Blast"]; ok {
-		p.Blast = val.(RecipeBookSetting)
+		p.Blast = *val.(*RecipeBookSetting)
 	}
 	if val, ok := fields["Smoker"]; ok {
-		p.Smoker = val.(RecipeBookSetting)
+		p.Smoker = *val.(*RecipeBookSetting)
 	}
 }
 

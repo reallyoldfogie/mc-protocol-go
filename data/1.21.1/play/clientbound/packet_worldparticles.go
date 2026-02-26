@@ -138,16 +138,16 @@ func (p *WorldParticles) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *WorldParticles) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["LongDistance"] = p.LongDistance
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["OffsetX"] = p.OffsetX
-	fields["OffsetY"] = p.OffsetY
-	fields["OffsetZ"] = p.OffsetZ
-	fields["VelocityOffset"] = p.VelocityOffset
-	fields["Amount"] = p.Amount
-	fields["Particle"] = p.Particle
+	fields["LongDistance"] = &p.LongDistance
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["OffsetX"] = &p.OffsetX
+	fields["OffsetY"] = &p.OffsetY
+	fields["OffsetZ"] = &p.OffsetZ
+	fields["VelocityOffset"] = &p.VelocityOffset
+	fields["Amount"] = &p.Amount
+	fields["Particle"] = &p.Particle
 	return fields
 }
 
@@ -158,36 +158,35 @@ func (p *WorldParticles) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *WorldParticles) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["LongDistance"]; ok {
-		p.LongDistance = val.(pk.Boolean)
+		p.LongDistance = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["OffsetX"]; ok {
-		p.OffsetX = val.(pk.Float)
+		p.OffsetX = *val.(*pk.Float)
 	}
 	if val, ok := fields["OffsetY"]; ok {
-		p.OffsetY = val.(pk.Float)
+		p.OffsetY = *val.(*pk.Float)
 	}
 	if val, ok := fields["OffsetZ"]; ok {
-		p.OffsetZ = val.(pk.Float)
+		p.OffsetZ = *val.(*pk.Float)
 	}
 	if val, ok := fields["VelocityOffset"]; ok {
-		p.VelocityOffset = val.(pk.Float)
+		p.VelocityOffset = *val.(*pk.Float)
 	}
 	if val, ok := fields["Amount"]; ok {
-		p.Amount = val.(pk.Int)
+		p.Amount = *val.(*pk.Int)
 	}
 	if val, ok := fields["Particle"]; ok {
-		p.Particle = val.(basetypes.Particle)
+		p.Particle = *val.(*basetypes.Particle)
 	}
 }
 

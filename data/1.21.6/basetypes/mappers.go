@@ -8,6 +8,51 @@ import (
 	"io"
 )
 
+type SoundSource struct {
+	Value string
+}
+
+var SoundSourceMappings = map[int64]string{
+	0:  "master",
+	1:  "music",
+	10: "ui",
+	2:  "record",
+	3:  "weather",
+	4:  "block",
+	5:  "hostile",
+	6:  "neutral",
+	7:  "player",
+	8:  "ambient",
+	9:  "voice",
+}
+
+func (m *SoundSource) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SoundSource key")
+	}
+
+	value, ok := SoundSourceMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SoundSourceMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
+}
+
 type ServerLinkType struct {
 	Value string
 }
@@ -182,135 +227,25 @@ func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
 }
 
-type ParticleType struct {
+type SlotComponentDataRarity struct {
 	Value string
 }
 
-var ParticleTypeMappings = map[int64]string{
-	0:   "angry_villager",
-	1:   "block",
-	10:  "landing_lava",
-	100: "electric_spark",
-	101: "scrape",
-	102: "shriek",
-	103: "egg_crack",
-	104: "dust_plume",
-	105: "trial_spawner_detected_player",
-	106: "trial_spawner_detected_player_ominous",
-	107: "vault_connection",
-	108: "dust_pillar",
-	109: "ominous_spawning",
-	11:  "dripping_water",
-	110: "raid_omen",
-	111: "trial_omen",
-	112: "block_crumble",
-	113: "firefly",
-	12:  "falling_water",
-	13:  "dust",
-	14:  "dust_color_transition",
-	15:  "effect",
-	16:  "elder_guardian",
-	17:  "enchanted_hit",
-	18:  "enchant",
-	19:  "end_rod",
-	2:   "block_marker",
-	20:  "entity_effect",
-	21:  "explosion_emitter",
-	22:  "explosion",
-	23:  "gust",
-	24:  "small_gust",
-	25:  "gust_emitter_large",
-	26:  "gust_emitter_small",
-	27:  "sonic_boom",
-	28:  "falling_dust",
-	29:  "firework",
-	3:   "bubble",
-	30:  "fishing",
-	31:  "flame",
-	32:  "infested",
-	33:  "cherry_leaves",
-	34:  "pale_oak_leaves",
-	35:  "tinted_leaves",
-	36:  "sculk_soul",
-	37:  "sculk_charge",
-	38:  "sculk_charge_pop",
-	39:  "soul_fire_flame",
-	4:   "cloud",
-	40:  "soul",
-	41:  "flash",
-	42:  "happy_villager",
-	43:  "composter",
-	44:  "heart",
-	45:  "instant_effect",
-	46:  "item",
-	47:  "vibration",
-	48:  "trail",
-	49:  "item_slime",
-	5:   "crit",
-	50:  "item_cobweb",
-	51:  "item_snowball",
-	52:  "large_smoke",
-	53:  "lava",
-	54:  "mycelium",
-	55:  "note",
-	56:  "poof",
-	57:  "portal",
-	58:  "rain",
-	59:  "smoke",
-	6:   "damage_indicator",
-	60:  "white_smoke",
-	61:  "sneeze",
-	62:  "spit",
-	63:  "squid_ink",
-	64:  "sweep_attack",
-	65:  "totem_of_undying",
-	66:  "underwater",
-	67:  "splash",
-	68:  "witch",
-	69:  "bubble_pop",
-	7:   "dragon_breath",
-	70:  "current_down",
-	71:  "bubble_column_up",
-	72:  "nautilus",
-	73:  "dolphin",
-	74:  "campfire_cosy_smoke",
-	75:  "campfire_signal_smoke",
-	76:  "dripping_honey",
-	77:  "falling_honey",
-	78:  "landing_honey",
-	79:  "falling_nectar",
-	8:   "dripping_lava",
-	80:  "falling_spore_blossom",
-	81:  "ash",
-	82:  "crimson_spore",
-	83:  "warped_spore",
-	84:  "spore_blossom_air",
-	85:  "dripping_obsidian_tear",
-	86:  "falling_obsidian_tear",
-	87:  "landing_obsidian_tear",
-	88:  "reverse_portal",
-	89:  "white_ash",
-	9:   "falling_lava",
-	90:  "small_flame",
-	91:  "snowflake",
-	92:  "dripping_dripstone_lava",
-	93:  "falling_dripstone_lava",
-	94:  "dripping_dripstone_water",
-	95:  "falling_dripstone_water",
-	96:  "glow_squid_ink",
-	97:  "glow",
-	98:  "wax_on",
-	99:  "wax_off",
+var SlotComponentDataRarityMappings = map[int64]string{
+	0: "common",
+	1: "uncommon",
+	2: "rare",
+	3: "epic",
 }
 
-func (m *ParticleType) ReadFrom(r io.Reader) (int64, error) {
+func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read ParticleType key")
+		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
 	}
 
-	value, ok := ParticleTypeMappings[int64(key)]
+	value, ok := SlotComponentDataRarityMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -320,95 +255,14 @@ func (m *ParticleType) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m ParticleType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ParticleTypeMappings {
+func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataRarityMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ParticleType value: %s", m.Value)
-}
-
-type ParticleDataVibrationPositionType struct {
-	Value string
-}
-
-var ParticleDataVibrationPositionTypeMappings = map[int64]string{
-	0: "block",
-	1: "entity",
-}
-
-func (m *ParticleDataVibrationPositionType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ParticleDataVibrationPositionType key")
-	}
-
-	value, ok := ParticleDataVibrationPositionTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ParticleDataVibrationPositionTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
-}
-
-type SoundSource struct {
-	Value string
-}
-
-var SoundSourceMappings = map[int64]string{
-	0:  "master",
-	1:  "music",
-	10: "ui",
-	2:  "record",
-	3:  "weather",
-	4:  "block",
-	5:  "hostile",
-	6:  "neutral",
-	7:  "player",
-	8:  "ambient",
-	9:  "voice",
-}
-
-func (m *SoundSource) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SoundSource key")
-	}
-
-	value, ok := SoundSourceMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SoundSourceMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
+	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
 }
 
 type SlotComponentDataConsumableAnimation struct {
@@ -617,25 +471,135 @@ func (m SlotComponentDataAttributeModifiersDisplayType) WriteTo(w io.Writer) (in
 	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersDisplayType value: %s", m.Value)
 }
 
-type SlotComponentDataRarity struct {
+type ParticleType struct {
 	Value string
 }
 
-var SlotComponentDataRarityMappings = map[int64]string{
-	0: "common",
-	1: "uncommon",
-	2: "rare",
-	3: "epic",
+var ParticleTypeMappings = map[int64]string{
+	0:   "angry_villager",
+	1:   "block",
+	10:  "landing_lava",
+	100: "electric_spark",
+	101: "scrape",
+	102: "shriek",
+	103: "egg_crack",
+	104: "dust_plume",
+	105: "trial_spawner_detected_player",
+	106: "trial_spawner_detected_player_ominous",
+	107: "vault_connection",
+	108: "dust_pillar",
+	109: "ominous_spawning",
+	11:  "dripping_water",
+	110: "raid_omen",
+	111: "trial_omen",
+	112: "block_crumble",
+	113: "firefly",
+	12:  "falling_water",
+	13:  "dust",
+	14:  "dust_color_transition",
+	15:  "effect",
+	16:  "elder_guardian",
+	17:  "enchanted_hit",
+	18:  "enchant",
+	19:  "end_rod",
+	2:   "block_marker",
+	20:  "entity_effect",
+	21:  "explosion_emitter",
+	22:  "explosion",
+	23:  "gust",
+	24:  "small_gust",
+	25:  "gust_emitter_large",
+	26:  "gust_emitter_small",
+	27:  "sonic_boom",
+	28:  "falling_dust",
+	29:  "firework",
+	3:   "bubble",
+	30:  "fishing",
+	31:  "flame",
+	32:  "infested",
+	33:  "cherry_leaves",
+	34:  "pale_oak_leaves",
+	35:  "tinted_leaves",
+	36:  "sculk_soul",
+	37:  "sculk_charge",
+	38:  "sculk_charge_pop",
+	39:  "soul_fire_flame",
+	4:   "cloud",
+	40:  "soul",
+	41:  "flash",
+	42:  "happy_villager",
+	43:  "composter",
+	44:  "heart",
+	45:  "instant_effect",
+	46:  "item",
+	47:  "vibration",
+	48:  "trail",
+	49:  "item_slime",
+	5:   "crit",
+	50:  "item_cobweb",
+	51:  "item_snowball",
+	52:  "large_smoke",
+	53:  "lava",
+	54:  "mycelium",
+	55:  "note",
+	56:  "poof",
+	57:  "portal",
+	58:  "rain",
+	59:  "smoke",
+	6:   "damage_indicator",
+	60:  "white_smoke",
+	61:  "sneeze",
+	62:  "spit",
+	63:  "squid_ink",
+	64:  "sweep_attack",
+	65:  "totem_of_undying",
+	66:  "underwater",
+	67:  "splash",
+	68:  "witch",
+	69:  "bubble_pop",
+	7:   "dragon_breath",
+	70:  "current_down",
+	71:  "bubble_column_up",
+	72:  "nautilus",
+	73:  "dolphin",
+	74:  "campfire_cosy_smoke",
+	75:  "campfire_signal_smoke",
+	76:  "dripping_honey",
+	77:  "falling_honey",
+	78:  "landing_honey",
+	79:  "falling_nectar",
+	8:   "dripping_lava",
+	80:  "falling_spore_blossom",
+	81:  "ash",
+	82:  "crimson_spore",
+	83:  "warped_spore",
+	84:  "spore_blossom_air",
+	85:  "dripping_obsidian_tear",
+	86:  "falling_obsidian_tear",
+	87:  "landing_obsidian_tear",
+	88:  "reverse_portal",
+	89:  "white_ash",
+	9:   "falling_lava",
+	90:  "small_flame",
+	91:  "snowflake",
+	92:  "dripping_dripstone_lava",
+	93:  "falling_dripstone_lava",
+	94:  "dripping_dripstone_water",
+	95:  "falling_dripstone_water",
+	96:  "glow_squid_ink",
+	97:  "glow",
+	98:  "wax_on",
+	99:  "wax_off",
 }
 
-func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
+func (m *ParticleType) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
+		return n, errors.Wrap(err, "failed to read ParticleType key")
 	}
 
-	value, ok := SlotComponentDataRarityMappings[int64(key)]
+	value, ok := ParticleTypeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -645,12 +609,48 @@ func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataRarityMappings {
+func (m ParticleType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ParticleTypeMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
+	return 0, errors.Errorf("unknown ParticleType value: %s", m.Value)
+}
+
+type ParticleDataVibrationPositionType struct {
+	Value string
+}
+
+var ParticleDataVibrationPositionTypeMappings = map[int64]string{
+	0: "block",
+	1: "entity",
+}
+
+func (m *ParticleDataVibrationPositionType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ParticleDataVibrationPositionType key")
+	}
+
+	value, ok := ParticleDataVibrationPositionTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ParticleDataVibrationPositionTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
 }

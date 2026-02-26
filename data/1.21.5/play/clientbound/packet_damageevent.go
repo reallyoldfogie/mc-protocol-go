@@ -105,11 +105,11 @@ func (p *DamageEvent) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *DamageEvent) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["SourceTypeId"] = p.SourceTypeId
-	fields["SourceCauseId"] = p.SourceCauseId
-	fields["SourceDirectId"] = p.SourceDirectId
-	fields["SourcePosition"] = p.SourcePosition
+	fields["EntityId"] = &p.EntityId
+	fields["SourceTypeId"] = &p.SourceTypeId
+	fields["SourceCauseId"] = &p.SourceCauseId
+	fields["SourceDirectId"] = &p.SourceDirectId
+	fields["SourcePosition"] = &p.SourcePosition
 	return fields
 }
 
@@ -120,21 +120,20 @@ func (p *DamageEvent) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *DamageEvent) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SourceTypeId"]; ok {
-		p.SourceTypeId = val.(pk.VarInt)
+		p.SourceTypeId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SourceCauseId"]; ok {
-		p.SourceCauseId = val.(pk.VarInt)
+		p.SourceCauseId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SourceDirectId"]; ok {
-		p.SourceDirectId = val.(pk.VarInt)
+		p.SourceDirectId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SourcePosition"]; ok {
-		p.SourcePosition = val.(models.Option[basetypes.Vec3f64])
+		p.SourcePosition = *val.(*models.Option[basetypes.Vec3f64])
 	}
 }
 

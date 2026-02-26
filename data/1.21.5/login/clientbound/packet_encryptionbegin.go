@@ -109,10 +109,10 @@ func (p *EncryptionBegin) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EncryptionBegin) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["ServerId"] = p.ServerId
-	fields["PublicKey"] = p.PublicKey
-	fields["VerifyToken"] = p.VerifyToken
-	fields["ShouldAuthenticate"] = p.ShouldAuthenticate
+	fields["ServerId"] = &p.ServerId
+	fields["PublicKey"] = &p.PublicKey
+	fields["VerifyToken"] = &p.VerifyToken
+	fields["ShouldAuthenticate"] = &p.ShouldAuthenticate
 	return fields
 }
 
@@ -123,18 +123,17 @@ func (p *EncryptionBegin) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EncryptionBegin) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["ServerId"]; ok {
-		p.ServerId = val.(pk.String)
+		p.ServerId = *val.(*pk.String)
 	}
 	if val, ok := fields["PublicKey"]; ok {
-		p.PublicKey = val.(pk.ByteArray)
+		p.PublicKey = *val.(*pk.ByteArray)
 	}
 	if val, ok := fields["VerifyToken"]; ok {
-		p.VerifyToken = val.(pk.ByteArray)
+		p.VerifyToken = *val.(*pk.ByteArray)
 	}
 	if val, ok := fields["ShouldAuthenticate"]; ok {
-		p.ShouldAuthenticate = val.(pk.Boolean)
+		p.ShouldAuthenticate = *val.(*pk.Boolean)
 	}
 }
 

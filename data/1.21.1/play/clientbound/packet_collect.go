@@ -81,9 +81,9 @@ func (p *Collect) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Collect) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["CollectedEntityId"] = p.CollectedEntityId
-	fields["CollectorEntityId"] = p.CollectorEntityId
-	fields["PickupItemCount"] = p.PickupItemCount
+	fields["CollectedEntityId"] = &p.CollectedEntityId
+	fields["CollectorEntityId"] = &p.CollectorEntityId
+	fields["PickupItemCount"] = &p.PickupItemCount
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *Collect) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Collect) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["CollectedEntityId"]; ok {
-		p.CollectedEntityId = val.(pk.VarInt)
+		p.CollectedEntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["CollectorEntityId"]; ok {
-		p.CollectorEntityId = val.(pk.VarInt)
+		p.CollectorEntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["PickupItemCount"]; ok {
-		p.PickupItemCount = val.(pk.VarInt)
+		p.PickupItemCount = *val.(*pk.VarInt)
 	}
 }
 

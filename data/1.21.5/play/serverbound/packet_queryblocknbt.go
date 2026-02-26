@@ -74,8 +74,8 @@ func (p *QueryBlockNbt) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *QueryBlockNbt) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["TransactionId"] = p.TransactionId
-	fields["Location"] = p.Location
+	fields["TransactionId"] = &p.TransactionId
+	fields["Location"] = &p.Location
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *QueryBlockNbt) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *QueryBlockNbt) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["TransactionId"]; ok {
-		p.TransactionId = val.(pk.VarInt)
+		p.TransactionId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 }
 

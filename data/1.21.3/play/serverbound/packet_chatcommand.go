@@ -65,7 +65,7 @@ func (p *ChatCommand) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChatCommand) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Command"] = p.Command
+	fields["Command"] = &p.Command
 	return fields
 }
 
@@ -76,9 +76,8 @@ func (p *ChatCommand) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChatCommand) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Command"]; ok {
-		p.Command = val.(pk.String)
+		p.Command = *val.(*pk.String)
 	}
 }
 

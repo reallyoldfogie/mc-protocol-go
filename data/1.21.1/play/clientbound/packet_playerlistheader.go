@@ -74,8 +74,8 @@ func (p *PlayerlistHeader) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PlayerlistHeader) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Header"] = p.Header
-	fields["Footer"] = p.Footer
+	fields["Header"] = &p.Header
+	fields["Footer"] = &p.Footer
 	return fields
 }
 
@@ -86,12 +86,11 @@ func (p *PlayerlistHeader) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PlayerlistHeader) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Header"]; ok {
-		p.Header = val.(models.AnonymousNBT)
+		p.Header = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["Footer"]; ok {
-		p.Footer = val.(models.AnonymousNBT)
+		p.Footer = *val.(*models.AnonymousNBT)
 	}
 }
 

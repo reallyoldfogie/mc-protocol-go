@@ -438,11 +438,11 @@ func (p *Advancements) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Advancements) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Reset"] = p.Reset
-	fields["AdvancementMapping"] = p.AdvancementMapping
-	fields["Identifiers"] = p.Identifiers
-	fields["ProgressMapping"] = p.ProgressMapping
-	fields["ShowAdvancements"] = p.ShowAdvancements
+	fields["Reset"] = &p.Reset
+	fields["AdvancementMapping"] = &p.AdvancementMapping
+	fields["Identifiers"] = &p.Identifiers
+	fields["ProgressMapping"] = &p.ProgressMapping
+	fields["ShowAdvancements"] = &p.ShowAdvancements
 	return fields
 }
 
@@ -453,21 +453,20 @@ func (p *Advancements) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Advancements) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Reset"]; ok {
-		p.Reset = val.(pk.Boolean)
+		p.Reset = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["AdvancementMapping"]; ok {
-		p.AdvancementMapping = val.(models.Array[pk.VarInt, AdvancementsAdvancementMappingArrayType])
+		p.AdvancementMapping = *val.(*models.Array[pk.VarInt, AdvancementsAdvancementMappingArrayType])
 	}
 	if val, ok := fields["Identifiers"]; ok {
-		p.Identifiers = val.(models.Array[pk.VarInt, pk.String])
+		p.Identifiers = *val.(*models.Array[pk.VarInt, pk.String])
 	}
 	if val, ok := fields["ProgressMapping"]; ok {
-		p.ProgressMapping = val.(models.Array[pk.VarInt, AdvancementsProgressMappingArrayType])
+		p.ProgressMapping = *val.(*models.Array[pk.VarInt, AdvancementsProgressMappingArrayType])
 	}
 	if val, ok := fields["ShowAdvancements"]; ok {
-		p.ShowAdvancements = val.(pk.Boolean)
+		p.ShowAdvancements = *val.(*pk.Boolean)
 	}
 }
 

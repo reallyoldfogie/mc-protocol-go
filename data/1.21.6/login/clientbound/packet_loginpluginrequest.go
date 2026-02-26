@@ -82,9 +82,9 @@ func (p *LoginPluginRequest) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *LoginPluginRequest) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["MessageId"] = p.MessageId
-	fields["Channel"] = p.Channel
-	fields["Data"] = p.Data
+	fields["MessageId"] = &p.MessageId
+	fields["Channel"] = &p.Channel
+	fields["Data"] = &p.Data
 	return fields
 }
 
@@ -95,15 +95,14 @@ func (p *LoginPluginRequest) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *LoginPluginRequest) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["MessageId"]; ok {
-		p.MessageId = val.(pk.VarInt)
+		p.MessageId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Channel"]; ok {
-		p.Channel = val.(pk.String)
+		p.Channel = *val.(*pk.String)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(models.RestBuffer)
+		p.Data = *val.(*models.RestBuffer)
 	}
 }
 

@@ -141,13 +141,14 @@ func (p *StopSound) Scan(packet pk.Packet) error {
 		}
 		p.Source = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Source] default case")
+			return errors.Wrap(err, "failed to read void switch field Source default case")
 		}
-		p.Source = &val
+		p.Source = &__void
 	}
 
 	// Switch field Sound based on flags
@@ -172,13 +173,14 @@ func (p *StopSound) Scan(packet pk.Packet) error {
 		}
 		p.Sound = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Sound] default case")
+			return errors.Wrap(err, "failed to read void switch field Sound default case")
 		}
-		p.Sound = &val
+		p.Sound = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -193,7 +195,7 @@ func (p *StopSound) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *StopSound) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Flags"] = p.Flags
+	fields["Flags"] = &p.Flags
 	fields["Source"] = p.Source
 	fields["Sound"] = p.Sound
 	return fields
@@ -206,9 +208,8 @@ func (p *StopSound) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *StopSound) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(pk.Byte)
+		p.Flags = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Source"]; ok {
 		p.Source = val.(pk.Field)
@@ -290,13 +291,14 @@ func (t *StopSound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Source = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Source default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Source default case")
 		}
-		t.Source = &val
+		t.Source = &__void
 	}
 
 	// Switch field Sound based on flags
@@ -321,13 +323,14 @@ func (t *StopSound) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Sound = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Sound default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Sound default case")
 		}
-		t.Sound = &val
+		t.Sound = &__void
 	}
 
 	return totalBytes, nil

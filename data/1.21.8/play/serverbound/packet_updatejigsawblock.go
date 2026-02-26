@@ -122,14 +122,14 @@ func (p *UpdateJigsawBlock) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateJigsawBlock) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["Name"] = p.Name
-	fields["Target"] = p.Target
-	fields["Pool"] = p.Pool
-	fields["FinalState"] = p.FinalState
-	fields["JointType"] = p.JointType
-	fields["SelectionPriority"] = p.SelectionPriority
-	fields["PlacementPriority"] = p.PlacementPriority
+	fields["Location"] = &p.Location
+	fields["Name"] = &p.Name
+	fields["Target"] = &p.Target
+	fields["Pool"] = &p.Pool
+	fields["FinalState"] = &p.FinalState
+	fields["JointType"] = &p.JointType
+	fields["SelectionPriority"] = &p.SelectionPriority
+	fields["PlacementPriority"] = &p.PlacementPriority
 	return fields
 }
 
@@ -140,30 +140,29 @@ func (p *UpdateJigsawBlock) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateJigsawBlock) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Name"]; ok {
-		p.Name = val.(pk.String)
+		p.Name = *val.(*pk.String)
 	}
 	if val, ok := fields["Target"]; ok {
-		p.Target = val.(pk.String)
+		p.Target = *val.(*pk.String)
 	}
 	if val, ok := fields["Pool"]; ok {
-		p.Pool = val.(pk.String)
+		p.Pool = *val.(*pk.String)
 	}
 	if val, ok := fields["FinalState"]; ok {
-		p.FinalState = val.(pk.String)
+		p.FinalState = *val.(*pk.String)
 	}
 	if val, ok := fields["JointType"]; ok {
-		p.JointType = val.(pk.String)
+		p.JointType = *val.(*pk.String)
 	}
 	if val, ok := fields["SelectionPriority"]; ok {
-		p.SelectionPriority = val.(pk.VarInt)
+		p.SelectionPriority = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["PlacementPriority"]; ok {
-		p.PlacementPriority = val.(pk.VarInt)
+		p.PlacementPriority = *val.(*pk.VarInt)
 	}
 }
 

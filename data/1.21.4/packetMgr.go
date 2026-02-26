@@ -260,7 +260,7 @@ func (p Packets) GetClientboundPacketByID(id models.ClientboundPacketID) (models
 		return play_clientbound.NewOpenWindow(), nil
 	case 54: // Play.Clientbound[{54}] = generator.packetData{Name:"OpenSignEntity", ID:54, Hex:"0X36", StructName:"OpenSignEntity", ProtoTypeName:"packet_open_sign_entity", AltName:"ClientboundOpenSignEditor"}
 		return play_clientbound.NewOpenSignEntity(), nil
-	case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"Ping", ID:55, Hex:"0X37", StructName:"", ProtoTypeName:"packet_ping", AltName:""}
+	case 55: // Play.Clientbound[{55}] = generator.packetData{Name:"Ping", ID:55, Hex:"0X37", StructName:"Ping", ProtoTypeName:"packet_ping", AltName:""}
 		return play_clientbound.NewPing(), nil
 	case 56: // Play.Clientbound[{56}] = generator.packetData{Name:"PingResponse", ID:56, Hex:"0X38", StructName:"PingResponse", ProtoTypeName:"packet_ping_response", AltName:"ClientboundPongResponse"}
 		return play_clientbound.NewPingResponse(), nil

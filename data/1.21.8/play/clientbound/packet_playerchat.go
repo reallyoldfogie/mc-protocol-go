@@ -274,13 +274,14 @@ func (p *PlayerChat) Scan(packet pk.Packet) error {
 		}
 		p.FilterTypeMask = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[FilterTypeMask] default case")
+			return errors.Wrap(err, "failed to read void switch field FilterTypeMask default case")
 		}
-		p.FilterTypeMask = &val
+		p.FilterTypeMask = &__void
 	}
 
 	bytesRead, err = p.Type.ReadFrom(r)
@@ -310,20 +311,20 @@ func (p *PlayerChat) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *PlayerChat) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["GlobalIndex"] = p.GlobalIndex
-	fields["SenderUuid"] = p.SenderUuid
-	fields["Index"] = p.Index
-	fields["Signature"] = p.Signature
-	fields["PlainMessage"] = p.PlainMessage
-	fields["Timestamp"] = p.Timestamp
-	fields["Salt"] = p.Salt
-	fields["PreviousMessages"] = p.PreviousMessages
-	fields["UnsignedChatContent"] = p.UnsignedChatContent
-	fields["FilterType"] = p.FilterType
+	fields["GlobalIndex"] = &p.GlobalIndex
+	fields["SenderUuid"] = &p.SenderUuid
+	fields["Index"] = &p.Index
+	fields["Signature"] = &p.Signature
+	fields["PlainMessage"] = &p.PlainMessage
+	fields["Timestamp"] = &p.Timestamp
+	fields["Salt"] = &p.Salt
+	fields["PreviousMessages"] = &p.PreviousMessages
+	fields["UnsignedChatContent"] = &p.UnsignedChatContent
+	fields["FilterType"] = &p.FilterType
 	fields["FilterTypeMask"] = p.FilterTypeMask
-	fields["Type"] = p.Type
-	fields["NetworkName"] = p.NetworkName
-	fields["NetworkTargetName"] = p.NetworkTargetName
+	fields["Type"] = &p.Type
+	fields["NetworkName"] = &p.NetworkName
+	fields["NetworkTargetName"] = &p.NetworkTargetName
 	return fields
 }
 
@@ -334,48 +335,47 @@ func (p *PlayerChat) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *PlayerChat) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["GlobalIndex"]; ok {
-		p.GlobalIndex = val.(pk.VarInt)
+		p.GlobalIndex = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SenderUuid"]; ok {
-		p.SenderUuid = val.(pk.UUID)
+		p.SenderUuid = *val.(*pk.UUID)
 	}
 	if val, ok := fields["Index"]; ok {
-		p.Index = val.(pk.VarInt)
+		p.Index = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Signature"]; ok {
-		p.Signature = val.(models.Option[models.FixedBuffer256])
+		p.Signature = *val.(*models.Option[models.FixedBuffer256])
 	}
 	if val, ok := fields["PlainMessage"]; ok {
-		p.PlainMessage = val.(pk.String)
+		p.PlainMessage = *val.(*pk.String)
 	}
 	if val, ok := fields["Timestamp"]; ok {
-		p.Timestamp = val.(pk.Long)
+		p.Timestamp = *val.(*pk.Long)
 	}
 	if val, ok := fields["Salt"]; ok {
-		p.Salt = val.(pk.Long)
+		p.Salt = *val.(*pk.Long)
 	}
 	if val, ok := fields["PreviousMessages"]; ok {
-		p.PreviousMessages = val.(basetypes.PreviousMessages)
+		p.PreviousMessages = *val.(*basetypes.PreviousMessages)
 	}
 	if val, ok := fields["UnsignedChatContent"]; ok {
-		p.UnsignedChatContent = val.(models.Option[models.AnonymousNBT])
+		p.UnsignedChatContent = *val.(*models.Option[models.AnonymousNBT])
 	}
 	if val, ok := fields["FilterType"]; ok {
-		p.FilterType = val.(pk.VarInt)
+		p.FilterType = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["FilterTypeMask"]; ok {
 		p.FilterTypeMask = val.(pk.Field)
 	}
 	if val, ok := fields["Type"]; ok {
-		p.Type = val.(ChatTypesHolder)
+		p.Type = *val.(*ChatTypesHolder)
 	}
 	if val, ok := fields["NetworkName"]; ok {
-		p.NetworkName = val.(models.AnonymousNBT)
+		p.NetworkName = *val.(*models.AnonymousNBT)
 	}
 	if val, ok := fields["NetworkTargetName"]; ok {
-		p.NetworkTargetName = val.(models.Option[models.AnonymousNBT])
+		p.NetworkTargetName = *val.(*models.Option[models.AnonymousNBT])
 	}
 }
 
@@ -642,13 +642,14 @@ func (t *PlayerChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.FilterTypeMask = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field FilterTypeMask default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field FilterTypeMask default case")
 		}
-		t.FilterTypeMask = &val
+		t.FilterTypeMask = &__void
 	}
 
 	bytesRead, err = t.Type.ReadFrom(r)

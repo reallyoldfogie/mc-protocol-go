@@ -44,7 +44,77 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type EditBookTitle = models.Option[pk.String]
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "argumentName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "signature",
+//	      "type": [
+//	        "buffer",
+//	        {
+//	          "count": 256
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type ChatCommandSignedArgumentSignaturesArrayType struct {
+	// "string"
+	ArgumentName pk.String
+	// [
+	//                           "buffer",
+	//                           {
+	//                             "count": 256
+	//                           }
+	//                         ]
+	Signature models.FixedBuffer256
+}
+
+func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.ArgumentName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
+	}
+	bytesRead, err = t.Signature.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Signature")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatCommandSignedArgumentSignaturesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.ArgumentName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Signature.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
+type TestInstanceBlockActionDataTest = models.Option[pk.String]
+
+type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
 
 type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
 
@@ -112,78 +182,8 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 
 type WindowClickCursorItem = models.Option[basetypes.HashedSlot]
 
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
+type EditBookTitle = models.Option[pk.String]
 
 type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
 type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "argumentName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "signature",
-//	      "type": [
-//	        "buffer",
-//	        {
-//	          "count": 256
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type ChatCommandSignedArgumentSignaturesArrayType struct {
-	// "string"
-	ArgumentName pk.String
-	// [
-	//                           "buffer",
-	//                           {
-	//                             "count": 256
-	//                           }
-	//                         ]
-	Signature models.FixedBuffer256
-}
-
-func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.ArgumentName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
-	}
-	bytesRead, err = t.Signature.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Signature")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChatCommandSignedArgumentSignaturesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.ArgumentName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Signature.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type TestInstanceBlockActionDataTest = models.Option[pk.String]
-
-type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]

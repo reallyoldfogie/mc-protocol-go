@@ -467,13 +467,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.UnnamedType0006 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0006] default case")
+			return errors.Wrap(err, "failed to read void switch field UnnamedType0006 default case")
 		}
-		p.UnnamedType0006 = &val
+		p.UnnamedType0006 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -506,13 +507,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Players] default case")
+			return errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		p.Players = &val
+		p.Players = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -527,8 +529,8 @@ func (p *Teams) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Team"] = p.Team
-	fields["Mode"] = p.Mode
+	fields["Team"] = &p.Team
+	fields["Mode"] = &p.Mode
 	fields["UnnamedType0006"] = p.UnnamedType0006
 	fields["Players"] = p.Players
 	return fields
@@ -541,12 +543,11 @@ func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Teams) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Team"]; ok {
-		p.Team = val.(pk.String)
+		p.Team = *val.(*pk.String)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(TeamsMode)
+		p.Mode = *val.(*TeamsMode)
 	}
 	if val, ok := fields["UnnamedType0006"]; ok {
 		p.UnnamedType0006 = val.(pk.Field)
@@ -647,13 +648,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.UnnamedType0006 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0006 default case")
 		}
-		t.UnnamedType0006 = &val
+		t.UnnamedType0006 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -686,13 +688,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Players default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		t.Players = &val
+		t.Players = &__void
 	}
 
 	return totalBytes, nil

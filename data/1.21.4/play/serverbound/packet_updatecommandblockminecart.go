@@ -81,9 +81,9 @@ func (p *UpdateCommandBlockMinecart) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateCommandBlockMinecart) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["Command"] = p.Command
-	fields["TrackOutput"] = p.TrackOutput
+	fields["EntityId"] = &p.EntityId
+	fields["Command"] = &p.Command
+	fields["TrackOutput"] = &p.TrackOutput
 	return fields
 }
 
@@ -94,15 +94,14 @@ func (p *UpdateCommandBlockMinecart) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateCommandBlockMinecart) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Command"]; ok {
-		p.Command = val.(pk.String)
+		p.Command = *val.(*pk.String)
 	}
 	if val, ok := fields["TrackOutput"]; ok {
-		p.TrackOutput = val.(pk.Boolean)
+		p.TrackOutput = *val.(*pk.Boolean)
 	}
 }
 

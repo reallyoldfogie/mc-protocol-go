@@ -199,18 +199,18 @@ func (p *Explosion) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Radius"] = p.Radius
-	fields["AffectedBlockOffsets"] = p.AffectedBlockOffsets
-	fields["PlayerMotionX"] = p.PlayerMotionX
-	fields["PlayerMotionY"] = p.PlayerMotionY
-	fields["PlayerMotionZ"] = p.PlayerMotionZ
-	fields["BlockInteractionType"] = p.BlockInteractionType
-	fields["SmallExplosionParticle"] = p.SmallExplosionParticle
-	fields["LargeExplosionParticle"] = p.LargeExplosionParticle
-	fields["Sound"] = p.Sound
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Radius"] = &p.Radius
+	fields["AffectedBlockOffsets"] = &p.AffectedBlockOffsets
+	fields["PlayerMotionX"] = &p.PlayerMotionX
+	fields["PlayerMotionY"] = &p.PlayerMotionY
+	fields["PlayerMotionZ"] = &p.PlayerMotionZ
+	fields["BlockInteractionType"] = &p.BlockInteractionType
+	fields["SmallExplosionParticle"] = &p.SmallExplosionParticle
+	fields["LargeExplosionParticle"] = &p.LargeExplosionParticle
+	fields["Sound"] = &p.Sound
 	return fields
 }
 
@@ -221,42 +221,41 @@ func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Explosion) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Radius"]; ok {
-		p.Radius = val.(pk.Float)
+		p.Radius = *val.(*pk.Float)
 	}
 	if val, ok := fields["AffectedBlockOffsets"]; ok {
-		p.AffectedBlockOffsets = val.(models.Array[pk.VarInt, ExplosionAffectedBlockOffsetsArrayType])
+		p.AffectedBlockOffsets = *val.(*models.Array[pk.VarInt, ExplosionAffectedBlockOffsetsArrayType])
 	}
 	if val, ok := fields["PlayerMotionX"]; ok {
-		p.PlayerMotionX = val.(pk.Float)
+		p.PlayerMotionX = *val.(*pk.Float)
 	}
 	if val, ok := fields["PlayerMotionY"]; ok {
-		p.PlayerMotionY = val.(pk.Float)
+		p.PlayerMotionY = *val.(*pk.Float)
 	}
 	if val, ok := fields["PlayerMotionZ"]; ok {
-		p.PlayerMotionZ = val.(pk.Float)
+		p.PlayerMotionZ = *val.(*pk.Float)
 	}
 	if val, ok := fields["BlockInteractionType"]; ok {
-		p.BlockInteractionType = val.(pk.VarInt)
+		p.BlockInteractionType = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["SmallExplosionParticle"]; ok {
-		p.SmallExplosionParticle = val.(basetypes.Particle)
+		p.SmallExplosionParticle = *val.(*basetypes.Particle)
 	}
 	if val, ok := fields["LargeExplosionParticle"]; ok {
-		p.LargeExplosionParticle = val.(basetypes.Particle)
+		p.LargeExplosionParticle = *val.(*basetypes.Particle)
 	}
 	if val, ok := fields["Sound"]; ok {
-		p.Sound = val.(basetypes.ItemSoundHolder)
+		p.Sound = *val.(*basetypes.ItemSoundHolder)
 	}
 }
 

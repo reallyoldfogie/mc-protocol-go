@@ -95,8 +95,8 @@ func (p *Difficulty) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Difficulty) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Difficulty"] = p.Difficulty
-	fields["DifficultyLocked"] = p.DifficultyLocked
+	fields["Difficulty"] = &p.Difficulty
+	fields["DifficultyLocked"] = &p.DifficultyLocked
 	return fields
 }
 
@@ -107,12 +107,11 @@ func (p *Difficulty) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Difficulty) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Difficulty"]; ok {
-		p.Difficulty = val.(DifficultyDifficulty)
+		p.Difficulty = *val.(*DifficultyDifficulty)
 	}
 	if val, ok := fields["DifficultyLocked"]; ok {
-		p.DifficultyLocked = val.(pk.Boolean)
+		p.DifficultyLocked = *val.(*pk.Boolean)
 	}
 }
 

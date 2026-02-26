@@ -93,8 +93,8 @@ func (p *EncryptionBegin) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *EncryptionBegin) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["SharedSecret"] = p.SharedSecret
-	fields["VerifyToken"] = p.VerifyToken
+	fields["SharedSecret"] = &p.SharedSecret
+	fields["VerifyToken"] = &p.VerifyToken
 	return fields
 }
 
@@ -105,12 +105,11 @@ func (p *EncryptionBegin) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *EncryptionBegin) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["SharedSecret"]; ok {
-		p.SharedSecret = val.(pk.ByteArray)
+		p.SharedSecret = *val.(*pk.ByteArray)
 	}
 	if val, ok := fields["VerifyToken"]; ok {
-		p.VerifyToken = val.(pk.ByteArray)
+		p.VerifyToken = *val.(*pk.ByteArray)
 	}
 }
 

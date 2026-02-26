@@ -90,10 +90,10 @@ func (p *BlockAction) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *BlockAction) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["Byte1"] = p.Byte1
-	fields["Byte2"] = p.Byte2
-	fields["BlockId"] = p.BlockId
+	fields["Location"] = &p.Location
+	fields["Byte1"] = &p.Byte1
+	fields["Byte2"] = &p.Byte2
+	fields["BlockId"] = &p.BlockId
 	return fields
 }
 
@@ -104,18 +104,17 @@ func (p *BlockAction) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *BlockAction) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Byte1"]; ok {
-		p.Byte1 = val.(pk.UnsignedByte)
+		p.Byte1 = *val.(*pk.UnsignedByte)
 	}
 	if val, ok := fields["Byte2"]; ok {
-		p.Byte2 = val.(pk.UnsignedByte)
+		p.Byte2 = *val.(*pk.UnsignedByte)
 	}
 	if val, ok := fields["BlockId"]; ok {
-		p.BlockId = val.(pk.VarInt)
+		p.BlockId = *val.(*pk.VarInt)
 	}
 }
 

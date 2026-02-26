@@ -186,22 +186,22 @@ func (p *UpdateStructureBlock) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UpdateStructureBlock) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Location"] = p.Location
-	fields["Action"] = p.Action
-	fields["Mode"] = p.Mode
-	fields["Name"] = p.Name
-	fields["OffsetX"] = p.OffsetX
-	fields["OffsetY"] = p.OffsetY
-	fields["OffsetZ"] = p.OffsetZ
-	fields["SizeX"] = p.SizeX
-	fields["SizeY"] = p.SizeY
-	fields["SizeZ"] = p.SizeZ
-	fields["Mirror"] = p.Mirror
-	fields["Rotation"] = p.Rotation
-	fields["Metadata"] = p.Metadata
-	fields["Integrity"] = p.Integrity
-	fields["Seed"] = p.Seed
-	fields["Flags"] = p.Flags
+	fields["Location"] = &p.Location
+	fields["Action"] = &p.Action
+	fields["Mode"] = &p.Mode
+	fields["Name"] = &p.Name
+	fields["OffsetX"] = &p.OffsetX
+	fields["OffsetY"] = &p.OffsetY
+	fields["OffsetZ"] = &p.OffsetZ
+	fields["SizeX"] = &p.SizeX
+	fields["SizeY"] = &p.SizeY
+	fields["SizeZ"] = &p.SizeZ
+	fields["Mirror"] = &p.Mirror
+	fields["Rotation"] = &p.Rotation
+	fields["Metadata"] = &p.Metadata
+	fields["Integrity"] = &p.Integrity
+	fields["Seed"] = &p.Seed
+	fields["Flags"] = &p.Flags
 	return fields
 }
 
@@ -212,54 +212,53 @@ func (p *UpdateStructureBlock) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UpdateStructureBlock) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Location"]; ok {
-		p.Location = val.(basetypes.Position)
+		p.Location = *val.(*basetypes.Position)
 	}
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.VarInt)
+		p.Action = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(pk.VarInt)
+		p.Mode = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Name"]; ok {
-		p.Name = val.(pk.String)
+		p.Name = *val.(*pk.String)
 	}
 	if val, ok := fields["OffsetX"]; ok {
-		p.OffsetX = val.(pk.Byte)
+		p.OffsetX = *val.(*pk.Byte)
 	}
 	if val, ok := fields["OffsetY"]; ok {
-		p.OffsetY = val.(pk.Byte)
+		p.OffsetY = *val.(*pk.Byte)
 	}
 	if val, ok := fields["OffsetZ"]; ok {
-		p.OffsetZ = val.(pk.Byte)
+		p.OffsetZ = *val.(*pk.Byte)
 	}
 	if val, ok := fields["SizeX"]; ok {
-		p.SizeX = val.(pk.Byte)
+		p.SizeX = *val.(*pk.Byte)
 	}
 	if val, ok := fields["SizeY"]; ok {
-		p.SizeY = val.(pk.Byte)
+		p.SizeY = *val.(*pk.Byte)
 	}
 	if val, ok := fields["SizeZ"]; ok {
-		p.SizeZ = val.(pk.Byte)
+		p.SizeZ = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Mirror"]; ok {
-		p.Mirror = val.(pk.VarInt)
+		p.Mirror = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Rotation"]; ok {
-		p.Rotation = val.(pk.VarInt)
+		p.Rotation = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Metadata"]; ok {
-		p.Metadata = val.(pk.String)
+		p.Metadata = *val.(*pk.String)
 	}
 	if val, ok := fields["Integrity"]; ok {
-		p.Integrity = val.(pk.Float)
+		p.Integrity = *val.(*pk.Float)
 	}
 	if val, ok := fields["Seed"]; ok {
-		p.Seed = val.(pk.VarInt)
+		p.Seed = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Flags"]; ok {
-		p.Flags = val.(pk.UnsignedByte)
+		p.Flags = *val.(*pk.UnsignedByte)
 	}
 }
 

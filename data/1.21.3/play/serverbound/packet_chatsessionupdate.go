@@ -89,10 +89,10 @@ func (p *ChatSessionUpdate) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *ChatSessionUpdate) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["SessionUUID"] = p.SessionUUID
-	fields["ExpireTime"] = p.ExpireTime
-	fields["PublicKey"] = p.PublicKey
-	fields["Signature"] = p.Signature
+	fields["SessionUUID"] = &p.SessionUUID
+	fields["ExpireTime"] = &p.ExpireTime
+	fields["PublicKey"] = &p.PublicKey
+	fields["Signature"] = &p.Signature
 	return fields
 }
 
@@ -103,18 +103,17 @@ func (p *ChatSessionUpdate) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ChatSessionUpdate) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["SessionUUID"]; ok {
-		p.SessionUUID = val.(pk.UUID)
+		p.SessionUUID = *val.(*pk.UUID)
 	}
 	if val, ok := fields["ExpireTime"]; ok {
-		p.ExpireTime = val.(pk.Long)
+		p.ExpireTime = *val.(*pk.Long)
 	}
 	if val, ok := fields["PublicKey"]; ok {
-		p.PublicKey = val.(pk.ByteArray)
+		p.PublicKey = *val.(*pk.ByteArray)
 	}
 	if val, ok := fields["Signature"]; ok {
-		p.Signature = val.(pk.ByteArray)
+		p.Signature = *val.(*pk.ByteArray)
 	}
 }
 

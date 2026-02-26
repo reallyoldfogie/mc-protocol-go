@@ -6,29 +6,11 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type ContainerID = pk.UnsignedByte
+type ByteArray = pk.ByteArray
 
 type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type Optvarint = pk.VarInt
-
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type ChatSession = models.Option[models.Void]
-
-type ByteArray = pk.ByteArray
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataProfileName = models.Option[pk.String]
-
-type SlotComponentDataProfileUuid = models.Option[pk.UUID]
-
-type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+type ContainerID = pk.UnsignedByte
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
@@ -37,3 +19,21 @@ type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
 type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+
+type SlotComponentDataProfileName = models.Option[pk.String]
+
+type SlotComponentDataProfileUuid = models.Option[pk.UUID]
+
+type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
+type ChatSession = models.Option[models.Void]
+
+type Optvarint = pk.VarInt
+
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]

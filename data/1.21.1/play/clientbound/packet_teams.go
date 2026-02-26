@@ -353,13 +353,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Name = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Name] default case")
+			return errors.Wrap(err, "failed to read void switch field Name default case")
 		}
-		p.Name = &val
+		p.Name = &__void
 	}
 
 	// Switch field FriendlyFire based on mode
@@ -384,13 +385,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.FriendlyFire = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[FriendlyFire] default case")
+			return errors.Wrap(err, "failed to read void switch field FriendlyFire default case")
 		}
-		p.FriendlyFire = &val
+		p.FriendlyFire = &__void
 	}
 
 	// Switch field NameTagVisibility based on mode
@@ -415,13 +417,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.NameTagVisibility = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[NameTagVisibility] default case")
+			return errors.Wrap(err, "failed to read void switch field NameTagVisibility default case")
 		}
-		p.NameTagVisibility = &val
+		p.NameTagVisibility = &__void
 	}
 
 	// Switch field CollisionRule based on mode
@@ -446,13 +449,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.CollisionRule = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[CollisionRule] default case")
+			return errors.Wrap(err, "failed to read void switch field CollisionRule default case")
 		}
-		p.CollisionRule = &val
+		p.CollisionRule = &__void
 	}
 
 	// Switch field Formatting based on mode
@@ -477,13 +481,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Formatting = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Formatting] default case")
+			return errors.Wrap(err, "failed to read void switch field Formatting default case")
 		}
-		p.Formatting = &val
+		p.Formatting = &__void
 	}
 
 	// Switch field Prefix based on mode
@@ -508,13 +513,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Prefix = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Prefix] default case")
+			return errors.Wrap(err, "failed to read void switch field Prefix default case")
 		}
-		p.Prefix = &val
+		p.Prefix = &__void
 	}
 
 	// Switch field Suffix based on mode
@@ -539,13 +545,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Suffix = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Suffix] default case")
+			return errors.Wrap(err, "failed to read void switch field Suffix default case")
 		}
-		p.Suffix = &val
+		p.Suffix = &__void
 	}
 
 	// Switch field Players based on mode
@@ -578,13 +585,14 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Players] default case")
+			return errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		p.Players = &val
+		p.Players = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -599,8 +607,8 @@ func (p *Teams) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Team"] = p.Team
-	fields["Mode"] = p.Mode
+	fields["Team"] = &p.Team
+	fields["Mode"] = &p.Mode
 	fields["Name"] = p.Name
 	fields["FriendlyFire"] = p.FriendlyFire
 	fields["NameTagVisibility"] = p.NameTagVisibility
@@ -619,12 +627,11 @@ func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Teams) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Team"]; ok {
-		p.Team = val.(pk.String)
+		p.Team = *val.(*pk.String)
 	}
 	if val, ok := fields["Mode"]; ok {
-		p.Mode = val.(pk.Byte)
+		p.Mode = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Name"]; ok {
 		p.Name = val.(pk.Field)
@@ -827,13 +834,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Name = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Name default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Name default case")
 		}
-		t.Name = &val
+		t.Name = &__void
 	}
 
 	// Switch field FriendlyFire based on mode
@@ -858,13 +866,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.FriendlyFire = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field FriendlyFire default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field FriendlyFire default case")
 		}
-		t.FriendlyFire = &val
+		t.FriendlyFire = &__void
 	}
 
 	// Switch field NameTagVisibility based on mode
@@ -889,13 +898,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.NameTagVisibility = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field NameTagVisibility default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field NameTagVisibility default case")
 		}
-		t.NameTagVisibility = &val
+		t.NameTagVisibility = &__void
 	}
 
 	// Switch field CollisionRule based on mode
@@ -920,13 +930,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.CollisionRule = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field CollisionRule default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field CollisionRule default case")
 		}
-		t.CollisionRule = &val
+		t.CollisionRule = &__void
 	}
 
 	// Switch field Formatting based on mode
@@ -951,13 +962,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Formatting = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Formatting default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Formatting default case")
 		}
-		t.Formatting = &val
+		t.Formatting = &__void
 	}
 
 	// Switch field Prefix based on mode
@@ -982,13 +994,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Prefix = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Prefix default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Prefix default case")
 		}
-		t.Prefix = &val
+		t.Prefix = &__void
 	}
 
 	// Switch field Suffix based on mode
@@ -1013,13 +1026,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Suffix = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Suffix default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Suffix default case")
 		}
-		t.Suffix = &val
+		t.Suffix = &__void
 	}
 
 	// Switch field Players based on mode
@@ -1052,13 +1066,14 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Players default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Players default case")
 		}
-		t.Players = &val
+		t.Players = &__void
 	}
 
 	return totalBytes, nil

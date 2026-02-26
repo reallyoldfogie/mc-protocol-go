@@ -102,6 +102,8 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 	return totalBytes, nil
 }
 
+type EditBookTitle = models.Option[pk.String]
+
 type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
 type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
@@ -171,5 +173,3 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	}
 	return totalBytes, nil
 }
-
-type EditBookTitle = models.Option[pk.String]

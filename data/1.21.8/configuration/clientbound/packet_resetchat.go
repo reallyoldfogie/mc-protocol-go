@@ -64,7 +64,6 @@ func (p *ResetChat) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *ResetChat) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 }
 
 // Typed field accessor methods for version-specific type-safe access

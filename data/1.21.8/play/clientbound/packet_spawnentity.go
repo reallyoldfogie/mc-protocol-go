@@ -161,19 +161,19 @@ func (p *SpawnEntity) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *SpawnEntity) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["EntityId"] = p.EntityId
-	fields["ObjectUUID"] = p.ObjectUUID
-	fields["Type"] = p.Type
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["Pitch"] = p.Pitch
-	fields["Yaw"] = p.Yaw
-	fields["HeadPitch"] = p.HeadPitch
-	fields["ObjectData"] = p.ObjectData
-	fields["VelocityX"] = p.VelocityX
-	fields["VelocityY"] = p.VelocityY
-	fields["VelocityZ"] = p.VelocityZ
+	fields["EntityId"] = &p.EntityId
+	fields["ObjectUUID"] = &p.ObjectUUID
+	fields["Type"] = &p.Type
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["Pitch"] = &p.Pitch
+	fields["Yaw"] = &p.Yaw
+	fields["HeadPitch"] = &p.HeadPitch
+	fields["ObjectData"] = &p.ObjectData
+	fields["VelocityX"] = &p.VelocityX
+	fields["VelocityY"] = &p.VelocityY
+	fields["VelocityZ"] = &p.VelocityZ
 	return fields
 }
 
@@ -184,45 +184,44 @@ func (p *SpawnEntity) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *SpawnEntity) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["EntityId"]; ok {
-		p.EntityId = val.(pk.VarInt)
+		p.EntityId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["ObjectUUID"]; ok {
-		p.ObjectUUID = val.(pk.UUID)
+		p.ObjectUUID = *val.(*pk.UUID)
 	}
 	if val, ok := fields["Type"]; ok {
-		p.Type = val.(pk.VarInt)
+		p.Type = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["Pitch"]; ok {
-		p.Pitch = val.(pk.Byte)
+		p.Pitch = *val.(*pk.Byte)
 	}
 	if val, ok := fields["Yaw"]; ok {
-		p.Yaw = val.(pk.Byte)
+		p.Yaw = *val.(*pk.Byte)
 	}
 	if val, ok := fields["HeadPitch"]; ok {
-		p.HeadPitch = val.(pk.Byte)
+		p.HeadPitch = *val.(*pk.Byte)
 	}
 	if val, ok := fields["ObjectData"]; ok {
-		p.ObjectData = val.(pk.VarInt)
+		p.ObjectData = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["VelocityX"]; ok {
-		p.VelocityX = val.(pk.Short)
+		p.VelocityX = *val.(*pk.Short)
 	}
 	if val, ok := fields["VelocityY"]; ok {
-		p.VelocityY = val.(pk.Short)
+		p.VelocityY = *val.(*pk.Short)
 	}
 	if val, ok := fields["VelocityZ"]; ok {
-		p.VelocityZ = val.(pk.Short)
+		p.VelocityZ = *val.(*pk.Short)
 	}
 }
 

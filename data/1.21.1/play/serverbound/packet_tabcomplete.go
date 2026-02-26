@@ -73,8 +73,8 @@ func (p *TabComplete) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *TabComplete) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["TransactionId"] = p.TransactionId
-	fields["Text"] = p.Text
+	fields["TransactionId"] = &p.TransactionId
+	fields["Text"] = &p.Text
 	return fields
 }
 
@@ -85,12 +85,11 @@ func (p *TabComplete) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *TabComplete) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["TransactionId"]; ok {
-		p.TransactionId = val.(pk.VarInt)
+		p.TransactionId = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["Text"]; ok {
-		p.Text = val.(pk.String)
+		p.Text = *val.(*pk.String)
 	}
 }
 

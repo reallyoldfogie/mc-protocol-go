@@ -236,13 +236,14 @@ func (p *UnlockRecipes) Scan(packet pk.Packet) error {
 		}
 		p.Recipes2 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[Recipes2] default case")
+			return errors.Wrap(err, "failed to read void switch field Recipes2 default case")
 		}
-		p.Recipes2 = &val
+		p.Recipes2 = &__void
 	}
 
 	_ = totalBytes // Unused in Scan()
@@ -257,16 +258,16 @@ func (p *UnlockRecipes) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *UnlockRecipes) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["Action"] = p.Action
-	fields["CraftingBookOpen"] = p.CraftingBookOpen
-	fields["FilteringCraftable"] = p.FilteringCraftable
-	fields["SmeltingBookOpen"] = p.SmeltingBookOpen
-	fields["FilteringSmeltable"] = p.FilteringSmeltable
-	fields["BlastFurnaceOpen"] = p.BlastFurnaceOpen
-	fields["FilteringBlastFurnace"] = p.FilteringBlastFurnace
-	fields["SmokerBookOpen"] = p.SmokerBookOpen
-	fields["FilteringSmoker"] = p.FilteringSmoker
-	fields["Recipes1"] = p.Recipes1
+	fields["Action"] = &p.Action
+	fields["CraftingBookOpen"] = &p.CraftingBookOpen
+	fields["FilteringCraftable"] = &p.FilteringCraftable
+	fields["SmeltingBookOpen"] = &p.SmeltingBookOpen
+	fields["FilteringSmeltable"] = &p.FilteringSmeltable
+	fields["BlastFurnaceOpen"] = &p.BlastFurnaceOpen
+	fields["FilteringBlastFurnace"] = &p.FilteringBlastFurnace
+	fields["SmokerBookOpen"] = &p.SmokerBookOpen
+	fields["FilteringSmoker"] = &p.FilteringSmoker
+	fields["Recipes1"] = &p.Recipes1
 	fields["Recipes2"] = p.Recipes2
 	return fields
 }
@@ -278,36 +279,35 @@ func (p *UnlockRecipes) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *UnlockRecipes) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["Action"]; ok {
-		p.Action = val.(pk.VarInt)
+		p.Action = *val.(*pk.VarInt)
 	}
 	if val, ok := fields["CraftingBookOpen"]; ok {
-		p.CraftingBookOpen = val.(pk.Boolean)
+		p.CraftingBookOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["FilteringCraftable"]; ok {
-		p.FilteringCraftable = val.(pk.Boolean)
+		p.FilteringCraftable = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmeltingBookOpen"]; ok {
-		p.SmeltingBookOpen = val.(pk.Boolean)
+		p.SmeltingBookOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["FilteringSmeltable"]; ok {
-		p.FilteringSmeltable = val.(pk.Boolean)
+		p.FilteringSmeltable = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["BlastFurnaceOpen"]; ok {
-		p.BlastFurnaceOpen = val.(pk.Boolean)
+		p.BlastFurnaceOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["FilteringBlastFurnace"]; ok {
-		p.FilteringBlastFurnace = val.(pk.Boolean)
+		p.FilteringBlastFurnace = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["SmokerBookOpen"]; ok {
-		p.SmokerBookOpen = val.(pk.Boolean)
+		p.SmokerBookOpen = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["FilteringSmoker"]; ok {
-		p.FilteringSmoker = val.(pk.Boolean)
+		p.FilteringSmoker = *val.(*pk.Boolean)
 	}
 	if val, ok := fields["Recipes1"]; ok {
-		p.Recipes1 = val.(models.Array[pk.VarInt, pk.String])
+		p.Recipes1 = *val.(*models.Array[pk.VarInt, pk.String])
 	}
 	if val, ok := fields["Recipes2"]; ok {
 		p.Recipes2 = val.(pk.Field)
@@ -535,13 +535,14 @@ func (t *UnlockRecipes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Recipes2 = &val
 	default:
-		var val models.Void
-		bytesRead, err = val.ReadFrom(r)
+		// Void case - no data to read
+		var __void models.Void
+		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Recipes2 default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field Recipes2 default case")
 		}
-		t.Recipes2 = &val
+		t.Recipes2 = &__void
 	}
 
 	return totalBytes, nil

@@ -113,12 +113,12 @@ func (p *Explosion) Scan(packet pk.Packet) error {
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountGetter).
 func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
-	fields["X"] = p.X
-	fields["Y"] = p.Y
-	fields["Z"] = p.Z
-	fields["PlayerKnockback"] = p.PlayerKnockback
-	fields["ExplosionParticle"] = p.ExplosionParticle
-	fields["Sound"] = p.Sound
+	fields["X"] = &p.X
+	fields["Y"] = &p.Y
+	fields["Z"] = &p.Z
+	fields["PlayerKnockback"] = &p.PlayerKnockback
+	fields["ExplosionParticle"] = &p.ExplosionParticle
+	fields["Sound"] = &p.Sound
 	return fields
 }
 
@@ -129,24 +129,23 @@ func (p *Explosion) GetFields() map[string]pk.FieldEncoder {
 // For version-specific code with type safety, use the typed setter methods (e.g., SetCount()).
 // For semi-agnostic code with fields that have stable types, use the typed interfaces (e.g., CountSetter).
 func (p *Explosion) SetFields(fields map[string]pk.FieldEncoder) {
-	fmt.Printf("<no value>\n")
 	if val, ok := fields["X"]; ok {
-		p.X = val.(pk.Double)
+		p.X = *val.(*pk.Double)
 	}
 	if val, ok := fields["Y"]; ok {
-		p.Y = val.(pk.Double)
+		p.Y = *val.(*pk.Double)
 	}
 	if val, ok := fields["Z"]; ok {
-		p.Z = val.(pk.Double)
+		p.Z = *val.(*pk.Double)
 	}
 	if val, ok := fields["PlayerKnockback"]; ok {
-		p.PlayerKnockback = val.(models.Option[basetypes.Vec3f64])
+		p.PlayerKnockback = *val.(*models.Option[basetypes.Vec3f64])
 	}
 	if val, ok := fields["ExplosionParticle"]; ok {
-		p.ExplosionParticle = val.(basetypes.Particle)
+		p.ExplosionParticle = *val.(*basetypes.Particle)
 	}
 	if val, ok := fields["Sound"]; ok {
-		p.Sound = val.(basetypes.ItemSoundHolder)
+		p.Sound = *val.(*basetypes.ItemSoundHolder)
 	}
 }
 
