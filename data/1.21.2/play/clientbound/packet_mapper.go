@@ -64,171 +64,6 @@ func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int6
 	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
 }
 
-type ChatTypeParameterType struct {
-	Value string
-}
-
-var ChatTypeParameterTypeMappings = map[int64]string{
-	0: "content",
-	1: "sender",
-	2: "target",
-}
-
-func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
-	}
-
-	value, ok := ChatTypeParameterTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChatTypeParameterTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
-}
-
-type RecipeDisplayType struct {
-	Value string
-}
-
-var RecipeDisplayTypeMappings = map[int64]string{
-	0: "crafting_shapeless",
-	1: "crafting_shaped",
-	2: "furnace",
-	3: "stonecutter",
-	4: "smithing",
-}
-
-func (m *RecipeDisplayType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read RecipeDisplayType key")
-	}
-
-	value, ok := RecipeDisplayTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range RecipeDisplayTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
-}
-
-type SlotDisplayType struct {
-	Value string
-}
-
-var SlotDisplayTypeMappings = map[int64]string{
-	0: "empty",
-	1: "any_fuel",
-	2: "item",
-	3: "item_stack",
-	4: "tag",
-	5: "smithing_trim",
-	6: "with_remainder",
-	7: "composite",
-}
-
-func (m *SlotDisplayType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotDisplayType key")
-	}
-
-	value, ok := SlotDisplayTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotDisplayTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
-}
-
-type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
-	Value string
-}
-
-var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
-	0:  "crafting_building_blocks",
-	1:  "crafting_redstone",
-	10: "stonecutter",
-	11: "smithing",
-	12: "campfire",
-	2:  "crafting_equipment",
-	3:  "crafting_misc",
-	4:  "furnace_food",
-	5:  "furnace_blocks",
-	6:  "furnace_misc",
-	7:  "blast_furnace_blocks",
-	8:  "blast_furnace_misc",
-	9:  "smoker_food",
-}
-
-func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
-	}
-
-	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
-}
-
 type SpawnInfoGamemode struct {
 	Value string
 }
@@ -430,4 +265,169 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
+}
+
+type SlotDisplayType struct {
+	Value string
+}
+
+var SlotDisplayTypeMappings = map[int64]string{
+	0: "empty",
+	1: "any_fuel",
+	2: "item",
+	3: "item_stack",
+	4: "tag",
+	5: "smithing_trim",
+	6: "with_remainder",
+	7: "composite",
+}
+
+func (m *SlotDisplayType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotDisplayType key")
+	}
+
+	value, ok := SlotDisplayTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotDisplayTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
+}
+
+type ChatTypeParameterType struct {
+	Value string
+}
+
+var ChatTypeParameterTypeMappings = map[int64]string{
+	0: "content",
+	1: "sender",
+	2: "target",
+}
+
+func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
+	}
+
+	value, ok := ChatTypeParameterTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChatTypeParameterTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
+}
+
+type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
+	Value string
+}
+
+var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
+	0:  "crafting_building_blocks",
+	1:  "crafting_redstone",
+	10: "stonecutter",
+	11: "smithing",
+	12: "campfire",
+	2:  "crafting_equipment",
+	3:  "crafting_misc",
+	4:  "furnace_food",
+	5:  "furnace_blocks",
+	6:  "furnace_misc",
+	7:  "blast_furnace_blocks",
+	8:  "blast_furnace_misc",
+	9:  "smoker_food",
+}
+
+func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
+	}
+
+	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
+}
+
+type RecipeDisplayType struct {
+	Value string
+}
+
+var RecipeDisplayTypeMappings = map[int64]string{
+	0: "crafting_shapeless",
+	1: "crafting_shaped",
+	2: "furnace",
+	3: "stonecutter",
+	4: "smithing",
+}
+
+func (m *RecipeDisplayType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read RecipeDisplayType key")
+	}
+
+	value, ok := RecipeDisplayTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range RecipeDisplayTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
 }

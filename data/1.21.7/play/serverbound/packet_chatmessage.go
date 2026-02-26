@@ -53,7 +53,7 @@ import (
 //	    },
 //	    {
 //	      "name": "checksum",
-//	      "type": "u8"
+//	      "type": "i8"
 //	    }
 //	  ]
 //	]
@@ -84,8 +84,8 @@ type ChatMessage struct {
 	//                 }
 	//               ]
 	Acknowledged models.FixedBuffer3
-	// "u8"
-	Checksum pk.UnsignedByte
+	// "i8"
+	Checksum pk.Byte
 }
 
 // NewChatMessage creates a new ChatMessage packet with the correct packet ID.
@@ -177,7 +177,7 @@ func (p *ChatMessage) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Acknowledged = val.(models.FixedBuffer3)
 	}
 	if val, ok := fields["Checksum"]; ok {
-		p.Checksum = val.(pk.UnsignedByte)
+		p.Checksum = val.(pk.Byte)
 	}
 }
 
@@ -269,14 +269,14 @@ func (p *ChatMessage) SetAcknowledged(val models.FixedBuffer3) {
 // GetChecksum returns the Checksum field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *ChatMessage) GetChecksum() pk.UnsignedByte {
+func (p *ChatMessage) GetChecksum() pk.Byte {
 	return p.Checksum
 }
 
 // SetChecksum sets the Checksum field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *ChatMessage) SetChecksum(val pk.UnsignedByte) {
+func (p *ChatMessage) SetChecksum(val pk.Byte) {
 	p.Checksum = val
 }
 

@@ -801,22 +801,6 @@ func (t ScoreboardObjective) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	return totalBytes, nil
 }
 
-type ScoreboardObjectiveNumberFormat0 models.Option[pk.VarInt]
+type ScoreboardObjectiveNumberFormat0 = models.Option[pk.VarInt]
 
-func (t *ScoreboardObjectiveNumberFormat0) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t ScoreboardObjectiveNumberFormat0) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type ScoreboardObjectiveNumberFormat2 models.Option[pk.VarInt]
-
-func (t *ScoreboardObjectiveNumberFormat2) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t ScoreboardObjectiveNumberFormat2) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
+type ScoreboardObjectiveNumberFormat2 = models.Option[pk.VarInt]

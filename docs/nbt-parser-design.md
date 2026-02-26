@@ -127,7 +127,7 @@ func (nr *NBTReader) ReadValue(tagType NBTType) (NBTValue, error)
 ### Integration with Existing Code
 
 The new NBT parser should:
-1. **Integrate with Buffer type** in `models/buffer.go` for io.Reader/io.Writer compatibility
+1. **Integrate with RestBuffer type** in `models/rest_buffer.go` for io.Reader/io.Writer compatibility
 2. **Support binary.ByteOrder configuration** (BigEndian for Java Edition)
 3. **Provide error types** similar to existing `NbtParseError`
 4. **Follow project conventions** as defined in user rules
@@ -285,4 +285,3 @@ The NBT parser implementation will maintain the MIT license from the original nb
 - Minecraft NBT specification: https://wiki.vg/NBT
 - Existing implementation: `models/nbt.go`
 - NBTField definition: `/home/reallyoldfogie/src/github.com/reallyoldfogie/vendor/github.com/Tnze/go-mc/net/packet/types.go`
-

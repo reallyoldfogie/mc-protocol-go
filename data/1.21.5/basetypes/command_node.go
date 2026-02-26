@@ -10,7 +10,6 @@ import (
 	"log"
 )
 
-//
 type CommandNodeFlags struct {
 	Unused               int64
 	HasCustomSuggestions int64
@@ -255,7 +254,83 @@ func (m CommandNodeExtraNodeData2Parser) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2Parser value: %s", m.Value)
 }
 
+type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
+	Value string
+}
+
+var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
+	0: "SINGLE_WORD",
+	1: "QUOTABLE_PHRASE",
+	2: "GREEDY_PHRASE",
+}
+
+func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
+	}
+
+	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
+}
+
+// Protodef: [
 //
+//	  "container",
+//	  [
+//	    {
+//	      "name": "registry",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
+	// "string"
+	Registry pk.String
+}
+
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Registry.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Registry.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type CommandNodeExtraNodeData2PropertiesBrigadierDoubleFlags struct {
 	Unused     int64
 	MaxPresent int64
@@ -560,12 +635,12 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierDouble) WriteTo(w io.Writer)
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector struct {
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceKey struct {
 	// "string"
 	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
@@ -576,11 +651,11 @@ func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) ReadFrom(
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
@@ -590,7 +665,165 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) WriteTo(w 
 	return totalBytes, nil
 }
 
+type CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder struct {
+	Unused        int64
+	AllowMultiple int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 7
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (7 bits, signed=false)
+	unused_mask := uint64((1 << 7) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 7)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 7
+	// Extract allowMultiple (1 bits, signed=false)
+	allowMultiple_mask := uint64((1 << 1) - 1)
+	allowMultiple_value := (packed >> (totalBits - currentOffset - 1)) & allowMultiple_mask
+	b.AllowMultiple = int64(allowMultiple_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 7
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (7 bits)
+	unused_value := uint64(b.Unused) & ((1 << 7) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 7)
+	currentOffset += 7
+	// Pack allowMultiple (1 bits)
+	allowMultiple_value := uint64(b.AllowMultiple) & ((1 << 1) - 1)
+	packed |= allowMultiple_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
+}
+
+// Protodef: [
 //
+//	  "container",
+//	  [
+//	    {
+//	      "name": "min",
+//	      "type": "i32"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
+	// "i32"
+	Min pk.Int
+}
+
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Min.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Min")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Min.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "registry",
+//	      "type": "string"
+//	    }
+//	  ]
+//	]
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag struct {
+	// "string"
+	Registry pk.String
+}
+
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Registry.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Registry")
+	}
+
+	return totalBytes, nil
+}
+
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Registry.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type CommandNodeExtraNodeData2PropertiesBrigadierFloatFlags struct {
 	Unused     int64
 	MaxPresent int64
@@ -885,98 +1118,6 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierFloat) WriteTo(w io.Writer) 
 	return totalBytes, nil
 }
 
-//
-type CommandNodeExtraNodeData2PropertiesMinecraftEntity struct {
-	Unused            int64
-	OnlyAllowPlayers  int64
-	OnlyAllowEntities int64
-}
-
-func (b *CommandNodeExtraNodeData2PropertiesMinecraftEntity) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (6 bits, signed=false)
-	unused_mask := uint64((1 << 6) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 6
-	// Extract onlyAllowPlayers (1 bits, signed=false)
-	onlyAllowPlayers_mask := uint64((1 << 1) - 1)
-	onlyAllowPlayers_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowPlayers_mask
-	b.OnlyAllowPlayers = int64(onlyAllowPlayers_value)
-	currentOffset += 1
-	// Extract onlyAllowEntities (1 bits, signed=false)
-	onlyAllowEntities_mask := uint64((1 << 1) - 1)
-	onlyAllowEntities_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowEntities_mask
-	b.OnlyAllowEntities = int64(onlyAllowEntities_value)
-	currentOffset += 1
-
-	return int64(nn), nil
-}
-
-func (b CommandNodeExtraNodeData2PropertiesMinecraftEntity) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 6
-	totalBits += 1
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (6 bits)
-	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 6)
-	currentOffset += 6
-	// Pack onlyAllowPlayers (1 bits)
-	onlyAllowPlayers_value := uint64(b.OnlyAllowPlayers) & ((1 << 1) - 1)
-	packed |= onlyAllowPlayers_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-	// Pack onlyAllowEntities (1 bits)
-	onlyAllowEntities_value := uint64(b.OnlyAllowEntities) & ((1 << 1) - 1)
-	packed |= onlyAllowEntities_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
 // Protodef: [
 //
 //	  "container",
@@ -1017,7 +1158,6 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResource) WriteTo(w io.Write
 	return totalBytes, nil
 }
 
-//
 type CommandNodeExtraNodeData2PropertiesBrigadierIntegerFlags struct {
 	Unused     int64
 	MaxPresent int64
@@ -1312,127 +1452,6 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierInteger) WriteTo(w io.Writer
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "min",
-//	      "type": "i32"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftTime struct {
-	// "i32"
-	Min pk.Int
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Min.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Min")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftTime) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftTime.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Min.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "registry",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceKey struct {
-	// "string"
-	Registry pk.String
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "registry",
-//	      "type": "string"
-//	    }
-//	  ]
-//	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag struct {
-	// "string"
-	Registry pk.String
-}
-
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Registry.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Registry")
-	}
-
-	return totalBytes, nil
-}
-
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTag.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Registry.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-//
 type CommandNodeExtraNodeData2PropertiesBrigadierLongFlags struct {
 	Unused     int64
 	MaxPresent int64
@@ -1727,123 +1746,6 @@ func (t CommandNodeExtraNodeData2PropertiesBrigadierLong) WriteTo(w io.Writer) (
 	return totalBytes, nil
 }
 
-type CommandNodeExtraNodeData2PropertiesBrigadierString struct {
-	Value string
-}
-
-var CommandNodeExtraNodeData2PropertiesBrigadierStringMappings = map[int64]string{
-	0: "SINGLE_WORD",
-	1: "QUOTABLE_PHRASE",
-	2: "GREEDY_PHRASE",
-}
-
-func (m *CommandNodeExtraNodeData2PropertiesBrigadierString) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read CommandNodeExtraNodeData2PropertiesBrigadierString key")
-	}
-
-	value, ok := CommandNodeExtraNodeData2PropertiesBrigadierStringMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m CommandNodeExtraNodeData2PropertiesBrigadierString) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range CommandNodeExtraNodeData2PropertiesBrigadierStringMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown CommandNodeExtraNodeData2PropertiesBrigadierString value: %s", m.Value)
-}
-
-//
-type CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder struct {
-	Unused        int64
-	AllowMultiple int64
-}
-
-func (b *CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) ReadFrom(r io.Reader) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 7
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-	data := make([]byte, numBytes)
-
-	nn, err := io.ReadFull(r, data)
-	if err != nil {
-		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder")
-	}
-
-	// Convert bytes to uint64 (big-endian)
-	var packed uint64
-	for i := 0; i < numBytes; i++ {
-		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
-	}
-
-	// Extract bit fields
-	currentOffset := 0
-	// Extract unused (7 bits, signed=false)
-	unused_mask := uint64((1 << 7) - 1)
-	unused_value := (packed >> (totalBits - currentOffset - 7)) & unused_mask
-	b.Unused = int64(unused_value)
-	currentOffset += 7
-	// Extract allowMultiple (1 bits, signed=false)
-	allowMultiple_mask := uint64((1 << 1) - 1)
-	allowMultiple_value := (packed >> (totalBits - currentOffset - 1)) & allowMultiple_mask
-	b.AllowMultiple = int64(allowMultiple_value)
-	currentOffset += 1
-
-	return int64(nn), nil
-}
-
-func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Writer) (int64, error) {
-	// Calculate total bits and bytes needed
-	totalBits := 0
-	totalBits += 7
-	totalBits += 1
-
-	if totalBits%8 != 0 {
-		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder total size %d is not a multiple of 8", totalBits)
-	}
-
-	numBytes := totalBits / 8
-
-	// Pack bit fields into uint64
-	var packed uint64
-	currentOffset := 0
-	// Pack unused (7 bits)
-	unused_value := uint64(b.Unused) & ((1 << 7) - 1)
-	packed |= unused_value << (totalBits - currentOffset - 7)
-	currentOffset += 7
-	// Pack allowMultiple (1 bits)
-	allowMultiple_value := uint64(b.AllowMultiple) & ((1 << 1) - 1)
-	packed |= allowMultiple_value << (totalBits - currentOffset - 1)
-	currentOffset += 1
-
-	// Convert uint64 to bytes (big-endian)
-	data := make([]byte, numBytes)
-	for i := 0; i < numBytes; i++ {
-		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
-	}
-
-	nn, err := w.Write(data)
-	return int64(nn), err
-}
-
 // Protodef: [
 //
 //	  "container",
@@ -1854,12 +1756,12 @@ func (b CommandNodeExtraNodeData2PropertiesMinecraftScoreHolder) WriteTo(w io.Wr
 //	    }
 //	  ]
 //	]
-type CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey struct {
+type CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector struct {
 	// "string"
 	Registry pk.String
 }
 
-func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Registry.ReadFrom(r)
 	totalBytes += bytesRead
@@ -1870,11 +1772,11 @@ func (t *CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) ReadFrom(
 	return totalBytes, nil
 }
 
-func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[CommandNodeExtraNodeData2PropertiesMinecraftResourceSelector.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Registry.WriteTo(w)
 	totalBytes += bytesWritten
@@ -1882,6 +1784,97 @@ func (t CommandNodeExtraNodeData2PropertiesMinecraftResourceOrTagKey) WriteTo(w 
 		return totalBytes, err
 	}
 	return totalBytes, nil
+}
+
+type CommandNodeExtraNodeData2PropertiesMinecraftEntity struct {
+	Unused            int64
+	OnlyAllowPlayers  int64
+	OnlyAllowEntities int64
+}
+
+func (b *CommandNodeExtraNodeData2PropertiesMinecraftEntity) ReadFrom(r io.Reader) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+	data := make([]byte, numBytes)
+
+	nn, err := io.ReadFull(r, data)
+	if err != nil {
+		return int64(nn), errors.Wrap(err, "failed to read bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity")
+	}
+
+	// Convert bytes to uint64 (big-endian)
+	var packed uint64
+	for i := 0; i < numBytes; i++ {
+		packed |= uint64(data[i]) << (8 * (numBytes - 1 - i))
+	}
+
+	// Extract bit fields
+	currentOffset := 0
+	// Extract unused (6 bits, signed=false)
+	unused_mask := uint64((1 << 6) - 1)
+	unused_value := (packed >> (totalBits - currentOffset - 6)) & unused_mask
+	b.Unused = int64(unused_value)
+	currentOffset += 6
+	// Extract onlyAllowPlayers (1 bits, signed=false)
+	onlyAllowPlayers_mask := uint64((1 << 1) - 1)
+	onlyAllowPlayers_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowPlayers_mask
+	b.OnlyAllowPlayers = int64(onlyAllowPlayers_value)
+	currentOffset += 1
+	// Extract onlyAllowEntities (1 bits, signed=false)
+	onlyAllowEntities_mask := uint64((1 << 1) - 1)
+	onlyAllowEntities_value := (packed >> (totalBits - currentOffset - 1)) & onlyAllowEntities_mask
+	b.OnlyAllowEntities = int64(onlyAllowEntities_value)
+	currentOffset += 1
+
+	return int64(nn), nil
+}
+
+func (b CommandNodeExtraNodeData2PropertiesMinecraftEntity) WriteTo(w io.Writer) (int64, error) {
+	// Calculate total bits and bytes needed
+	totalBits := 0
+	totalBits += 6
+	totalBits += 1
+	totalBits += 1
+
+	if totalBits%8 != 0 {
+		return 0, fmt.Errorf("bitfield CommandNodeExtraNodeData2PropertiesMinecraftEntity total size %d is not a multiple of 8", totalBits)
+	}
+
+	numBytes := totalBits / 8
+
+	// Pack bit fields into uint64
+	var packed uint64
+	currentOffset := 0
+	// Pack unused (6 bits)
+	unused_value := uint64(b.Unused) & ((1 << 6) - 1)
+	packed |= unused_value << (totalBits - currentOffset - 6)
+	currentOffset += 6
+	// Pack onlyAllowPlayers (1 bits)
+	onlyAllowPlayers_value := uint64(b.OnlyAllowPlayers) & ((1 << 1) - 1)
+	packed |= onlyAllowPlayers_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+	// Pack onlyAllowEntities (1 bits)
+	onlyAllowEntities_value := uint64(b.OnlyAllowEntities) & ((1 << 1) - 1)
+	packed |= onlyAllowEntities_value << (totalBits - currentOffset - 1)
+	currentOffset += 1
+
+	// Convert uint64 to bytes (big-endian)
+	data := make([]byte, numBytes)
+	for i := 0; i < numBytes; i++ {
+		data[i] = byte(packed >> (8 * (numBytes - 1 - i)))
+	}
+
+	nn, err := w.Write(data)
+	return int64(nn), err
 }
 
 // Protodef: [
@@ -3228,41 +3221,15 @@ func (t *CommandNodeExtraNodeData2) ReadFromWithParentContext(r io.Reader, ctx m
 func (t CommandNodeExtraNodeData2) WriteToWithParentContext(w io.Writer, ctx models.ParentContext) (totalBytes int64, err error) {
 	// Write switch fields using their underlying encoders when set; other fields normally.
 	var bytesWritten int64
-	bytesWritten, err = t.Name.WriteTo(w)
+	bytesWritten, err = t.Properties.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Parser.WriteTo(w)
+	bytesWritten, err = t.SuggestionType.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
-	}
-	if t.Properties != nil {
-		if writer, ok := t.Properties.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			return totalBytes, fmt.Errorf("switch field Properties value does not implement WriteTo: %T", t.Properties)
-		}
-	}
-	if t.SuggestionType != nil {
-		if writer, ok := t.SuggestionType.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			return totalBytes, fmt.Errorf("switch field SuggestionType value does not implement WriteTo: %T", t.SuggestionType)
-		}
 	}
 	return totalBytes, nil
 }

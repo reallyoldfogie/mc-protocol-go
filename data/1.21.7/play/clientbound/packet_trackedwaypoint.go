@@ -80,7 +80,23 @@ import (
 //	                  "name": "color",
 //	                  "type": [
 //	                    "option",
-//	                    "i32"
+//	                    [
+//	                      "container",
+//	                      [
+//	                        {
+//	                          "name": "red",
+//	                          "type": "u8"
+//	                        },
+//	                        {
+//	                          "name": "green",
+//	                          "type": "u8"
+//	                        },
+//	                        {
+//	                          "name": "blue",
+//	                          "type": "u8"
+//	                        }
+//	                      ]
+//	                    ]
 //	                  ]
 //	                }
 //	              ]
@@ -195,7 +211,23 @@ type TrackedWaypoint struct {
 	//                           "name": "color",
 	//                           "type": [
 	//                             "option",
-	//                             "i32"
+	//                             [
+	//                               "container",
+	//                               [
+	//                                 {
+	//                                   "name": "red",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "green",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "blue",
+	//                                   "type": "u8"
+	//                                 }
+	//                               ]
+	//                             ]
 	//                           ]
 	//                         }
 	//                       ]
@@ -424,7 +456,23 @@ func (t TrackedWaypoint) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	            "name": "color",
 //	            "type": [
 //	              "option",
-//	              "i32"
+//	              [
+//	                "container",
+//	                [
+//	                  {
+//	                    "name": "red",
+//	                    "type": "u8"
+//	                  },
+//	                  {
+//	                    "name": "green",
+//	                    "type": "u8"
+//	                  },
+//	                  {
+//	                    "name": "blue",
+//	                    "type": "u8"
+//	                  }
+//	                ]
+//	              ]
 //	            ]
 //	          }
 //	        ]
@@ -514,7 +562,23 @@ type TrackedWaypointWaypoint struct {
 	//                           "name": "color",
 	//                           "type": [
 	//                             "option",
-	//                             "i32"
+	//                             [
+	//                               "container",
+	//                               [
+	//                                 {
+	//                                   "name": "red",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "green",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "blue",
+	//                                   "type": "u8"
+	//                                 }
+	//                               ]
+	//                             ]
 	//                           ]
 	//                         }
 	//                       ]

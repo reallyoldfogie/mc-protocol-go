@@ -172,13 +172,7 @@ func Run(cfg *Config) error {
 			continue
 		}
 
-		// Check if protocol.json exists before attempting generation
-		protocolJSONPath := filepath.Join(cfg.Cache.MetadataDir, version, "downloads", "protocol.json")
-		if _, err := os.Stat(protocolJSONPath); os.IsNotExist(err) {
-			fmt.Printf("Warning: protocol.json not found for version %s, skipping protocol generation\n", version)
-			continue
-		}
-
+		// GetProtocolData will download protocol.json from PrismarineJS if it doesn't exist
 		protocolDefinitions, err := GetProtocolData(cfg.Cache.MetadataDir, version2Use, version)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to get protocol data for version (%s): %s", version, err.Error()))

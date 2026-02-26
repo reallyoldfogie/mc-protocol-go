@@ -510,7 +510,7 @@ Verify toNative() mappings in `/internal/generator/packets.go` (lines 3026-3187)
 - [ ] anonOptionalNbt → models.Option[pk.NBTField] (TYPE IS CORRECT - needs V field initialization)
 - [x] bitflags with u32 → models.UInt32 (FIXED in bitflags PR)
 - [x] buffer → pk.ByteArray
-- [x] restBuffer → models.Void (may need proper implementation)
+- [x] restBuffer → models.RestBuffer
 
 ---
 

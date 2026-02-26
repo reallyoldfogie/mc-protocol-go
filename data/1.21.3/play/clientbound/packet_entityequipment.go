@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/pkg/errors"
+	"github.com/reallyoldfogie/mc-protocol-go/data/1.21.3/basetypes"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 	"io"
 	"log"
@@ -63,7 +64,7 @@ type EntityEquipment struct {
 	//                   ]
 	//                 }
 	//               ]
-	Equipments models.Void
+	Equipments models.TopBitSetTerminatedArray[EntityEquipmentEquipmentsEntry]
 }
 
 // NewEntityEquipment creates a new EntityEquipment packet with the correct packet ID.
@@ -125,7 +126,7 @@ func (p *EntityEquipment) SetFields(fields map[string]pk.FieldEncoder) {
 		p.EntityId = val.(pk.VarInt)
 	}
 	if val, ok := fields["Equipments"]; ok {
-		p.Equipments = val.(models.Void)
+		p.Equipments = val.(models.TopBitSetTerminatedArray[EntityEquipmentEquipmentsEntry])
 	}
 }
 
@@ -147,14 +148,14 @@ func (p *EntityEquipment) SetEntityId(val pk.VarInt) {
 // GetEquipments returns the Equipments field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EntityEquipment) GetEquipments() models.Void {
+func (p *EntityEquipment) GetEquipments() models.TopBitSetTerminatedArray[EntityEquipmentEquipmentsEntry] {
 	return p.Equipments
 }
 
 // SetEquipments sets the Equipments field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EntityEquipment) SetEquipments(val models.Void) {
+func (p *EntityEquipment) SetEquipments(val models.TopBitSetTerminatedArray[EntityEquipmentEquipmentsEntry]) {
 	p.Equipments = val
 }
 
@@ -186,6 +187,62 @@ func (t EntityEquipment) WriteTo(w io.Writer) (totalBytes int64, err error) {
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Equipments.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "slot",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "item",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type EntityEquipmentEquipmentsEntry struct {
+	// "i8"
+	Slot pk.Byte
+	// "Slot"
+	Item basetypes.Slot
+}
+
+func (t *EntityEquipmentEquipmentsEntry) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Slot.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Slot")
+	}
+	bytesRead, err = t.Item.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Item")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityEquipmentEquipmentsEntry) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityEquipmentEquipmentsEntry.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Slot.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Item.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

@@ -503,6 +503,17 @@ func compareValue(fieldName string, expected interface{}, actual reflect.Value) 
 					if _, isVoid := actualValue.(models.Void); isVoid {
 						return nil
 					}
+					// Check if actualValue is RestBuffer with no data
+					if restBuf, ok := actualValue.(models.RestBuffer); ok {
+						if len(restBuf.Data) == 0 {
+							return nil
+						}
+					}
+					if restBuf, ok := actualValue.(*models.RestBuffer); ok {
+						if restBuf == nil || len(restBuf.Data) == 0 {
+							return nil
+						}
+					}
 				}
 				// Non-empty buffer: compare with byte array
 				// Try direct []byte first
@@ -513,6 +524,13 @@ func compareValue(fieldName string, expected interface{}, actual reflect.Value) 
 				// Try packet.ByteArray (which is an alias for []byte from Tnze/go-mc)
 				if byteArr, ok := actualValue.(pk.ByteArray); ok {
 					return compareByteArrays(fieldName, data, []byte(byteArr))
+				}
+				// Try RestBuffer
+				if restBuf, ok := actualValue.(models.RestBuffer); ok {
+					return compareByteArrays(fieldName, data, restBuf.Data)
+				}
+				if restBuf, ok := actualValue.(*models.RestBuffer); ok && restBuf != nil {
+					return compareByteArrays(fieldName, data, restBuf.Data)
 				}
 
 				// Try reflection for any slice of bytes

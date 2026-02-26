@@ -49,6 +49,62 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 //	  "container",
 //	  [
 //	    {
+//	      "name": "location",
+//	      "type": "i16"
+//	    },
+//	    {
+//	      "name": "item",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type WindowClickChangedSlotsArrayType struct {
+	// "i16"
+	Location pk.Short
+	// "Slot"
+	Item basetypes.Slot
+}
+
+func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Location.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+	bytesRead, err = t.Item.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Item")
+	}
+
+	return totalBytes, nil
+}
+
+func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Item.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "argumentName",
 //	      "type": "string"
 //	    },
@@ -110,98 +166,10 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type EditBookTitle models.Option[pk.String]
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
-func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
 
-func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
 
-type SetBeaconEffectPrimaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectPrimaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectPrimaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type SetBeaconEffectSecondaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectSecondaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectSecondaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "location",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "item",
-//	      "type": "Slot"
-//	    }
-//	  ]
-//	]
-type WindowClickChangedSlotsArrayType struct {
-	// "i16"
-	Location pk.Short
-	// "Slot"
-	Item basetypes.Slot
-}
-
-func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-	bytesRead, err = t.Item.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Item")
-	}
-
-	return totalBytes, nil
-}
-
-func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Item.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ChatMessageSignature models.Option[models.FixedBuffer256]
-
-func (t *ChatMessageSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
-}
-
-func (t ChatMessageSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
-}
+type EditBookTitle = models.Option[pk.String]

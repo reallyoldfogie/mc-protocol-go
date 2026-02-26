@@ -44,6 +44,12 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
+
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
 // Protodef: [
 //
 //	  "container",
@@ -98,46 +104,6 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 		return totalBytes, err
 	}
 	return totalBytes, nil
-}
-
-type EditBookTitle models.Option[pk.String]
-
-func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type ChatMessageSignature models.Option[models.FixedBuffer256]
-
-func (t *ChatMessageSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
-}
-
-func (t ChatMessageSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
-}
-
-type SetBeaconEffectPrimaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectPrimaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectPrimaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type SetBeaconEffectSecondaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectSecondaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectSecondaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
 }
 
 // Protodef: [
@@ -205,3 +171,5 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	}
 	return totalBytes, nil
 }
+
+type EditBookTitle = models.Option[pk.String]

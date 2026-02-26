@@ -10,15 +10,7 @@ import (
 	"log"
 )
 
-type RegistryDataEntriesArrayTypeValue models.Option[models.AnonymousNBT]
-
-func (t *RegistryDataEntriesArrayTypeValue) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t RegistryDataEntriesArrayTypeValue) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
+type RegistryDataEntriesArrayTypeValue = models.Option[models.AnonymousNBT]
 
 // Protodef: [
 //

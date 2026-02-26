@@ -795,12 +795,4 @@ func (t Map) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-type MapIcons models.Array[pk.VarInt, MapIconsMapIconsElement]
-
-func (t *MapIcons) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, MapIconsMapIconsElement])(t).ReadFrom(r)
-}
-
-func (t MapIcons) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, MapIconsMapIconsElement])(t).WriteTo(w)
-}
+type MapIcons = models.Array[pk.VarInt, MapIconsMapIconsElement]

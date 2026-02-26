@@ -44,55 +44,7 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type TestInstanceBlockActionDataTest models.Option[pk.String]
-
-func (t *TestInstanceBlockActionDataTest) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t TestInstanceBlockActionDataTest) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type TestInstanceBlockActionDataErrorMessage models.Option[models.AnonymousNBT]
-
-func (t *TestInstanceBlockActionDataErrorMessage) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.AnonymousNBT])(t).ReadFrom(r)
-}
-
-func (t TestInstanceBlockActionDataErrorMessage) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.AnonymousNBT])(t).WriteTo(w)
-}
-
-type SetBeaconEffectPrimaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectPrimaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectPrimaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type SetBeaconEffectSecondaryEffect models.Option[pk.VarInt]
-
-func (t *SetBeaconEffectSecondaryEffect) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
-
-func (t SetBeaconEffectSecondaryEffect) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type WindowClickChangedSlotsArrayTypeItem models.Option[basetypes.HashedSlot]
-
-func (t *WindowClickChangedSlotsArrayTypeItem) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[basetypes.HashedSlot])(t).ReadFrom(r)
-}
-
-func (t WindowClickChangedSlotsArrayTypeItem) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[basetypes.HashedSlot])(t).WriteTo(w)
-}
+type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
 
 // Protodef: [
 //
@@ -156,25 +108,7 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 	return totalBytes, nil
 }
 
-type WindowClickCursorItem models.Option[basetypes.HashedSlot]
-
-func (t *WindowClickCursorItem) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[basetypes.HashedSlot])(t).ReadFrom(r)
-}
-
-func (t WindowClickCursorItem) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[basetypes.HashedSlot])(t).WriteTo(w)
-}
-
-type EditBookTitle models.Option[pk.String]
-
-func (t *EditBookTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t EditBookTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type WindowClickCursorItem = models.Option[basetypes.HashedSlot]
 
 // Protodef: [
 //
@@ -242,12 +176,14 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type ChatMessageSignature models.Option[models.FixedBuffer256]
+type TestInstanceBlockActionDataTest = models.Option[pk.String]
 
-func (t *ChatMessageSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.FixedBuffer256])(t).ReadFrom(r)
-}
+type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
 
-func (t ChatMessageSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.FixedBuffer256])(t).WriteTo(w)
-}
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
+
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
+type EditBookTitle = models.Option[pk.String]

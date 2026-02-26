@@ -335,7 +335,7 @@ if actualStruct := reflect.ValueOf(actualValue); actualStruct.Kind() == reflect.
 
 Two distinct issues:
 1. `expected string "test", got *packet.String(0xc0009d7770)` - pointer not dereferenced
-2. `expected string "auto_9eckxj", got *models.Buffer(&{[]})` - parsed as Buffer instead of String!
+2. `expected string "auto_9eckxj", got *models.RestBuffer(&{[]})` - parsed as RestBuffer instead of String!
 
 ### Analysis
 
@@ -369,7 +369,7 @@ for actual.Kind() == reflect.Ptr && !actual.IsNil() {
 
 ### Solution for Issue #2 (Parsing Bug)
 
-The `tabId` field is being parsed as `*models.Buffer` instead of string. This is a **generator bug** or **protocol definition issue**.
+The `tabId` field is being parsed as `*models.RestBuffer` instead of string. This is a **generator bug** or **protocol definition issue**.
 
 **Action Required:**
 1. Check protocol definition for `advancement_tab` packet

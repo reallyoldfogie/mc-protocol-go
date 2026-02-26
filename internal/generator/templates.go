@@ -291,7 +291,10 @@ const (
 				{{- $short = trimPrefix $short "models."}}
 				{{- $useModels = true}}
 			{{- end}}
-			{{- if or (contains $short "Common") $useBasetype}}
+			{{- if not $short}}
+				// Safety-net: StructName was not resolved during generation
+				return nil, fmt.Errorf("clientbound play packet %q (0x%X) has no struct name - packet struct was not generated", "{{$value.Name}}", {{$key.ID}})
+			{{- else if or (contains $short "Common") $useBasetype}}
 				pkt := basetypes.New{{$short}}()
 				pkt.SetPacketID({{$key.ID}})
 				return pkt, nil
@@ -347,11 +350,13 @@ const (
 				pkt := basetypes.New{{$value.StructName}}()
 				pkt.SetPacketID({{$key.ID}})
 				return pkt, nil {{else}}
-				return play_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if contains $value.Name "Common"}}
+				return play_serverbound.New{{$value.StructName}}(), nil{{end}}{{else}}{{if $value.Name}}{{if contains $value.Name "Common"}}
 				pkt := basetypes.New{{$value.Name}}()
 				pkt.SetPacketID({{$key.ID}})
 				return pkt, nil {{else}}
-				return play_serverbound.New{{$value.Name}}(), nil{{end}}{{end}}{{end}}
+				return play_serverbound.New{{$value.Name}}(), nil{{end}}{{else}}
+				// Safety-net: both StructName and Name are empty - packet struct was not generated
+				return nil, fmt.Errorf("serverbound play packet at 0x%X has no struct name - packet struct was not generated", {{$key.ID}}){{end}}{{end}}{{end}}
 		default:
 			return nil, fmt.Errorf("unknown serverbound play packet ID: %d", id)
 		}
@@ -427,6 +432,7 @@ package {{PACKAGE_NAME}}
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
@@ -434,27 +440,27 @@ import (
 type Packets struct {}
 
 func (p Packets) GetClientboundLoginPacketID(name string) models.ClientboundPacketID {
-	fmt.Printf("GetClientboundLoginPacketID(\"%s\")\n",name)
+	log.Printf("GetClientboundLoginPacketID(\"%s\")\n",name)
 
 	switch name { {{range $key, $value := .Login.Clientbound}}
 	case "LoginClientbound{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return LoginClientbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "LoginClientboundPacketIDGuard": return {{.MaxLoginClientboundID.ID}}
 	default:
-		fmt.Printf("GetClientboundLoginPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetClientboundLoginPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
 
 func (p Packets) GetServerboundLoginPacketID(name string) models.ServerboundPacketID {
-	fmt.Printf("GetServerboundLoginPacketID(\"%s\")\n",name)
+	log.Printf("GetServerboundLoginPacketID(\"%s\")\n",name)
 
 	switch name { {{range $key, $value := .Login.Serverbound}}
 	case "LoginServerbound{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return LoginServerbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "LoginServerboundPacketIDGuard": return {{.MaxLoginServerboundID.ID}}
 	default:
-		fmt.Printf("GetServerboundLoginPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetServerboundLoginPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }
@@ -471,14 +477,14 @@ func (p Packets) ClientboundLoginToString(id models.ClientboundPacketID) string 
 }
 
 func (p Packets) GetClientboundConfigPacketID(name string) models.ClientboundPacketID {
-	fmt.Printf("GetClientboundConfigPacketID(\"%s\")\n",name)
+	log.Printf("GetClientboundConfigPacketID(\"%s\")\n",name)
 
 	switch name { {{range $key, $value := .Configuration.Clientbound}}
 	case "ClientboundConfig{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return ClientboundConfig{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ClientboundConfigPacketIDGuard": return {{.MaxConfigClientboundID.ID}}
 	default:
-		fmt.Printf("GetClientboundConfigPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetClientboundConfigPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
@@ -495,14 +501,14 @@ func (p Packets) ClientboundConfigToString(id models.ClientboundPacketID) string
 }
 
 func (p Packets) GetServerboundConfigPacketID(name string) models.ServerboundPacketID {
-	fmt.Printf("GetServerboundConfigPacketID(\"%s\")\n",name)
+	log.Printf("GetServerboundConfigPacketID(\"%s\")\n",name)
 
 	switch name { {{range $key, $value := .Configuration.Serverbound}}
 	case "ServerboundConfig{{$value.Name}}"{{if $value.AltName}}, "{{$value.AltName}}"{{end}}:   
 		return ServerboundConfig{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ServerboundConfigPacketIDGuard": return {{.MaxConfigServerboundID.ID}}
 	default:
-		fmt.Printf("GetServerboundConfigPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetServerboundConfigPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }
@@ -530,7 +536,7 @@ func (p Packets) GetClientboundPacketID(name string) models.ClientboundPacketID 
 		return Clientbound{{$short}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ClientboundPacketIDGuard": return {{.MaxPlayClientboundID.ID}}
 	default:
-		fmt.Printf("GetClientboundPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetClientboundPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
 	}
 }
@@ -558,7 +564,7 @@ func (p Packets) GetServerboundPacketID(name string) models.ServerboundPacketID 
 		return Serverbound{{$value.Name}} // {{$value.ID}} {{$value.Hex}} {{end}}
 	case "ServerboundPacketIDGuard": return {{.MaxPlayServerboundID.ID}}
 	default:
-		fmt.Printf("GetServerboundPacketID => unknown packet name: %s\n", name)
+		log.Printf("GetServerboundPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
 	}
 }

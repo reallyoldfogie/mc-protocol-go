@@ -29,7 +29,7 @@ type CustomPayload struct {
 	// "string"
 	Channel pk.String
 	// "restBuffer"
-	Data models.Void
+	Data models.RestBuffer
 }
 
 // NewCustomPayload creates a new CustomPayload packet with the correct packet ID.
@@ -91,7 +91,7 @@ func (p *CustomPayload) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Channel = val.(pk.String)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(models.Void)
+		p.Data = val.(models.RestBuffer)
 	}
 }
 
@@ -113,14 +113,14 @@ func (p *CustomPayload) SetChannel(val pk.String) {
 // GetData returns the Data field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *CustomPayload) GetData() models.Void {
+func (p *CustomPayload) GetData() models.RestBuffer {
 	return p.Data
 }
 
 // SetData sets the Data field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *CustomPayload) SetData(val models.Void) {
+func (p *CustomPayload) SetData(val models.RestBuffer) {
 	p.Data = val
 }
 

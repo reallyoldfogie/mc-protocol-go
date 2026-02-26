@@ -4,255 +4,76 @@ package basetypes
 import (
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
-	"io"
 )
 
-type ContainerID pk.VarInt
+type ByteArray = pk.ByteArray
 
-func (t *ContainerID) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.VarInt)(t).ReadFrom(r)
-}
+type ChatSession = models.Option[models.Void]
 
-func (t ContainerID) WriteTo(w io.Writer) (int64, error) {
-	return (pk.VarInt)(t).WriteTo(w)
-}
+type Varint = pk.VarInt
 
-type GameProfilePropertiesArrayTypeSignature models.Option[pk.String]
+type Optvarint = pk.VarInt
 
-func (t *GameProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
+type F64 = pk.Double
 
-func (t GameProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type I16 = pk.Short
 
-type Ingredient models.Array[pk.VarInt, Slot]
+type F32 = pk.Float
 
-func (t *Ingredient) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, Slot])(t).ReadFrom(r)
-}
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
-func (t Ingredient) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, Slot])(t).WriteTo(w)
-}
+type U64 = models.UInt64
 
-type Optvarint pk.VarInt
+type SlotComponentDataProfileName = models.Option[pk.String]
 
-func (t *Optvarint) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.VarInt)(t).ReadFrom(r)
-}
+type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
-func (t Optvarint) WriteTo(w io.Writer) (int64, error) {
-	return (pk.VarInt)(t).WriteTo(w)
-}
+type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type ExactComponentMatcher models.Array[pk.VarInt, SlotComponent]
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-func (t *ExactComponentMatcher) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, SlotComponent])(t).ReadFrom(r)
-}
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
 
-func (t ExactComponentMatcher) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, SlotComponent])(t).WriteTo(w)
-}
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
-type ByteArray pk.ByteArray
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-func (t *ByteArray) ReadFrom(r io.Reader) (int64, error) {
-	return (*pk.ByteArray)(t).ReadFrom(r)
-}
+type SlotComponentDataEquippableModel = models.Option[pk.String]
 
-func (t ByteArray) WriteTo(w io.Writer) (int64, error) {
-	return (pk.ByteArray)(t).WriteTo(w)
-}
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
-type SlotComponentDataToolRulesArrayTypeSpeed models.Option[pk.Float]
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
-func (t *SlotComponentDataToolRulesArrayTypeSpeed) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Float])(t).ReadFrom(r)
-}
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
-func (t SlotComponentDataToolRulesArrayTypeSpeed) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Float])(t).WriteTo(w)
-}
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks models.Option[pk.Boolean]
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
-func (t *SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Boolean])(t).ReadFrom(r)
-}
+type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
-func (t SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Boolean])(t).WriteTo(w)
-}
+type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
 
-type SlotComponentDataProfileName models.Option[pk.String]
+type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
-func (t *SlotComponentDataProfileName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
+type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
-func (t SlotComponentDataProfileName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type Ingredient = models.Array[pk.VarInt, Slot]
 
-type SlotComponentDataProfileUuid models.Option[pk.UUID]
+type I32 = pk.Int
 
-func (t *SlotComponentDataProfileUuid) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.UUID])(t).ReadFrom(r)
-}
+type U16 = pk.UnsignedShort
 
-func (t SlotComponentDataProfileUuid) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.UUID])(t).WriteTo(w)
-}
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type SlotComponentDataProfilePropertiesArrayTypeSignature models.Option[pk.String]
+type bool = pk.Boolean
 
-func (t *SlotComponentDataProfilePropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
+type ContainerID = pk.VarInt
 
-func (t SlotComponentDataProfilePropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type U32 = models.UInt32
 
-type SlotComponentDataPotionContentsPotionId models.Option[pk.VarInt]
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
 
-func (t *SlotComponentDataPotionContentsPotionId) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.VarInt])(t).ReadFrom(r)
-}
+type I64 = pk.Long
 
-func (t SlotComponentDataPotionContentsPotionId) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.VarInt])(t).WriteTo(w)
-}
-
-type SlotComponentDataPotionContentsCustomColor models.Option[pk.Int]
-
-func (t *SlotComponentDataPotionContentsCustomColor) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.Int])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataPotionContentsCustomColor) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.Int])(t).WriteTo(w)
-}
-
-type SlotComponentDataPotionContentsCustomName models.Option[pk.String]
-
-func (t *SlotComponentDataPotionContentsCustomName) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataPotionContentsCustomName) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataWrittenBookContentFilteredTitle models.Option[pk.String]
-
-func (t *SlotComponentDataWrittenBookContentFilteredTitle) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataWrittenBookContentFilteredTitle) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataEquippableModel models.Option[pk.String]
-
-func (t *SlotComponentDataEquippableModel) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataEquippableModel) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataEquippableCameraOverlay models.Option[pk.String]
-
-func (t *SlotComponentDataEquippableCameraOverlay) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataEquippableCameraOverlay) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataEquippableAllowedEntities models.Option[IDSet]
-
-func (t *SlotComponentDataEquippableAllowedEntities) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[IDSet])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataEquippableAllowedEntities) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[IDSet])(t).WriteTo(w)
-}
-
-type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType models.Option[IDSet]
-
-func (t *SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[IDSet])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[IDSet])(t).WriteTo(w)
-}
-
-type SlotComponentDataBlocksAttacksBypassedBy models.Option[pk.String]
-
-func (t *SlotComponentDataBlocksAttacksBypassedBy) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataBlocksAttacksBypassedBy) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type SlotComponentDataBlocksAttacksBlockSound models.Option[ItemSoundHolder]
-
-func (t *SlotComponentDataBlocksAttacksBlockSound) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[ItemSoundHolder])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataBlocksAttacksBlockSound) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[ItemSoundHolder])(t).WriteTo(w)
-}
-
-type SlotComponentDataBlocksAttacksDisableSound models.Option[ItemSoundHolder]
-
-func (t *SlotComponentDataBlocksAttacksDisableSound) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[ItemSoundHolder])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataBlocksAttacksDisableSound) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[ItemSoundHolder])(t).WriteTo(w)
-}
-
-type SlotComponentDataUseCooldownCooldownGroup models.Option[pk.String]
-
-func (t *SlotComponentDataUseCooldownCooldownGroup) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SlotComponentDataUseCooldownCooldownGroup) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
-
-type PreviousMessages models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-func (t *PreviousMessages) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).ReadFrom(r)
-}
-
-func (t PreviousMessages) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement])(t).WriteTo(w)
-}
-
-type ChatSession models.Option[models.Void]
-
-func (t *ChatSession) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.Void])(t).ReadFrom(r)
-}
-
-func (t ChatSession) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.Void])(t).WriteTo(w)
-}
+type I8 = pk.Byte

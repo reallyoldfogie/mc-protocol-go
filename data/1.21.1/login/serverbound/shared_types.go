@@ -3,15 +3,6 @@ package serverbound
 
 import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
-	"io"
 )
 
-type LoginPluginResponseData models.Option[models.Void]
-
-func (t *LoginPluginResponseData) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[models.Void])(t).ReadFrom(r)
-}
-
-func (t LoginPluginResponseData) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[models.Void])(t).WriteTo(w)
-}
+type LoginPluginResponseData = models.Option[models.RestBuffer]

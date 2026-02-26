@@ -69,10 +69,6 @@ func TestPosition_RoundTrip(t *testing.T) {
 	}
 }
 
-
-
-
-
 // TestOption_RoundTrip tests option types
 func TestOption_RoundTrip(t *testing.T) {
 	tests := []struct {

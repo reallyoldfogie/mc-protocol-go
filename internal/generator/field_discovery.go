@@ -212,6 +212,8 @@ func resolveFieldTypeString(field *datatypes.ContainerField, container *datatype
 		return "pk.UUID"
 	case "buffer":
 		return "[]byte"
+	case "restBuffer":
+		return "models.RestBuffer"
 	case "void":
 		return "models.Void"
 
@@ -298,6 +300,9 @@ func normalizeTypeForInterface(typeName string) string {
 	// But strip the models. prefix since we're generating code IN the models package
 	if typeName == "models.Void" {
 		return "Void"
+	}
+	if typeName == "models.RestBuffer" {
+		return "RestBuffer"
 	}
 	if typeName == "models.NBTField" {
 		return "NBTField"

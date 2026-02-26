@@ -991,41 +991,41 @@ func generateMultipleTypesFiles(basePath, version, packageName string, inTypes [
 	// Generate shared types file (only for packets, not basetypes)
 	if !areBaseTypes {
 		if sharedGroup, ok := groups["shared"]; ok {
-		// Separate mapper types and packet struct from other shared types
-		mapperTypes := []*datatypes.Type{}
-		packetTypes := []*datatypes.Type{}
-		otherShared := []*datatypes.Type{}
+			// Separate mapper types and packet struct from other shared types
+			mapperTypes := []*datatypes.Type{}
+			packetTypes := []*datatypes.Type{}
+			otherShared := []*datatypes.Type{}
 
-		for _, t := range sharedGroup.relatedTypes {
-			if t.TypeName == "mapper" || strings.Contains(t.Name, "Mapper") || strings.Contains(t.Name, "Mappings") {
-				mapperTypes = append(mapperTypes, t)
-			} else if t.Name == "Packet" || t.Name == "PacketName" {
-				packetTypes = append(packetTypes, t)
-			} else {
-				otherShared = append(otherShared, t)
+			for _, t := range sharedGroup.relatedTypes {
+				if t.TypeName == "mapper" || strings.Contains(t.Name, "Mapper") || strings.Contains(t.Name, "Mappings") {
+					mapperTypes = append(mapperTypes, t)
+				} else if t.Name == "Packet" || t.Name == "PacketName" {
+					packetTypes = append(packetTypes, t)
+				} else {
+					otherShared = append(otherShared, t)
+				}
 			}
-		}
 
-		// Generate shared_types.go for common types
-		if len(otherShared) > 0 {
-			if err := generateSingleTypesFile(basePath, version, packageName, "shared_types.go", otherShared, false); err != nil {
-				return fmt.Errorf("failed to generate shared_types.go: %w", err)
+			// Generate shared_types.go for common types
+			if len(otherShared) > 0 {
+				if err := generateSingleTypesFile(basePath, version, packageName, "shared_types.go", otherShared, false); err != nil {
+					return fmt.Errorf("failed to generate shared_types.go: %w", err)
+				}
 			}
-		}
 
-		// Generate packet_mapper.go for mapper types
-		if len(mapperTypes) > 0 {
-			if err := generateSingleTypesFile(basePath, version, packageName, "packet_mapper.go", mapperTypes, false); err != nil {
-				return fmt.Errorf("failed to generate packet_mapper.go: %w", err)
+			// Generate packet_mapper.go for mapper types
+			if len(mapperTypes) > 0 {
+				if err := generateSingleTypesFile(basePath, version, packageName, "packet_mapper.go", mapperTypes, false); err != nil {
+					return fmt.Errorf("failed to generate packet_mapper.go: %w", err)
+				}
 			}
-		}
 
-		// Generate packet.go for main Packet struct
-		if len(packetTypes) > 0 {
-			if err := generateSingleTypesFile(basePath, version, packageName, "packet.go", packetTypes, false); err != nil {
-				return fmt.Errorf("failed to generate packet.go: %w", err)
+			// Generate packet.go for main Packet struct
+			if len(packetTypes) > 0 {
+				if err := generateSingleTypesFile(basePath, version, packageName, "packet.go", packetTypes, false); err != nil {
+					return fmt.Errorf("failed to generate packet.go: %w", err)
+				}
 			}
-		}
 		}
 	}
 
@@ -1100,6 +1100,10 @@ func generateSingleTypesFile(basePath, version, packageName, fileName string, in
 	}
 
 	inTypes = tmpTypes
+
+	tmpConcatStructFile, _ := os.Create(filepath.Join("./tmp/full_struct.tmpl"))
+	fmt.Fprintf(tmpConcatStructFile, "%s", structsTmpl+bitflagWrapperTmpl+bitflagWrapperTypeTmpl)
+	tmpConcatStructFile.Close()
 
 	// Generate type definitions
 	var buf strings.Builder
@@ -1230,7 +1234,7 @@ func generateSingleTypesFile(basePath, version, packageName, fileName string, in
 
 	// Combine header and type definitions
 	fullContent := header + typeDefsOutput
-	
+
 	// Format the generated code
 	formatted, err := format.Source([]byte(fullContent))
 	if err != nil {
@@ -1239,7 +1243,7 @@ func generateSingleTypesFile(basePath, version, packageName, fileName string, in
 		_, writeErr := typesFile.WriteString(fullContent)
 		return writeErr
 	}
-	
+
 	// Write formatted code
 	_, err = typesFile.Write(formatted)
 	return err
@@ -1458,6 +1462,8 @@ func generateTypesFile(basePath, version, packageName string, inTypes []*datatyp
 
 const (
 	structsTmpl = `
+	// START structsTmpl 
+
 {{define "structsTmpl"}}
 {{- range .}}
 {{if eq .TypeName "container"}}
@@ -1499,15 +1505,7 @@ const (
 type {{.Name}} {{.TypeName}}
 
 {{else}}
-type {{.Name}} {{.TypeName}}
-
-func (t *{{.Name}}) ReadFrom(r io.Reader) (int64, error) {
-	return (*{{.TypeName}})(t).ReadFrom(r)
-}
-
-func (t {{.Name}}) WriteTo(w io.Writer) (int64, error) {
-	return ({{.TypeName}})(t).WriteTo(w)
-}
+type {{.Name}} = {{.TypeName}}
 {{end}}
 {{- end}}
 {{end}}
@@ -1650,7 +1648,6 @@ func (p *{{$container.Name}}) GetFields() map[string]pk.FieldEncoder {
 	{{- end}}
 	return fields
 }
-
 // SetFields updates packet fields from a map for version-agnostic access.
 // Use this when you need to set fields dynamically or when working with version-specific types
 // that don't have stable cross-version interfaces.
@@ -1665,7 +1662,6 @@ func (p *{{$container.Name}}) SetFields(fields map[string]pk.FieldEncoder) {
 	}
 	{{- end}}
 }
-
 // Typed field accessor methods for version-specific type-safe access
 {{- range $container.Fields}}
 // Get{{.Name}} returns the {{.Name}} field value.
@@ -1815,27 +1811,17 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	{{- if hasFieldMethods $container}}
 	var bytesWritten int64
 	{{- range $container.Fields}}
-	{{- if isSwitch .}}
-	{{- $sw := getSwitchInfo .}}
-	{{- $fieldName := .Name}}
-	if t.{{$fieldName}} != nil {
-		if writer, ok := t.{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			return totalBytes, fmt.Errorf("switch field {{$fieldName}} value does not implement WriteTo: %T", t.{{$fieldName}})
-		}
-	}
-	{{- else if ne .Type.TypeName "[]byte"}}
-	bytesWritten, err = t.{{.Name}}.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	{{- end}}
+		{{- if isSwitch .}}
+			{{- $sw := getSwitchInfo .}}
+			{{- $fieldName := .Name}}
+			{{- if ne .Type.TypeName "[]byte"}}
+				bytesWritten, err = t.{{.Name}}.WriteTo(w)
+				totalBytes += bytesWritten
+				if err != nil {
+					return totalBytes, err
+				}
+			{{- end}}
+		{{- end}}
 	{{- end}}
 	return totalBytes, nil
 	{{- else}}
@@ -2577,6 +2563,7 @@ func (t {{.Name}}) WriteTo(w io.Writer) (totalWritten int64, err error) {
 	return totalWritten, errors.Wrap(err, "failed to write entity metadata loop terminator")
 }
 {{end}}
+
 `
 )
 
@@ -3033,6 +3020,10 @@ func toArray(t *datatypes.Type) *datatypes.Array {
 	return t.Extras.(*datatypes.Array)
 }
 
+func toTopBitSetTerminatedArray(t *datatypes.Type) *datatypes.TopBitSetTerminatedArray {
+	return t.Extras.(*datatypes.TopBitSetTerminatedArray)
+}
+
 func toBitfield(t *datatypes.Type) *datatypes.Bitfield {
 	return t.Extras.(*datatypes.Bitfield)
 }
@@ -3312,6 +3303,7 @@ func resolveFieldTypeForBitflags(container *datatypes.Container, field *datatype
 }
 
 const bitflagWrapperTmpl = `
+// START bitflagWrapperTmpl
 {{define "bitflagWrapperTmpl"}}
 {{$c := .container}}{{$f := .field}}{{$name := wrapperName $c $f}}
 {{ $bf := bitflags $f }}
@@ -3385,10 +3377,13 @@ func (bf *{{$name}}) Set{{toIdentifier $flag}}(value bool) {
 }
 {{- end }}
 {{end}}
+
 `
 
 // Standalone bitflags type wrapper generation
 const bitflagWrapperTypeTmpl = `
+// START bitflagWrapperTypeTmpl
+
 {{define "bitflagWrapperTypeTmpl"}}
 {{$name := .Name}}
 {{ $bit := .Extras }}
@@ -3461,6 +3456,7 @@ func (bf *{{$name}}) Set{{toIdentifier $flag}}(value bool) {
 }
 {{- end }}
 {{end}}
+
 `
 
 func isOption(t *datatypes.Type) (*datatypes.Option, bool) {
@@ -3733,7 +3729,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			// First try direct toNative conversion on the lookupKey, but skip for complex types with Extras
 			// that need special processing (option, array, container, etc.)
 			lookupKeyLower := strings.ToLower(lookupKey)
-			isComplexType := field.Type.Extras != nil && (lookupKeyLower == "option" || lookupKeyLower == "array" || lookupKeyLower == "container" || lookupKeyLower == "switch" || lookupKeyLower == "bitfield")
+			isComplexType := field.Type.Extras != nil && (lookupKeyLower == "option" || lookupKeyLower == "array" || lookupKeyLower == "container" || lookupKeyLower == "switch" || lookupKeyLower == "bitfield" || lookupKeyLower == "topbitsetalternative" || lookupKeyLower == "topbitsetterminatedarray")
 			if !isComplexType {
 				nativeCheck := toNative(lookupKey, field.Type, baseTypes, isGeneratingBaseTypes)
 				if nativeCheck != lookupKey && (strings.HasPrefix(nativeCheck, "pk.") || strings.Contains(nativeCheck, "[")) {
@@ -3788,8 +3784,51 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 					}
 				}
 			}
-			if field.Type.Extras != nil {
+			// Special handling for topBitSetTerminatedArray which might have lost its Extras
+			lowerTypeName := strings.ToLower(field.Type.TypeName)
+			if lowerTypeName == "topbitsetterminatedarray" || lowerTypeName == "topbitsetalternative" {
+				if field.Type.Extras == nil {
+					fmt.Printf("WARNING [gen_packet.go]: topBitSetTerminatedArray field '%s.%s' has no Extras, skipping special processing\n", t.Name, field.Name)
+				} else {
+					fmt.Printf("DEBUG [gen_packet.go]: Processing topBitSetTerminatedArray field '%s.%s' with Extras\n", t.Name, field.Name)
+					parentName := t.Name
+					tbsa := toTopBitSetTerminatedArray(field.Type)
+					array := (*datatypes.Array)(nil)
+					if tbsa != nil && tbsa.Type != nil {
+						// Convert TopBitSetTerminatedArray to Array for processing
+						array = &datatypes.Array{Type: tbsa.Type}
+					}
+					if array == nil || array.Type == nil {
+						fmt.Printf("WARNING [gen_packet.go]: topBitSetTerminatedArray field '%s.%s' has invalid array Extras\n", t.Name, field.Name)
+						// Fall through to default handling
+					} else {
+						// Build child type name
+						childName := field.Name + "Entry"
+						parentType := array.Type
+						childType := createChildType(parentName, childName, parentType, baseTypes, isGeneratingBaseTypes)
+						entryTypeName := childType.Name
+						if childType.Name != childType.TypeName {
+							types = append(types, processType(&childType, baseTypes, field.Anon, isGeneratingBaseTypes, nil)...)
+						}
+						// Check if entry type needs basetypes prefix
+						if !isGeneratingBaseTypes && entryTypeName != "" && !strings.Contains(entryTypeName, ".") && !strings.HasPrefix(entryTypeName, "pk.") {
+							lookupKey := strings.ToLower(entryTypeName)
+							if _, ok := baseTypes[lookupKey]; ok {
+								fmt.Printf("DEBUG [gen_packet.go]: TopBitSetTerminatedArray entry type '%s' FOUND in baseTypes, adding prefix\n", entryTypeName)
+								entryTypeName = "basetypes." + entryTypeName
+							}
+						}
+						// Set field type to models.TopBitSetTerminatedArray[EntryType]
+						fmt.Printf("DEBUG [gen_packet.go]: Setting topBitSetTerminatedArray field '%s.%s' type to models.TopBitSetTerminatedArray[%s]\n", t.Name, field.Name, entryTypeName)
+						field.Type.TypeName = "models.TopBitSetTerminatedArray[" + entryTypeName + "]"
+						field.Type.Extras = nil
+					}
+				}
+			} else if field.Type.Extras != nil {
 				parentName := t.Name
+				if t.Name == "EntityEquipment" || field.Name == "Equipments" {
+					fmt.Printf("DEBUG [gen_packet.go]: About to switch on field '%s.%s' TypeName='%s', Extras=%v\n", t.Name, field.Name, field.Type.TypeName, field.Type.Extras != nil)
+				}
 				switch strings.ToLower(field.Type.TypeName) {
 				case "buffer":
 					// Buffer types can be fixed-size or variable-length
@@ -3915,6 +3954,55 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 						field.Type.TypeName = "models.Array[" + countTypeName + "," + elementTypeName + "]"
 						field.Type.Extras = nil
 					}
+				case "topBitSetTerminatedArray", "topbitsetalternative":
+					fmt.Printf("DEBUG [gen_packet.go]: Found topBitSetTerminatedArray field '%s.%s', TypeName='%s', Extras=%v\n", t.Name, field.Name, field.Type.TypeName, field.Type.Extras != nil)
+					// topBitSetTerminatedArray: array of entries terminated by a byte with MSB set
+					// Structure: ["topBitSetTerminatedArray", { "type": [containerDefinition] }]
+					// The nested container defines the structure of each entry
+					// We extract this nested type and generate an entry type to hold it
+
+					if field.Type.Extras == nil {
+						fmt.Printf("WARNING [gen_packet.go]: topBitSetTerminatedArray field '%s.%s' has no Extras\n", t.Name, field.Name)
+						continue
+					}
+
+					// Extract the nested container definition
+					// The Extras contains the array metadata with Type pointing to the entry container
+					array := toArray(field.Type)
+					if array == nil || array.Type == nil {
+						fmt.Printf("WARNING [gen_packet.go]: topBitSetTerminatedArray field '%s.%s' has invalid array Extras\n", t.Name, field.Name)
+						continue
+					}
+
+					// Build child type name using the pattern ParentName_FieldName + "Entry"
+					childName := field.Name + "Entry"
+
+					// Create entry type from the nested container definition
+					parentType := array.Type
+					childType := createChildType(parentName, childName, parentType, baseTypes, isGeneratingBaseTypes)
+					entryTypeName := childType.Name
+
+					// Process the entry type recursively to handle any nested complexity
+					if childType.Name != childType.TypeName {
+						types = append(types, processType(&childType, baseTypes, field.Anon, isGeneratingBaseTypes, nil)...)
+					}
+
+					// Check if entry type needs basetypes prefix
+					if !isGeneratingBaseTypes && entryTypeName != "" && !strings.Contains(entryTypeName, ".") && !strings.HasPrefix(entryTypeName, "pk.") {
+						lookupKey := strings.ToLower(entryTypeName)
+						if _, ok := baseTypes[lookupKey]; ok {
+							fmt.Printf("DEBUG [gen_packet.go]: TopBitSetTerminatedArray entry type '%s' FOUND in baseTypes, adding prefix\n", entryTypeName)
+							entryTypeName = "basetypes." + entryTypeName
+						}
+					}
+
+					// Set field type to models.TopBitSetTerminatedArray[EntryType]
+					fmt.Printf("DEBUG [gen_packet.go]: Processing topBitSetTerminatedArray field '%s.%s' with entry type '%s'\n", t.Name, field.Name, entryTypeName)
+					newTypeName := "models.TopBitSetTerminatedArray[" + entryTypeName + "]"
+					fmt.Printf("DEBUG [gen_packet.go]: Setting field.Type.TypeName to '%s'\n", newTypeName)
+					field.Type.TypeName = newTypeName
+					field.Type.Extras = nil
+					fmt.Printf("DEBUG [gen_packet.go]: After setting, field.Type.TypeName='%s'\n", field.Type.TypeName)
 				case "bitfield":
 					// Bitfield types within fields - generate specialized struct with custom ReadFrom/WriteTo
 					childType := createChildType(parentName, field.Name, field.Type, baseTypes, isGeneratingBaseTypes)
@@ -3935,6 +4023,17 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 					}
 					// Check if the option contains complex types that need special handling
 					optionInnerTypeName := strings.ToLower(option.Type.TypeName)
+
+					// Special handling for optional-switch: don't generate a child type, just use pk.Field like regular switches
+					if optionInnerTypeName == "switch" && option.Type.Extras != nil {
+						// Optional switch field - treat like regular switch but with protocol-defined boolean presence
+						// The boolean prefix will be handled by the protodef protocol definition
+						field.Type.TypeName = "pk.Field"       // Treat as regular switch field
+						field.Type.Extras = option.Type.Extras // Preserve switch metadata
+						// Keep field.Type.Extras for template to access switch info
+						continue // Skip further option processing
+					}
+
 					// Handle nested complex types that have Extras (registryEntryHolder, array with complex elements, etc.)
 					if option.Type.Extras != nil && (optionInnerTypeName == "registryentryholderset" || optionInnerTypeName == "registryentryholder" ||
 						optionInnerTypeName == "array" || optionInnerTypeName == "container" ||
@@ -4612,7 +4711,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 // fixUnprefixedBaseTypes adds models. prefix to unprefixed Array, Bitflags references
 // and basetypes. prefix to other basetype references
 func fixUnprefixedBaseTypes(content string) string {
-	// Note: Array, Option, Bitflags, Buffer, PString, UInt32, UInt64, and Void are now in models package
+	// Note: Array, Option, Bitflags, RestBuffer, PString, UInt32, UInt64, and Void are now in models package
 	// Other types like Mapper remain in basetypes package
 
 	// Fix Array[ references - now in models package
@@ -4640,8 +4739,8 @@ func fixUnprefixedBaseTypes(content string) string {
 	content = strings.ReplaceAll(content, " Bitflags ", " models.Bitflags ")
 	content = strings.ReplaceAll(content, "\tBitflags ", "\tmodels.Bitflags ")
 
-	// Fix Buffer, PString, UInt32, UInt64 references - now in models package
-	for _, typeName := range []string{"Buffer", "PString", "UInt32", "UInt64"} {
+	// Fix RestBuffer, PString, UInt32, UInt64 references - now in models package
+	for _, typeName := range []string{"RestBuffer", "PString", "UInt32", "UInt64"} {
 		content = strings.ReplaceAll(content, " "+typeName+"\n", " models."+typeName+"\n")
 		content = strings.ReplaceAll(content, "\t"+typeName+"\n", "\tmodels."+typeName+"\n")
 		content = strings.ReplaceAll(content, " "+typeName+" ", " models."+typeName+" ")
@@ -4671,7 +4770,7 @@ func needsBaseTypesPrefix(typeName string) bool {
 	}
 
 	// Types now in models package - should NOT get basetypes prefix
-	modelsTypes := []string{"Array", "Option", "Bitflags", "Buffer", "PString", "UInt32", "UInt64", "Void"}
+	modelsTypes := []string{"Array", "Option", "Bitflags", "RestBuffer", "PString", "UInt32", "UInt64", "Void"}
 	for _, mt := range modelsTypes {
 		if typeName == mt || strings.HasPrefix(typeName, mt+"[") {
 			return false
@@ -4742,6 +4841,8 @@ func createChildType(parentName, childName string, parentType *datatypes.Type, b
 }
 
 func processNamespace(version, nsName string, namespace *namespace.Namespace, baseTypes map[string]string, packetsData inversePacketParse) error {
+	// Reset per-namespace tracking maps if any (none currently)
+
 	// file, err := os.Create(filepath.Join(version, nsName+".go"))
 	// if err != nil {
 	// 	fmt.Fprintf(os.Stderr, "Error: %v\n", err)
@@ -5029,7 +5130,7 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 		// Generic container type without specific structure
 		return "models.Void"
 	case "restBuffer":
-		return "models.Void" // TODO: fix properly
+		return "models.RestBuffer"
 	case "AnonymousNbt", "anonymousNbt":
 		return "models.AnonymousNBT"
 	case "anonOptionalNbt", "AnonOptionalNbt":
@@ -5071,7 +5172,7 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 		}
 		return "EntityMetadata" // fallback
 	case "topBitSetTerminatedArray", "TopBitSetTerminatedArray":
-		return "models.Void" //TODO: handle this properly
+		return "models.TopBitSetTerminatedArray"
 	case "option":
 		// Handle option types - convert to models.Option with appropriate type parameters
 		if in != nil && in.Extras != nil {

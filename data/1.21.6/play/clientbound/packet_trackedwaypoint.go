@@ -80,7 +80,23 @@ import (
 //	                  "name": "color",
 //	                  "type": [
 //	                    "option",
-//	                    "i32"
+//	                    [
+//	                      "container",
+//	                      [
+//	                        {
+//	                          "name": "red",
+//	                          "type": "u8"
+//	                        },
+//	                        {
+//	                          "name": "green",
+//	                          "type": "u8"
+//	                        },
+//	                        {
+//	                          "name": "blue",
+//	                          "type": "u8"
+//	                        }
+//	                      ]
+//	                    ]
 //	                  ]
 //	                }
 //	              ]
@@ -195,7 +211,23 @@ type TrackedWaypoint struct {
 	//                           "name": "color",
 	//                           "type": [
 	//                             "option",
-	//                             "i32"
+	//                             [
+	//                               "container",
+	//                               [
+	//                                 {
+	//                                   "name": "red",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "green",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "blue",
+	//                                   "type": "u8"
+	//                                 }
+	//                               ]
+	//                             ]
 	//                           ]
 	//                         }
 	//                       ]
@@ -424,7 +456,23 @@ func (t TrackedWaypoint) WriteTo(w io.Writer) (totalBytes int64, err error) {
 //	            "name": "color",
 //	            "type": [
 //	              "option",
-//	              "i32"
+//	              [
+//	                "container",
+//	                [
+//	                  {
+//	                    "name": "red",
+//	                    "type": "u8"
+//	                  },
+//	                  {
+//	                    "name": "green",
+//	                    "type": "u8"
+//	                  },
+//	                  {
+//	                    "name": "blue",
+//	                    "type": "u8"
+//	                  }
+//	                ]
+//	              ]
 //	            ]
 //	          }
 //	        ]
@@ -502,7 +550,7 @@ type TrackedWaypointWaypoint struct {
 	//                         }
 	//                       }
 	//                     ]
-	UnnamedType0006 pk.Field
+	UnnamedType0005 pk.Field
 	// [
 	//                       "container",
 	//                       [
@@ -514,7 +562,23 @@ type TrackedWaypointWaypoint struct {
 	//                           "name": "color",
 	//                           "type": [
 	//                             "option",
-	//                             "i32"
+	//                             [
+	//                               "container",
+	//                               [
+	//                                 {
+	//                                   "name": "red",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "green",
+	//                                   "type": "u8"
+	//                                 },
+	//                                 {
+	//                                   "name": "blue",
+	//                                   "type": "u8"
+	//                                 }
+	//                               ]
+	//                             ]
 	//                           ]
 	//                         }
 	//                       ]
@@ -566,27 +630,27 @@ func (t *TrackedWaypointWaypoint) ReadFrom(r io.Reader) (totalBytes int64, err e
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field HasUUID")
 	}
-	// Switch field UnnamedType0006 based on hasUUID
+	// Switch field UnnamedType0005 based on hasUUID
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0006 := fmt.Sprintf("%v", t.HasUUID)
+	compareValueUnnamedType0005 := fmt.Sprintf("%v", t.HasUUID)
 
-	switch compareValueUnnamedType0006 {
+	switch compareValueUnnamedType0005 {
 	case "false":
-		var val TrackedWaypointWaypointUnnamedType0006False
+		var val TrackedWaypointWaypointUnnamedType0005False
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case false")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case false")
 		}
-		t.UnnamedType0006 = &val
+		t.UnnamedType0005 = &val
 	case "true":
-		var val TrackedWaypointWaypointUnnamedType0006True
+		var val TrackedWaypointWaypointUnnamedType0005True
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case true")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case true")
 		}
-		t.UnnamedType0006 = &val
+		t.UnnamedType0005 = &val
 	default:
 		// No explicit default; treat as void (no data)
 		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
@@ -595,9 +659,9 @@ func (t *TrackedWaypointWaypoint) ReadFrom(r io.Reader) (totalBytes int64, err e
 		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 default void case")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 default void case")
 		}
-		t.UnnamedType0006 = &__void
+		t.UnnamedType0005 = &__void
 	}
 
 	bytesRead, err = t.Icon.ReadFrom(r)
@@ -659,10 +723,10 @@ func (t TrackedWaypointWaypoint) WriteTo(w io.Writer) (totalBytes int64, err err
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0006 based on hasUUID
-	if t.UnnamedType0006 != nil {
+	// Switch field UnnamedType0005 based on hasUUID
+	if t.UnnamedType0005 != nil {
 		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0006.(interface {
+		if writer, ok := t.UnnamedType0005.(interface {
 			WriteTo(io.Writer) (int64, error)
 		}); ok {
 			bytesWritten, err = writer.WriteTo(w)
@@ -672,7 +736,7 @@ func (t TrackedWaypointWaypoint) WriteTo(w io.Writer) (totalBytes int64, err err
 			}
 		} else {
 			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0006 value does not implement WriteTo: %T", t.UnnamedType0006)
+			return totalBytes, fmt.Errorf("switch field UnnamedType0005 value does not implement WriteTo: %T", t.UnnamedType0005)
 		}
 	}
 	bytesWritten, err = t.Icon.WriteTo(w)

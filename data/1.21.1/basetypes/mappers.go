@@ -8,31 +8,31 @@ import (
 	"io"
 )
 
-type ServerLinkType struct {
+type SoundSource struct {
 	Value string
 }
 
-var ServerLinkTypeMappings = map[int64]string{
-	0: "bug_report",
-	1: "community_guidelines",
-	2: "support",
-	3: "status",
-	4: "feedback",
-	5: "community",
-	6: "website",
-	7: "forums",
-	8: "news",
-	9: "announcements",
+var SoundSourceMappings = map[int64]string{
+	0: "master",
+	1: "music",
+	2: "record",
+	3: "weather",
+	4: "block",
+	5: "hostile",
+	6: "neutral",
+	7: "player",
+	8: "ambient",
+	9: "voice",
 }
 
-func (m *ServerLinkType) ReadFrom(r io.Reader) (int64, error) {
+func (m *SoundSource) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read ServerLinkType key")
+		return n, errors.Wrap(err, "failed to read SoundSource key")
 	}
 
-	value, ok := ServerLinkTypeMappings[int64(key)]
+	value, ok := SoundSourceMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -42,14 +42,14 @@ func (m *ServerLinkType) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m ServerLinkType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ServerLinkTypeMappings {
+func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SoundSourceMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ServerLinkType value: %s", m.Value)
+	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
 }
 
 type SlotComponentType struct {
@@ -143,25 +143,31 @@ func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
 }
 
-type SlotComponentDataRarity struct {
+type ServerLinkType struct {
 	Value string
 }
 
-var SlotComponentDataRarityMappings = map[int64]string{
-	0: "common",
-	1: "uncommon",
-	2: "rare",
-	3: "epic",
+var ServerLinkTypeMappings = map[int64]string{
+	0: "bug_report",
+	1: "community_guidelines",
+	2: "support",
+	3: "status",
+	4: "feedback",
+	5: "community",
+	6: "website",
+	7: "forums",
+	8: "news",
+	9: "announcements",
 }
 
-func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
+func (m *ServerLinkType) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
+		return n, errors.Wrap(err, "failed to read ServerLinkType key")
 	}
 
-	value, ok := SlotComponentDataRarityMappings[int64(key)]
+	value, ok := ServerLinkTypeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -171,14 +177,14 @@ func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataRarityMappings {
+func (m ServerLinkType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ServerLinkTypeMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
+	return 0, errors.Errorf("unknown ServerLinkType value: %s", m.Value)
 }
 
 type SlotComponentDataAttributeModifiersAttributesArrayTypeOperation struct {
@@ -260,6 +266,44 @@ func (m SlotComponentDataAttributeModifiersAttributesArrayTypeSlot) WriteTo(w io
 		}
 	}
 	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeSlot value: %s", m.Value)
+}
+
+type SlotComponentDataRarity struct {
+	Value string
+}
+
+var SlotComponentDataRarityMappings = map[int64]string{
+	0: "common",
+	1: "uncommon",
+	2: "rare",
+	3: "epic",
+}
+
+func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
+	}
+
+	value, ok := SlotComponentDataRarityMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataRarityMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
 }
 
 type ParticleType struct {
@@ -439,48 +483,4 @@ func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
-}
-
-type SoundSource struct {
-	Value string
-}
-
-var SoundSourceMappings = map[int64]string{
-	0: "master",
-	1: "music",
-	2: "record",
-	3: "weather",
-	4: "block",
-	5: "hostile",
-	6: "neutral",
-	7: "player",
-	8: "ambient",
-	9: "voice",
-}
-
-func (m *SoundSource) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SoundSource key")
-	}
-
-	value, ok := SoundSourceMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SoundSourceMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
 }

@@ -35,7 +35,7 @@ type LoginPluginResponse struct {
 	//                 "option",
 	//                 "restBuffer"
 	//               ]
-	Data models.Option[models.Void]
+	Data models.Option[models.RestBuffer]
 }
 
 // NewLoginPluginResponse creates a new LoginPluginResponse packet with the correct packet ID.
@@ -97,7 +97,7 @@ func (p *LoginPluginResponse) SetFields(fields map[string]pk.FieldEncoder) {
 		p.MessageId = val.(pk.VarInt)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(models.Option[models.Void])
+		p.Data = val.(models.Option[models.RestBuffer])
 	}
 }
 
@@ -119,14 +119,14 @@ func (p *LoginPluginResponse) SetMessageId(val pk.VarInt) {
 // GetData returns the Data field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *LoginPluginResponse) GetData() models.Option[models.Void] {
+func (p *LoginPluginResponse) GetData() models.Option[models.RestBuffer] {
 	return p.Data
 }
 
 // SetData sets the Data field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *LoginPluginResponse) SetData(val models.Option[models.Void]) {
+func (p *LoginPluginResponse) SetData(val models.Option[models.RestBuffer]) {
 	p.Data = val
 }
 

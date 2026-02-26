@@ -191,13 +191,27 @@ func (a Array[LENTYPE, VALTYPE]) writeToWithParentContext(w io.Writer, usePtr bo
 }
 
 func (a Array[LENTYPE, VALTYPE]) Length() LENTYPE {
-	return LENTYPE(len(a.Ary.Ary.([]VALTYPE)))
+	switch v := a.Ary.Ary.(type) {
+	case []VALTYPE:
+		return LENTYPE(len(v))
+	case *[]VALTYPE:
+		return LENTYPE(len(*v))
+	default:
+		return 0
+	}
 }
 
-func (a Array[LENTYPE, VALTYPE]) Get() *[]VALTYPE {
-	return a.Ary.Ary.(*[]VALTYPE)
+func (a Array[LENTYPE, VALTYPE]) Get() []VALTYPE {
+	switch v := a.Ary.Ary.(type) {
+	case []VALTYPE:
+		return v
+	case *[]VALTYPE:
+		return *v
+	default:
+		return nil
+	}
 }
 
-func (a *Array[LENTYPE, VALTYPE]) Set(v *[]VALTYPE) {
+func (a *Array[LENTYPE, VALTYPE]) Set(v []VALTYPE) {
 	a.Ary.Ary = v
 }

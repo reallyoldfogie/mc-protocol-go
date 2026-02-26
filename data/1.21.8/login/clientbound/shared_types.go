@@ -9,15 +9,7 @@ import (
 	"log"
 )
 
-type SuccessPropertiesArrayTypeSignature models.Option[pk.String]
-
-func (t *SuccessPropertiesArrayTypeSignature) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Option[pk.String])(t).ReadFrom(r)
-}
-
-func (t SuccessPropertiesArrayTypeSignature) WriteTo(w io.Writer) (int64, error) {
-	return (models.Option[pk.String])(t).WriteTo(w)
-}
+type SuccessPropertiesArrayTypeSignature = models.Option[pk.String]
 
 // Protodef: [
 //

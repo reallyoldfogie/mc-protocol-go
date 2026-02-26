@@ -422,13 +422,13 @@ func (p *PlayerInfo) Scan(packet pk.Packet) error {
 	}
 	// Prepare parent context for array 'Data'
 	ctx := models.NewParentContext()
-	ctx.SetField("action/add_player", p.Action.AddPlayer)
-	ctx.SetField("action/initialize_chat", p.Action.InitializeChat)
-	ctx.SetField("action/update_game_mode", p.Action.UpdateGameMode)
-	ctx.SetField("action/update_listed", p.Action.UpdateListed)
-	ctx.SetField("action/update_latency", p.Action.UpdateLatency)
-	ctx.SetField("action/update_display_name", p.Action.UpdateDisplayName)
-	ctx.SetField("action/update_list_order", p.Action.UpdateListOrder)
+	ctx.SetField("action/add_player", p.Action.AddPlayer())
+	ctx.SetField("action/initialize_chat", p.Action.InitializeChat())
+	ctx.SetField("action/update_game_mode", p.Action.UpdateGameMode())
+	ctx.SetField("action/update_listed", p.Action.UpdateListed())
+	ctx.SetField("action/update_latency", p.Action.UpdateLatency())
+	ctx.SetField("action/update_display_name", p.Action.UpdateDisplayName())
+	ctx.SetField("action/update_list_order", p.Action.UpdateListOrder())
 	p.Data.SetParentContext(ctx)
 	bytesRead, err = p.Data.ReadFrom(r)
 	totalBytes += bytesRead
@@ -506,13 +506,13 @@ func (t *PlayerInfo) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	}
 	// Prepare parent context for array 'Data'
 	Data_ctx := models.NewParentContext()
-	Data_ctx.SetField("action/add_player", t.Action.AddPlayer)
-	Data_ctx.SetField("action/initialize_chat", t.Action.InitializeChat)
-	Data_ctx.SetField("action/update_game_mode", t.Action.UpdateGameMode)
-	Data_ctx.SetField("action/update_listed", t.Action.UpdateListed)
-	Data_ctx.SetField("action/update_latency", t.Action.UpdateLatency)
-	Data_ctx.SetField("action/update_display_name", t.Action.UpdateDisplayName)
-	Data_ctx.SetField("action/update_list_order", t.Action.UpdateListOrder)
+	Data_ctx.SetField("action/add_player", t.Action.AddPlayer())
+	Data_ctx.SetField("action/initialize_chat", t.Action.InitializeChat())
+	Data_ctx.SetField("action/update_game_mode", t.Action.UpdateGameMode())
+	Data_ctx.SetField("action/update_listed", t.Action.UpdateListed())
+	Data_ctx.SetField("action/update_latency", t.Action.UpdateLatency())
+	Data_ctx.SetField("action/update_display_name", t.Action.UpdateDisplayName())
+	Data_ctx.SetField("action/update_list_order", t.Action.UpdateListOrder())
 	t.Data.SetParentContext(Data_ctx)
 	bytesRead, err = t.Data.ReadFrom(r)
 	totalBytes += bytesRead

@@ -77,12 +77,4 @@ func (t TagsTagsElement) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-type Tags models.Array[pk.VarInt, TagsTagsElement]
-
-func (t *Tags) ReadFrom(r io.Reader) (int64, error) {
-	return (*models.Array[pk.VarInt, TagsTagsElement])(t).ReadFrom(r)
-}
-
-func (t Tags) WriteTo(w io.Writer) (int64, error) {
-	return (models.Array[pk.VarInt, TagsTagsElement])(t).WriteTo(w)
-}
+type Tags = models.Array[pk.VarInt, TagsTagsElement]

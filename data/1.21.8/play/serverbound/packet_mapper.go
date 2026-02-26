@@ -8,44 +8,6 @@ import (
 	"io"
 )
 
-type ChangeGamemodeMode struct {
-	Value string
-}
-
-var ChangeGamemodeModeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
-}
-
-func (m *ChangeGamemodeMode) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChangeGamemodeMode key")
-	}
-
-	value, ok := ChangeGamemodeModeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ChangeGamemodeMode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChangeGamemodeModeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ChangeGamemodeMode value: %s", m.Value)
-}
-
 type EntityActionActionId struct {
 	Value string
 }
@@ -223,6 +185,44 @@ func (m UpdateStructureBlockFlags) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown UpdateStructureBlockFlags value: %s", m.Value)
+}
+
+type ChangeGamemodeMode struct {
+	Value string
+}
+
+var ChangeGamemodeModeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
+}
+
+func (m *ChangeGamemodeMode) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ChangeGamemodeMode key")
+	}
+
+	value, ok := ChangeGamemodeModeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ChangeGamemodeMode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChangeGamemodeModeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ChangeGamemodeMode value: %s", m.Value)
 }
 
 type SetDifficultyNewDifficulty struct {

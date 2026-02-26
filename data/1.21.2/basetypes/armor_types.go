@@ -14,6 +14,94 @@ import (
 //	  "container",
 //	  [
 //	    {
+//	      "name": "assetId",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "templateItemId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "description",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "decal",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type ArmorTrimPattern struct {
+	// "string"
+	AssetId pk.String
+	// "varint"
+	TemplateItemId pk.VarInt
+	// "anonymousNbt"
+	Description models.AnonymousNBT
+	// "bool"
+	Decal pk.Boolean
+}
+
+func (t *ArmorTrimPattern) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.AssetId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
+	}
+	bytesRead, err = t.TemplateItemId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TemplateItemId")
+	}
+	bytesRead, err = t.Description.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Description")
+	}
+	bytesRead, err = t.Decal.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Decal")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ArmorTrimPattern) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ArmorTrimPattern.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.AssetId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TemplateItemId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Description.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Decal.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "key",
 //	      "type": "string"
 //	    },
@@ -182,94 +270,6 @@ func (t ArmorTrimMaterial) WriteTo(w io.Writer) (totalBytes int64, err error) {
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Description.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "assetId",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "templateItemId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "description",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "decal",
-//	      "type": "bool"
-//	    }
-//	  ]
-//	]
-type ArmorTrimPattern struct {
-	// "string"
-	AssetId pk.String
-	// "varint"
-	TemplateItemId pk.VarInt
-	// "anonymousNbt"
-	Description models.AnonymousNBT
-	// "bool"
-	Decal pk.Boolean
-}
-
-func (t *ArmorTrimPattern) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.AssetId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
-	}
-	bytesRead, err = t.TemplateItemId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TemplateItemId")
-	}
-	bytesRead, err = t.Description.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Description")
-	}
-	bytesRead, err = t.Decal.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Decal")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ArmorTrimPattern) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ArmorTrimPattern.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.AssetId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.TemplateItemId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Description.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Decal.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

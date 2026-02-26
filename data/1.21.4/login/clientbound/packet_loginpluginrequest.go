@@ -35,7 +35,7 @@ type LoginPluginRequest struct {
 	// "string"
 	Channel pk.String
 	// "restBuffer"
-	Data models.Void
+	Data models.RestBuffer
 }
 
 // NewLoginPluginRequest creates a new LoginPluginRequest packet with the correct packet ID.
@@ -103,7 +103,7 @@ func (p *LoginPluginRequest) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Channel = val.(pk.String)
 	}
 	if val, ok := fields["Data"]; ok {
-		p.Data = val.(models.Void)
+		p.Data = val.(models.RestBuffer)
 	}
 }
 
@@ -139,14 +139,14 @@ func (p *LoginPluginRequest) SetChannel(val pk.String) {
 // GetData returns the Data field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *LoginPluginRequest) GetData() models.Void {
+func (p *LoginPluginRequest) GetData() models.RestBuffer {
 	return p.Data
 }
 
 // SetData sets the Data field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *LoginPluginRequest) SetData(val models.Void) {
+func (p *LoginPluginRequest) SetData(val models.RestBuffer) {
 	p.Data = val
 }
 
