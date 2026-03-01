@@ -8,26 +8,25 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Packets struct{}
+type Packets struct {}
 
 func (p Packets) GetClientboundLoginPacketID(name string) models.ClientboundPacketID {
-	log.Printf("GetClientboundLoginPacketID(\"%s\")\n", name)
+	log.Printf("GetClientboundLoginPacketID(\"%s\")\n",name)
 
-	switch name {
-	case "LoginClientboundDisconnect", "ClientboundLoginLoginDisconnect":
-		return LoginClientboundDisconnect // 0 0X00
-	case "LoginClientboundEncryptionBegin", "ClientboundLoginHello":
-		return LoginClientboundEncryptionBegin // 1 0X01
-	case "LoginClientboundSuccess", "ClientboundLoginLoginFinished":
-		return LoginClientboundSuccess // 2 0X02
-	case "LoginClientboundCompress", "ClientboundLoginLoginCompression":
-		return LoginClientboundCompress // 3 0X03
-	case "LoginClientboundLoginPluginRequest", "ClientboundLoginCustomQuery":
-		return LoginClientboundLoginPluginRequest // 4 0X04
-	case "LoginClientboundCommonCookieRequest", "ClientboundLoginCookieRequest":
-		return LoginClientboundCommonCookieRequest // 5 0X05
-	case "LoginClientboundPacketIDGuard":
-		return 6
+	switch name { 
+	case "LoginClientboundDisconnect", "ClientboundLoginLoginDisconnect":   
+		return LoginClientboundDisconnect // 0 0X00 
+	case "LoginClientboundEncryptionBegin", "ClientboundLoginHello":   
+		return LoginClientboundEncryptionBegin // 1 0X01 
+	case "LoginClientboundSuccess", "ClientboundLoginLoginFinished":   
+		return LoginClientboundSuccess // 2 0X02 
+	case "LoginClientboundCompress", "ClientboundLoginLoginCompression":   
+		return LoginClientboundCompress // 3 0X03 
+	case "LoginClientboundLoginPluginRequest", "ClientboundLoginCustomQuery":   
+		return LoginClientboundLoginPluginRequest // 4 0X04 
+	case "LoginClientboundCommonCookieRequest", "ClientboundLoginCookieRequest":   
+		return LoginClientboundCommonCookieRequest // 5 0X05 
+	case "LoginClientboundPacketIDGuard": return 6
 	default:
 		log.Printf("GetClientboundLoginPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
@@ -35,21 +34,20 @@ func (p Packets) GetClientboundLoginPacketID(name string) models.ClientboundPack
 }
 
 func (p Packets) GetServerboundLoginPacketID(name string) models.ServerboundPacketID {
-	log.Printf("GetServerboundLoginPacketID(\"%s\")\n", name)
+	log.Printf("GetServerboundLoginPacketID(\"%s\")\n",name)
 
-	switch name {
-	case "LoginServerboundLoginStart", "ServerboundLoginHello":
-		return LoginServerboundLoginStart // 0 0X00
-	case "LoginServerboundEncryptionBegin", "ServerboundLoginKey":
-		return LoginServerboundEncryptionBegin // 1 0X01
-	case "LoginServerboundLoginPluginResponse", "ServerboundLoginCustomQueryAnswer":
-		return LoginServerboundLoginPluginResponse // 2 0X02
-	case "LoginServerboundLoginAcknowledged", "ServerboundLoginLoginAcknowledged":
-		return LoginServerboundLoginAcknowledged // 3 0X03
-	case "LoginServerboundCommonCookieResponse", "ServerboundLoginCookieResponse":
-		return LoginServerboundCommonCookieResponse // 4 0X04
-	case "LoginServerboundPacketIDGuard":
-		return 5
+	switch name { 
+	case "LoginServerboundLoginStart", "ServerboundLoginHello":   
+		return LoginServerboundLoginStart // 0 0X00 
+	case "LoginServerboundEncryptionBegin", "ServerboundLoginKey":   
+		return LoginServerboundEncryptionBegin // 1 0X01 
+	case "LoginServerboundLoginPluginResponse", "ServerboundLoginCustomQueryAnswer":   
+		return LoginServerboundLoginPluginResponse // 2 0X02 
+	case "LoginServerboundLoginAcknowledged", "ServerboundLoginLoginAcknowledged":   
+		return LoginServerboundLoginAcknowledged // 3 0X03 
+	case "LoginServerboundCommonCookieResponse", "ServerboundLoginCookieResponse":   
+		return LoginServerboundCommonCookieResponse // 4 0X04 
+	case "LoginServerboundPacketIDGuard": return 5
 	default:
 		log.Printf("GetServerboundLoginPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
@@ -57,73 +55,71 @@ func (p Packets) GetServerboundLoginPacketID(name string) models.ServerboundPack
 }
 
 func (p Packets) ClientboundLoginToString(id models.ClientboundPacketID) string {
-	switch id {
-
-	case LoginClientboundDisconnect:
-		return "LoginClientboundDisconnect" // 0 0X00
-	case LoginClientboundEncryptionBegin:
-		return "LoginClientboundEncryptionBegin" // 1 0X01
-	case LoginClientboundSuccess:
-		return "LoginClientboundSuccess" // 2 0X02
-	case LoginClientboundCompress:
-		return "LoginClientboundCompress" // 3 0X03
-	case LoginClientboundLoginPluginRequest:
-		return "LoginClientboundLoginPluginRequest" // 4 0X04
-	case LoginClientboundCommonCookieRequest:
-		return "LoginClientboundCommonCookieRequest" // 5 0X05
-	case 6:
-		return "LoginClientboundPacketIDGuard"
+	switch id{
+	
+	case LoginClientboundDisconnect:   
+		return "LoginClientboundDisconnect" // 0 0X00 
+	case LoginClientboundEncryptionBegin:   
+		return "LoginClientboundEncryptionBegin" // 1 0X01 
+	case LoginClientboundSuccess:   
+		return "LoginClientboundSuccess" // 2 0X02 
+	case LoginClientboundCompress:   
+		return "LoginClientboundCompress" // 3 0X03 
+	case LoginClientboundLoginPluginRequest:   
+		return "LoginClientboundLoginPluginRequest" // 4 0X04 
+	case LoginClientboundCommonCookieRequest:   
+		return "LoginClientboundCommonCookieRequest" // 5 0X05 
+	case 6: return "LoginClientboundPacketIDGuard"
 	default:
 		return fmt.Sprintf("Unknown Clientbound Login packet ID: %d", id)
 	}
 }
 
 func (p Packets) GetClientboundConfigPacketID(name string) models.ClientboundPacketID {
-	log.Printf("GetClientboundConfigPacketID(\"%s\")\n", name)
+	log.Printf("GetClientboundConfigPacketID(\"%s\")\n",name)
 
-	switch name {
-	case "ClientboundConfigCommonCookieRequest", "ClientboundConfigCookieRequest":
-		return ClientboundConfigCommonCookieRequest // 0 0X00
-	case "ClientboundConfigCustomPayload":
-		return ClientboundConfigCustomPayload // 1 0X01
-	case "ClientboundConfigDisconnect":
-		return ClientboundConfigDisconnect // 2 0X02
-	case "ClientboundConfigFinishConfiguration":
-		return ClientboundConfigFinishConfiguration // 3 0X03
-	case "ClientboundConfigKeepAlive":
-		return ClientboundConfigKeepAlive // 4 0X04
-	case "ClientboundConfigPing":
-		return ClientboundConfigPing // 5 0X05
-	case "ClientboundConfigResetChat":
-		return ClientboundConfigResetChat // 6 0X06
-	case "ClientboundConfigRegistryData":
-		return ClientboundConfigRegistryData // 7 0X07
-	case "ClientboundConfigCommonRemoveResourcePack", "ClientboundConfigResourcePackPop":
-		return ClientboundConfigCommonRemoveResourcePack // 8 0X08
-	case "ClientboundConfigCommonAddResourcePack", "ClientboundConfigResourcePackPush":
-		return ClientboundConfigCommonAddResourcePack // 9 0X09
-	case "ClientboundConfigCommonStoreCookie", "ClientboundConfigStoreCookie":
-		return ClientboundConfigCommonStoreCookie // 10 0X0A
-	case "ClientboundConfigCommonTransfer", "ClientboundConfigTransfer":
-		return ClientboundConfigCommonTransfer // 11 0X0B
-	case "ClientboundConfigFeatureFlags", "ClientboundConfigUpdateEnabledFeatures":
-		return ClientboundConfigFeatureFlags // 12 0X0C
-	case "ClientboundConfigTags", "ClientboundConfigUpdateTags":
-		return ClientboundConfigTags // 13 0X0D
-	case "ClientboundConfigCommonSelectKnownPacks", "ClientboundConfigSelectKnownPacks":
-		return ClientboundConfigCommonSelectKnownPacks // 14 0X0E
-	case "ClientboundConfigCommonCustomReportDetails", "ClientboundConfigCustomReportDetails":
-		return ClientboundConfigCommonCustomReportDetails // 15 0X0F
-	case "ClientboundConfigCommonServerLinks", "ClientboundConfigServerLinks":
-		return ClientboundConfigCommonServerLinks // 16 0X10
-	case "ClientboundConfigCommonClearDialog", "ClientboundConfigClearDialog":
-		return ClientboundConfigCommonClearDialog // 17 0X11
-	case "ClientboundConfigShowDialog":
-		return ClientboundConfigShowDialog // 18 0X12
-	case "ClientboundConfigCodeOfConduct":
-		return ClientboundConfigCodeOfConduct // 19 0X13
-	case "ClientboundConfigPacketIDGuard":
-		return 20
+	switch name { 
+	case "ClientboundConfigCommonCookieRequest", "ClientboundConfigCookieRequest":   
+		return ClientboundConfigCommonCookieRequest // 0 0X00 
+	case "ClientboundConfigCustomPayload":   
+		return ClientboundConfigCustomPayload // 1 0X01 
+	case "ClientboundConfigDisconnect":   
+		return ClientboundConfigDisconnect // 2 0X02 
+	case "ClientboundConfigFinishConfiguration":   
+		return ClientboundConfigFinishConfiguration // 3 0X03 
+	case "ClientboundConfigKeepAlive":   
+		return ClientboundConfigKeepAlive // 4 0X04 
+	case "ClientboundConfigPing":   
+		return ClientboundConfigPing // 5 0X05 
+	case "ClientboundConfigResetChat":   
+		return ClientboundConfigResetChat // 6 0X06 
+	case "ClientboundConfigRegistryData":   
+		return ClientboundConfigRegistryData // 7 0X07 
+	case "ClientboundConfigCommonRemoveResourcePack", "ClientboundConfigResourcePackPop":   
+		return ClientboundConfigCommonRemoveResourcePack // 8 0X08 
+	case "ClientboundConfigCommonAddResourcePack", "ClientboundConfigResourcePackPush":   
+		return ClientboundConfigCommonAddResourcePack // 9 0X09 
+	case "ClientboundConfigCommonStoreCookie", "ClientboundConfigStoreCookie":   
+		return ClientboundConfigCommonStoreCookie // 10 0X0A 
+	case "ClientboundConfigCommonTransfer", "ClientboundConfigTransfer":   
+		return ClientboundConfigCommonTransfer // 11 0X0B 
+	case "ClientboundConfigFeatureFlags", "ClientboundConfigUpdateEnabledFeatures":   
+		return ClientboundConfigFeatureFlags // 12 0X0C 
+	case "ClientboundConfigTags", "ClientboundConfigUpdateTags":   
+		return ClientboundConfigTags // 13 0X0D 
+	case "ClientboundConfigCommonSelectKnownPacks", "ClientboundConfigSelectKnownPacks":   
+		return ClientboundConfigCommonSelectKnownPacks // 14 0X0E 
+	case "ClientboundConfigCommonCustomReportDetails", "ClientboundConfigCustomReportDetails":   
+		return ClientboundConfigCommonCustomReportDetails // 15 0X0F 
+	case "ClientboundConfigCommonServerLinks", "ClientboundConfigServerLinks":   
+		return ClientboundConfigCommonServerLinks // 16 0X10 
+	case "ClientboundConfigCommonClearDialog", "ClientboundConfigClearDialog":   
+		return ClientboundConfigCommonClearDialog // 17 0X11 
+	case "ClientboundConfigShowDialog":   
+		return ClientboundConfigShowDialog // 18 0X12 
+	case "ClientboundConfigCodeOfConduct":   
+		return ClientboundConfigCodeOfConduct // 19 0X13 
+	case "ClientboundConfigPacketIDGuard": return 20
 	default:
 		log.Printf("GetClientboundConfigPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
@@ -132,80 +128,78 @@ func (p Packets) GetClientboundConfigPacketID(name string) models.ClientboundPac
 
 func (p Packets) ClientboundConfigToString(id models.ClientboundPacketID) string {
 	switch id {
-
-	case ClientboundConfigCommonCookieRequest:
-		return "ClientboundConfigCommonCookieRequest" // 0 0X00
-	case ClientboundConfigCustomPayload:
-		return "ClientboundConfigCustomPayload" // 1 0X01
-	case ClientboundConfigDisconnect:
-		return "ClientboundConfigDisconnect" // 2 0X02
-	case ClientboundConfigFinishConfiguration:
-		return "ClientboundConfigFinishConfiguration" // 3 0X03
-	case ClientboundConfigKeepAlive:
-		return "ClientboundConfigKeepAlive" // 4 0X04
-	case ClientboundConfigPing:
-		return "ClientboundConfigPing" // 5 0X05
-	case ClientboundConfigResetChat:
-		return "ClientboundConfigResetChat" // 6 0X06
-	case ClientboundConfigRegistryData:
-		return "ClientboundConfigRegistryData" // 7 0X07
-	case ClientboundConfigCommonRemoveResourcePack:
-		return "ClientboundConfigCommonRemoveResourcePack" // 8 0X08
-	case ClientboundConfigCommonAddResourcePack:
-		return "ClientboundConfigCommonAddResourcePack" // 9 0X09
-	case ClientboundConfigCommonStoreCookie:
-		return "ClientboundConfigCommonStoreCookie" // 10 0X0A
-	case ClientboundConfigCommonTransfer:
-		return "ClientboundConfigCommonTransfer" // 11 0X0B
-	case ClientboundConfigFeatureFlags:
-		return "ClientboundConfigFeatureFlags" // 12 0X0C
-	case ClientboundConfigTags:
-		return "ClientboundConfigTags" // 13 0X0D
-	case ClientboundConfigCommonSelectKnownPacks:
-		return "ClientboundConfigCommonSelectKnownPacks" // 14 0X0E
-	case ClientboundConfigCommonCustomReportDetails:
-		return "ClientboundConfigCommonCustomReportDetails" // 15 0X0F
-	case ClientboundConfigCommonServerLinks:
-		return "ClientboundConfigCommonServerLinks" // 16 0X10
-	case ClientboundConfigCommonClearDialog:
-		return "ClientboundConfigCommonClearDialog" // 17 0X11
-	case ClientboundConfigShowDialog:
-		return "ClientboundConfigShowDialog" // 18 0X12
-	case ClientboundConfigCodeOfConduct:
-		return "ClientboundConfigCodeOfConduct" // 19 0X13
-	case 20:
-		return "ClientboundConfigPacketIDGuard"
+	
+	case ClientboundConfigCommonCookieRequest:   
+		return "ClientboundConfigCommonCookieRequest" // 0 0X00 
+	case ClientboundConfigCustomPayload:   
+		return "ClientboundConfigCustomPayload" // 1 0X01 
+	case ClientboundConfigDisconnect:   
+		return "ClientboundConfigDisconnect" // 2 0X02 
+	case ClientboundConfigFinishConfiguration:   
+		return "ClientboundConfigFinishConfiguration" // 3 0X03 
+	case ClientboundConfigKeepAlive:   
+		return "ClientboundConfigKeepAlive" // 4 0X04 
+	case ClientboundConfigPing:   
+		return "ClientboundConfigPing" // 5 0X05 
+	case ClientboundConfigResetChat:   
+		return "ClientboundConfigResetChat" // 6 0X06 
+	case ClientboundConfigRegistryData:   
+		return "ClientboundConfigRegistryData" // 7 0X07 
+	case ClientboundConfigCommonRemoveResourcePack:   
+		return "ClientboundConfigCommonRemoveResourcePack" // 8 0X08 
+	case ClientboundConfigCommonAddResourcePack:   
+		return "ClientboundConfigCommonAddResourcePack" // 9 0X09 
+	case ClientboundConfigCommonStoreCookie:   
+		return "ClientboundConfigCommonStoreCookie" // 10 0X0A 
+	case ClientboundConfigCommonTransfer:   
+		return "ClientboundConfigCommonTransfer" // 11 0X0B 
+	case ClientboundConfigFeatureFlags:   
+		return "ClientboundConfigFeatureFlags" // 12 0X0C 
+	case ClientboundConfigTags:   
+		return "ClientboundConfigTags" // 13 0X0D 
+	case ClientboundConfigCommonSelectKnownPacks:   
+		return "ClientboundConfigCommonSelectKnownPacks" // 14 0X0E 
+	case ClientboundConfigCommonCustomReportDetails:   
+		return "ClientboundConfigCommonCustomReportDetails" // 15 0X0F 
+	case ClientboundConfigCommonServerLinks:   
+		return "ClientboundConfigCommonServerLinks" // 16 0X10 
+	case ClientboundConfigCommonClearDialog:   
+		return "ClientboundConfigCommonClearDialog" // 17 0X11 
+	case ClientboundConfigShowDialog:   
+		return "ClientboundConfigShowDialog" // 18 0X12 
+	case ClientboundConfigCodeOfConduct:   
+		return "ClientboundConfigCodeOfConduct" // 19 0X13 
+	case 20: return "ClientboundConfigPacketIDGuard"
 	default:
 		return fmt.Sprintf("Unknown Clientbound Configuration packet ID: %d", id)
 	}
 }
 
 func (p Packets) GetServerboundConfigPacketID(name string) models.ServerboundPacketID {
-	log.Printf("GetServerboundConfigPacketID(\"%s\")\n", name)
+	log.Printf("GetServerboundConfigPacketID(\"%s\")\n",name)
 
-	switch name {
-	case "ServerboundConfigCommonSettings", "ServerboundConfigClientInformation":
-		return ServerboundConfigCommonSettings // 0 0X00
-	case "ServerboundConfigCommonCookieResponse", "ServerboundConfigCookieResponse":
-		return ServerboundConfigCommonCookieResponse // 1 0X01
-	case "ServerboundConfigCustomPayload":
-		return ServerboundConfigCustomPayload // 2 0X02
-	case "ServerboundConfigFinishConfiguration":
-		return ServerboundConfigFinishConfiguration // 3 0X03
-	case "ServerboundConfigKeepAlive":
-		return ServerboundConfigKeepAlive // 4 0X04
-	case "ServerboundConfigPong":
-		return ServerboundConfigPong // 5 0X05
-	case "ServerboundConfigResourcePackReceive", "ServerboundConfigResourcePack":
-		return ServerboundConfigResourcePackReceive // 6 0X06
-	case "ServerboundConfigCommonSelectKnownPacks", "ServerboundConfigSelectKnownPacks":
-		return ServerboundConfigCommonSelectKnownPacks // 7 0X07
-	case "ServerboundConfigCommonCustomClickAction", "ServerboundConfigCustomClickAction":
-		return ServerboundConfigCommonCustomClickAction // 8 0X08
-	case "ServerboundConfigAcceptCodeOfConduct":
-		return ServerboundConfigAcceptCodeOfConduct // 9 0X09
-	case "ServerboundConfigPacketIDGuard":
-		return 10
+	switch name { 
+	case "ServerboundConfigCommonSettings", "ServerboundConfigClientInformation":   
+		return ServerboundConfigCommonSettings // 0 0X00 
+	case "ServerboundConfigCommonCookieResponse", "ServerboundConfigCookieResponse":   
+		return ServerboundConfigCommonCookieResponse // 1 0X01 
+	case "ServerboundConfigCustomPayload":   
+		return ServerboundConfigCustomPayload // 2 0X02 
+	case "ServerboundConfigFinishConfiguration":   
+		return ServerboundConfigFinishConfiguration // 3 0X03 
+	case "ServerboundConfigKeepAlive":   
+		return ServerboundConfigKeepAlive // 4 0X04 
+	case "ServerboundConfigPong":   
+		return ServerboundConfigPong // 5 0X05 
+	case "ServerboundConfigResourcePackReceive", "ServerboundConfigResourcePack":   
+		return ServerboundConfigResourcePackReceive // 6 0X06 
+	case "ServerboundConfigCommonSelectKnownPacks", "ServerboundConfigSelectKnownPacks":   
+		return ServerboundConfigCommonSelectKnownPacks // 7 0X07 
+	case "ServerboundConfigCommonCustomClickAction", "ServerboundConfigCustomClickAction":   
+		return ServerboundConfigCommonCustomClickAction // 8 0X08 
+	case "ServerboundConfigAcceptCodeOfConduct":   
+		return ServerboundConfigAcceptCodeOfConduct // 9 0X09 
+	case "ServerboundConfigPacketIDGuard": return 10
 	default:
 		log.Printf("GetServerboundConfigPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
@@ -214,29 +208,28 @@ func (p Packets) GetServerboundConfigPacketID(name string) models.ServerboundPac
 
 func (p Packets) ServerboundConfigToString(id models.ServerboundPacketID) string {
 	switch id {
-
-	case ServerboundConfigCommonSettings:
-		return "ServerboundConfigCommonSettings" // 0 0X00
-	case ServerboundConfigCommonCookieResponse:
-		return "ServerboundConfigCommonCookieResponse" // 1 0X01
-	case ServerboundConfigCustomPayload:
-		return "ServerboundConfigCustomPayload" // 2 0X02
-	case ServerboundConfigFinishConfiguration:
-		return "ServerboundConfigFinishConfiguration" // 3 0X03
-	case ServerboundConfigKeepAlive:
-		return "ServerboundConfigKeepAlive" // 4 0X04
-	case ServerboundConfigPong:
-		return "ServerboundConfigPong" // 5 0X05
-	case ServerboundConfigResourcePackReceive:
-		return "ServerboundConfigResourcePackReceive" // 6 0X06
-	case ServerboundConfigCommonSelectKnownPacks:
-		return "ServerboundConfigCommonSelectKnownPacks" // 7 0X07
-	case ServerboundConfigCommonCustomClickAction:
-		return "ServerboundConfigCommonCustomClickAction" // 8 0X08
-	case ServerboundConfigAcceptCodeOfConduct:
-		return "ServerboundConfigAcceptCodeOfConduct" // 9 0X09
-	case 10:
-		return "ServerboundConfigPacketIDGuard"
+	
+	case ServerboundConfigCommonSettings:   
+		return "ServerboundConfigCommonSettings" // 0 0X00 
+	case ServerboundConfigCommonCookieResponse:   
+		return "ServerboundConfigCommonCookieResponse" // 1 0X01 
+	case ServerboundConfigCustomPayload:   
+		return "ServerboundConfigCustomPayload" // 2 0X02 
+	case ServerboundConfigFinishConfiguration:   
+		return "ServerboundConfigFinishConfiguration" // 3 0X03 
+	case ServerboundConfigKeepAlive:   
+		return "ServerboundConfigKeepAlive" // 4 0X04 
+	case ServerboundConfigPong:   
+		return "ServerboundConfigPong" // 5 0X05 
+	case ServerboundConfigResourcePackReceive:   
+		return "ServerboundConfigResourcePackReceive" // 6 0X06 
+	case ServerboundConfigCommonSelectKnownPacks:   
+		return "ServerboundConfigCommonSelectKnownPacks" // 7 0X07 
+	case ServerboundConfigCommonCustomClickAction:   
+		return "ServerboundConfigCommonCustomClickAction" // 8 0X08 
+	case ServerboundConfigAcceptCodeOfConduct:   
+		return "ServerboundConfigAcceptCodeOfConduct" // 9 0X09 
+	case 10: return "ServerboundConfigPacketIDGuard"
 	default:
 		return fmt.Sprintf("Unknown Serverbound Configuration packet ID: %d", id)
 	}
@@ -244,287 +237,286 @@ func (p Packets) ServerboundConfigToString(id models.ServerboundPacketID) string
 
 func (p Packets) GetClientboundPacketID(name string) models.ClientboundPacketID {
 	switch name {
-
-	case "Clientboundmodels.Void", "ClientboundBundleDelimiter":
-		return ClientboundVoid // 0 0X00
-	case "ClientboundSpawnEntity", "ClientboundAddEntity":
-		return ClientboundSpawnEntity // 1 0X01
-	case "ClientboundAnimation", "ClientboundAnimate":
-		return ClientboundAnimation // 2 0X02
-	case "ClientboundStatistics", "ClientboundAwardStats":
-		return ClientboundStatistics // 3 0X03
-	case "ClientboundAcknowledgePlayerDigging", "ClientboundBlockChangedAck":
-		return ClientboundAcknowledgePlayerDigging // 4 0X04
-	case "ClientboundBlockBreakAnimation", "ClientboundBlockDestruction":
-		return ClientboundBlockBreakAnimation // 5 0X05
-	case "ClientboundTileEntityData", "ClientboundBlockEntityData":
-		return ClientboundTileEntityData // 6 0X06
-	case "ClientboundBlockAction", "ClientboundBlockEvent":
-		return ClientboundBlockAction // 7 0X07
-	case "ClientboundBlockChange", "ClientboundBlockUpdate":
-		return ClientboundBlockChange // 8 0X08
-	case "ClientboundBossBar", "ClientboundBossEvent":
-		return ClientboundBossBar // 9 0X09
-	case "ClientboundDifficulty", "ClientboundChangeDifficulty":
-		return ClientboundDifficulty // 10 0X0A
-	case "ClientboundChunkBatchFinished":
-		return ClientboundChunkBatchFinished // 11 0X0B
-	case "ClientboundChunkBatchStart":
-		return ClientboundChunkBatchStart // 12 0X0C
-	case "ClientboundChunkBiomes", "ClientboundChunksBiomes":
-		return ClientboundChunkBiomes // 13 0X0D
-	case "ClientboundClearTitles":
-		return ClientboundClearTitles // 14 0X0E
-	case "ClientboundTabComplete", "ClientboundCommandSuggestions":
-		return ClientboundTabComplete // 15 0X0F
-	case "ClientboundDeclareCommands", "ClientboundCommands":
-		return ClientboundDeclareCommands // 16 0X10
-	case "ClientboundCloseWindow", "ClientboundContainerClose":
-		return ClientboundCloseWindow // 17 0X11
-	case "ClientboundWindowItems", "ClientboundContainerSetContent":
-		return ClientboundWindowItems // 18 0X12
-	case "ClientboundCraftProgressBar", "ClientboundContainerSetData":
-		return ClientboundCraftProgressBar // 19 0X13
-	case "ClientboundSetSlot", "ClientboundContainerSetSlot":
-		return ClientboundSetSlot // 20 0X14
-	case "ClientboundCommonCookieRequest", "ClientboundCookieRequest":
-		return ClientboundCommonCookieRequest // 21 0X15
-	case "ClientboundSetCooldown", "ClientboundCooldown":
-		return ClientboundSetCooldown // 22 0X16
-	case "ClientboundChatSuggestions", "ClientboundCustomChatCompletions":
-		return ClientboundChatSuggestions // 23 0X17
-	case "ClientboundCustomPayload":
-		return ClientboundCustomPayload // 24 0X18
-	case "ClientboundDamageEvent":
-		return ClientboundDamageEvent // 25 0X19
-	case "ClientboundDebugBlockValue", "ClientboundDebug/blockValue":
-		return ClientboundDebugBlockValue // 26 0X1A
-	case "ClientboundDebugChunkValue", "ClientboundDebug/chunkValue":
-		return ClientboundDebugChunkValue // 27 0X1B
-	case "ClientboundDebugEntityValue", "ClientboundDebug/entityValue":
-		return ClientboundDebugEntityValue // 28 0X1C
-	case "ClientboundDebugEvent", "ClientboundDebug/event":
-		return ClientboundDebugEvent // 29 0X1D
-	case "ClientboundDebugSample":
-		return ClientboundDebugSample // 30 0X1E
-	case "ClientboundHideMessage", "ClientboundDeleteChat":
-		return ClientboundHideMessage // 31 0X1F
-	case "ClientboundKickDisconnect", "ClientboundDisconnect":
-		return ClientboundKickDisconnect // 32 0X20
-	case "ClientboundProfilelessChat", "ClientboundDisguisedChat":
-		return ClientboundProfilelessChat // 33 0X21
-	case "ClientboundEntityStatus", "ClientboundEntityEvent":
-		return ClientboundEntityStatus // 34 0X22
-	case "ClientboundSyncEntityPosition", "ClientboundEntityPositionSync":
-		return ClientboundSyncEntityPosition // 35 0X23
-	case "ClientboundExplosion", "ClientboundExplode":
-		return ClientboundExplosion // 36 0X24
-	case "ClientboundUnloadChunk", "ClientboundForgetLevelChunk":
-		return ClientboundUnloadChunk // 37 0X25
-	case "ClientboundGameStateChange", "ClientboundGameEvent":
-		return ClientboundGameStateChange // 38 0X26
-	case "ClientboundGameTestHighlightPos":
-		return ClientboundGameTestHighlightPos // 39 0X27
-	case "ClientboundOpenHorseWindow", "ClientboundMountScreenOpen":
-		return ClientboundOpenHorseWindow // 40 0X28
-	case "ClientboundHurtAnimation":
-		return ClientboundHurtAnimation // 41 0X29
-	case "ClientboundInitializeWorldBorder", "ClientboundInitializeBorder":
-		return ClientboundInitializeWorldBorder // 42 0X2A
-	case "ClientboundKeepAlive":
-		return ClientboundKeepAlive // 43 0X2B
-	case "ClientboundMapChunk", "ClientboundLevelChunkWithLight":
-		return ClientboundMapChunk // 44 0X2C
-	case "ClientboundWorldEvent", "ClientboundLevelEvent":
-		return ClientboundWorldEvent // 45 0X2D
-	case "ClientboundWorldParticles", "ClientboundLevelParticles":
-		return ClientboundWorldParticles // 46 0X2E
-	case "ClientboundUpdateLight", "ClientboundLightUpdate":
-		return ClientboundUpdateLight // 47 0X2F
-	case "ClientboundLogin":
-		return ClientboundLogin // 48 0X30
-	case "ClientboundMap", "ClientboundMapItemData":
-		return ClientboundMap // 49 0X31
-	case "ClientboundTradeList", "ClientboundMerchantOffers":
-		return ClientboundTradeList // 50 0X32
-	case "ClientboundRelEntityMove", "ClientboundMoveEntityPos":
-		return ClientboundRelEntityMove // 51 0X33
-	case "ClientboundEntityMoveLook", "ClientboundMoveEntityPosRot":
-		return ClientboundEntityMoveLook // 52 0X34
-	case "ClientboundMoveMinecart", "ClientboundMoveMinecartAlongTrack":
-		return ClientboundMoveMinecart // 53 0X35
-	case "ClientboundEntityLook", "ClientboundMoveEntityRot":
-		return ClientboundEntityLook // 54 0X36
-	case "ClientboundVehicleMove", "ClientboundMoveVehicle":
-		return ClientboundVehicleMove // 55 0X37
-	case "ClientboundOpenBook":
-		return ClientboundOpenBook // 56 0X38
-	case "ClientboundOpenWindow", "ClientboundOpenScreen":
-		return ClientboundOpenWindow // 57 0X39
-	case "ClientboundOpenSignEntity", "ClientboundOpenSignEditor":
-		return ClientboundOpenSignEntity // 58 0X3A
-	case "ClientboundPing":
-		return ClientboundPing // 59 0X3B
-	case "ClientboundPingResponse", "ClientboundPongResponse":
-		return ClientboundPingResponse // 60 0X3C
-	case "ClientboundCraftRecipeResponse", "ClientboundPlaceGhostRecipe":
-		return ClientboundCraftRecipeResponse // 61 0X3D
-	case "ClientboundAbilities", "ClientboundPlayerAbilities":
-		return ClientboundAbilities // 62 0X3E
-	case "ClientboundPlayerChat":
-		return ClientboundPlayerChat // 63 0X3F
-	case "ClientboundEndCombatEvent", "ClientboundPlayerCombatEnd":
-		return ClientboundEndCombatEvent // 64 0X40
-	case "ClientboundEnterCombatEvent", "ClientboundPlayerCombatEnter":
-		return ClientboundEnterCombatEvent // 65 0X41
-	case "ClientboundDeathCombatEvent", "ClientboundPlayerCombatKill":
-		return ClientboundDeathCombatEvent // 66 0X42
-	case "ClientboundPlayerRemove", "ClientboundPlayerInfoRemove":
-		return ClientboundPlayerRemove // 67 0X43
-	case "ClientboundPlayerInfo", "ClientboundPlayerInfoUpdate":
-		return ClientboundPlayerInfo // 68 0X44
-	case "ClientboundFacePlayer", "ClientboundPlayerLookAt":
-		return ClientboundFacePlayer // 69 0X45
-	case "ClientboundPosition", "ClientboundPlayerPosition":
-		return ClientboundPosition // 70 0X46
-	case "ClientboundPlayerRotation":
-		return ClientboundPlayerRotation // 71 0X47
-	case "ClientboundRecipeBookAdd":
-		return ClientboundRecipeBookAdd // 72 0X48
-	case "ClientboundRecipeBookRemove":
-		return ClientboundRecipeBookRemove // 73 0X49
-	case "ClientboundRecipeBookSettings":
-		return ClientboundRecipeBookSettings // 74 0X4A
-	case "ClientboundEntityDestroy", "ClientboundRemoveEntities":
-		return ClientboundEntityDestroy // 75 0X4B
-	case "ClientboundRemoveEntityEffect", "ClientboundRemoveMobEffect":
-		return ClientboundRemoveEntityEffect // 76 0X4C
-	case "ClientboundResetScore":
-		return ClientboundResetScore // 77 0X4D
-	case "ClientboundCommonRemoveResourcePack", "ClientboundResourcePackPop":
-		return ClientboundCommonRemoveResourcePack // 78 0X4E
-	case "ClientboundCommonAddResourcePack", "ClientboundResourcePackPush":
-		return ClientboundCommonAddResourcePack // 79 0X4F
-	case "ClientboundRespawn":
-		return ClientboundRespawn // 80 0X50
-	case "ClientboundEntityHeadRotation", "ClientboundRotateHead":
-		return ClientboundEntityHeadRotation // 81 0X51
-	case "ClientboundMultiBlockChange", "ClientboundSectionBlocksUpdate":
-		return ClientboundMultiBlockChange // 82 0X52
-	case "ClientboundSelectAdvancementTab", "ClientboundSelectAdvancementsTab":
-		return ClientboundSelectAdvancementTab // 83 0X53
-	case "ClientboundServerData":
-		return ClientboundServerData // 84 0X54
-	case "ClientboundActionBar", "ClientboundSetActionBarText":
-		return ClientboundActionBar // 85 0X55
-	case "ClientboundWorldBorderCenter", "ClientboundSetBorderCenter":
-		return ClientboundWorldBorderCenter // 86 0X56
-	case "ClientboundWorldBorderLerpSize", "ClientboundSetBorderLerpSize":
-		return ClientboundWorldBorderLerpSize // 87 0X57
-	case "ClientboundWorldBorderSize", "ClientboundSetBorderSize":
-		return ClientboundWorldBorderSize // 88 0X58
-	case "ClientboundWorldBorderWarningDelay", "ClientboundSetBorderWarningDelay":
-		return ClientboundWorldBorderWarningDelay // 89 0X59
-	case "ClientboundWorldBorderWarningReach", "ClientboundSetBorderWarningDistance":
-		return ClientboundWorldBorderWarningReach // 90 0X5A
-	case "ClientboundCamera", "ClientboundSetCamera":
-		return ClientboundCamera // 91 0X5B
-	case "ClientboundUpdateViewPosition", "ClientboundSetChunkCacheCenter":
-		return ClientboundUpdateViewPosition // 92 0X5C
-	case "ClientboundUpdateViewDistance", "ClientboundSetChunkCacheRadius":
-		return ClientboundUpdateViewDistance // 93 0X5D
-	case "ClientboundSetCursorItem":
-		return ClientboundSetCursorItem // 94 0X5E
-	case "ClientboundSpawnPosition", "ClientboundSetDefaultSpawnPosition":
-		return ClientboundSpawnPosition // 95 0X5F
-	case "ClientboundScoreboardDisplayObjective", "ClientboundSetDisplayObjective":
-		return ClientboundScoreboardDisplayObjective // 96 0X60
-	case "ClientboundEntityMetadata", "ClientboundSetEntityData":
-		return ClientboundEntityMetadata // 97 0X61
-	case "ClientboundAttachEntity", "ClientboundSetEntityLink":
-		return ClientboundAttachEntity // 98 0X62
-	case "ClientboundEntityVelocity", "ClientboundSetEntityMotion":
-		return ClientboundEntityVelocity // 99 0X63
-	case "ClientboundEntityEquipment", "ClientboundSetEquipment":
-		return ClientboundEntityEquipment // 100 0X64
-	case "ClientboundExperience", "ClientboundSetExperience":
-		return ClientboundExperience // 101 0X65
-	case "ClientboundUpdateHealth", "ClientboundSetHealth":
-		return ClientboundUpdateHealth // 102 0X66
-	case "ClientboundHeldItemSlot", "ClientboundSetHeldSlot":
-		return ClientboundHeldItemSlot // 103 0X67
-	case "ClientboundScoreboardObjective", "ClientboundSetObjective":
-		return ClientboundScoreboardObjective // 104 0X68
-	case "ClientboundSetPassengers":
-		return ClientboundSetPassengers // 105 0X69
-	case "ClientboundSetPlayerInventory":
-		return ClientboundSetPlayerInventory // 106 0X6A
-	case "ClientboundTeams", "ClientboundSetPlayerTeam":
-		return ClientboundTeams // 107 0X6B
-	case "ClientboundScoreboardScore", "ClientboundSetScore":
-		return ClientboundScoreboardScore // 108 0X6C
-	case "ClientboundSimulationDistance", "ClientboundSetSimulationDistance":
-		return ClientboundSimulationDistance // 109 0X6D
-	case "ClientboundSetTitleSubtitle", "ClientboundSetSubtitleText":
-		return ClientboundSetTitleSubtitle // 110 0X6E
-	case "ClientboundUpdateTime", "ClientboundSetTime":
-		return ClientboundUpdateTime // 111 0X6F
-	case "ClientboundSetTitleText":
-		return ClientboundSetTitleText // 112 0X70
-	case "ClientboundSetTitleTime", "ClientboundSetTitlesAnimation":
-		return ClientboundSetTitleTime // 113 0X71
-	case "ClientboundEntitySoundEffect", "ClientboundSoundEntity":
-		return ClientboundEntitySoundEffect // 114 0X72
-	case "ClientboundSoundEffect", "ClientboundSound":
-		return ClientboundSoundEffect // 115 0X73
-	case "ClientboundStartConfiguration":
-		return ClientboundStartConfiguration // 116 0X74
-	case "ClientboundStopSound":
-		return ClientboundStopSound // 117 0X75
-	case "ClientboundCommonStoreCookie", "ClientboundStoreCookie":
-		return ClientboundCommonStoreCookie // 118 0X76
-	case "ClientboundSystemChat":
-		return ClientboundSystemChat // 119 0X77
-	case "ClientboundPlayerlistHeader", "ClientboundTabList":
-		return ClientboundPlayerlistHeader // 120 0X78
-	case "ClientboundNbtQueryResponse", "ClientboundTagQuery":
-		return ClientboundNbtQueryResponse // 121 0X79
-	case "ClientboundCollect", "ClientboundTakeItemEntity":
-		return ClientboundCollect // 122 0X7A
-	case "ClientboundEntityTeleport", "ClientboundTeleportEntity":
-		return ClientboundEntityTeleport // 123 0X7B
-	case "ClientboundTestInstanceBlockStatus":
-		return ClientboundTestInstanceBlockStatus // 124 0X7C
-	case "ClientboundSetTickingState", "ClientboundTickingState":
-		return ClientboundSetTickingState // 125 0X7D
-	case "ClientboundStepTick", "ClientboundTickingStep":
-		return ClientboundStepTick // 126 0X7E
-	case "ClientboundCommonTransfer", "ClientboundTransfer":
-		return ClientboundCommonTransfer // 127 0X7F
-	case "ClientboundAdvancements", "ClientboundUpdateAdvancements":
-		return ClientboundAdvancements // 128 0X80
-	case "ClientboundEntityUpdateAttributes", "ClientboundUpdateAttributes":
-		return ClientboundEntityUpdateAttributes // 129 0X81
-	case "ClientboundEntityEffect", "ClientboundUpdateMobEffect":
-		return ClientboundEntityEffect // 130 0X82
-	case "ClientboundDeclareRecipes", "ClientboundUpdateRecipes":
-		return ClientboundDeclareRecipes // 131 0X83
-	case "ClientboundTags", "ClientboundUpdateTags":
-		return ClientboundTags // 132 0X84
-	case "ClientboundSetProjectilePower", "ClientboundProjectilePower":
-		return ClientboundSetProjectilePower // 133 0X85
-	case "ClientboundCommonCustomReportDetails", "ClientboundCustomReportDetails":
-		return ClientboundCommonCustomReportDetails // 134 0X86
-	case "ClientboundCommonServerLinks", "ClientboundServerLinks":
-		return ClientboundCommonServerLinks // 135 0X87
-	case "ClientboundTrackedWaypoint", "ClientboundWaypoint":
-		return ClientboundTrackedWaypoint // 136 0X88
-	case "ClientboundCommonClearDialog", "ClientboundClearDialog":
-		return ClientboundCommonClearDialog // 137 0X89
-	case "ClientboundShowDialog":
-		return ClientboundShowDialog // 138 0X8A
-	case "ClientboundPacketIDGuard":
-		return 139
+	
+	case "Clientboundmodels.Void", "ClientboundBundleDelimiter": 
+		return ClientboundVoid // 0 0X00 
+	case "ClientboundSpawnEntity", "ClientboundAddEntity": 
+		return ClientboundSpawnEntity // 1 0X01 
+	case "ClientboundAnimation", "ClientboundAnimate": 
+		return ClientboundAnimation // 2 0X02 
+	case "ClientboundStatistics", "ClientboundAwardStats": 
+		return ClientboundStatistics // 3 0X03 
+	case "ClientboundAcknowledgePlayerDigging", "ClientboundBlockChangedAck": 
+		return ClientboundAcknowledgePlayerDigging // 4 0X04 
+	case "ClientboundBlockBreakAnimation", "ClientboundBlockDestruction": 
+		return ClientboundBlockBreakAnimation // 5 0X05 
+	case "ClientboundTileEntityData", "ClientboundBlockEntityData": 
+		return ClientboundTileEntityData // 6 0X06 
+	case "ClientboundBlockAction", "ClientboundBlockEvent": 
+		return ClientboundBlockAction // 7 0X07 
+	case "ClientboundBlockChange", "ClientboundBlockUpdate": 
+		return ClientboundBlockChange // 8 0X08 
+	case "ClientboundBossBar", "ClientboundBossEvent": 
+		return ClientboundBossBar // 9 0X09 
+	case "ClientboundDifficulty", "ClientboundChangeDifficulty": 
+		return ClientboundDifficulty // 10 0X0A 
+	case "ClientboundChunkBatchFinished": 
+		return ClientboundChunkBatchFinished // 11 0X0B 
+	case "ClientboundChunkBatchStart": 
+		return ClientboundChunkBatchStart // 12 0X0C 
+	case "ClientboundChunkBiomes", "ClientboundChunksBiomes": 
+		return ClientboundChunkBiomes // 13 0X0D 
+	case "ClientboundClearTitles": 
+		return ClientboundClearTitles // 14 0X0E 
+	case "ClientboundTabComplete", "ClientboundCommandSuggestions": 
+		return ClientboundTabComplete // 15 0X0F 
+	case "ClientboundDeclareCommands", "ClientboundCommands": 
+		return ClientboundDeclareCommands // 16 0X10 
+	case "ClientboundCloseWindow", "ClientboundContainerClose": 
+		return ClientboundCloseWindow // 17 0X11 
+	case "ClientboundWindowItems", "ClientboundContainerSetContent": 
+		return ClientboundWindowItems // 18 0X12 
+	case "ClientboundCraftProgressBar", "ClientboundContainerSetData": 
+		return ClientboundCraftProgressBar // 19 0X13 
+	case "ClientboundSetSlot", "ClientboundContainerSetSlot": 
+		return ClientboundSetSlot // 20 0X14 
+	case "ClientboundCommonCookieRequest", "ClientboundCookieRequest": 
+		return ClientboundCommonCookieRequest // 21 0X15 
+	case "ClientboundSetCooldown", "ClientboundCooldown": 
+		return ClientboundSetCooldown // 22 0X16 
+	case "ClientboundChatSuggestions", "ClientboundCustomChatCompletions": 
+		return ClientboundChatSuggestions // 23 0X17 
+	case "ClientboundCustomPayload": 
+		return ClientboundCustomPayload // 24 0X18 
+	case "ClientboundDamageEvent": 
+		return ClientboundDamageEvent // 25 0X19 
+	case "ClientboundDebugBlockValue", "ClientboundDebug/blockValue": 
+		return ClientboundDebugBlockValue // 26 0X1A 
+	case "ClientboundDebugChunkValue", "ClientboundDebug/chunkValue": 
+		return ClientboundDebugChunkValue // 27 0X1B 
+	case "ClientboundDebugEntityValue", "ClientboundDebug/entityValue": 
+		return ClientboundDebugEntityValue // 28 0X1C 
+	case "ClientboundDebugEvent", "ClientboundDebug/event": 
+		return ClientboundDebugEvent // 29 0X1D 
+	case "ClientboundDebugSample": 
+		return ClientboundDebugSample // 30 0X1E 
+	case "ClientboundHideMessage", "ClientboundDeleteChat": 
+		return ClientboundHideMessage // 31 0X1F 
+	case "ClientboundKickDisconnect", "ClientboundDisconnect": 
+		return ClientboundKickDisconnect // 32 0X20 
+	case "ClientboundProfilelessChat", "ClientboundDisguisedChat": 
+		return ClientboundProfilelessChat // 33 0X21 
+	case "ClientboundEntityStatus", "ClientboundEntityEvent": 
+		return ClientboundEntityStatus // 34 0X22 
+	case "ClientboundSyncEntityPosition", "ClientboundEntityPositionSync": 
+		return ClientboundSyncEntityPosition // 35 0X23 
+	case "ClientboundExplosion", "ClientboundExplode": 
+		return ClientboundExplosion // 36 0X24 
+	case "ClientboundUnloadChunk", "ClientboundForgetLevelChunk": 
+		return ClientboundUnloadChunk // 37 0X25 
+	case "ClientboundGameStateChange", "ClientboundGameEvent": 
+		return ClientboundGameStateChange // 38 0X26 
+	case "ClientboundGameTestHighlightPos": 
+		return ClientboundGameTestHighlightPos // 39 0X27 
+	case "ClientboundOpenHorseWindow", "ClientboundMountScreenOpen": 
+		return ClientboundOpenHorseWindow // 40 0X28 
+	case "ClientboundHurtAnimation": 
+		return ClientboundHurtAnimation // 41 0X29 
+	case "ClientboundInitializeWorldBorder", "ClientboundInitializeBorder": 
+		return ClientboundInitializeWorldBorder // 42 0X2A 
+	case "ClientboundKeepAlive": 
+		return ClientboundKeepAlive // 43 0X2B 
+	case "ClientboundMapChunk", "ClientboundLevelChunkWithLight": 
+		return ClientboundMapChunk // 44 0X2C 
+	case "ClientboundWorldEvent", "ClientboundLevelEvent": 
+		return ClientboundWorldEvent // 45 0X2D 
+	case "ClientboundWorldParticles", "ClientboundLevelParticles": 
+		return ClientboundWorldParticles // 46 0X2E 
+	case "ClientboundUpdateLight", "ClientboundLightUpdate": 
+		return ClientboundUpdateLight // 47 0X2F 
+	case "ClientboundLogin": 
+		return ClientboundLogin // 48 0X30 
+	case "ClientboundMap", "ClientboundMapItemData": 
+		return ClientboundMap // 49 0X31 
+	case "ClientboundTradeList", "ClientboundMerchantOffers": 
+		return ClientboundTradeList // 50 0X32 
+	case "ClientboundRelEntityMove", "ClientboundMoveEntityPos": 
+		return ClientboundRelEntityMove // 51 0X33 
+	case "ClientboundEntityMoveLook", "ClientboundMoveEntityPosRot": 
+		return ClientboundEntityMoveLook // 52 0X34 
+	case "ClientboundMoveMinecart", "ClientboundMoveMinecartAlongTrack": 
+		return ClientboundMoveMinecart // 53 0X35 
+	case "ClientboundEntityLook", "ClientboundMoveEntityRot": 
+		return ClientboundEntityLook // 54 0X36 
+	case "ClientboundVehicleMove", "ClientboundMoveVehicle": 
+		return ClientboundVehicleMove // 55 0X37 
+	case "ClientboundOpenBook": 
+		return ClientboundOpenBook // 56 0X38 
+	case "ClientboundOpenWindow", "ClientboundOpenScreen": 
+		return ClientboundOpenWindow // 57 0X39 
+	case "ClientboundOpenSignEntity", "ClientboundOpenSignEditor": 
+		return ClientboundOpenSignEntity // 58 0X3A 
+	case "ClientboundPing": 
+		return ClientboundPing // 59 0X3B 
+	case "ClientboundPingResponse", "ClientboundPongResponse": 
+		return ClientboundPingResponse // 60 0X3C 
+	case "ClientboundCraftRecipeResponse", "ClientboundPlaceGhostRecipe": 
+		return ClientboundCraftRecipeResponse // 61 0X3D 
+	case "ClientboundAbilities", "ClientboundPlayerAbilities": 
+		return ClientboundAbilities // 62 0X3E 
+	case "ClientboundPlayerChat": 
+		return ClientboundPlayerChat // 63 0X3F 
+	case "ClientboundEndCombatEvent", "ClientboundPlayerCombatEnd": 
+		return ClientboundEndCombatEvent // 64 0X40 
+	case "ClientboundEnterCombatEvent", "ClientboundPlayerCombatEnter": 
+		return ClientboundEnterCombatEvent // 65 0X41 
+	case "ClientboundDeathCombatEvent", "ClientboundPlayerCombatKill": 
+		return ClientboundDeathCombatEvent // 66 0X42 
+	case "ClientboundPlayerRemove", "ClientboundPlayerInfoRemove": 
+		return ClientboundPlayerRemove // 67 0X43 
+	case "ClientboundPlayerInfo", "ClientboundPlayerInfoUpdate": 
+		return ClientboundPlayerInfo // 68 0X44 
+	case "ClientboundFacePlayer", "ClientboundPlayerLookAt": 
+		return ClientboundFacePlayer // 69 0X45 
+	case "ClientboundPosition", "ClientboundPlayerPosition": 
+		return ClientboundPosition // 70 0X46 
+	case "ClientboundPlayerRotation": 
+		return ClientboundPlayerRotation // 71 0X47 
+	case "ClientboundRecipeBookAdd": 
+		return ClientboundRecipeBookAdd // 72 0X48 
+	case "ClientboundRecipeBookRemove": 
+		return ClientboundRecipeBookRemove // 73 0X49 
+	case "ClientboundRecipeBookSettings": 
+		return ClientboundRecipeBookSettings // 74 0X4A 
+	case "ClientboundEntityDestroy", "ClientboundRemoveEntities": 
+		return ClientboundEntityDestroy // 75 0X4B 
+	case "ClientboundRemoveEntityEffect", "ClientboundRemoveMobEffect": 
+		return ClientboundRemoveEntityEffect // 76 0X4C 
+	case "ClientboundResetScore": 
+		return ClientboundResetScore // 77 0X4D 
+	case "ClientboundCommonRemoveResourcePack", "ClientboundResourcePackPop": 
+		return ClientboundCommonRemoveResourcePack // 78 0X4E 
+	case "ClientboundCommonAddResourcePack", "ClientboundResourcePackPush": 
+		return ClientboundCommonAddResourcePack // 79 0X4F 
+	case "ClientboundRespawn": 
+		return ClientboundRespawn // 80 0X50 
+	case "ClientboundEntityHeadRotation", "ClientboundRotateHead": 
+		return ClientboundEntityHeadRotation // 81 0X51 
+	case "ClientboundMultiBlockChange", "ClientboundSectionBlocksUpdate": 
+		return ClientboundMultiBlockChange // 82 0X52 
+	case "ClientboundSelectAdvancementTab", "ClientboundSelectAdvancementsTab": 
+		return ClientboundSelectAdvancementTab // 83 0X53 
+	case "ClientboundServerData": 
+		return ClientboundServerData // 84 0X54 
+	case "ClientboundActionBar", "ClientboundSetActionBarText": 
+		return ClientboundActionBar // 85 0X55 
+	case "ClientboundWorldBorderCenter", "ClientboundSetBorderCenter": 
+		return ClientboundWorldBorderCenter // 86 0X56 
+	case "ClientboundWorldBorderLerpSize", "ClientboundSetBorderLerpSize": 
+		return ClientboundWorldBorderLerpSize // 87 0X57 
+	case "ClientboundWorldBorderSize", "ClientboundSetBorderSize": 
+		return ClientboundWorldBorderSize // 88 0X58 
+	case "ClientboundWorldBorderWarningDelay", "ClientboundSetBorderWarningDelay": 
+		return ClientboundWorldBorderWarningDelay // 89 0X59 
+	case "ClientboundWorldBorderWarningReach", "ClientboundSetBorderWarningDistance": 
+		return ClientboundWorldBorderWarningReach // 90 0X5A 
+	case "ClientboundCamera", "ClientboundSetCamera": 
+		return ClientboundCamera // 91 0X5B 
+	case "ClientboundUpdateViewPosition", "ClientboundSetChunkCacheCenter": 
+		return ClientboundUpdateViewPosition // 92 0X5C 
+	case "ClientboundUpdateViewDistance", "ClientboundSetChunkCacheRadius": 
+		return ClientboundUpdateViewDistance // 93 0X5D 
+	case "ClientboundSetCursorItem": 
+		return ClientboundSetCursorItem // 94 0X5E 
+	case "ClientboundSpawnPosition", "ClientboundSetDefaultSpawnPosition": 
+		return ClientboundSpawnPosition // 95 0X5F 
+	case "ClientboundScoreboardDisplayObjective", "ClientboundSetDisplayObjective": 
+		return ClientboundScoreboardDisplayObjective // 96 0X60 
+	case "ClientboundEntityMetadata", "ClientboundSetEntityData": 
+		return ClientboundEntityMetadata // 97 0X61 
+	case "ClientboundAttachEntity", "ClientboundSetEntityLink": 
+		return ClientboundAttachEntity // 98 0X62 
+	case "ClientboundEntityVelocity", "ClientboundSetEntityMotion": 
+		return ClientboundEntityVelocity // 99 0X63 
+	case "ClientboundEntityEquipment", "ClientboundSetEquipment": 
+		return ClientboundEntityEquipment // 100 0X64 
+	case "ClientboundExperience", "ClientboundSetExperience": 
+		return ClientboundExperience // 101 0X65 
+	case "ClientboundUpdateHealth", "ClientboundSetHealth": 
+		return ClientboundUpdateHealth // 102 0X66 
+	case "ClientboundHeldItemSlot", "ClientboundSetHeldSlot": 
+		return ClientboundHeldItemSlot // 103 0X67 
+	case "ClientboundScoreboardObjective", "ClientboundSetObjective": 
+		return ClientboundScoreboardObjective // 104 0X68 
+	case "ClientboundSetPassengers": 
+		return ClientboundSetPassengers // 105 0X69 
+	case "ClientboundSetPlayerInventory": 
+		return ClientboundSetPlayerInventory // 106 0X6A 
+	case "ClientboundTeams", "ClientboundSetPlayerTeam": 
+		return ClientboundTeams // 107 0X6B 
+	case "ClientboundScoreboardScore", "ClientboundSetScore": 
+		return ClientboundScoreboardScore // 108 0X6C 
+	case "ClientboundSimulationDistance", "ClientboundSetSimulationDistance": 
+		return ClientboundSimulationDistance // 109 0X6D 
+	case "ClientboundSetTitleSubtitle", "ClientboundSetSubtitleText": 
+		return ClientboundSetTitleSubtitle // 110 0X6E 
+	case "ClientboundUpdateTime", "ClientboundSetTime": 
+		return ClientboundUpdateTime // 111 0X6F 
+	case "ClientboundSetTitleText": 
+		return ClientboundSetTitleText // 112 0X70 
+	case "ClientboundSetTitleTime", "ClientboundSetTitlesAnimation": 
+		return ClientboundSetTitleTime // 113 0X71 
+	case "ClientboundEntitySoundEffect", "ClientboundSoundEntity": 
+		return ClientboundEntitySoundEffect // 114 0X72 
+	case "ClientboundSoundEffect", "ClientboundSound": 
+		return ClientboundSoundEffect // 115 0X73 
+	case "ClientboundStartConfiguration": 
+		return ClientboundStartConfiguration // 116 0X74 
+	case "ClientboundStopSound": 
+		return ClientboundStopSound // 117 0X75 
+	case "ClientboundCommonStoreCookie", "ClientboundStoreCookie": 
+		return ClientboundCommonStoreCookie // 118 0X76 
+	case "ClientboundSystemChat": 
+		return ClientboundSystemChat // 119 0X77 
+	case "ClientboundPlayerlistHeader", "ClientboundTabList": 
+		return ClientboundPlayerlistHeader // 120 0X78 
+	case "ClientboundNbtQueryResponse", "ClientboundTagQuery": 
+		return ClientboundNbtQueryResponse // 121 0X79 
+	case "ClientboundCollect", "ClientboundTakeItemEntity": 
+		return ClientboundCollect // 122 0X7A 
+	case "ClientboundEntityTeleport", "ClientboundTeleportEntity": 
+		return ClientboundEntityTeleport // 123 0X7B 
+	case "ClientboundTestInstanceBlockStatus": 
+		return ClientboundTestInstanceBlockStatus // 124 0X7C 
+	case "ClientboundSetTickingState", "ClientboundTickingState": 
+		return ClientboundSetTickingState // 125 0X7D 
+	case "ClientboundStepTick", "ClientboundTickingStep": 
+		return ClientboundStepTick // 126 0X7E 
+	case "ClientboundCommonTransfer", "ClientboundTransfer": 
+		return ClientboundCommonTransfer // 127 0X7F 
+	case "ClientboundAdvancements", "ClientboundUpdateAdvancements": 
+		return ClientboundAdvancements // 128 0X80 
+	case "ClientboundEntityUpdateAttributes", "ClientboundUpdateAttributes": 
+		return ClientboundEntityUpdateAttributes // 129 0X81 
+	case "ClientboundEntityEffect", "ClientboundUpdateMobEffect": 
+		return ClientboundEntityEffect // 130 0X82 
+	case "ClientboundDeclareRecipes", "ClientboundUpdateRecipes": 
+		return ClientboundDeclareRecipes // 131 0X83 
+	case "ClientboundTags", "ClientboundUpdateTags": 
+		return ClientboundTags // 132 0X84 
+	case "ClientboundSetProjectilePower", "ClientboundProjectilePower": 
+		return ClientboundSetProjectilePower // 133 0X85 
+	case "ClientboundCommonCustomReportDetails", "ClientboundCustomReportDetails": 
+		return ClientboundCommonCustomReportDetails // 134 0X86 
+	case "ClientboundCommonServerLinks", "ClientboundServerLinks": 
+		return ClientboundCommonServerLinks // 135 0X87 
+	case "ClientboundTrackedWaypoint", "ClientboundWaypoint": 
+		return ClientboundTrackedWaypoint // 136 0X88 
+	case "ClientboundCommonClearDialog", "ClientboundClearDialog": 
+		return ClientboundCommonClearDialog // 137 0X89 
+	case "ClientboundShowDialog": 
+		return ClientboundShowDialog // 138 0X8A 
+	case "ClientboundPacketIDGuard": return 139
 	default:
 		log.Printf("GetClientboundPacketID => unknown packet name: %s\n", name)
 		return models.ClientboundPacketID(-1) // unknown packet name
@@ -533,287 +525,286 @@ func (p Packets) GetClientboundPacketID(name string) models.ClientboundPacketID 
 
 func (p Packets) ClientboundToString(id models.ClientboundPacketID) string {
 	switch id {
-
-	case ClientboundVoid:
-		return "ClientboundVoid" // 0 0X00
-	case ClientboundSpawnEntity:
-		return "ClientboundSpawnEntity" // 1 0X01
-	case ClientboundAnimation:
-		return "ClientboundAnimation" // 2 0X02
-	case ClientboundStatistics:
-		return "ClientboundStatistics" // 3 0X03
-	case ClientboundAcknowledgePlayerDigging:
-		return "ClientboundAcknowledgePlayerDigging" // 4 0X04
-	case ClientboundBlockBreakAnimation:
-		return "ClientboundBlockBreakAnimation" // 5 0X05
-	case ClientboundTileEntityData:
-		return "ClientboundTileEntityData" // 6 0X06
-	case ClientboundBlockAction:
-		return "ClientboundBlockAction" // 7 0X07
-	case ClientboundBlockChange:
-		return "ClientboundBlockChange" // 8 0X08
-	case ClientboundBossBar:
-		return "ClientboundBossBar" // 9 0X09
-	case ClientboundDifficulty:
-		return "ClientboundDifficulty" // 10 0X0A
-	case ClientboundChunkBatchFinished:
-		return "ClientboundChunkBatchFinished" // 11 0X0B
-	case ClientboundChunkBatchStart:
-		return "ClientboundChunkBatchStart" // 12 0X0C
-	case ClientboundChunkBiomes:
-		return "ClientboundChunkBiomes" // 13 0X0D
-	case ClientboundClearTitles:
-		return "ClientboundClearTitles" // 14 0X0E
-	case ClientboundTabComplete:
-		return "ClientboundTabComplete" // 15 0X0F
-	case ClientboundDeclareCommands:
-		return "ClientboundDeclareCommands" // 16 0X10
-	case ClientboundCloseWindow:
-		return "ClientboundCloseWindow" // 17 0X11
-	case ClientboundWindowItems:
-		return "ClientboundWindowItems" // 18 0X12
-	case ClientboundCraftProgressBar:
-		return "ClientboundCraftProgressBar" // 19 0X13
-	case ClientboundSetSlot:
-		return "ClientboundSetSlot" // 20 0X14
-	case ClientboundCommonCookieRequest:
-		return "ClientboundCommonCookieRequest" // 21 0X15
-	case ClientboundSetCooldown:
-		return "ClientboundSetCooldown" // 22 0X16
-	case ClientboundChatSuggestions:
-		return "ClientboundChatSuggestions" // 23 0X17
-	case ClientboundCustomPayload:
-		return "ClientboundCustomPayload" // 24 0X18
-	case ClientboundDamageEvent:
-		return "ClientboundDamageEvent" // 25 0X19
-	case ClientboundDebugBlockValue:
-		return "ClientboundDebugBlockValue" // 26 0X1A
-	case ClientboundDebugChunkValue:
-		return "ClientboundDebugChunkValue" // 27 0X1B
-	case ClientboundDebugEntityValue:
-		return "ClientboundDebugEntityValue" // 28 0X1C
-	case ClientboundDebugEvent:
-		return "ClientboundDebugEvent" // 29 0X1D
-	case ClientboundDebugSample:
-		return "ClientboundDebugSample" // 30 0X1E
-	case ClientboundHideMessage:
-		return "ClientboundHideMessage" // 31 0X1F
-	case ClientboundKickDisconnect:
-		return "ClientboundKickDisconnect" // 32 0X20
-	case ClientboundProfilelessChat:
-		return "ClientboundProfilelessChat" // 33 0X21
-	case ClientboundEntityStatus:
-		return "ClientboundEntityStatus" // 34 0X22
-	case ClientboundSyncEntityPosition:
-		return "ClientboundSyncEntityPosition" // 35 0X23
-	case ClientboundExplosion:
-		return "ClientboundExplosion" // 36 0X24
-	case ClientboundUnloadChunk:
-		return "ClientboundUnloadChunk" // 37 0X25
-	case ClientboundGameStateChange:
-		return "ClientboundGameStateChange" // 38 0X26
-	case ClientboundGameTestHighlightPos:
-		return "ClientboundGameTestHighlightPos" // 39 0X27
-	case ClientboundOpenHorseWindow:
-		return "ClientboundOpenHorseWindow" // 40 0X28
-	case ClientboundHurtAnimation:
-		return "ClientboundHurtAnimation" // 41 0X29
-	case ClientboundInitializeWorldBorder:
-		return "ClientboundInitializeWorldBorder" // 42 0X2A
-	case ClientboundKeepAlive:
-		return "ClientboundKeepAlive" // 43 0X2B
-	case ClientboundMapChunk:
-		return "ClientboundMapChunk" // 44 0X2C
-	case ClientboundWorldEvent:
-		return "ClientboundWorldEvent" // 45 0X2D
-	case ClientboundWorldParticles:
-		return "ClientboundWorldParticles" // 46 0X2E
-	case ClientboundUpdateLight:
-		return "ClientboundUpdateLight" // 47 0X2F
-	case ClientboundLogin:
-		return "ClientboundLogin" // 48 0X30
-	case ClientboundMap:
-		return "ClientboundMap" // 49 0X31
-	case ClientboundTradeList:
-		return "ClientboundTradeList" // 50 0X32
-	case ClientboundRelEntityMove:
-		return "ClientboundRelEntityMove" // 51 0X33
-	case ClientboundEntityMoveLook:
-		return "ClientboundEntityMoveLook" // 52 0X34
-	case ClientboundMoveMinecart:
-		return "ClientboundMoveMinecart" // 53 0X35
-	case ClientboundEntityLook:
-		return "ClientboundEntityLook" // 54 0X36
-	case ClientboundVehicleMove:
-		return "ClientboundVehicleMove" // 55 0X37
-	case ClientboundOpenBook:
-		return "ClientboundOpenBook" // 56 0X38
-	case ClientboundOpenWindow:
-		return "ClientboundOpenWindow" // 57 0X39
-	case ClientboundOpenSignEntity:
-		return "ClientboundOpenSignEntity" // 58 0X3A
-	case ClientboundPing:
-		return "ClientboundPing" // 59 0X3B
-	case ClientboundPingResponse:
-		return "ClientboundPingResponse" // 60 0X3C
-	case ClientboundCraftRecipeResponse:
-		return "ClientboundCraftRecipeResponse" // 61 0X3D
-	case ClientboundAbilities:
-		return "ClientboundAbilities" // 62 0X3E
-	case ClientboundPlayerChat:
-		return "ClientboundPlayerChat" // 63 0X3F
-	case ClientboundEndCombatEvent:
-		return "ClientboundEndCombatEvent" // 64 0X40
-	case ClientboundEnterCombatEvent:
-		return "ClientboundEnterCombatEvent" // 65 0X41
-	case ClientboundDeathCombatEvent:
-		return "ClientboundDeathCombatEvent" // 66 0X42
-	case ClientboundPlayerRemove:
-		return "ClientboundPlayerRemove" // 67 0X43
-	case ClientboundPlayerInfo:
-		return "ClientboundPlayerInfo" // 68 0X44
-	case ClientboundFacePlayer:
-		return "ClientboundFacePlayer" // 69 0X45
-	case ClientboundPosition:
-		return "ClientboundPosition" // 70 0X46
-	case ClientboundPlayerRotation:
-		return "ClientboundPlayerRotation" // 71 0X47
-	case ClientboundRecipeBookAdd:
-		return "ClientboundRecipeBookAdd" // 72 0X48
-	case ClientboundRecipeBookRemove:
-		return "ClientboundRecipeBookRemove" // 73 0X49
-	case ClientboundRecipeBookSettings:
-		return "ClientboundRecipeBookSettings" // 74 0X4A
-	case ClientboundEntityDestroy:
-		return "ClientboundEntityDestroy" // 75 0X4B
-	case ClientboundRemoveEntityEffect:
-		return "ClientboundRemoveEntityEffect" // 76 0X4C
-	case ClientboundResetScore:
-		return "ClientboundResetScore" // 77 0X4D
-	case ClientboundCommonRemoveResourcePack:
-		return "ClientboundCommonRemoveResourcePack" // 78 0X4E
-	case ClientboundCommonAddResourcePack:
-		return "ClientboundCommonAddResourcePack" // 79 0X4F
-	case ClientboundRespawn:
-		return "ClientboundRespawn" // 80 0X50
-	case ClientboundEntityHeadRotation:
-		return "ClientboundEntityHeadRotation" // 81 0X51
-	case ClientboundMultiBlockChange:
-		return "ClientboundMultiBlockChange" // 82 0X52
-	case ClientboundSelectAdvancementTab:
-		return "ClientboundSelectAdvancementTab" // 83 0X53
-	case ClientboundServerData:
-		return "ClientboundServerData" // 84 0X54
-	case ClientboundActionBar:
-		return "ClientboundActionBar" // 85 0X55
-	case ClientboundWorldBorderCenter:
-		return "ClientboundWorldBorderCenter" // 86 0X56
-	case ClientboundWorldBorderLerpSize:
-		return "ClientboundWorldBorderLerpSize" // 87 0X57
-	case ClientboundWorldBorderSize:
-		return "ClientboundWorldBorderSize" // 88 0X58
-	case ClientboundWorldBorderWarningDelay:
-		return "ClientboundWorldBorderWarningDelay" // 89 0X59
-	case ClientboundWorldBorderWarningReach:
-		return "ClientboundWorldBorderWarningReach" // 90 0X5A
-	case ClientboundCamera:
-		return "ClientboundCamera" // 91 0X5B
-	case ClientboundUpdateViewPosition:
-		return "ClientboundUpdateViewPosition" // 92 0X5C
-	case ClientboundUpdateViewDistance:
-		return "ClientboundUpdateViewDistance" // 93 0X5D
-	case ClientboundSetCursorItem:
-		return "ClientboundSetCursorItem" // 94 0X5E
-	case ClientboundSpawnPosition:
-		return "ClientboundSpawnPosition" // 95 0X5F
-	case ClientboundScoreboardDisplayObjective:
-		return "ClientboundScoreboardDisplayObjective" // 96 0X60
-	case ClientboundEntityMetadata:
-		return "ClientboundEntityMetadata" // 97 0X61
-	case ClientboundAttachEntity:
-		return "ClientboundAttachEntity" // 98 0X62
-	case ClientboundEntityVelocity:
-		return "ClientboundEntityVelocity" // 99 0X63
-	case ClientboundEntityEquipment:
-		return "ClientboundEntityEquipment" // 100 0X64
-	case ClientboundExperience:
-		return "ClientboundExperience" // 101 0X65
-	case ClientboundUpdateHealth:
-		return "ClientboundUpdateHealth" // 102 0X66
-	case ClientboundHeldItemSlot:
-		return "ClientboundHeldItemSlot" // 103 0X67
-	case ClientboundScoreboardObjective:
-		return "ClientboundScoreboardObjective" // 104 0X68
-	case ClientboundSetPassengers:
-		return "ClientboundSetPassengers" // 105 0X69
-	case ClientboundSetPlayerInventory:
-		return "ClientboundSetPlayerInventory" // 106 0X6A
-	case ClientboundTeams:
-		return "ClientboundTeams" // 107 0X6B
-	case ClientboundScoreboardScore:
-		return "ClientboundScoreboardScore" // 108 0X6C
-	case ClientboundSimulationDistance:
-		return "ClientboundSimulationDistance" // 109 0X6D
-	case ClientboundSetTitleSubtitle:
-		return "ClientboundSetTitleSubtitle" // 110 0X6E
-	case ClientboundUpdateTime:
-		return "ClientboundUpdateTime" // 111 0X6F
-	case ClientboundSetTitleText:
-		return "ClientboundSetTitleText" // 112 0X70
-	case ClientboundSetTitleTime:
-		return "ClientboundSetTitleTime" // 113 0X71
-	case ClientboundEntitySoundEffect:
-		return "ClientboundEntitySoundEffect" // 114 0X72
-	case ClientboundSoundEffect:
-		return "ClientboundSoundEffect" // 115 0X73
-	case ClientboundStartConfiguration:
-		return "ClientboundStartConfiguration" // 116 0X74
-	case ClientboundStopSound:
-		return "ClientboundStopSound" // 117 0X75
-	case ClientboundCommonStoreCookie:
-		return "ClientboundCommonStoreCookie" // 118 0X76
-	case ClientboundSystemChat:
-		return "ClientboundSystemChat" // 119 0X77
-	case ClientboundPlayerlistHeader:
-		return "ClientboundPlayerlistHeader" // 120 0X78
-	case ClientboundNbtQueryResponse:
-		return "ClientboundNbtQueryResponse" // 121 0X79
-	case ClientboundCollect:
-		return "ClientboundCollect" // 122 0X7A
-	case ClientboundEntityTeleport:
-		return "ClientboundEntityTeleport" // 123 0X7B
-	case ClientboundTestInstanceBlockStatus:
-		return "ClientboundTestInstanceBlockStatus" // 124 0X7C
-	case ClientboundSetTickingState:
-		return "ClientboundSetTickingState" // 125 0X7D
-	case ClientboundStepTick:
-		return "ClientboundStepTick" // 126 0X7E
-	case ClientboundCommonTransfer:
-		return "ClientboundCommonTransfer" // 127 0X7F
-	case ClientboundAdvancements:
-		return "ClientboundAdvancements" // 128 0X80
-	case ClientboundEntityUpdateAttributes:
-		return "ClientboundEntityUpdateAttributes" // 129 0X81
-	case ClientboundEntityEffect:
-		return "ClientboundEntityEffect" // 130 0X82
-	case ClientboundDeclareRecipes:
-		return "ClientboundDeclareRecipes" // 131 0X83
-	case ClientboundTags:
-		return "ClientboundTags" // 132 0X84
-	case ClientboundSetProjectilePower:
-		return "ClientboundSetProjectilePower" // 133 0X85
-	case ClientboundCommonCustomReportDetails:
-		return "ClientboundCommonCustomReportDetails" // 134 0X86
-	case ClientboundCommonServerLinks:
-		return "ClientboundCommonServerLinks" // 135 0X87
-	case ClientboundTrackedWaypoint:
-		return "ClientboundTrackedWaypoint" // 136 0X88
-	case ClientboundCommonClearDialog:
-		return "ClientboundCommonClearDialog" // 137 0X89
-	case ClientboundShowDialog:
-		return "ClientboundShowDialog" // 138 0X8A
-	case 139:
-		return "ClientboundPacketIDGuard"
+	 
+	case ClientboundVoid:   
+		return "ClientboundVoid" // 0 0X00  
+	case ClientboundSpawnEntity:   
+		return "ClientboundSpawnEntity" // 1 0X01  
+	case ClientboundAnimation:   
+		return "ClientboundAnimation" // 2 0X02  
+	case ClientboundStatistics:   
+		return "ClientboundStatistics" // 3 0X03  
+	case ClientboundAcknowledgePlayerDigging:   
+		return "ClientboundAcknowledgePlayerDigging" // 4 0X04  
+	case ClientboundBlockBreakAnimation:   
+		return "ClientboundBlockBreakAnimation" // 5 0X05  
+	case ClientboundTileEntityData:   
+		return "ClientboundTileEntityData" // 6 0X06  
+	case ClientboundBlockAction:   
+		return "ClientboundBlockAction" // 7 0X07  
+	case ClientboundBlockChange:   
+		return "ClientboundBlockChange" // 8 0X08  
+	case ClientboundBossBar:   
+		return "ClientboundBossBar" // 9 0X09  
+	case ClientboundDifficulty:   
+		return "ClientboundDifficulty" // 10 0X0A  
+	case ClientboundChunkBatchFinished:   
+		return "ClientboundChunkBatchFinished" // 11 0X0B  
+	case ClientboundChunkBatchStart:   
+		return "ClientboundChunkBatchStart" // 12 0X0C  
+	case ClientboundChunkBiomes:   
+		return "ClientboundChunkBiomes" // 13 0X0D  
+	case ClientboundClearTitles:   
+		return "ClientboundClearTitles" // 14 0X0E  
+	case ClientboundTabComplete:   
+		return "ClientboundTabComplete" // 15 0X0F  
+	case ClientboundDeclareCommands:   
+		return "ClientboundDeclareCommands" // 16 0X10  
+	case ClientboundCloseWindow:   
+		return "ClientboundCloseWindow" // 17 0X11  
+	case ClientboundWindowItems:   
+		return "ClientboundWindowItems" // 18 0X12  
+	case ClientboundCraftProgressBar:   
+		return "ClientboundCraftProgressBar" // 19 0X13  
+	case ClientboundSetSlot:   
+		return "ClientboundSetSlot" // 20 0X14  
+	case ClientboundCommonCookieRequest:   
+		return "ClientboundCommonCookieRequest" // 21 0X15  
+	case ClientboundSetCooldown:   
+		return "ClientboundSetCooldown" // 22 0X16  
+	case ClientboundChatSuggestions:   
+		return "ClientboundChatSuggestions" // 23 0X17  
+	case ClientboundCustomPayload:   
+		return "ClientboundCustomPayload" // 24 0X18  
+	case ClientboundDamageEvent:   
+		return "ClientboundDamageEvent" // 25 0X19  
+	case ClientboundDebugBlockValue:   
+		return "ClientboundDebugBlockValue" // 26 0X1A  
+	case ClientboundDebugChunkValue:   
+		return "ClientboundDebugChunkValue" // 27 0X1B  
+	case ClientboundDebugEntityValue:   
+		return "ClientboundDebugEntityValue" // 28 0X1C  
+	case ClientboundDebugEvent:   
+		return "ClientboundDebugEvent" // 29 0X1D  
+	case ClientboundDebugSample:   
+		return "ClientboundDebugSample" // 30 0X1E  
+	case ClientboundHideMessage:   
+		return "ClientboundHideMessage" // 31 0X1F  
+	case ClientboundKickDisconnect:   
+		return "ClientboundKickDisconnect" // 32 0X20  
+	case ClientboundProfilelessChat:   
+		return "ClientboundProfilelessChat" // 33 0X21  
+	case ClientboundEntityStatus:   
+		return "ClientboundEntityStatus" // 34 0X22  
+	case ClientboundSyncEntityPosition:   
+		return "ClientboundSyncEntityPosition" // 35 0X23  
+	case ClientboundExplosion:   
+		return "ClientboundExplosion" // 36 0X24  
+	case ClientboundUnloadChunk:   
+		return "ClientboundUnloadChunk" // 37 0X25  
+	case ClientboundGameStateChange:   
+		return "ClientboundGameStateChange" // 38 0X26  
+	case ClientboundGameTestHighlightPos:   
+		return "ClientboundGameTestHighlightPos" // 39 0X27  
+	case ClientboundOpenHorseWindow:   
+		return "ClientboundOpenHorseWindow" // 40 0X28  
+	case ClientboundHurtAnimation:   
+		return "ClientboundHurtAnimation" // 41 0X29  
+	case ClientboundInitializeWorldBorder:   
+		return "ClientboundInitializeWorldBorder" // 42 0X2A  
+	case ClientboundKeepAlive:   
+		return "ClientboundKeepAlive" // 43 0X2B  
+	case ClientboundMapChunk:   
+		return "ClientboundMapChunk" // 44 0X2C  
+	case ClientboundWorldEvent:   
+		return "ClientboundWorldEvent" // 45 0X2D  
+	case ClientboundWorldParticles:   
+		return "ClientboundWorldParticles" // 46 0X2E  
+	case ClientboundUpdateLight:   
+		return "ClientboundUpdateLight" // 47 0X2F  
+	case ClientboundLogin:   
+		return "ClientboundLogin" // 48 0X30  
+	case ClientboundMap:   
+		return "ClientboundMap" // 49 0X31  
+	case ClientboundTradeList:   
+		return "ClientboundTradeList" // 50 0X32  
+	case ClientboundRelEntityMove:   
+		return "ClientboundRelEntityMove" // 51 0X33  
+	case ClientboundEntityMoveLook:   
+		return "ClientboundEntityMoveLook" // 52 0X34  
+	case ClientboundMoveMinecart:   
+		return "ClientboundMoveMinecart" // 53 0X35  
+	case ClientboundEntityLook:   
+		return "ClientboundEntityLook" // 54 0X36  
+	case ClientboundVehicleMove:   
+		return "ClientboundVehicleMove" // 55 0X37  
+	case ClientboundOpenBook:   
+		return "ClientboundOpenBook" // 56 0X38  
+	case ClientboundOpenWindow:   
+		return "ClientboundOpenWindow" // 57 0X39  
+	case ClientboundOpenSignEntity:   
+		return "ClientboundOpenSignEntity" // 58 0X3A  
+	case ClientboundPing:   
+		return "ClientboundPing" // 59 0X3B  
+	case ClientboundPingResponse:   
+		return "ClientboundPingResponse" // 60 0X3C  
+	case ClientboundCraftRecipeResponse:   
+		return "ClientboundCraftRecipeResponse" // 61 0X3D  
+	case ClientboundAbilities:   
+		return "ClientboundAbilities" // 62 0X3E  
+	case ClientboundPlayerChat:   
+		return "ClientboundPlayerChat" // 63 0X3F  
+	case ClientboundEndCombatEvent:   
+		return "ClientboundEndCombatEvent" // 64 0X40  
+	case ClientboundEnterCombatEvent:   
+		return "ClientboundEnterCombatEvent" // 65 0X41  
+	case ClientboundDeathCombatEvent:   
+		return "ClientboundDeathCombatEvent" // 66 0X42  
+	case ClientboundPlayerRemove:   
+		return "ClientboundPlayerRemove" // 67 0X43  
+	case ClientboundPlayerInfo:   
+		return "ClientboundPlayerInfo" // 68 0X44  
+	case ClientboundFacePlayer:   
+		return "ClientboundFacePlayer" // 69 0X45  
+	case ClientboundPosition:   
+		return "ClientboundPosition" // 70 0X46  
+	case ClientboundPlayerRotation:   
+		return "ClientboundPlayerRotation" // 71 0X47  
+	case ClientboundRecipeBookAdd:   
+		return "ClientboundRecipeBookAdd" // 72 0X48  
+	case ClientboundRecipeBookRemove:   
+		return "ClientboundRecipeBookRemove" // 73 0X49  
+	case ClientboundRecipeBookSettings:   
+		return "ClientboundRecipeBookSettings" // 74 0X4A  
+	case ClientboundEntityDestroy:   
+		return "ClientboundEntityDestroy" // 75 0X4B  
+	case ClientboundRemoveEntityEffect:   
+		return "ClientboundRemoveEntityEffect" // 76 0X4C  
+	case ClientboundResetScore:   
+		return "ClientboundResetScore" // 77 0X4D  
+	case ClientboundCommonRemoveResourcePack:   
+		return "ClientboundCommonRemoveResourcePack" // 78 0X4E  
+	case ClientboundCommonAddResourcePack:   
+		return "ClientboundCommonAddResourcePack" // 79 0X4F  
+	case ClientboundRespawn:   
+		return "ClientboundRespawn" // 80 0X50  
+	case ClientboundEntityHeadRotation:   
+		return "ClientboundEntityHeadRotation" // 81 0X51  
+	case ClientboundMultiBlockChange:   
+		return "ClientboundMultiBlockChange" // 82 0X52  
+	case ClientboundSelectAdvancementTab:   
+		return "ClientboundSelectAdvancementTab" // 83 0X53  
+	case ClientboundServerData:   
+		return "ClientboundServerData" // 84 0X54  
+	case ClientboundActionBar:   
+		return "ClientboundActionBar" // 85 0X55  
+	case ClientboundWorldBorderCenter:   
+		return "ClientboundWorldBorderCenter" // 86 0X56  
+	case ClientboundWorldBorderLerpSize:   
+		return "ClientboundWorldBorderLerpSize" // 87 0X57  
+	case ClientboundWorldBorderSize:   
+		return "ClientboundWorldBorderSize" // 88 0X58  
+	case ClientboundWorldBorderWarningDelay:   
+		return "ClientboundWorldBorderWarningDelay" // 89 0X59  
+	case ClientboundWorldBorderWarningReach:   
+		return "ClientboundWorldBorderWarningReach" // 90 0X5A  
+	case ClientboundCamera:   
+		return "ClientboundCamera" // 91 0X5B  
+	case ClientboundUpdateViewPosition:   
+		return "ClientboundUpdateViewPosition" // 92 0X5C  
+	case ClientboundUpdateViewDistance:   
+		return "ClientboundUpdateViewDistance" // 93 0X5D  
+	case ClientboundSetCursorItem:   
+		return "ClientboundSetCursorItem" // 94 0X5E  
+	case ClientboundSpawnPosition:   
+		return "ClientboundSpawnPosition" // 95 0X5F  
+	case ClientboundScoreboardDisplayObjective:   
+		return "ClientboundScoreboardDisplayObjective" // 96 0X60  
+	case ClientboundEntityMetadata:   
+		return "ClientboundEntityMetadata" // 97 0X61  
+	case ClientboundAttachEntity:   
+		return "ClientboundAttachEntity" // 98 0X62  
+	case ClientboundEntityVelocity:   
+		return "ClientboundEntityVelocity" // 99 0X63  
+	case ClientboundEntityEquipment:   
+		return "ClientboundEntityEquipment" // 100 0X64  
+	case ClientboundExperience:   
+		return "ClientboundExperience" // 101 0X65  
+	case ClientboundUpdateHealth:   
+		return "ClientboundUpdateHealth" // 102 0X66  
+	case ClientboundHeldItemSlot:   
+		return "ClientboundHeldItemSlot" // 103 0X67  
+	case ClientboundScoreboardObjective:   
+		return "ClientboundScoreboardObjective" // 104 0X68  
+	case ClientboundSetPassengers:   
+		return "ClientboundSetPassengers" // 105 0X69  
+	case ClientboundSetPlayerInventory:   
+		return "ClientboundSetPlayerInventory" // 106 0X6A  
+	case ClientboundTeams:   
+		return "ClientboundTeams" // 107 0X6B  
+	case ClientboundScoreboardScore:   
+		return "ClientboundScoreboardScore" // 108 0X6C  
+	case ClientboundSimulationDistance:   
+		return "ClientboundSimulationDistance" // 109 0X6D  
+	case ClientboundSetTitleSubtitle:   
+		return "ClientboundSetTitleSubtitle" // 110 0X6E  
+	case ClientboundUpdateTime:   
+		return "ClientboundUpdateTime" // 111 0X6F  
+	case ClientboundSetTitleText:   
+		return "ClientboundSetTitleText" // 112 0X70  
+	case ClientboundSetTitleTime:   
+		return "ClientboundSetTitleTime" // 113 0X71  
+	case ClientboundEntitySoundEffect:   
+		return "ClientboundEntitySoundEffect" // 114 0X72  
+	case ClientboundSoundEffect:   
+		return "ClientboundSoundEffect" // 115 0X73  
+	case ClientboundStartConfiguration:   
+		return "ClientboundStartConfiguration" // 116 0X74  
+	case ClientboundStopSound:   
+		return "ClientboundStopSound" // 117 0X75  
+	case ClientboundCommonStoreCookie:   
+		return "ClientboundCommonStoreCookie" // 118 0X76  
+	case ClientboundSystemChat:   
+		return "ClientboundSystemChat" // 119 0X77  
+	case ClientboundPlayerlistHeader:   
+		return "ClientboundPlayerlistHeader" // 120 0X78  
+	case ClientboundNbtQueryResponse:   
+		return "ClientboundNbtQueryResponse" // 121 0X79  
+	case ClientboundCollect:   
+		return "ClientboundCollect" // 122 0X7A  
+	case ClientboundEntityTeleport:   
+		return "ClientboundEntityTeleport" // 123 0X7B  
+	case ClientboundTestInstanceBlockStatus:   
+		return "ClientboundTestInstanceBlockStatus" // 124 0X7C  
+	case ClientboundSetTickingState:   
+		return "ClientboundSetTickingState" // 125 0X7D  
+	case ClientboundStepTick:   
+		return "ClientboundStepTick" // 126 0X7E  
+	case ClientboundCommonTransfer:   
+		return "ClientboundCommonTransfer" // 127 0X7F  
+	case ClientboundAdvancements:   
+		return "ClientboundAdvancements" // 128 0X80  
+	case ClientboundEntityUpdateAttributes:   
+		return "ClientboundEntityUpdateAttributes" // 129 0X81  
+	case ClientboundEntityEffect:   
+		return "ClientboundEntityEffect" // 130 0X82  
+	case ClientboundDeclareRecipes:   
+		return "ClientboundDeclareRecipes" // 131 0X83  
+	case ClientboundTags:   
+		return "ClientboundTags" // 132 0X84  
+	case ClientboundSetProjectilePower:   
+		return "ClientboundSetProjectilePower" // 133 0X85  
+	case ClientboundCommonCustomReportDetails:   
+		return "ClientboundCommonCustomReportDetails" // 134 0X86  
+	case ClientboundCommonServerLinks:   
+		return "ClientboundCommonServerLinks" // 135 0X87  
+	case ClientboundTrackedWaypoint:   
+		return "ClientboundTrackedWaypoint" // 136 0X88  
+	case ClientboundCommonClearDialog:   
+		return "ClientboundCommonClearDialog" // 137 0X89  
+	case ClientboundShowDialog:   
+		return "ClientboundShowDialog" // 138 0X8A 
+	case 139: return "ClientboundPacketIDGuard"
 	default:
 		return fmt.Sprintf("Unknown Clientbound packet ID: %d", id)
 	}
@@ -821,141 +812,140 @@ func (p Packets) ClientboundToString(id models.ClientboundPacketID) string {
 
 func (p Packets) GetServerboundPacketID(name string) models.ServerboundPacketID {
 	switch name {
-
-	case "ServerboundTeleportConfirm", "ServerboundAcceptTeleportation":
-		return ServerboundTeleportConfirm // 0 0X00
-	case "ServerboundQueryBlockNbt", "ServerboundBlockEntityTagQuery":
-		return ServerboundQueryBlockNbt // 1 0X01
-	case "ServerboundSelectBundleItem", "ServerboundBundleItemSelected":
-		return ServerboundSelectBundleItem // 2 0X02
-	case "ServerboundSetDifficulty", "ServerboundChangeDifficulty":
-		return ServerboundSetDifficulty // 3 0X03
-	case "ServerboundChangeGamemode", "ServerboundChangeGameMode":
-		return ServerboundChangeGamemode // 4 0X04
-	case "ServerboundMessageAcknowledgement", "ServerboundChatAck":
-		return ServerboundMessageAcknowledgement // 5 0X05
-	case "ServerboundChatCommand":
-		return ServerboundChatCommand // 6 0X06
-	case "ServerboundChatCommandSigned":
-		return ServerboundChatCommandSigned // 7 0X07
-	case "ServerboundChatMessage", "ServerboundChat":
-		return ServerboundChatMessage // 8 0X08
-	case "ServerboundChatSessionUpdate":
-		return ServerboundChatSessionUpdate // 9 0X09
-	case "ServerboundChunkBatchReceived":
-		return ServerboundChunkBatchReceived // 10 0X0A
-	case "ServerboundClientCommand":
-		return ServerboundClientCommand // 11 0X0B
-	case "ServerboundTickEnd", "ServerboundClientTickEnd":
-		return ServerboundTickEnd // 12 0X0C
-	case "ServerboundCommonSettings", "ServerboundClientInformation":
-		return ServerboundCommonSettings // 13 0X0D
-	case "ServerboundTabComplete", "ServerboundCommandSuggestion":
-		return ServerboundTabComplete // 14 0X0E
-	case "ServerboundConfigurationAcknowledged":
-		return ServerboundConfigurationAcknowledged // 15 0X0F
-	case "ServerboundEnchantItem", "ServerboundContainerButtonClick":
-		return ServerboundEnchantItem // 16 0X10
-	case "ServerboundWindowClick", "ServerboundContainerClick":
-		return ServerboundWindowClick // 17 0X11
-	case "ServerboundCloseWindow", "ServerboundContainerClose":
-		return ServerboundCloseWindow // 18 0X12
-	case "ServerboundSetSlotState", "ServerboundContainerSlotStateChanged":
-		return ServerboundSetSlotState // 19 0X13
-	case "ServerboundCommonCookieResponse", "ServerboundCookieResponse":
-		return ServerboundCommonCookieResponse // 20 0X14
-	case "ServerboundCustomPayload":
-		return ServerboundCustomPayload // 21 0X15
-	case "ServerboundDebugSubscriptionRequest":
-		return ServerboundDebugSubscriptionRequest // 22 0X16
-	case "ServerboundEditBook":
-		return ServerboundEditBook // 23 0X17
-	case "ServerboundQueryEntityNbt", "ServerboundEntityTagQuery":
-		return ServerboundQueryEntityNbt // 24 0X18
-	case "ServerboundUseEntity", "ServerboundInteract":
-		return ServerboundUseEntity // 25 0X19
-	case "ServerboundGenerateStructure", "ServerboundJigsawGenerate":
-		return ServerboundGenerateStructure // 26 0X1A
-	case "ServerboundKeepAlive":
-		return ServerboundKeepAlive // 27 0X1B
-	case "ServerboundLockDifficulty":
-		return ServerboundLockDifficulty // 28 0X1C
-	case "ServerboundPosition", "ServerboundMovePlayerPos":
-		return ServerboundPosition // 29 0X1D
-	case "ServerboundPositionLook", "ServerboundMovePlayerPosRot":
-		return ServerboundPositionLook // 30 0X1E
-	case "ServerboundLook", "ServerboundMovePlayerRot":
-		return ServerboundLook // 31 0X1F
-	case "ServerboundFlying", "ServerboundMovePlayerStatusOnly":
-		return ServerboundFlying // 32 0X20
-	case "ServerboundVehicleMove", "ServerboundMoveVehicle":
-		return ServerboundVehicleMove // 33 0X21
-	case "ServerboundSteerBoat", "ServerboundPaddleBoat":
-		return ServerboundSteerBoat // 34 0X22
-	case "ServerboundPickItemFromBlock":
-		return ServerboundPickItemFromBlock // 35 0X23
-	case "ServerboundPickItemFromEntity":
-		return ServerboundPickItemFromEntity // 36 0X24
-	case "ServerboundPingRequest":
-		return ServerboundPingRequest // 37 0X25
-	case "ServerboundCraftRecipeRequest", "ServerboundPlaceRecipe":
-		return ServerboundCraftRecipeRequest // 38 0X26
-	case "ServerboundAbilities", "ServerboundPlayerAbilities":
-		return ServerboundAbilities // 39 0X27
-	case "ServerboundBlockDig", "ServerboundPlayerAction":
-		return ServerboundBlockDig // 40 0X28
-	case "ServerboundEntityAction", "ServerboundPlayerCommand":
-		return ServerboundEntityAction // 41 0X29
-	case "ServerboundPlayerInput":
-		return ServerboundPlayerInput // 42 0X2A
-	case "ServerboundPlayerLoaded":
-		return ServerboundPlayerLoaded // 43 0X2B
-	case "ServerboundPong":
-		return ServerboundPong // 44 0X2C
-	case "ServerboundRecipeBook", "ServerboundRecipeBookChangeSettings":
-		return ServerboundRecipeBook // 45 0X2D
-	case "ServerboundDisplayedRecipe", "ServerboundRecipeBookSeenRecipe":
-		return ServerboundDisplayedRecipe // 46 0X2E
-	case "ServerboundNameItem", "ServerboundRenameItem":
-		return ServerboundNameItem // 47 0X2F
-	case "ServerboundResourcePackReceive", "ServerboundResourcePack":
-		return ServerboundResourcePackReceive // 48 0X30
-	case "ServerboundAdvancementTab", "ServerboundSeenAdvancements":
-		return ServerboundAdvancementTab // 49 0X31
-	case "ServerboundSelectTrade":
-		return ServerboundSelectTrade // 50 0X32
-	case "ServerboundSetBeaconEffect", "ServerboundSetBeacon":
-		return ServerboundSetBeaconEffect // 51 0X33
-	case "ServerboundHeldItemSlot", "ServerboundSetCarriedItem":
-		return ServerboundHeldItemSlot // 52 0X34
-	case "ServerboundUpdateCommandBlock", "ServerboundSetCommandBlock":
-		return ServerboundUpdateCommandBlock // 53 0X35
-	case "ServerboundUpdateCommandBlockMinecart", "ServerboundSetCommandMinecart":
-		return ServerboundUpdateCommandBlockMinecart // 54 0X36
-	case "ServerboundSetCreativeSlot", "ServerboundSetCreativeModeSlot":
-		return ServerboundSetCreativeSlot // 55 0X37
-	case "ServerboundUpdateJigsawBlock", "ServerboundSetJigsawBlock":
-		return ServerboundUpdateJigsawBlock // 56 0X38
-	case "ServerboundUpdateStructureBlock", "ServerboundSetStructureBlock":
-		return ServerboundUpdateStructureBlock // 57 0X39
-	case "ServerboundSetTestBlock":
-		return ServerboundSetTestBlock // 58 0X3A
-	case "ServerboundUpdateSign", "ServerboundSignUpdate":
-		return ServerboundUpdateSign // 59 0X3B
-	case "ServerboundArmAnimation", "ServerboundSwing":
-		return ServerboundArmAnimation // 60 0X3C
-	case "ServerboundSpectate", "ServerboundTeleportToEntity":
-		return ServerboundSpectate // 61 0X3D
-	case "ServerboundTestInstanceBlockAction":
-		return ServerboundTestInstanceBlockAction // 62 0X3E
-	case "ServerboundBlockPlace", "ServerboundUseItemOn":
-		return ServerboundBlockPlace // 63 0X3F
-	case "ServerboundUseItem":
-		return ServerboundUseItem // 64 0X40
-	case "ServerboundCommonCustomClickAction", "ServerboundCustomClickAction":
-		return ServerboundCommonCustomClickAction // 65 0X41
-	case "ServerboundPacketIDGuard":
-		return 66
+	
+	case "ServerboundTeleportConfirm", "ServerboundAcceptTeleportation":   
+		return ServerboundTeleportConfirm // 0 0X00 
+	case "ServerboundQueryBlockNbt", "ServerboundBlockEntityTagQuery":   
+		return ServerboundQueryBlockNbt // 1 0X01 
+	case "ServerboundSelectBundleItem", "ServerboundBundleItemSelected":   
+		return ServerboundSelectBundleItem // 2 0X02 
+	case "ServerboundSetDifficulty", "ServerboundChangeDifficulty":   
+		return ServerboundSetDifficulty // 3 0X03 
+	case "ServerboundChangeGamemode", "ServerboundChangeGameMode":   
+		return ServerboundChangeGamemode // 4 0X04 
+	case "ServerboundMessageAcknowledgement", "ServerboundChatAck":   
+		return ServerboundMessageAcknowledgement // 5 0X05 
+	case "ServerboundChatCommand":   
+		return ServerboundChatCommand // 6 0X06 
+	case "ServerboundChatCommandSigned":   
+		return ServerboundChatCommandSigned // 7 0X07 
+	case "ServerboundChatMessage", "ServerboundChat":   
+		return ServerboundChatMessage // 8 0X08 
+	case "ServerboundChatSessionUpdate":   
+		return ServerboundChatSessionUpdate // 9 0X09 
+	case "ServerboundChunkBatchReceived":   
+		return ServerboundChunkBatchReceived // 10 0X0A 
+	case "ServerboundClientCommand":   
+		return ServerboundClientCommand // 11 0X0B 
+	case "ServerboundTickEnd", "ServerboundClientTickEnd":   
+		return ServerboundTickEnd // 12 0X0C 
+	case "ServerboundCommonSettings", "ServerboundClientInformation":   
+		return ServerboundCommonSettings // 13 0X0D 
+	case "ServerboundTabComplete", "ServerboundCommandSuggestion":   
+		return ServerboundTabComplete // 14 0X0E 
+	case "ServerboundConfigurationAcknowledged":   
+		return ServerboundConfigurationAcknowledged // 15 0X0F 
+	case "ServerboundEnchantItem", "ServerboundContainerButtonClick":   
+		return ServerboundEnchantItem // 16 0X10 
+	case "ServerboundWindowClick", "ServerboundContainerClick":   
+		return ServerboundWindowClick // 17 0X11 
+	case "ServerboundCloseWindow", "ServerboundContainerClose":   
+		return ServerboundCloseWindow // 18 0X12 
+	case "ServerboundSetSlotState", "ServerboundContainerSlotStateChanged":   
+		return ServerboundSetSlotState // 19 0X13 
+	case "ServerboundCommonCookieResponse", "ServerboundCookieResponse":   
+		return ServerboundCommonCookieResponse // 20 0X14 
+	case "ServerboundCustomPayload":   
+		return ServerboundCustomPayload // 21 0X15 
+	case "ServerboundDebugSubscriptionRequest":   
+		return ServerboundDebugSubscriptionRequest // 22 0X16 
+	case "ServerboundEditBook":   
+		return ServerboundEditBook // 23 0X17 
+	case "ServerboundQueryEntityNbt", "ServerboundEntityTagQuery":   
+		return ServerboundQueryEntityNbt // 24 0X18 
+	case "ServerboundUseEntity", "ServerboundInteract":   
+		return ServerboundUseEntity // 25 0X19 
+	case "ServerboundGenerateStructure", "ServerboundJigsawGenerate":   
+		return ServerboundGenerateStructure // 26 0X1A 
+	case "ServerboundKeepAlive":   
+		return ServerboundKeepAlive // 27 0X1B 
+	case "ServerboundLockDifficulty":   
+		return ServerboundLockDifficulty // 28 0X1C 
+	case "ServerboundPosition", "ServerboundMovePlayerPos":   
+		return ServerboundPosition // 29 0X1D 
+	case "ServerboundPositionLook", "ServerboundMovePlayerPosRot":   
+		return ServerboundPositionLook // 30 0X1E 
+	case "ServerboundLook", "ServerboundMovePlayerRot":   
+		return ServerboundLook // 31 0X1F 
+	case "ServerboundFlying", "ServerboundMovePlayerStatusOnly":   
+		return ServerboundFlying // 32 0X20 
+	case "ServerboundVehicleMove", "ServerboundMoveVehicle":   
+		return ServerboundVehicleMove // 33 0X21 
+	case "ServerboundSteerBoat", "ServerboundPaddleBoat":   
+		return ServerboundSteerBoat // 34 0X22 
+	case "ServerboundPickItemFromBlock":   
+		return ServerboundPickItemFromBlock // 35 0X23 
+	case "ServerboundPickItemFromEntity":   
+		return ServerboundPickItemFromEntity // 36 0X24 
+	case "ServerboundPingRequest":   
+		return ServerboundPingRequest // 37 0X25 
+	case "ServerboundCraftRecipeRequest", "ServerboundPlaceRecipe":   
+		return ServerboundCraftRecipeRequest // 38 0X26 
+	case "ServerboundAbilities", "ServerboundPlayerAbilities":   
+		return ServerboundAbilities // 39 0X27 
+	case "ServerboundBlockDig", "ServerboundPlayerAction":   
+		return ServerboundBlockDig // 40 0X28 
+	case "ServerboundEntityAction", "ServerboundPlayerCommand":   
+		return ServerboundEntityAction // 41 0X29 
+	case "ServerboundPlayerInput":   
+		return ServerboundPlayerInput // 42 0X2A 
+	case "ServerboundPlayerLoaded":   
+		return ServerboundPlayerLoaded // 43 0X2B 
+	case "ServerboundPong":   
+		return ServerboundPong // 44 0X2C 
+	case "ServerboundRecipeBook", "ServerboundRecipeBookChangeSettings":   
+		return ServerboundRecipeBook // 45 0X2D 
+	case "ServerboundDisplayedRecipe", "ServerboundRecipeBookSeenRecipe":   
+		return ServerboundDisplayedRecipe // 46 0X2E 
+	case "ServerboundNameItem", "ServerboundRenameItem":   
+		return ServerboundNameItem // 47 0X2F 
+	case "ServerboundResourcePackReceive", "ServerboundResourcePack":   
+		return ServerboundResourcePackReceive // 48 0X30 
+	case "ServerboundAdvancementTab", "ServerboundSeenAdvancements":   
+		return ServerboundAdvancementTab // 49 0X31 
+	case "ServerboundSelectTrade":   
+		return ServerboundSelectTrade // 50 0X32 
+	case "ServerboundSetBeaconEffect", "ServerboundSetBeacon":   
+		return ServerboundSetBeaconEffect // 51 0X33 
+	case "ServerboundHeldItemSlot", "ServerboundSetCarriedItem":   
+		return ServerboundHeldItemSlot // 52 0X34 
+	case "ServerboundUpdateCommandBlock", "ServerboundSetCommandBlock":   
+		return ServerboundUpdateCommandBlock // 53 0X35 
+	case "ServerboundUpdateCommandBlockMinecart", "ServerboundSetCommandMinecart":   
+		return ServerboundUpdateCommandBlockMinecart // 54 0X36 
+	case "ServerboundSetCreativeSlot", "ServerboundSetCreativeModeSlot":   
+		return ServerboundSetCreativeSlot // 55 0X37 
+	case "ServerboundUpdateJigsawBlock", "ServerboundSetJigsawBlock":   
+		return ServerboundUpdateJigsawBlock // 56 0X38 
+	case "ServerboundUpdateStructureBlock", "ServerboundSetStructureBlock":   
+		return ServerboundUpdateStructureBlock // 57 0X39 
+	case "ServerboundSetTestBlock":   
+		return ServerboundSetTestBlock // 58 0X3A 
+	case "ServerboundUpdateSign", "ServerboundSignUpdate":   
+		return ServerboundUpdateSign // 59 0X3B 
+	case "ServerboundArmAnimation", "ServerboundSwing":   
+		return ServerboundArmAnimation // 60 0X3C 
+	case "ServerboundSpectate", "ServerboundTeleportToEntity":   
+		return ServerboundSpectate // 61 0X3D 
+	case "ServerboundTestInstanceBlockAction":   
+		return ServerboundTestInstanceBlockAction // 62 0X3E 
+	case "ServerboundBlockPlace", "ServerboundUseItemOn":   
+		return ServerboundBlockPlace // 63 0X3F 
+	case "ServerboundUseItem":   
+		return ServerboundUseItem // 64 0X40 
+	case "ServerboundCommonCustomClickAction", "ServerboundCustomClickAction":   
+		return ServerboundCommonCustomClickAction // 65 0X41 
+	case "ServerboundPacketIDGuard": return 66
 	default:
 		log.Printf("GetServerboundPacketID => unknown packet name: %s\n", name)
 		return models.ServerboundPacketID(-1) // unknown packet name
@@ -964,141 +954,140 @@ func (p Packets) GetServerboundPacketID(name string) models.ServerboundPacketID 
 
 func (p Packets) ServerboundToString(id models.ServerboundPacketID) string {
 	switch id {
-
-	case ServerboundTeleportConfirm:
-		return "ServerboundTeleportConfirm" // 0 0X00
-	case ServerboundQueryBlockNbt:
-		return "ServerboundQueryBlockNbt" // 1 0X01
-	case ServerboundSelectBundleItem:
-		return "ServerboundSelectBundleItem" // 2 0X02
-	case ServerboundSetDifficulty:
-		return "ServerboundSetDifficulty" // 3 0X03
-	case ServerboundChangeGamemode:
-		return "ServerboundChangeGamemode" // 4 0X04
-	case ServerboundMessageAcknowledgement:
-		return "ServerboundMessageAcknowledgement" // 5 0X05
-	case ServerboundChatCommand:
-		return "ServerboundChatCommand" // 6 0X06
-	case ServerboundChatCommandSigned:
-		return "ServerboundChatCommandSigned" // 7 0X07
-	case ServerboundChatMessage:
-		return "ServerboundChatMessage" // 8 0X08
-	case ServerboundChatSessionUpdate:
-		return "ServerboundChatSessionUpdate" // 9 0X09
-	case ServerboundChunkBatchReceived:
-		return "ServerboundChunkBatchReceived" // 10 0X0A
-	case ServerboundClientCommand:
-		return "ServerboundClientCommand" // 11 0X0B
-	case ServerboundTickEnd:
-		return "ServerboundTickEnd" // 12 0X0C
-	case ServerboundCommonSettings:
-		return "ServerboundCommonSettings" // 13 0X0D
-	case ServerboundTabComplete:
-		return "ServerboundTabComplete" // 14 0X0E
-	case ServerboundConfigurationAcknowledged:
-		return "ServerboundConfigurationAcknowledged" // 15 0X0F
-	case ServerboundEnchantItem:
-		return "ServerboundEnchantItem" // 16 0X10
-	case ServerboundWindowClick:
-		return "ServerboundWindowClick" // 17 0X11
-	case ServerboundCloseWindow:
-		return "ServerboundCloseWindow" // 18 0X12
-	case ServerboundSetSlotState:
-		return "ServerboundSetSlotState" // 19 0X13
-	case ServerboundCommonCookieResponse:
-		return "ServerboundCommonCookieResponse" // 20 0X14
-	case ServerboundCustomPayload:
-		return "ServerboundCustomPayload" // 21 0X15
-	case ServerboundDebugSubscriptionRequest:
-		return "ServerboundDebugSubscriptionRequest" // 22 0X16
-	case ServerboundEditBook:
-		return "ServerboundEditBook" // 23 0X17
-	case ServerboundQueryEntityNbt:
-		return "ServerboundQueryEntityNbt" // 24 0X18
-	case ServerboundUseEntity:
-		return "ServerboundUseEntity" // 25 0X19
-	case ServerboundGenerateStructure:
-		return "ServerboundGenerateStructure" // 26 0X1A
-	case ServerboundKeepAlive:
-		return "ServerboundKeepAlive" // 27 0X1B
-	case ServerboundLockDifficulty:
-		return "ServerboundLockDifficulty" // 28 0X1C
-	case ServerboundPosition:
-		return "ServerboundPosition" // 29 0X1D
-	case ServerboundPositionLook:
-		return "ServerboundPositionLook" // 30 0X1E
-	case ServerboundLook:
-		return "ServerboundLook" // 31 0X1F
-	case ServerboundFlying:
-		return "ServerboundFlying" // 32 0X20
-	case ServerboundVehicleMove:
-		return "ServerboundVehicleMove" // 33 0X21
-	case ServerboundSteerBoat:
-		return "ServerboundSteerBoat" // 34 0X22
-	case ServerboundPickItemFromBlock:
-		return "ServerboundPickItemFromBlock" // 35 0X23
-	case ServerboundPickItemFromEntity:
-		return "ServerboundPickItemFromEntity" // 36 0X24
-	case ServerboundPingRequest:
-		return "ServerboundPingRequest" // 37 0X25
-	case ServerboundCraftRecipeRequest:
-		return "ServerboundCraftRecipeRequest" // 38 0X26
-	case ServerboundAbilities:
-		return "ServerboundAbilities" // 39 0X27
-	case ServerboundBlockDig:
-		return "ServerboundBlockDig" // 40 0X28
-	case ServerboundEntityAction:
-		return "ServerboundEntityAction" // 41 0X29
-	case ServerboundPlayerInput:
-		return "ServerboundPlayerInput" // 42 0X2A
-	case ServerboundPlayerLoaded:
-		return "ServerboundPlayerLoaded" // 43 0X2B
-	case ServerboundPong:
-		return "ServerboundPong" // 44 0X2C
-	case ServerboundRecipeBook:
-		return "ServerboundRecipeBook" // 45 0X2D
-	case ServerboundDisplayedRecipe:
-		return "ServerboundDisplayedRecipe" // 46 0X2E
-	case ServerboundNameItem:
-		return "ServerboundNameItem" // 47 0X2F
-	case ServerboundResourcePackReceive:
-		return "ServerboundResourcePackReceive" // 48 0X30
-	case ServerboundAdvancementTab:
-		return "ServerboundAdvancementTab" // 49 0X31
-	case ServerboundSelectTrade:
-		return "ServerboundSelectTrade" // 50 0X32
-	case ServerboundSetBeaconEffect:
-		return "ServerboundSetBeaconEffect" // 51 0X33
-	case ServerboundHeldItemSlot:
-		return "ServerboundHeldItemSlot" // 52 0X34
-	case ServerboundUpdateCommandBlock:
-		return "ServerboundUpdateCommandBlock" // 53 0X35
-	case ServerboundUpdateCommandBlockMinecart:
-		return "ServerboundUpdateCommandBlockMinecart" // 54 0X36
-	case ServerboundSetCreativeSlot:
-		return "ServerboundSetCreativeSlot" // 55 0X37
-	case ServerboundUpdateJigsawBlock:
-		return "ServerboundUpdateJigsawBlock" // 56 0X38
-	case ServerboundUpdateStructureBlock:
-		return "ServerboundUpdateStructureBlock" // 57 0X39
-	case ServerboundSetTestBlock:
-		return "ServerboundSetTestBlock" // 58 0X3A
-	case ServerboundUpdateSign:
-		return "ServerboundUpdateSign" // 59 0X3B
-	case ServerboundArmAnimation:
-		return "ServerboundArmAnimation" // 60 0X3C
-	case ServerboundSpectate:
-		return "ServerboundSpectate" // 61 0X3D
-	case ServerboundTestInstanceBlockAction:
-		return "ServerboundTestInstanceBlockAction" // 62 0X3E
-	case ServerboundBlockPlace:
-		return "ServerboundBlockPlace" // 63 0X3F
-	case ServerboundUseItem:
-		return "ServerboundUseItem" // 64 0X40
-	case ServerboundCommonCustomClickAction:
-		return "ServerboundCommonCustomClickAction" // 65 0X41
-	case 66:
-		return "ServerboundPacketIDGuard"
+	
+	case ServerboundTeleportConfirm:   
+		return "ServerboundTeleportConfirm" // 0 0X00 
+	case ServerboundQueryBlockNbt:   
+		return "ServerboundQueryBlockNbt" // 1 0X01 
+	case ServerboundSelectBundleItem:   
+		return "ServerboundSelectBundleItem" // 2 0X02 
+	case ServerboundSetDifficulty:   
+		return "ServerboundSetDifficulty" // 3 0X03 
+	case ServerboundChangeGamemode:   
+		return "ServerboundChangeGamemode" // 4 0X04 
+	case ServerboundMessageAcknowledgement:   
+		return "ServerboundMessageAcknowledgement" // 5 0X05 
+	case ServerboundChatCommand:   
+		return "ServerboundChatCommand" // 6 0X06 
+	case ServerboundChatCommandSigned:   
+		return "ServerboundChatCommandSigned" // 7 0X07 
+	case ServerboundChatMessage:   
+		return "ServerboundChatMessage" // 8 0X08 
+	case ServerboundChatSessionUpdate:   
+		return "ServerboundChatSessionUpdate" // 9 0X09 
+	case ServerboundChunkBatchReceived:   
+		return "ServerboundChunkBatchReceived" // 10 0X0A 
+	case ServerboundClientCommand:   
+		return "ServerboundClientCommand" // 11 0X0B 
+	case ServerboundTickEnd:   
+		return "ServerboundTickEnd" // 12 0X0C 
+	case ServerboundCommonSettings:   
+		return "ServerboundCommonSettings" // 13 0X0D 
+	case ServerboundTabComplete:   
+		return "ServerboundTabComplete" // 14 0X0E 
+	case ServerboundConfigurationAcknowledged:   
+		return "ServerboundConfigurationAcknowledged" // 15 0X0F 
+	case ServerboundEnchantItem:   
+		return "ServerboundEnchantItem" // 16 0X10 
+	case ServerboundWindowClick:   
+		return "ServerboundWindowClick" // 17 0X11 
+	case ServerboundCloseWindow:   
+		return "ServerboundCloseWindow" // 18 0X12 
+	case ServerboundSetSlotState:   
+		return "ServerboundSetSlotState" // 19 0X13 
+	case ServerboundCommonCookieResponse:   
+		return "ServerboundCommonCookieResponse" // 20 0X14 
+	case ServerboundCustomPayload:   
+		return "ServerboundCustomPayload" // 21 0X15 
+	case ServerboundDebugSubscriptionRequest:   
+		return "ServerboundDebugSubscriptionRequest" // 22 0X16 
+	case ServerboundEditBook:   
+		return "ServerboundEditBook" // 23 0X17 
+	case ServerboundQueryEntityNbt:   
+		return "ServerboundQueryEntityNbt" // 24 0X18 
+	case ServerboundUseEntity:   
+		return "ServerboundUseEntity" // 25 0X19 
+	case ServerboundGenerateStructure:   
+		return "ServerboundGenerateStructure" // 26 0X1A 
+	case ServerboundKeepAlive:   
+		return "ServerboundKeepAlive" // 27 0X1B 
+	case ServerboundLockDifficulty:   
+		return "ServerboundLockDifficulty" // 28 0X1C 
+	case ServerboundPosition:   
+		return "ServerboundPosition" // 29 0X1D 
+	case ServerboundPositionLook:   
+		return "ServerboundPositionLook" // 30 0X1E 
+	case ServerboundLook:   
+		return "ServerboundLook" // 31 0X1F 
+	case ServerboundFlying:   
+		return "ServerboundFlying" // 32 0X20 
+	case ServerboundVehicleMove:   
+		return "ServerboundVehicleMove" // 33 0X21 
+	case ServerboundSteerBoat:   
+		return "ServerboundSteerBoat" // 34 0X22 
+	case ServerboundPickItemFromBlock:   
+		return "ServerboundPickItemFromBlock" // 35 0X23 
+	case ServerboundPickItemFromEntity:   
+		return "ServerboundPickItemFromEntity" // 36 0X24 
+	case ServerboundPingRequest:   
+		return "ServerboundPingRequest" // 37 0X25 
+	case ServerboundCraftRecipeRequest:   
+		return "ServerboundCraftRecipeRequest" // 38 0X26 
+	case ServerboundAbilities:   
+		return "ServerboundAbilities" // 39 0X27 
+	case ServerboundBlockDig:   
+		return "ServerboundBlockDig" // 40 0X28 
+	case ServerboundEntityAction:   
+		return "ServerboundEntityAction" // 41 0X29 
+	case ServerboundPlayerInput:   
+		return "ServerboundPlayerInput" // 42 0X2A 
+	case ServerboundPlayerLoaded:   
+		return "ServerboundPlayerLoaded" // 43 0X2B 
+	case ServerboundPong:   
+		return "ServerboundPong" // 44 0X2C 
+	case ServerboundRecipeBook:   
+		return "ServerboundRecipeBook" // 45 0X2D 
+	case ServerboundDisplayedRecipe:   
+		return "ServerboundDisplayedRecipe" // 46 0X2E 
+	case ServerboundNameItem:   
+		return "ServerboundNameItem" // 47 0X2F 
+	case ServerboundResourcePackReceive:   
+		return "ServerboundResourcePackReceive" // 48 0X30 
+	case ServerboundAdvancementTab:   
+		return "ServerboundAdvancementTab" // 49 0X31 
+	case ServerboundSelectTrade:   
+		return "ServerboundSelectTrade" // 50 0X32 
+	case ServerboundSetBeaconEffect:   
+		return "ServerboundSetBeaconEffect" // 51 0X33 
+	case ServerboundHeldItemSlot:   
+		return "ServerboundHeldItemSlot" // 52 0X34 
+	case ServerboundUpdateCommandBlock:   
+		return "ServerboundUpdateCommandBlock" // 53 0X35 
+	case ServerboundUpdateCommandBlockMinecart:   
+		return "ServerboundUpdateCommandBlockMinecart" // 54 0X36 
+	case ServerboundSetCreativeSlot:   
+		return "ServerboundSetCreativeSlot" // 55 0X37 
+	case ServerboundUpdateJigsawBlock:   
+		return "ServerboundUpdateJigsawBlock" // 56 0X38 
+	case ServerboundUpdateStructureBlock:   
+		return "ServerboundUpdateStructureBlock" // 57 0X39 
+	case ServerboundSetTestBlock:   
+		return "ServerboundSetTestBlock" // 58 0X3A 
+	case ServerboundUpdateSign:   
+		return "ServerboundUpdateSign" // 59 0X3B 
+	case ServerboundArmAnimation:   
+		return "ServerboundArmAnimation" // 60 0X3C 
+	case ServerboundSpectate:   
+		return "ServerboundSpectate" // 61 0X3D 
+	case ServerboundTestInstanceBlockAction:   
+		return "ServerboundTestInstanceBlockAction" // 62 0X3E 
+	case ServerboundBlockPlace:   
+		return "ServerboundBlockPlace" // 63 0X3F 
+	case ServerboundUseItem:   
+		return "ServerboundUseItem" // 64 0X40 
+	case ServerboundCommonCustomClickAction:   
+		return "ServerboundCommonCustomClickAction" // 65 0X41 
+	case 66: return "ServerboundPacketIDGuard"
 	default:
 		return fmt.Sprintf("Unknown Serverbound packet ID: %d", id)
 	}
@@ -1110,283 +1099,284 @@ func NewPackets() Packets {
 
 // Login ClientBound
 const (
-	LoginClientboundDisconnect          models.ClientboundPacketID = 0 // 0 0X00
-	LoginClientboundEncryptionBegin     models.ClientboundPacketID = 1 // 1 0X01
-	LoginClientboundSuccess             models.ClientboundPacketID = 2 // 2 0X02
-	LoginClientboundCompress            models.ClientboundPacketID = 3 // 3 0X03
-	LoginClientboundLoginPluginRequest  models.ClientboundPacketID = 4 // 4 0X04
-	LoginClientboundCommonCookieRequest models.ClientboundPacketID = 5 // 5 0X05
-	LoginClientboundPacketIDGuard       models.ClientboundPacketID = 6
+	LoginClientboundDisconnect models.ClientboundPacketID = 0 // 0 0X00 
+	LoginClientboundEncryptionBegin models.ClientboundPacketID = 1 // 1 0X01 
+	LoginClientboundSuccess models.ClientboundPacketID = 2 // 2 0X02 
+	LoginClientboundCompress models.ClientboundPacketID = 3 // 3 0X03 
+	LoginClientboundLoginPluginRequest models.ClientboundPacketID = 4 // 4 0X04 
+	LoginClientboundCommonCookieRequest models.ClientboundPacketID = 5 // 5 0X05 
+	LoginClientboundPacketIDGuard models.ClientboundPacketID = 6
 )
 
 // Login Serverbound
 const (
-	LoginServerboundLoginStart           models.ServerboundPacketID = 0 // 0 0X00
-	LoginServerboundEncryptionBegin      models.ServerboundPacketID = 1 // 1 0X01
-	LoginServerboundLoginPluginResponse  models.ServerboundPacketID = 2 // 2 0X02
-	LoginServerboundLoginAcknowledged    models.ServerboundPacketID = 3 // 3 0X03
-	LoginServerboundCommonCookieResponse models.ServerboundPacketID = 4 // 4 0X04
-	LoginServerboundPacketIDGuard        models.ServerboundPacketID = 5
+	LoginServerboundLoginStart models.ServerboundPacketID = 0 // 0 0X00 
+	LoginServerboundEncryptionBegin models.ServerboundPacketID = 1 // 1 0X01 
+	LoginServerboundLoginPluginResponse models.ServerboundPacketID = 2 // 2 0X02 
+	LoginServerboundLoginAcknowledged models.ServerboundPacketID = 3 // 3 0X03 
+	LoginServerboundCommonCookieResponse models.ServerboundPacketID = 4 // 4 0X04 
+	LoginServerboundPacketIDGuard models.ServerboundPacketID = 5
 )
 
 // Status Clientbound
 const (
-	ClientboundStatusServerInfo    models.ClientboundPacketID = 0 // 0 0X00
-	ClientboundStatusPing          models.ClientboundPacketID = 1 // 1 0X01
+	ClientboundStatusServerInfo models.ClientboundPacketID = 0 // 0 0X00 
+	ClientboundStatusPing models.ClientboundPacketID = 1 // 1 0X01 
 	ClientboundStatusPacketIDGuard models.ClientboundPacketID = 2
 )
 
 // Configuration Clientbound
 const (
-	ClientboundConfigCommonCookieRequest       models.ClientboundPacketID = 0  // 0 0X00
-	ClientboundConfigCustomPayload             models.ClientboundPacketID = 1  // 1 0X01
-	ClientboundConfigDisconnect                models.ClientboundPacketID = 2  // 2 0X02
-	ClientboundConfigFinishConfiguration       models.ClientboundPacketID = 3  // 3 0X03
-	ClientboundConfigKeepAlive                 models.ClientboundPacketID = 4  // 4 0X04
-	ClientboundConfigPing                      models.ClientboundPacketID = 5  // 5 0X05
-	ClientboundConfigResetChat                 models.ClientboundPacketID = 6  // 6 0X06
-	ClientboundConfigRegistryData              models.ClientboundPacketID = 7  // 7 0X07
-	ClientboundConfigCommonRemoveResourcePack  models.ClientboundPacketID = 8  // 8 0X08
-	ClientboundConfigCommonAddResourcePack     models.ClientboundPacketID = 9  // 9 0X09
-	ClientboundConfigCommonStoreCookie         models.ClientboundPacketID = 10 // 10 0X0A
-	ClientboundConfigCommonTransfer            models.ClientboundPacketID = 11 // 11 0X0B
-	ClientboundConfigFeatureFlags              models.ClientboundPacketID = 12 // 12 0X0C
-	ClientboundConfigTags                      models.ClientboundPacketID = 13 // 13 0X0D
-	ClientboundConfigCommonSelectKnownPacks    models.ClientboundPacketID = 14 // 14 0X0E
-	ClientboundConfigCommonCustomReportDetails models.ClientboundPacketID = 15 // 15 0X0F
-	ClientboundConfigCommonServerLinks         models.ClientboundPacketID = 16 // 16 0X10
-	ClientboundConfigCommonClearDialog         models.ClientboundPacketID = 17 // 17 0X11
-	ClientboundConfigShowDialog                models.ClientboundPacketID = 18 // 18 0X12
-	ClientboundConfigCodeOfConduct             models.ClientboundPacketID = 19 // 19 0X13
-	ClientboundConfigPacketIDGuard             models.ClientboundPacketID = 20
+	ClientboundConfigCommonCookieRequest models.ClientboundPacketID = 0 // 0 0X00 
+	ClientboundConfigCustomPayload models.ClientboundPacketID = 1 // 1 0X01 
+	ClientboundConfigDisconnect models.ClientboundPacketID = 2 // 2 0X02 
+	ClientboundConfigFinishConfiguration models.ClientboundPacketID = 3 // 3 0X03 
+	ClientboundConfigKeepAlive models.ClientboundPacketID = 4 // 4 0X04 
+	ClientboundConfigPing models.ClientboundPacketID = 5 // 5 0X05 
+	ClientboundConfigResetChat models.ClientboundPacketID = 6 // 6 0X06 
+	ClientboundConfigRegistryData models.ClientboundPacketID = 7 // 7 0X07 
+	ClientboundConfigCommonRemoveResourcePack models.ClientboundPacketID = 8 // 8 0X08 
+	ClientboundConfigCommonAddResourcePack models.ClientboundPacketID = 9 // 9 0X09 
+	ClientboundConfigCommonStoreCookie models.ClientboundPacketID = 10 // 10 0X0A 
+	ClientboundConfigCommonTransfer models.ClientboundPacketID = 11 // 11 0X0B 
+	ClientboundConfigFeatureFlags models.ClientboundPacketID = 12 // 12 0X0C 
+	ClientboundConfigTags models.ClientboundPacketID = 13 // 13 0X0D 
+	ClientboundConfigCommonSelectKnownPacks models.ClientboundPacketID = 14 // 14 0X0E 
+	ClientboundConfigCommonCustomReportDetails models.ClientboundPacketID = 15 // 15 0X0F 
+	ClientboundConfigCommonServerLinks models.ClientboundPacketID = 16 // 16 0X10 
+	ClientboundConfigCommonClearDialog models.ClientboundPacketID = 17 // 17 0X11 
+	ClientboundConfigShowDialog models.ClientboundPacketID = 18 // 18 0X12 
+	ClientboundConfigCodeOfConduct models.ClientboundPacketID = 19 // 19 0X13 
+	ClientboundConfigPacketIDGuard models.ClientboundPacketID = 20
 )
 
 // Configuration Serverbound
 const (
-	ServerboundConfigCommonSettings          models.ServerboundPacketID = 0 // 0 0X00
-	ServerboundConfigCommonCookieResponse    models.ServerboundPacketID = 1 // 1 0X01
-	ServerboundConfigCustomPayload           models.ServerboundPacketID = 2 // 2 0X02
-	ServerboundConfigFinishConfiguration     models.ServerboundPacketID = 3 // 3 0X03
-	ServerboundConfigKeepAlive               models.ServerboundPacketID = 4 // 4 0X04
-	ServerboundConfigPong                    models.ServerboundPacketID = 5 // 5 0X05
-	ServerboundConfigResourcePackReceive     models.ServerboundPacketID = 6 // 6 0X06
-	ServerboundConfigCommonSelectKnownPacks  models.ServerboundPacketID = 7 // 7 0X07
-	ServerboundConfigCommonCustomClickAction models.ServerboundPacketID = 8 // 8 0X08
-	ServerboundConfigAcceptCodeOfConduct     models.ServerboundPacketID = 9 // 9 0X09
-	ServerboundConfigPacketIDGuard           models.ServerboundPacketID = 10
+	ServerboundConfigCommonSettings models.ServerboundPacketID = 0 // 0 0X00 
+	ServerboundConfigCommonCookieResponse models.ServerboundPacketID = 1 // 1 0X01 
+	ServerboundConfigCustomPayload models.ServerboundPacketID = 2 // 2 0X02 
+	ServerboundConfigFinishConfiguration models.ServerboundPacketID = 3 // 3 0X03 
+	ServerboundConfigKeepAlive models.ServerboundPacketID = 4 // 4 0X04 
+	ServerboundConfigPong models.ServerboundPacketID = 5 // 5 0X05 
+	ServerboundConfigResourcePackReceive models.ServerboundPacketID = 6 // 6 0X06 
+	ServerboundConfigCommonSelectKnownPacks models.ServerboundPacketID = 7 // 7 0X07 
+	ServerboundConfigCommonCustomClickAction models.ServerboundPacketID = 8 // 8 0X08 
+	ServerboundConfigAcceptCodeOfConduct models.ServerboundPacketID = 9 // 9 0X09 
+	ServerboundConfigPacketIDGuard models.ServerboundPacketID = 10
 )
 
 // Game Play Clientbound
 const (
-	ClientboundVoid                       models.ClientboundPacketID = 0   // 0 0X00
-	ClientboundSpawnEntity                models.ClientboundPacketID = 1   // 1 0X01
-	ClientboundAnimation                  models.ClientboundPacketID = 2   // 2 0X02
-	ClientboundStatistics                 models.ClientboundPacketID = 3   // 3 0X03
-	ClientboundAcknowledgePlayerDigging   models.ClientboundPacketID = 4   // 4 0X04
-	ClientboundBlockBreakAnimation        models.ClientboundPacketID = 5   // 5 0X05
-	ClientboundTileEntityData             models.ClientboundPacketID = 6   // 6 0X06
-	ClientboundBlockAction                models.ClientboundPacketID = 7   // 7 0X07
-	ClientboundBlockChange                models.ClientboundPacketID = 8   // 8 0X08
-	ClientboundBossBar                    models.ClientboundPacketID = 9   // 9 0X09
-	ClientboundDifficulty                 models.ClientboundPacketID = 10  // 10 0X0A
-	ClientboundChunkBatchFinished         models.ClientboundPacketID = 11  // 11 0X0B
-	ClientboundChunkBatchStart            models.ClientboundPacketID = 12  // 12 0X0C
-	ClientboundChunkBiomes                models.ClientboundPacketID = 13  // 13 0X0D
-	ClientboundClearTitles                models.ClientboundPacketID = 14  // 14 0X0E
-	ClientboundTabComplete                models.ClientboundPacketID = 15  // 15 0X0F
-	ClientboundDeclareCommands            models.ClientboundPacketID = 16  // 16 0X10
-	ClientboundCloseWindow                models.ClientboundPacketID = 17  // 17 0X11
-	ClientboundWindowItems                models.ClientboundPacketID = 18  // 18 0X12
-	ClientboundCraftProgressBar           models.ClientboundPacketID = 19  // 19 0X13
-	ClientboundSetSlot                    models.ClientboundPacketID = 20  // 20 0X14
-	ClientboundCommonCookieRequest        models.ClientboundPacketID = 21  // 21 0X15
-	ClientboundSetCooldown                models.ClientboundPacketID = 22  // 22 0X16
-	ClientboundChatSuggestions            models.ClientboundPacketID = 23  // 23 0X17
-	ClientboundCustomPayload              models.ClientboundPacketID = 24  // 24 0X18
-	ClientboundDamageEvent                models.ClientboundPacketID = 25  // 25 0X19
-	ClientboundDebugBlockValue            models.ClientboundPacketID = 26  // 26 0X1A
-	ClientboundDebugChunkValue            models.ClientboundPacketID = 27  // 27 0X1B
-	ClientboundDebugEntityValue           models.ClientboundPacketID = 28  // 28 0X1C
-	ClientboundDebugEvent                 models.ClientboundPacketID = 29  // 29 0X1D
-	ClientboundDebugSample                models.ClientboundPacketID = 30  // 30 0X1E
-	ClientboundHideMessage                models.ClientboundPacketID = 31  // 31 0X1F
-	ClientboundKickDisconnect             models.ClientboundPacketID = 32  // 32 0X20
-	ClientboundProfilelessChat            models.ClientboundPacketID = 33  // 33 0X21
-	ClientboundEntityStatus               models.ClientboundPacketID = 34  // 34 0X22
-	ClientboundSyncEntityPosition         models.ClientboundPacketID = 35  // 35 0X23
-	ClientboundExplosion                  models.ClientboundPacketID = 36  // 36 0X24
-	ClientboundUnloadChunk                models.ClientboundPacketID = 37  // 37 0X25
-	ClientboundGameStateChange            models.ClientboundPacketID = 38  // 38 0X26
-	ClientboundGameTestHighlightPos       models.ClientboundPacketID = 39  // 39 0X27
-	ClientboundOpenHorseWindow            models.ClientboundPacketID = 40  // 40 0X28
-	ClientboundHurtAnimation              models.ClientboundPacketID = 41  // 41 0X29
-	ClientboundInitializeWorldBorder      models.ClientboundPacketID = 42  // 42 0X2A
-	ClientboundKeepAlive                  models.ClientboundPacketID = 43  // 43 0X2B
-	ClientboundMapChunk                   models.ClientboundPacketID = 44  // 44 0X2C
-	ClientboundWorldEvent                 models.ClientboundPacketID = 45  // 45 0X2D
-	ClientboundWorldParticles             models.ClientboundPacketID = 46  // 46 0X2E
-	ClientboundUpdateLight                models.ClientboundPacketID = 47  // 47 0X2F
-	ClientboundLogin                      models.ClientboundPacketID = 48  // 48 0X30
-	ClientboundMap                        models.ClientboundPacketID = 49  // 49 0X31
-	ClientboundTradeList                  models.ClientboundPacketID = 50  // 50 0X32
-	ClientboundRelEntityMove              models.ClientboundPacketID = 51  // 51 0X33
-	ClientboundEntityMoveLook             models.ClientboundPacketID = 52  // 52 0X34
-	ClientboundMoveMinecart               models.ClientboundPacketID = 53  // 53 0X35
-	ClientboundEntityLook                 models.ClientboundPacketID = 54  // 54 0X36
-	ClientboundVehicleMove                models.ClientboundPacketID = 55  // 55 0X37
-	ClientboundOpenBook                   models.ClientboundPacketID = 56  // 56 0X38
-	ClientboundOpenWindow                 models.ClientboundPacketID = 57  // 57 0X39
-	ClientboundOpenSignEntity             models.ClientboundPacketID = 58  // 58 0X3A
-	ClientboundPing                       models.ClientboundPacketID = 59  // 59 0X3B
-	ClientboundPingResponse               models.ClientboundPacketID = 60  // 60 0X3C
-	ClientboundCraftRecipeResponse        models.ClientboundPacketID = 61  // 61 0X3D
-	ClientboundAbilities                  models.ClientboundPacketID = 62  // 62 0X3E
-	ClientboundPlayerChat                 models.ClientboundPacketID = 63  // 63 0X3F
-	ClientboundEndCombatEvent             models.ClientboundPacketID = 64  // 64 0X40
-	ClientboundEnterCombatEvent           models.ClientboundPacketID = 65  // 65 0X41
-	ClientboundDeathCombatEvent           models.ClientboundPacketID = 66  // 66 0X42
-	ClientboundPlayerRemove               models.ClientboundPacketID = 67  // 67 0X43
-	ClientboundPlayerInfo                 models.ClientboundPacketID = 68  // 68 0X44
-	ClientboundFacePlayer                 models.ClientboundPacketID = 69  // 69 0X45
-	ClientboundPosition                   models.ClientboundPacketID = 70  // 70 0X46
-	ClientboundPlayerRotation             models.ClientboundPacketID = 71  // 71 0X47
-	ClientboundRecipeBookAdd              models.ClientboundPacketID = 72  // 72 0X48
-	ClientboundRecipeBookRemove           models.ClientboundPacketID = 73  // 73 0X49
-	ClientboundRecipeBookSettings         models.ClientboundPacketID = 74  // 74 0X4A
-	ClientboundEntityDestroy              models.ClientboundPacketID = 75  // 75 0X4B
-	ClientboundRemoveEntityEffect         models.ClientboundPacketID = 76  // 76 0X4C
-	ClientboundResetScore                 models.ClientboundPacketID = 77  // 77 0X4D
-	ClientboundCommonRemoveResourcePack   models.ClientboundPacketID = 78  // 78 0X4E
-	ClientboundCommonAddResourcePack      models.ClientboundPacketID = 79  // 79 0X4F
-	ClientboundRespawn                    models.ClientboundPacketID = 80  // 80 0X50
-	ClientboundEntityHeadRotation         models.ClientboundPacketID = 81  // 81 0X51
-	ClientboundMultiBlockChange           models.ClientboundPacketID = 82  // 82 0X52
-	ClientboundSelectAdvancementTab       models.ClientboundPacketID = 83  // 83 0X53
-	ClientboundServerData                 models.ClientboundPacketID = 84  // 84 0X54
-	ClientboundActionBar                  models.ClientboundPacketID = 85  // 85 0X55
-	ClientboundWorldBorderCenter          models.ClientboundPacketID = 86  // 86 0X56
-	ClientboundWorldBorderLerpSize        models.ClientboundPacketID = 87  // 87 0X57
-	ClientboundWorldBorderSize            models.ClientboundPacketID = 88  // 88 0X58
-	ClientboundWorldBorderWarningDelay    models.ClientboundPacketID = 89  // 89 0X59
-	ClientboundWorldBorderWarningReach    models.ClientboundPacketID = 90  // 90 0X5A
-	ClientboundCamera                     models.ClientboundPacketID = 91  // 91 0X5B
-	ClientboundUpdateViewPosition         models.ClientboundPacketID = 92  // 92 0X5C
-	ClientboundUpdateViewDistance         models.ClientboundPacketID = 93  // 93 0X5D
-	ClientboundSetCursorItem              models.ClientboundPacketID = 94  // 94 0X5E
-	ClientboundSpawnPosition              models.ClientboundPacketID = 95  // 95 0X5F
-	ClientboundScoreboardDisplayObjective models.ClientboundPacketID = 96  // 96 0X60
-	ClientboundEntityMetadata             models.ClientboundPacketID = 97  // 97 0X61
-	ClientboundAttachEntity               models.ClientboundPacketID = 98  // 98 0X62
-	ClientboundEntityVelocity             models.ClientboundPacketID = 99  // 99 0X63
-	ClientboundEntityEquipment            models.ClientboundPacketID = 100 // 100 0X64
-	ClientboundExperience                 models.ClientboundPacketID = 101 // 101 0X65
-	ClientboundUpdateHealth               models.ClientboundPacketID = 102 // 102 0X66
-	ClientboundHeldItemSlot               models.ClientboundPacketID = 103 // 103 0X67
-	ClientboundScoreboardObjective        models.ClientboundPacketID = 104 // 104 0X68
-	ClientboundSetPassengers              models.ClientboundPacketID = 105 // 105 0X69
-	ClientboundSetPlayerInventory         models.ClientboundPacketID = 106 // 106 0X6A
-	ClientboundTeams                      models.ClientboundPacketID = 107 // 107 0X6B
-	ClientboundScoreboardScore            models.ClientboundPacketID = 108 // 108 0X6C
-	ClientboundSimulationDistance         models.ClientboundPacketID = 109 // 109 0X6D
-	ClientboundSetTitleSubtitle           models.ClientboundPacketID = 110 // 110 0X6E
-	ClientboundUpdateTime                 models.ClientboundPacketID = 111 // 111 0X6F
-	ClientboundSetTitleText               models.ClientboundPacketID = 112 // 112 0X70
-	ClientboundSetTitleTime               models.ClientboundPacketID = 113 // 113 0X71
-	ClientboundEntitySoundEffect          models.ClientboundPacketID = 114 // 114 0X72
-	ClientboundSoundEffect                models.ClientboundPacketID = 115 // 115 0X73
-	ClientboundStartConfiguration         models.ClientboundPacketID = 116 // 116 0X74
-	ClientboundStopSound                  models.ClientboundPacketID = 117 // 117 0X75
-	ClientboundCommonStoreCookie          models.ClientboundPacketID = 118 // 118 0X76
-	ClientboundSystemChat                 models.ClientboundPacketID = 119 // 119 0X77
-	ClientboundPlayerlistHeader           models.ClientboundPacketID = 120 // 120 0X78
-	ClientboundNbtQueryResponse           models.ClientboundPacketID = 121 // 121 0X79
-	ClientboundCollect                    models.ClientboundPacketID = 122 // 122 0X7A
-	ClientboundEntityTeleport             models.ClientboundPacketID = 123 // 123 0X7B
-	ClientboundTestInstanceBlockStatus    models.ClientboundPacketID = 124 // 124 0X7C
-	ClientboundSetTickingState            models.ClientboundPacketID = 125 // 125 0X7D
-	ClientboundStepTick                   models.ClientboundPacketID = 126 // 126 0X7E
-	ClientboundCommonTransfer             models.ClientboundPacketID = 127 // 127 0X7F
-	ClientboundAdvancements               models.ClientboundPacketID = 128 // 128 0X80
-	ClientboundEntityUpdateAttributes     models.ClientboundPacketID = 129 // 129 0X81
-	ClientboundEntityEffect               models.ClientboundPacketID = 130 // 130 0X82
-	ClientboundDeclareRecipes             models.ClientboundPacketID = 131 // 131 0X83
-	ClientboundTags                       models.ClientboundPacketID = 132 // 132 0X84
-	ClientboundSetProjectilePower         models.ClientboundPacketID = 133 // 133 0X85
-	ClientboundCommonCustomReportDetails  models.ClientboundPacketID = 134 // 134 0X86
-	ClientboundCommonServerLinks          models.ClientboundPacketID = 135 // 135 0X87
-	ClientboundTrackedWaypoint            models.ClientboundPacketID = 136 // 136 0X88
-	ClientboundCommonClearDialog          models.ClientboundPacketID = 137 // 137 0X89
-	ClientboundShowDialog                 models.ClientboundPacketID = 138 // 138 0X8A
-	ClientboundPacketIDGuard              models.ClientboundPacketID = 139
+	ClientboundVoid models.ClientboundPacketID = 0 // 0 0X00
+	ClientboundSpawnEntity models.ClientboundPacketID = 1 // 1 0X01
+	ClientboundAnimation models.ClientboundPacketID = 2 // 2 0X02
+	ClientboundStatistics models.ClientboundPacketID = 3 // 3 0X03
+	ClientboundAcknowledgePlayerDigging models.ClientboundPacketID = 4 // 4 0X04
+	ClientboundBlockBreakAnimation models.ClientboundPacketID = 5 // 5 0X05
+	ClientboundTileEntityData models.ClientboundPacketID = 6 // 6 0X06
+	ClientboundBlockAction models.ClientboundPacketID = 7 // 7 0X07
+	ClientboundBlockChange models.ClientboundPacketID = 8 // 8 0X08
+	ClientboundBossBar models.ClientboundPacketID = 9 // 9 0X09
+	ClientboundDifficulty models.ClientboundPacketID = 10 // 10 0X0A
+	ClientboundChunkBatchFinished models.ClientboundPacketID = 11 // 11 0X0B
+	ClientboundChunkBatchStart models.ClientboundPacketID = 12 // 12 0X0C
+	ClientboundChunkBiomes models.ClientboundPacketID = 13 // 13 0X0D
+	ClientboundClearTitles models.ClientboundPacketID = 14 // 14 0X0E
+	ClientboundTabComplete models.ClientboundPacketID = 15 // 15 0X0F
+	ClientboundDeclareCommands models.ClientboundPacketID = 16 // 16 0X10
+	ClientboundCloseWindow models.ClientboundPacketID = 17 // 17 0X11
+	ClientboundWindowItems models.ClientboundPacketID = 18 // 18 0X12
+	ClientboundCraftProgressBar models.ClientboundPacketID = 19 // 19 0X13
+	ClientboundSetSlot models.ClientboundPacketID = 20 // 20 0X14
+	ClientboundCommonCookieRequest models.ClientboundPacketID = 21 // 21 0X15
+	ClientboundSetCooldown models.ClientboundPacketID = 22 // 22 0X16
+	ClientboundChatSuggestions models.ClientboundPacketID = 23 // 23 0X17
+	ClientboundCustomPayload models.ClientboundPacketID = 24 // 24 0X18
+	ClientboundDamageEvent models.ClientboundPacketID = 25 // 25 0X19
+	ClientboundDebugBlockValue models.ClientboundPacketID = 26 // 26 0X1A
+	ClientboundDebugChunkValue models.ClientboundPacketID = 27 // 27 0X1B
+	ClientboundDebugEntityValue models.ClientboundPacketID = 28 // 28 0X1C
+	ClientboundDebugEvent models.ClientboundPacketID = 29 // 29 0X1D
+	ClientboundDebugSample models.ClientboundPacketID = 30 // 30 0X1E
+	ClientboundHideMessage models.ClientboundPacketID = 31 // 31 0X1F
+	ClientboundKickDisconnect models.ClientboundPacketID = 32 // 32 0X20
+	ClientboundProfilelessChat models.ClientboundPacketID = 33 // 33 0X21
+	ClientboundEntityStatus models.ClientboundPacketID = 34 // 34 0X22
+	ClientboundSyncEntityPosition models.ClientboundPacketID = 35 // 35 0X23
+	ClientboundExplosion models.ClientboundPacketID = 36 // 36 0X24
+	ClientboundUnloadChunk models.ClientboundPacketID = 37 // 37 0X25
+	ClientboundGameStateChange models.ClientboundPacketID = 38 // 38 0X26
+	ClientboundGameTestHighlightPos models.ClientboundPacketID = 39 // 39 0X27
+	ClientboundOpenHorseWindow models.ClientboundPacketID = 40 // 40 0X28
+	ClientboundHurtAnimation models.ClientboundPacketID = 41 // 41 0X29
+	ClientboundInitializeWorldBorder models.ClientboundPacketID = 42 // 42 0X2A
+	ClientboundKeepAlive models.ClientboundPacketID = 43 // 43 0X2B
+	ClientboundMapChunk models.ClientboundPacketID = 44 // 44 0X2C
+	ClientboundWorldEvent models.ClientboundPacketID = 45 // 45 0X2D
+	ClientboundWorldParticles models.ClientboundPacketID = 46 // 46 0X2E
+	ClientboundUpdateLight models.ClientboundPacketID = 47 // 47 0X2F
+	ClientboundLogin models.ClientboundPacketID = 48 // 48 0X30
+	ClientboundMap models.ClientboundPacketID = 49 // 49 0X31
+	ClientboundTradeList models.ClientboundPacketID = 50 // 50 0X32
+	ClientboundRelEntityMove models.ClientboundPacketID = 51 // 51 0X33
+	ClientboundEntityMoveLook models.ClientboundPacketID = 52 // 52 0X34
+	ClientboundMoveMinecart models.ClientboundPacketID = 53 // 53 0X35
+	ClientboundEntityLook models.ClientboundPacketID = 54 // 54 0X36
+	ClientboundVehicleMove models.ClientboundPacketID = 55 // 55 0X37
+	ClientboundOpenBook models.ClientboundPacketID = 56 // 56 0X38
+	ClientboundOpenWindow models.ClientboundPacketID = 57 // 57 0X39
+	ClientboundOpenSignEntity models.ClientboundPacketID = 58 // 58 0X3A
+	ClientboundPing models.ClientboundPacketID = 59 // 59 0X3B
+	ClientboundPingResponse models.ClientboundPacketID = 60 // 60 0X3C
+	ClientboundCraftRecipeResponse models.ClientboundPacketID = 61 // 61 0X3D
+	ClientboundAbilities models.ClientboundPacketID = 62 // 62 0X3E
+	ClientboundPlayerChat models.ClientboundPacketID = 63 // 63 0X3F
+	ClientboundEndCombatEvent models.ClientboundPacketID = 64 // 64 0X40
+	ClientboundEnterCombatEvent models.ClientboundPacketID = 65 // 65 0X41
+	ClientboundDeathCombatEvent models.ClientboundPacketID = 66 // 66 0X42
+	ClientboundPlayerRemove models.ClientboundPacketID = 67 // 67 0X43
+	ClientboundPlayerInfo models.ClientboundPacketID = 68 // 68 0X44
+	ClientboundFacePlayer models.ClientboundPacketID = 69 // 69 0X45
+	ClientboundPosition models.ClientboundPacketID = 70 // 70 0X46
+	ClientboundPlayerRotation models.ClientboundPacketID = 71 // 71 0X47
+	ClientboundRecipeBookAdd models.ClientboundPacketID = 72 // 72 0X48
+	ClientboundRecipeBookRemove models.ClientboundPacketID = 73 // 73 0X49
+	ClientboundRecipeBookSettings models.ClientboundPacketID = 74 // 74 0X4A
+	ClientboundEntityDestroy models.ClientboundPacketID = 75 // 75 0X4B
+	ClientboundRemoveEntityEffect models.ClientboundPacketID = 76 // 76 0X4C
+	ClientboundResetScore models.ClientboundPacketID = 77 // 77 0X4D
+	ClientboundCommonRemoveResourcePack models.ClientboundPacketID = 78 // 78 0X4E
+	ClientboundCommonAddResourcePack models.ClientboundPacketID = 79 // 79 0X4F
+	ClientboundRespawn models.ClientboundPacketID = 80 // 80 0X50
+	ClientboundEntityHeadRotation models.ClientboundPacketID = 81 // 81 0X51
+	ClientboundMultiBlockChange models.ClientboundPacketID = 82 // 82 0X52
+	ClientboundSelectAdvancementTab models.ClientboundPacketID = 83 // 83 0X53
+	ClientboundServerData models.ClientboundPacketID = 84 // 84 0X54
+	ClientboundActionBar models.ClientboundPacketID = 85 // 85 0X55
+	ClientboundWorldBorderCenter models.ClientboundPacketID = 86 // 86 0X56
+	ClientboundWorldBorderLerpSize models.ClientboundPacketID = 87 // 87 0X57
+	ClientboundWorldBorderSize models.ClientboundPacketID = 88 // 88 0X58
+	ClientboundWorldBorderWarningDelay models.ClientboundPacketID = 89 // 89 0X59
+	ClientboundWorldBorderWarningReach models.ClientboundPacketID = 90 // 90 0X5A
+	ClientboundCamera models.ClientboundPacketID = 91 // 91 0X5B
+	ClientboundUpdateViewPosition models.ClientboundPacketID = 92 // 92 0X5C
+	ClientboundUpdateViewDistance models.ClientboundPacketID = 93 // 93 0X5D
+	ClientboundSetCursorItem models.ClientboundPacketID = 94 // 94 0X5E
+	ClientboundSpawnPosition models.ClientboundPacketID = 95 // 95 0X5F
+	ClientboundScoreboardDisplayObjective models.ClientboundPacketID = 96 // 96 0X60
+	ClientboundEntityMetadata models.ClientboundPacketID = 97 // 97 0X61
+	ClientboundAttachEntity models.ClientboundPacketID = 98 // 98 0X62
+	ClientboundEntityVelocity models.ClientboundPacketID = 99 // 99 0X63
+	ClientboundEntityEquipment models.ClientboundPacketID = 100 // 100 0X64
+	ClientboundExperience models.ClientboundPacketID = 101 // 101 0X65
+	ClientboundUpdateHealth models.ClientboundPacketID = 102 // 102 0X66
+	ClientboundHeldItemSlot models.ClientboundPacketID = 103 // 103 0X67
+	ClientboundScoreboardObjective models.ClientboundPacketID = 104 // 104 0X68
+	ClientboundSetPassengers models.ClientboundPacketID = 105 // 105 0X69
+	ClientboundSetPlayerInventory models.ClientboundPacketID = 106 // 106 0X6A
+	ClientboundTeams models.ClientboundPacketID = 107 // 107 0X6B
+	ClientboundScoreboardScore models.ClientboundPacketID = 108 // 108 0X6C
+	ClientboundSimulationDistance models.ClientboundPacketID = 109 // 109 0X6D
+	ClientboundSetTitleSubtitle models.ClientboundPacketID = 110 // 110 0X6E
+	ClientboundUpdateTime models.ClientboundPacketID = 111 // 111 0X6F
+	ClientboundSetTitleText models.ClientboundPacketID = 112 // 112 0X70
+	ClientboundSetTitleTime models.ClientboundPacketID = 113 // 113 0X71
+	ClientboundEntitySoundEffect models.ClientboundPacketID = 114 // 114 0X72
+	ClientboundSoundEffect models.ClientboundPacketID = 115 // 115 0X73
+	ClientboundStartConfiguration models.ClientboundPacketID = 116 // 116 0X74
+	ClientboundStopSound models.ClientboundPacketID = 117 // 117 0X75
+	ClientboundCommonStoreCookie models.ClientboundPacketID = 118 // 118 0X76
+	ClientboundSystemChat models.ClientboundPacketID = 119 // 119 0X77
+	ClientboundPlayerlistHeader models.ClientboundPacketID = 120 // 120 0X78
+	ClientboundNbtQueryResponse models.ClientboundPacketID = 121 // 121 0X79
+	ClientboundCollect models.ClientboundPacketID = 122 // 122 0X7A
+	ClientboundEntityTeleport models.ClientboundPacketID = 123 // 123 0X7B
+	ClientboundTestInstanceBlockStatus models.ClientboundPacketID = 124 // 124 0X7C
+	ClientboundSetTickingState models.ClientboundPacketID = 125 // 125 0X7D
+	ClientboundStepTick models.ClientboundPacketID = 126 // 126 0X7E
+	ClientboundCommonTransfer models.ClientboundPacketID = 127 // 127 0X7F
+	ClientboundAdvancements models.ClientboundPacketID = 128 // 128 0X80
+	ClientboundEntityUpdateAttributes models.ClientboundPacketID = 129 // 129 0X81
+	ClientboundEntityEffect models.ClientboundPacketID = 130 // 130 0X82
+	ClientboundDeclareRecipes models.ClientboundPacketID = 131 // 131 0X83
+	ClientboundTags models.ClientboundPacketID = 132 // 132 0X84
+	ClientboundSetProjectilePower models.ClientboundPacketID = 133 // 133 0X85
+	ClientboundCommonCustomReportDetails models.ClientboundPacketID = 134 // 134 0X86
+	ClientboundCommonServerLinks models.ClientboundPacketID = 135 // 135 0X87
+	ClientboundTrackedWaypoint models.ClientboundPacketID = 136 // 136 0X88
+	ClientboundCommonClearDialog models.ClientboundPacketID = 137 // 137 0X89
+	ClientboundShowDialog models.ClientboundPacketID = 138 // 138 0X8A
+	ClientboundPacketIDGuard models.ClientboundPacketID = 139
 )
 
 // Game Play Serverbound
 const (
-	ServerboundTeleportConfirm            models.ServerboundPacketID = 0  // 0 0X00
-	ServerboundQueryBlockNbt              models.ServerboundPacketID = 1  // 1 0X01
-	ServerboundSelectBundleItem           models.ServerboundPacketID = 2  // 2 0X02
-	ServerboundSetDifficulty              models.ServerboundPacketID = 3  // 3 0X03
-	ServerboundChangeGamemode             models.ServerboundPacketID = 4  // 4 0X04
-	ServerboundMessageAcknowledgement     models.ServerboundPacketID = 5  // 5 0X05
-	ServerboundChatCommand                models.ServerboundPacketID = 6  // 6 0X06
-	ServerboundChatCommandSigned          models.ServerboundPacketID = 7  // 7 0X07
-	ServerboundChatMessage                models.ServerboundPacketID = 8  // 8 0X08
-	ServerboundChatSessionUpdate          models.ServerboundPacketID = 9  // 9 0X09
-	ServerboundChunkBatchReceived         models.ServerboundPacketID = 10 // 10 0X0A
-	ServerboundClientCommand              models.ServerboundPacketID = 11 // 11 0X0B
-	ServerboundTickEnd                    models.ServerboundPacketID = 12 // 12 0X0C
-	ServerboundCommonSettings             models.ServerboundPacketID = 13 // 13 0X0D
-	ServerboundTabComplete                models.ServerboundPacketID = 14 // 14 0X0E
-	ServerboundConfigurationAcknowledged  models.ServerboundPacketID = 15 // 15 0X0F
-	ServerboundEnchantItem                models.ServerboundPacketID = 16 // 16 0X10
-	ServerboundWindowClick                models.ServerboundPacketID = 17 // 17 0X11
-	ServerboundCloseWindow                models.ServerboundPacketID = 18 // 18 0X12
-	ServerboundSetSlotState               models.ServerboundPacketID = 19 // 19 0X13
-	ServerboundCommonCookieResponse       models.ServerboundPacketID = 20 // 20 0X14
-	ServerboundCustomPayload              models.ServerboundPacketID = 21 // 21 0X15
-	ServerboundDebugSubscriptionRequest   models.ServerboundPacketID = 22 // 22 0X16
-	ServerboundEditBook                   models.ServerboundPacketID = 23 // 23 0X17
-	ServerboundQueryEntityNbt             models.ServerboundPacketID = 24 // 24 0X18
-	ServerboundUseEntity                  models.ServerboundPacketID = 25 // 25 0X19
-	ServerboundGenerateStructure          models.ServerboundPacketID = 26 // 26 0X1A
-	ServerboundKeepAlive                  models.ServerboundPacketID = 27 // 27 0X1B
-	ServerboundLockDifficulty             models.ServerboundPacketID = 28 // 28 0X1C
-	ServerboundPosition                   models.ServerboundPacketID = 29 // 29 0X1D
-	ServerboundPositionLook               models.ServerboundPacketID = 30 // 30 0X1E
-	ServerboundLook                       models.ServerboundPacketID = 31 // 31 0X1F
-	ServerboundFlying                     models.ServerboundPacketID = 32 // 32 0X20
-	ServerboundVehicleMove                models.ServerboundPacketID = 33 // 33 0X21
-	ServerboundSteerBoat                  models.ServerboundPacketID = 34 // 34 0X22
-	ServerboundPickItemFromBlock          models.ServerboundPacketID = 35 // 35 0X23
-	ServerboundPickItemFromEntity         models.ServerboundPacketID = 36 // 36 0X24
-	ServerboundPingRequest                models.ServerboundPacketID = 37 // 37 0X25
-	ServerboundCraftRecipeRequest         models.ServerboundPacketID = 38 // 38 0X26
-	ServerboundAbilities                  models.ServerboundPacketID = 39 // 39 0X27
-	ServerboundBlockDig                   models.ServerboundPacketID = 40 // 40 0X28
-	ServerboundEntityAction               models.ServerboundPacketID = 41 // 41 0X29
-	ServerboundPlayerInput                models.ServerboundPacketID = 42 // 42 0X2A
-	ServerboundPlayerLoaded               models.ServerboundPacketID = 43 // 43 0X2B
-	ServerboundPong                       models.ServerboundPacketID = 44 // 44 0X2C
-	ServerboundRecipeBook                 models.ServerboundPacketID = 45 // 45 0X2D
-	ServerboundDisplayedRecipe            models.ServerboundPacketID = 46 // 46 0X2E
-	ServerboundNameItem                   models.ServerboundPacketID = 47 // 47 0X2F
-	ServerboundResourcePackReceive        models.ServerboundPacketID = 48 // 48 0X30
-	ServerboundAdvancementTab             models.ServerboundPacketID = 49 // 49 0X31
-	ServerboundSelectTrade                models.ServerboundPacketID = 50 // 50 0X32
-	ServerboundSetBeaconEffect            models.ServerboundPacketID = 51 // 51 0X33
-	ServerboundHeldItemSlot               models.ServerboundPacketID = 52 // 52 0X34
-	ServerboundUpdateCommandBlock         models.ServerboundPacketID = 53 // 53 0X35
-	ServerboundUpdateCommandBlockMinecart models.ServerboundPacketID = 54 // 54 0X36
-	ServerboundSetCreativeSlot            models.ServerboundPacketID = 55 // 55 0X37
-	ServerboundUpdateJigsawBlock          models.ServerboundPacketID = 56 // 56 0X38
-	ServerboundUpdateStructureBlock       models.ServerboundPacketID = 57 // 57 0X39
-	ServerboundSetTestBlock               models.ServerboundPacketID = 58 // 58 0X3A
-	ServerboundUpdateSign                 models.ServerboundPacketID = 59 // 59 0X3B
-	ServerboundArmAnimation               models.ServerboundPacketID = 60 // 60 0X3C
-	ServerboundSpectate                   models.ServerboundPacketID = 61 // 61 0X3D
-	ServerboundTestInstanceBlockAction    models.ServerboundPacketID = 62 // 62 0X3E
-	ServerboundBlockPlace                 models.ServerboundPacketID = 63 // 63 0X3F
-	ServerboundUseItem                    models.ServerboundPacketID = 64 // 64 0X40
-	ServerboundCommonCustomClickAction    models.ServerboundPacketID = 65 // 65 0X41
-	ServerboundPacketIDGuard              models.ServerboundPacketID = 66
+	ServerboundTeleportConfirm models.ServerboundPacketID = 0 // 0 0X00 
+	ServerboundQueryBlockNbt models.ServerboundPacketID = 1 // 1 0X01 
+	ServerboundSelectBundleItem models.ServerboundPacketID = 2 // 2 0X02 
+	ServerboundSetDifficulty models.ServerboundPacketID = 3 // 3 0X03 
+	ServerboundChangeGamemode models.ServerboundPacketID = 4 // 4 0X04 
+	ServerboundMessageAcknowledgement models.ServerboundPacketID = 5 // 5 0X05 
+	ServerboundChatCommand models.ServerboundPacketID = 6 // 6 0X06 
+	ServerboundChatCommandSigned models.ServerboundPacketID = 7 // 7 0X07 
+	ServerboundChatMessage models.ServerboundPacketID = 8 // 8 0X08 
+	ServerboundChatSessionUpdate models.ServerboundPacketID = 9 // 9 0X09 
+	ServerboundChunkBatchReceived models.ServerboundPacketID = 10 // 10 0X0A 
+	ServerboundClientCommand models.ServerboundPacketID = 11 // 11 0X0B 
+	ServerboundTickEnd models.ServerboundPacketID = 12 // 12 0X0C 
+	ServerboundCommonSettings models.ServerboundPacketID = 13 // 13 0X0D 
+	ServerboundTabComplete models.ServerboundPacketID = 14 // 14 0X0E 
+	ServerboundConfigurationAcknowledged models.ServerboundPacketID = 15 // 15 0X0F 
+	ServerboundEnchantItem models.ServerboundPacketID = 16 // 16 0X10 
+	ServerboundWindowClick models.ServerboundPacketID = 17 // 17 0X11 
+	ServerboundCloseWindow models.ServerboundPacketID = 18 // 18 0X12 
+	ServerboundSetSlotState models.ServerboundPacketID = 19 // 19 0X13 
+	ServerboundCommonCookieResponse models.ServerboundPacketID = 20 // 20 0X14 
+	ServerboundCustomPayload models.ServerboundPacketID = 21 // 21 0X15 
+	ServerboundDebugSubscriptionRequest models.ServerboundPacketID = 22 // 22 0X16 
+	ServerboundEditBook models.ServerboundPacketID = 23 // 23 0X17 
+	ServerboundQueryEntityNbt models.ServerboundPacketID = 24 // 24 0X18 
+	ServerboundUseEntity models.ServerboundPacketID = 25 // 25 0X19 
+	ServerboundGenerateStructure models.ServerboundPacketID = 26 // 26 0X1A 
+	ServerboundKeepAlive models.ServerboundPacketID = 27 // 27 0X1B 
+	ServerboundLockDifficulty models.ServerboundPacketID = 28 // 28 0X1C 
+	ServerboundPosition models.ServerboundPacketID = 29 // 29 0X1D 
+	ServerboundPositionLook models.ServerboundPacketID = 30 // 30 0X1E 
+	ServerboundLook models.ServerboundPacketID = 31 // 31 0X1F 
+	ServerboundFlying models.ServerboundPacketID = 32 // 32 0X20 
+	ServerboundVehicleMove models.ServerboundPacketID = 33 // 33 0X21 
+	ServerboundSteerBoat models.ServerboundPacketID = 34 // 34 0X22 
+	ServerboundPickItemFromBlock models.ServerboundPacketID = 35 // 35 0X23 
+	ServerboundPickItemFromEntity models.ServerboundPacketID = 36 // 36 0X24 
+	ServerboundPingRequest models.ServerboundPacketID = 37 // 37 0X25 
+	ServerboundCraftRecipeRequest models.ServerboundPacketID = 38 // 38 0X26 
+	ServerboundAbilities models.ServerboundPacketID = 39 // 39 0X27 
+	ServerboundBlockDig models.ServerboundPacketID = 40 // 40 0X28 
+	ServerboundEntityAction models.ServerboundPacketID = 41 // 41 0X29 
+	ServerboundPlayerInput models.ServerboundPacketID = 42 // 42 0X2A 
+	ServerboundPlayerLoaded models.ServerboundPacketID = 43 // 43 0X2B 
+	ServerboundPong models.ServerboundPacketID = 44 // 44 0X2C 
+	ServerboundRecipeBook models.ServerboundPacketID = 45 // 45 0X2D 
+	ServerboundDisplayedRecipe models.ServerboundPacketID = 46 // 46 0X2E 
+	ServerboundNameItem models.ServerboundPacketID = 47 // 47 0X2F 
+	ServerboundResourcePackReceive models.ServerboundPacketID = 48 // 48 0X30 
+	ServerboundAdvancementTab models.ServerboundPacketID = 49 // 49 0X31 
+	ServerboundSelectTrade models.ServerboundPacketID = 50 // 50 0X32 
+	ServerboundSetBeaconEffect models.ServerboundPacketID = 51 // 51 0X33 
+	ServerboundHeldItemSlot models.ServerboundPacketID = 52 // 52 0X34 
+	ServerboundUpdateCommandBlock models.ServerboundPacketID = 53 // 53 0X35 
+	ServerboundUpdateCommandBlockMinecart models.ServerboundPacketID = 54 // 54 0X36 
+	ServerboundSetCreativeSlot models.ServerboundPacketID = 55 // 55 0X37 
+	ServerboundUpdateJigsawBlock models.ServerboundPacketID = 56 // 56 0X38 
+	ServerboundUpdateStructureBlock models.ServerboundPacketID = 57 // 57 0X39 
+	ServerboundSetTestBlock models.ServerboundPacketID = 58 // 58 0X3A 
+	ServerboundUpdateSign models.ServerboundPacketID = 59 // 59 0X3B 
+	ServerboundArmAnimation models.ServerboundPacketID = 60 // 60 0X3C 
+	ServerboundSpectate models.ServerboundPacketID = 61 // 61 0X3D 
+	ServerboundTestInstanceBlockAction models.ServerboundPacketID = 62 // 62 0X3E 
+	ServerboundBlockPlace models.ServerboundPacketID = 63 // 63 0X3F 
+	ServerboundUseItem models.ServerboundPacketID = 64 // 64 0X40 
+	ServerboundCommonCustomClickAction models.ServerboundPacketID = 65 // 65 0X41 
+	ServerboundPacketIDGuard models.ServerboundPacketID = 66
 )
+

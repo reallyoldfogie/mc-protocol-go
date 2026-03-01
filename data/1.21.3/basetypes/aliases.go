@@ -6,17 +6,33 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type F32 = pk.Float
+type U16 = pk.UnsignedShort
 
-type I64 = pk.Long
+type U64 = models.UInt64
 
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type ChatSession = models.Option[models.Void]
+type ContainerID = pk.VarInt
 
 type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type U32 = models.UInt32
+type I32 = pk.Int
+
+type F32 = pk.Float
+
+type ChatSession = models.Option[models.Void]
+
+type I16 = pk.Short
+
+type ByteArray = pk.ByteArray
+
+type Varint = pk.VarInt
+
+type Optvarint = pk.VarInt
+
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
 type SlotComponentDataEquippableModel = models.Option[pk.String]
 
@@ -24,9 +40,9 @@ type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
 type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type SlotComponentDataProfileName = models.Option[pk.String]
 
@@ -38,32 +54,16 @@ type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
 type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
-
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
-
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
-
-type U64 = models.UInt64
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type U16 = pk.UnsignedShort
-
-type bool = pk.Boolean
-
-type Optvarint = pk.VarInt
-
-type I8 = pk.Byte
-
-type ContainerID = pk.VarInt
-
-type I32 = pk.Int
+type I64 = pk.Long
 
 type F64 = pk.Double
 
-type ByteArray = pk.ByteArray
+type bool = pk.Boolean
 
-type I16 = pk.Short
+type I8 = pk.Byte
 
-type Varint = pk.VarInt
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type U32 = models.UInt32

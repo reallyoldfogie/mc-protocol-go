@@ -6,73 +6,53 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type GameProfilePropertySignature = models.Option[pk.String]
-
-type DebugSubscriptionUpdateUnnamedType0002DefaultPayloadBeesHivePos = models.Option[Position]
-
-type DebugSubscriptionUpdateUnnamedType0002DefaultPayloadBeesFlowerPos = models.Option[Position]
-
-type DebugSubscriptionUpdateUnnamedType0002DefaultPayloadBreezesAttackTarget = models.Option[pk.VarInt]
-
-type DebugSubscriptionUpdateUnnamedType0002DefaultPayloadBreezesJumpTarget = models.Option[Position]
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type I8 = pk.Byte
-
-type U32 = models.UInt32
+type ContainerID = pk.VarInt
 
 type I16 = pk.Short
 
-type I64 = pk.Long
-
-type ByteArray = pk.ByteArray
-
-type I32 = pk.Int
-
 type bool = pk.Boolean
 
-type ContainerID = pk.VarInt
+type PartialResolvableProfileName = models.Option[pk.String]
 
-type U16 = pk.UnsignedShort
+type PartialResolvableProfileUuid = models.Option[pk.UUID]
+
+type F64 = pk.Double
+
+type GameProfilePropertySignature = models.Option[pk.String]
+
+type U32 = models.UInt32
+
+type I8 = pk.Byte
 
 type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type Optvarint = pk.VarInt
 
 type Varint = pk.VarInt
 
+type I32 = pk.Int
+
+type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
+
+type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
+
+type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
+
+type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
+
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBreezesAttackTarget = models.Option[pk.VarInt]
+
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBreezesJumpTarget = models.Option[Position]
+
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBeesHivePos = models.Option[Position]
+
+type DebugSubscriptionUpdateUnnamedType0005DefaultPayloadBeesFlowerPos = models.Option[Position]
+
 type ChatSession = models.Option[models.Void]
 
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
-
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
-type SlotComponentDataEquippableModel = models.Option[pk.String]
-
-type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
-
-type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
-
-type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
-
-type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
-
-type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
-
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
-
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
-
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+type ByteArray = pk.ByteArray
 
 type PlayerSkinPatchBody = models.Option[pk.String]
 
@@ -82,20 +62,40 @@ type PlayerSkinPatchElytra = models.Option[pk.String]
 
 type U64 = models.UInt64
 
-type DebugSubscriptionEventValueBeesHivePos = models.Option[Position]
+type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
-type DebugSubscriptionEventValueBeesFlowerPos = models.Option[Position]
+type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
 
-type DebugSubscriptionEventValueBreezesAttackTarget = models.Option[pk.VarInt]
+type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
-type DebugSubscriptionEventValueBreezesJumpTarget = models.Option[Position]
+type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
-type Optvarint = pk.VarInt
+type SlotComponentDataEquippableModel = models.Option[pk.String]
 
-type PartialResolvableProfileName = models.Option[pk.String]
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
-type PartialResolvableProfileUuid = models.Option[pk.UUID]
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
+
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
+
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
+type SlotComponentDataLodestoneTrackerGlobalPosition = models.Option[GlobalPos]
+
+type Ingredient = models.Array[pk.VarInt, Slot]
 
 type F32 = pk.Float
 
-type F64 = pk.Double
+type U16 = pk.UnsignedShort
+
+type I64 = pk.Long

@@ -4641,7 +4641,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			for _, field := range container.Fields {
 				if field.Type != nil && field.Type.TypeName == "pk.Field" && field.Type.Extras != nil {
 					// This is a switch field (wrapped in pk.Field for optional switches)
-					if sw, ok := field.Type.Extras.(*datatypes.Switch); ok && sw.CompareTo != "" {
+					if sw, ok := field.Type.Extras.(*datatypes.Switch); ok && sw.CompareTo != "" && !strings.HasPrefix(sw.CompareTo, "../") {
 						// Get the comparison field name
 						compareFieldName := getCompareToFieldName(sw)
 						if compareFieldName != "" {

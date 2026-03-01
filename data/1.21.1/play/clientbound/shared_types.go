@@ -291,127 +291,67 @@ func (t SpawnInfo) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "position",
-//	      "type": "packedChunkPos"
-//	    },
-//	    {
-//	      "name": "data",
-//	      "type": "ByteArray"
-//	    }
-//	  ]
-//	]
-type ChunkBiomesBiomesArrayType struct {
-	// "packedChunkPos"
-	Position basetypes.PackedChunkPos
-	// "ByteArray"
-	Data pk.ByteArray
-}
-
-func (t *ChunkBiomesBiomesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Position.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Position")
-	}
-	bytesRead, err = t.Data.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Data")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChunkBiomesBiomesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChunkBiomesBiomesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Position.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Data.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "chat",
-//	      "type": "ChatType"
-//	    },
-//	    {
-//	      "name": "narration",
-//	      "type": "ChatType"
-//	    }
-//	  ]
-//	]
-type ChatTypes struct {
-	// "ChatType"
-	Chat ChatType
-	// "ChatType"
-	Narration ChatType
-}
-
-func (t *ChatTypes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Chat.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Chat")
-	}
-	bytesRead, err = t.Narration.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Narration")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ChatTypes) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ChatTypes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Chat.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Narration.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type UpdateLightSkyLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
-
-type UpdateLightBlockLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
-
 type PlayerChatSignature = models.Option[models.FixedBuffer256]
 
 type PlayerChatUnsignedChatContent = models.Option[models.AnonymousNBT]
 
 type PlayerChatNetworkTargetName = models.Option[models.AnonymousNBT]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "tagType",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tags",
+//	      "type": "tags"
+//	    }
+//	  ]
+//	]
+type TagsTagsArrayType struct {
+	// "string"
+	TagType pk.String
+	// "tags"
+	Tags basetypes.Tags
+}
+
+func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.TagType.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TagType")
+	}
+	bytesRead, err = t.Tags.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Tags")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.TagType.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Tags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
 
 // Protodef: [
 //
@@ -919,177 +859,9 @@ func (t TradeListTradesArrayType) WriteTo(w io.Writer) (totalBytes int64, err er
 	return totalBytes, nil
 }
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "dimensionName",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "location",
-//	      "type": "position"
-//	    }
-//	  ]
-//	]
-type SpawnInfoDeath struct {
-	// "string"
-	DimensionName pk.String
-	// "position"
-	Location basetypes.Position
-}
+type UpdateLightSkyLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
 
-func (t *SpawnInfoDeath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.DimensionName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
-	}
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-
-	return totalBytes, nil
-}
-
-func (t SpawnInfoDeath) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[SpawnInfoDeath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.DimensionName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type MapIconsMapIconsElementDisplayName = models.Option[models.AnonymousNBT]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "type",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "x",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "direction",
-//	      "type": "u8"
-//	    },
-//	    {
-//	      "name": "displayName",
-//	      "type": [
-//	        "option",
-//	        "anonymousNbt"
-//	      ]
-//	    }
-//	  ]
-//	]
-type MapIconsMapIconsElement struct {
-	// "varint"
-	Type pk.VarInt
-	// "i8"
-	X pk.Byte
-	// "i8"
-	Z pk.Byte
-	// "u8"
-	Direction pk.UnsignedByte
-	// [
-	//                             "option",
-	//                             "anonymousNbt"
-	//                           ]
-	DisplayName models.Option[models.AnonymousNBT]
-}
-
-func (t *MapIconsMapIconsElement) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Type.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Type")
-	}
-	bytesRead, err = t.X.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field X")
-	}
-	bytesRead, err = t.Z.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Z")
-	}
-	bytesRead, err = t.Direction.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Direction")
-	}
-	bytesRead, err = t.DisplayName.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field DisplayName")
-	}
-
-	return totalBytes, nil
-}
-
-func (t MapIconsMapIconsElement) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[MapIconsMapIconsElement.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.X.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Z.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Direction.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.DisplayName.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ScoreboardScoreDisplayName = models.Option[models.AnonymousNBT]
-
-type ScoreboardScoreNumberFormat = models.Option[pk.VarInt]
+type UpdateLightBlockLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
 
 // Protodef: [
 //
@@ -1337,18 +1109,30 @@ func (t EntityUpdateAttributesPropertiesArrayType) WriteTo(w io.Writer) (totalBy
 	return totalBytes, nil
 }
 
-type TabCompleteMatchesArrayTypeTooltip = models.Option[models.AnonymousNBT]
+type MapIconsMapIconsElementDisplayName = models.Option[models.AnonymousNBT]
 
 // Protodef: [
 //
 //	  "container",
 //	  [
 //	    {
-//	      "name": "match",
-//	      "type": "string"
+//	      "name": "type",
+//	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "tooltip",
+//	      "name": "x",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "direction",
+//	      "type": "u8"
+//	    },
+//	    {
+//	      "name": "displayName",
 //	      "type": [
 //	        "option",
 //	        "anonymousNbt"
@@ -1356,1389 +1140,65 @@ type TabCompleteMatchesArrayTypeTooltip = models.Option[models.AnonymousNBT]
 //	    }
 //	  ]
 //	]
-type TabCompleteMatchesArrayType struct {
-	// "string"
-	Match pk.String
+type MapIconsMapIconsElement struct {
+	// "varint"
+	Type pk.VarInt
+	// "i8"
+	X pk.Byte
+	// "i8"
+	Z pk.Byte
+	// "u8"
+	Direction pk.UnsignedByte
 	// [
-	//                           "option",
-	//                           "anonymousNbt"
-	//                         ]
-	Tooltip models.Option[models.AnonymousNBT]
+	//                             "option",
+	//                             "anonymousNbt"
+	//                           ]
+	DisplayName models.Option[models.AnonymousNBT]
 }
 
-func (t *TabCompleteMatchesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *MapIconsMapIconsElement) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Match.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Match")
-	}
-	bytesRead, err = t.Tooltip.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tooltip")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TabCompleteMatchesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TabCompleteMatchesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Match.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tooltip.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type ResetScoreObjectiveName = models.Option[pk.String]
-
-type ServerDataIconBytes = models.Option[pk.ByteArray]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "categoryId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "statisticId",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "value",
-//	      "type": "varint"
-//	    }
-//	  ]
-//	]
-type StatisticsEntriesArrayType struct {
-	// "varint"
-	CategoryId pk.VarInt
-	// "varint"
-	StatisticId pk.VarInt
-	// "varint"
-	Value pk.VarInt
-}
-
-func (t *StatisticsEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.CategoryId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CategoryId")
-	}
-	bytesRead, err = t.StatisticId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field StatisticId")
-	}
-	bytesRead, err = t.Value.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Value")
-	}
-
-	return totalBytes, nil
-}
-
-func (t StatisticsEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[StatisticsEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.CategoryId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.StatisticId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Value.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "template",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "base",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "addition",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "result",
-//	      "type": "Slot"
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform struct {
-	// "ingredient"
-	Template basetypes.Ingredient
-	// "ingredient"
-	Base basetypes.Ingredient
-	// "ingredient"
-	Addition basetypes.Ingredient
-	// "Slot"
-	Result basetypes.Slot
-}
-
-func (t *DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Template.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Template")
-	}
-	bytesRead, err = t.Base.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Base")
-	}
-	bytesRead, err = t.Addition.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Addition")
-	}
-	bytesRead, err = t.Result.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Result")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Template.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Base.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Addition.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Result.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "group",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "category",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "ingredients",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ingredient"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "result",
-//	      "type": "Slot"
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless struct {
-	// "string"
-	Group pk.String
-	// "varint"
-	Category pk.VarInt
-	// [
-	//                                       "array",
-	//                                       {
-	//                                         "countType": "varint",
-	//                                         "type": "ingredient"
-	//                                       }
-	//                                     ]
-	Ingredients models.Array[pk.VarInt, basetypes.Ingredient]
-	// "Slot"
-	Result basetypes.Slot
-}
-
-func (t *DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Group.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Group")
-	}
-	bytesRead, err = t.Category.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Category")
-	}
-	bytesRead, err = t.Ingredients.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
-	}
-	bytesRead, err = t.Result.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Result")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Group.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Category.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Ingredients.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Result.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "group",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "ingredient",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "result",
-//	      "type": "Slot"
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting struct {
-	// "string"
-	Group pk.String
-	// "ingredient"
-	Ingredient basetypes.Ingredient
-	// "Slot"
-	Result basetypes.Slot
-}
-
-func (t *DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Group.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Group")
-	}
-	bytesRead, err = t.Ingredient.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Ingredient")
-	}
-	bytesRead, err = t.Result.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Result")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Group.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Ingredient.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Result.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapedIngredientsArrayType = models.Array[pk.VarInt, basetypes.Ingredient]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "group",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "category",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "gridWidth",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "gridHeight",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "ingredients",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "count": "gridWidth",
-//	          "type": [
-//	            "array",
-//	            {
-//	              "count": "gridHeight",
-//	              "type": "ingredient"
-//	            }
-//	          ]
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "result",
-//	      "type": "Slot"
-//	    },
-//	    {
-//	      "name": "showNotification",
-//	      "type": "bool"
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped struct {
-	// "string"
-	Group pk.String
-	// "varint"
-	Category pk.VarInt
-	// "varint"
-	GridWidth pk.VarInt
-	// "varint"
-	GridHeight pk.VarInt
-	// [
-	//                                       "array",
-	//                                       {
-	//                                         "count": "gridWidth",
-	//                                         "type": [
-	//                                           "array",
-	//                                           {
-	//                                             "count": "gridHeight",
-	//                                             "type": "ingredient"
-	//                                           }
-	//                                         ]
-	//                                       }
-	//                                     ]
-	Ingredients models.ExplicitCountArray[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapedIngredientsArrayType]
-	// "Slot"
-	Result basetypes.Slot
-	// "bool"
-	ShowNotification pk.Boolean
-}
-
-func (t *DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Group.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Group")
-	}
-	bytesRead, err = t.Category.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Category")
-	}
-	bytesRead, err = t.GridWidth.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field GridWidth")
-	}
-	bytesRead, err = t.GridHeight.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field GridHeight")
-	}
-	// Initialize ExplicitCountArray with count field name
-	t.Ingredients.CountFieldName = "GridWidth"
-	// Prepare parent context for explicit count array 'Ingredients'
-	Ingredients_ctx := models.NewParentContext()
-	Ingredients_ctx.SetField("GridWidth", t.GridWidth)
-	t.Ingredients.SetParentContext(Ingredients_ctx)
-	bytesRead, err = t.Ingredients.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
-	}
-	bytesRead, err = t.Result.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Result")
-	}
-	bytesRead, err = t.ShowNotification.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field ShowNotification")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Group.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Category.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.GridWidth.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.GridHeight.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Ingredients.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Result.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.ShowNotification.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "template",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "base",
-//	      "type": "ingredient"
-//	    },
-//	    {
-//	      "name": "addition",
-//	      "type": "ingredient"
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim struct {
-	// "ingredient"
-	Template basetypes.Ingredient
-	// "ingredient"
-	Base basetypes.Ingredient
-	// "ingredient"
-	Addition basetypes.Ingredient
-}
-
-func (t *DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Template.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Template")
-	}
-	bytesRead, err = t.Base.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Base")
-	}
-	bytesRead, err = t.Addition.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Addition")
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Template.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Base.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Addition.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "type",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "minecraft:crafting_shaped",
-//	            "1": "minecraft:crafting_shapeless",
-//	            "2": "minecraft:crafting_special_armordye",
-//	            "3": "minecraft:crafting_special_bookcloning",
-//	            "4": "minecraft:crafting_special_mapcloning",
-//	            "5": "minecraft:crafting_special_mapextending",
-//	            "6": "minecraft:crafting_special_firework_rocket",
-//	            "7": "minecraft:crafting_special_firework_star",
-//	            "8": "minecraft:crafting_special_firework_star_fade",
-//	            "9": "minecraft:crafting_special_tippedarrow",
-//	            "10": "minecraft:crafting_special_bannerduplicate",
-//	            "11": "minecraft:crafting_special_shielddecoration",
-//	            "12": "minecraft:crafting_special_shulkerboxcoloring",
-//	            "13": "minecraft:crafting_special_suspiciousstew",
-//	            "14": "minecraft:crafting_special_repairitem",
-//	            "15": "minecraft:smelting",
-//	            "16": "minecraft:blasting",
-//	            "17": "minecraft:smoking",
-//	            "18": "minecraft:campfire_cooking",
-//	            "19": "minecraft:stonecutting",
-//	            "20": "minecraft:smithing_transform",
-//	            "21": "minecraft:smithing_trim",
-//	            "22": "minecraft:crafting_decorated_pot"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "data",
-//	      "type": [
-//	        "switch",
-//	        {
-//	          "compareTo": "type",
-//	          "fields": {
-//	            "minecraft:crafting_shapeless": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "group",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "category",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "ingredients",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "countType": "varint",
-//	                      "type": "ingredient"
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "result",
-//	                  "type": "Slot"
-//	                }
-//	              ]
-//	            ],
-//	            "minecraft:crafting_shaped": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "group",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "category",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "gridWidth",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "gridHeight",
-//	                  "type": "varint"
-//	                },
-//	                {
-//	                  "name": "ingredients",
-//	                  "type": [
-//	                    "array",
-//	                    {
-//	                      "count": "gridWidth",
-//	                      "type": [
-//	                        "array",
-//	                        {
-//	                          "count": "gridHeight",
-//	                          "type": "ingredient"
-//	                        }
-//	                      ]
-//	                    }
-//	                  ]
-//	                },
-//	                {
-//	                  "name": "result",
-//	                  "type": "Slot"
-//	                },
-//	                {
-//	                  "name": "showNotification",
-//	                  "type": "bool"
-//	                }
-//	              ]
-//	            ],
-//	            "minecraft:crafting_special_armordye": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_bookcloning": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_mapcloning": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_mapextending": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_firework_rocket": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_firework_star": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_firework_star_fade": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_repairitem": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_tippedarrow": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_bannerduplicate": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_banneraddpattern": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_shielddecoration": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_shulkerboxcoloring": "minecraft_simple_recipe_format",
-//	            "minecraft:crafting_special_suspiciousstew": "minecraft_simple_recipe_format",
-//	            "minecraft:smelting": "minecraft_smelting_format",
-//	            "minecraft:blasting": "minecraft_smelting_format",
-//	            "minecraft:smoking": "minecraft_smelting_format",
-//	            "minecraft:campfire_cooking": "minecraft_smelting_format",
-//	            "minecraft:stonecutting": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "group",
-//	                  "type": "string"
-//	                },
-//	                {
-//	                  "name": "ingredient",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "result",
-//	                  "type": "Slot"
-//	                }
-//	              ]
-//	            ],
-//	            "minecraft:smithing_transform": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "template",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "base",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "addition",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "result",
-//	                  "type": "Slot"
-//	                }
-//	              ]
-//	            ],
-//	            "minecraft:smithing_trim": [
-//	              "container",
-//	              [
-//	                {
-//	                  "name": "template",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "base",
-//	                  "type": "ingredient"
-//	                },
-//	                {
-//	                  "name": "addition",
-//	                  "type": "ingredient"
-//	                }
-//	              ]
-//	            ],
-//	            "minecraft:crafting_decorated_pot": "minecraft_simple_recipe_format"
-//	          }
-//	        }
-//	      ]
-//	    }
-//	  ]
-//	]
-type DeclareRecipesRecipesArrayType struct {
-	// "string"
-	Name pk.String
-	// [
-	//                           "mapper",
-	//                           {
-	//                             "type": "varint",
-	//                             "mappings": {
-	//                               "0": "minecraft:crafting_shaped",
-	//                               "1": "minecraft:crafting_shapeless",
-	//                               "2": "minecraft:crafting_special_armordye",
-	//                               "3": "minecraft:crafting_special_bookcloning",
-	//                               "4": "minecraft:crafting_special_mapcloning",
-	//                               "5": "minecraft:crafting_special_mapextending",
-	//                               "6": "minecraft:crafting_special_firework_rocket",
-	//                               "7": "minecraft:crafting_special_firework_star",
-	//                               "8": "minecraft:crafting_special_firework_star_fade",
-	//                               "9": "minecraft:crafting_special_tippedarrow",
-	//                               "10": "minecraft:crafting_special_bannerduplicate",
-	//                               "11": "minecraft:crafting_special_shielddecoration",
-	//                               "12": "minecraft:crafting_special_shulkerboxcoloring",
-	//                               "13": "minecraft:crafting_special_suspiciousstew",
-	//                               "14": "minecraft:crafting_special_repairitem",
-	//                               "15": "minecraft:smelting",
-	//                               "16": "minecraft:blasting",
-	//                               "17": "minecraft:smoking",
-	//                               "18": "minecraft:campfire_cooking",
-	//                               "19": "minecraft:stonecutting",
-	//                               "20": "minecraft:smithing_transform",
-	//                               "21": "minecraft:smithing_trim",
-	//                               "22": "minecraft:crafting_decorated_pot"
-	//                             }
-	//                           }
-	//                         ]
-	Type DeclareRecipesRecipesArrayTypeType
-	// [
-	//                           "switch",
-	//                           {
-	//                             "compareTo": "type",
-	//                             "fields": {
-	//                               "minecraft:crafting_shapeless": [
-	//                                 "container",
-	//                                 [
-	//                                   {
-	//                                     "name": "group",
-	//                                     "type": "string"
-	//                                   },
-	//                                   {
-	//                                     "name": "category",
-	//                                     "type": "varint"
-	//                                   },
-	//                                   {
-	//                                     "name": "ingredients",
-	//                                     "type": [
-	//                                       "array",
-	//                                       {
-	//                                         "countType": "varint",
-	//                                         "type": "ingredient"
-	//                                       }
-	//                                     ]
-	//                                   },
-	//                                   {
-	//                                     "name": "result",
-	//                                     "type": "Slot"
-	//                                   }
-	//                                 ]
-	//                               ],
-	//                               "minecraft:crafting_shaped": [
-	//                                 "container",
-	//                                 [
-	//                                   {
-	//                                     "name": "group",
-	//                                     "type": "string"
-	//                                   },
-	//                                   {
-	//                                     "name": "category",
-	//                                     "type": "varint"
-	//                                   },
-	//                                   {
-	//                                     "name": "gridWidth",
-	//                                     "type": "varint"
-	//                                   },
-	//                                   {
-	//                                     "name": "gridHeight",
-	//                                     "type": "varint"
-	//                                   },
-	//                                   {
-	//                                     "name": "ingredients",
-	//                                     "type": [
-	//                                       "array",
-	//                                       {
-	//                                         "count": "gridWidth",
-	//                                         "type": [
-	//                                           "array",
-	//                                           {
-	//                                             "count": "gridHeight",
-	//                                             "type": "ingredient"
-	//                                           }
-	//                                         ]
-	//                                       }
-	//                                     ]
-	//                                   },
-	//                                   {
-	//                                     "name": "result",
-	//                                     "type": "Slot"
-	//                                   },
-	//                                   {
-	//                                     "name": "showNotification",
-	//                                     "type": "bool"
-	//                                   }
-	//                                 ]
-	//                               ],
-	//                               "minecraft:crafting_special_armordye": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_bookcloning": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_mapcloning": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_mapextending": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_firework_rocket": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_firework_star": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_firework_star_fade": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_repairitem": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_tippedarrow": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_bannerduplicate": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_banneraddpattern": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_shielddecoration": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_shulkerboxcoloring": "minecraft_simple_recipe_format",
-	//                               "minecraft:crafting_special_suspiciousstew": "minecraft_simple_recipe_format",
-	//                               "minecraft:smelting": "minecraft_smelting_format",
-	//                               "minecraft:blasting": "minecraft_smelting_format",
-	//                               "minecraft:smoking": "minecraft_smelting_format",
-	//                               "minecraft:campfire_cooking": "minecraft_smelting_format",
-	//                               "minecraft:stonecutting": [
-	//                                 "container",
-	//                                 [
-	//                                   {
-	//                                     "name": "group",
-	//                                     "type": "string"
-	//                                   },
-	//                                   {
-	//                                     "name": "ingredient",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "result",
-	//                                     "type": "Slot"
-	//                                   }
-	//                                 ]
-	//                               ],
-	//                               "minecraft:smithing_transform": [
-	//                                 "container",
-	//                                 [
-	//                                   {
-	//                                     "name": "template",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "base",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "addition",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "result",
-	//                                     "type": "Slot"
-	//                                   }
-	//                                 ]
-	//                               ],
-	//                               "minecraft:smithing_trim": [
-	//                                 "container",
-	//                                 [
-	//                                   {
-	//                                     "name": "template",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "base",
-	//                                     "type": "ingredient"
-	//                                   },
-	//                                   {
-	//                                     "name": "addition",
-	//                                     "type": "ingredient"
-	//                                   }
-	//                                 ]
-	//                               ],
-	//                               "minecraft:crafting_decorated_pot": "minecraft_simple_recipe_format"
-	//                             }
-	//                           }
-	//                         ]
-	Data pk.Field
-}
-
-func (t *DeclareRecipesRecipesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
 	bytesRead, err = t.Type.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
-	// Switch field Data based on type
-	// Convert compareTo value to string for matching
-	compareValueData := t.Type.Value
-
-	switch compareValueData {
-	case "minecraft:blasting":
-		var val basetypes.MinecraftSmeltingFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:blasting")
-		}
-		t.Data = &val
-	case "minecraft:campfire_cooking":
-		var val basetypes.MinecraftSmeltingFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:campfire_cooking")
-		}
-		t.Data = &val
-	case "minecraft:crafting_decorated_pot":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_decorated_pot")
-		}
-		t.Data = &val
-	case "minecraft:crafting_shaped":
-		var val DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_shaped")
-		}
-		t.Data = &val
-	case "minecraft:crafting_shapeless":
-		var val DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_shapeless")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_armordye":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_armordye")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_banneraddpattern":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_banneraddpattern")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_bannerduplicate":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_bannerduplicate")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_bookcloning":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_bookcloning")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_firework_rocket":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_rocket")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_firework_star":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_star")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_firework_star_fade":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_star_fade")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_mapcloning":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_mapcloning")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_mapextending":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_mapextending")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_repairitem":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_repairitem")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_shielddecoration":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_shielddecoration")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_shulkerboxcoloring":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_shulkerboxcoloring")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_suspiciousstew":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_suspiciousstew")
-		}
-		t.Data = &val
-	case "minecraft:crafting_special_tippedarrow":
-		var val basetypes.MinecraftSimpleRecipeFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_tippedarrow")
-		}
-		t.Data = &val
-	case "minecraft:smelting":
-		var val basetypes.MinecraftSmeltingFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smelting")
-		}
-		t.Data = &val
-	case "minecraft:smithing_transform":
-		var val DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smithing_transform")
-		}
-		t.Data = &val
-	case "minecraft:smithing_trim":
-		var val DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smithing_trim")
-		}
-		t.Data = &val
-	case "minecraft:smoking":
-		var val basetypes.MinecraftSmeltingFormat
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smoking")
-		}
-		t.Data = &val
-	case "minecraft:stonecutting":
-		var val DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting
-		bytesRead, err = val.ReadFrom(r)
-		totalBytes += bytesRead
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:stonecutting")
-		}
-		t.Data = &val
-	default:
-		// Mapper-backed discriminator with no explicit data for this value: treat as void
-		var __void models.Void
-		t.Data = &__void
-	}
-
-	return totalBytes, nil
-}
-
-func (t DeclareRecipesRecipesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[DeclareRecipesRecipesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Type.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	// Switch field Data based on type
-	if t.Data != nil {
-		// Write switch field value if it implements WriteTo
-		if writer, ok := t.Data.(interface {
-			WriteTo(io.Writer) (int64, error)
-		}); ok {
-			bytesWritten, err = writer.WriteTo(w)
-			totalBytes += bytesWritten
-			if err != nil {
-				return totalBytes, err
-			}
-		} else {
-			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field Data value does not implement WriteTo: %T", t.Data)
-		}
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "tagType",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "tags",
-//	      "type": "tags"
-//	    }
-//	  ]
-//	]
-type TagsTagsArrayType struct {
-	// "string"
-	TagType pk.String
-	// "tags"
-	Tags basetypes.Tags
-}
-
-func (t *TagsTagsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.TagType.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TagType")
-	}
-	bytesRead, err = t.Tags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Tags")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TagsTagsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TagsTagsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.TagType.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Tags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "x",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "y",
-//	      "type": "i8"
-//	    },
-//	    {
-//	      "name": "z",
-//	      "type": "i8"
-//	    }
-//	  ]
-//	]
-type ExplosionAffectedBlockOffsetsArrayType struct {
-	// "i8"
-	X pk.Byte
-	// "i8"
-	Y pk.Byte
-	// "i8"
-	Z pk.Byte
-}
-
-func (t *ExplosionAffectedBlockOffsetsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
 	bytesRead, err = t.X.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field X")
-	}
-	bytesRead, err = t.Y.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Y")
 	}
 	bytesRead, err = t.Z.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Z")
 	}
+	bytesRead, err = t.Direction.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Direction")
+	}
+	bytesRead, err = t.DisplayName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DisplayName")
+	}
 
 	return totalBytes, nil
 }
 
-func (t ExplosionAffectedBlockOffsetsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t MapIconsMapIconsElement) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ExplosionAffectedBlockOffsetsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[MapIconsMapIconsElement.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.X.WriteTo(w)
+	bytesWritten, err = t.Type.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Y.WriteTo(w)
+	bytesWritten, err = t.X.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -2748,11 +1208,108 @@ func (t ExplosionAffectedBlockOffsetsArrayType) WriteTo(w io.Writer) (totalBytes
 	if err != nil {
 		return totalBytes, err
 	}
+	bytesWritten, err = t.Direction.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.DisplayName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
 	return totalBytes, nil
 }
 
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "translationKey",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "parameters",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ChatTypeParameterType"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "style",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type ChatType struct {
+	// "string"
+	TranslationKey pk.String
+	// [
+	//                 "array",
+	//                 {
+	//                   "countType": "varint",
+	//                   "type": "ChatTypeParameterType"
+	//                 }
+	//               ]
+	Parameters models.Array[pk.VarInt, ChatTypeParameterType]
+	// "anonymousNbt"
+	Style models.AnonymousNBT
+}
+
+func (t *ChatType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.TranslationKey.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TranslationKey")
+	}
+	bytesRead, err = t.Parameters.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Parameters")
+	}
+	bytesRead, err = t.Style.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Style")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.TranslationKey.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Parameters.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Style.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ServerDataIconBytes = models.Option[pk.ByteArray]
+
 type AdvancementsAdvancementMappingArrayTypeValueParentId = models.Option[pk.String]
 
+//
 type AdvancementsAdvancementMappingArrayTypeValueDisplayDataFlags struct {
 	Unused               int64
 	Hidden               int64
@@ -3805,78 +2362,1530 @@ func (t AdvancementsProgressMappingArrayType) WriteTo(w io.Writer) (totalBytes i
 //	  "container",
 //	  [
 //	    {
-//	      "name": "translationKey",
-//	      "type": "string"
+//	      "name": "position",
+//	      "type": "packedChunkPos"
 //	    },
 //	    {
-//	      "name": "parameters",
-//	      "type": [
-//	        "array",
-//	        {
-//	          "countType": "varint",
-//	          "type": "ChatTypeParameterType"
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "style",
-//	      "type": "anonymousNbt"
+//	      "name": "data",
+//	      "type": "ByteArray"
 //	    }
 //	  ]
 //	]
-type ChatType struct {
-	// "string"
-	TranslationKey pk.String
-	// [
-	//                 "array",
-	//                 {
-	//                   "countType": "varint",
-	//                   "type": "ChatTypeParameterType"
-	//                 }
-	//               ]
-	Parameters models.Array[pk.VarInt, ChatTypeParameterType]
-	// "anonymousNbt"
-	Style models.AnonymousNBT
+type ChunkBiomesBiomesArrayType struct {
+	// "packedChunkPos"
+	Position basetypes.PackedChunkPos
+	// "ByteArray"
+	Data pk.ByteArray
 }
 
-func (t *ChatType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *ChunkBiomesBiomesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.TranslationKey.ReadFrom(r)
+	bytesRead, err = t.Position.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TranslationKey")
+		return totalBytes, errors.Wrap(err, "failed to read field Position")
 	}
-	bytesRead, err = t.Parameters.ReadFrom(r)
+	bytesRead, err = t.Data.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Parameters")
-	}
-	bytesRead, err = t.Style.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Style")
+		return totalBytes, errors.Wrap(err, "failed to read field Data")
 	}
 
 	return totalBytes, nil
 }
 
-func (t ChatType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t ChunkBiomesBiomesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[ChatType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[ChunkBiomesBiomesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
-	bytesWritten, err = t.TranslationKey.WriteTo(w)
+	bytesWritten, err = t.Position.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Parameters.WriteTo(w)
+	bytesWritten, err = t.Data.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.Style.WriteTo(w)
+	return totalBytes, nil
+}
+
+type SelectAdvancementTabId = models.Option[pk.String]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "chat",
+//	      "type": "ChatType"
+//	    },
+//	    {
+//	      "name": "narration",
+//	      "type": "ChatType"
+//	    }
+//	  ]
+//	]
+type ChatTypes struct {
+	// "ChatType"
+	Chat ChatType
+	// "ChatType"
+	Narration ChatType
+}
+
+func (t *ChatTypes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Chat.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Chat")
+	}
+	bytesRead, err = t.Narration.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Narration")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ChatTypes) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ChatTypes.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Chat.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Narration.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type DamageEventSourcePosition = models.Option[basetypes.Vec3f64]
+
+type TabCompleteMatchesArrayTypeTooltip = models.Option[models.AnonymousNBT]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "match",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tooltip",
+//	      "type": [
+//	        "option",
+//	        "anonymousNbt"
+//	      ]
+//	    }
+//	  ]
+//	]
+type TabCompleteMatchesArrayType struct {
+	// "string"
+	Match pk.String
+	// [
+	//                           "option",
+	//                           "anonymousNbt"
+	//                         ]
+	Tooltip models.Option[models.AnonymousNBT]
+}
+
+func (t *TabCompleteMatchesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Match.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Match")
+	}
+	bytesRead, err = t.Tooltip.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Tooltip")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TabCompleteMatchesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TabCompleteMatchesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Match.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Tooltip.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type ScoreboardScoreDisplayName = models.Option[models.AnonymousNBT]
+
+type ScoreboardScoreNumberFormat = models.Option[pk.VarInt]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "template",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "base",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "addition",
+//	      "type": "ingredient"
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim struct {
+	// "ingredient"
+	Template basetypes.Ingredient
+	// "ingredient"
+	Base basetypes.Ingredient
+	// "ingredient"
+	Addition basetypes.Ingredient
+}
+
+func (t *DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Template.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Template")
+	}
+	bytesRead, err = t.Base.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Base")
+	}
+	bytesRead, err = t.Addition.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Addition")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Template.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Base.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Addition.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "group",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "category",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "ingredients",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "countType": "varint",
+//	          "type": "ingredient"
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "result",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless struct {
+	// "string"
+	Group pk.String
+	// "varint"
+	Category pk.VarInt
+	// [
+	//                                       "array",
+	//                                       {
+	//                                         "countType": "varint",
+	//                                         "type": "ingredient"
+	//                                       }
+	//                                     ]
+	Ingredients models.Array[pk.VarInt, basetypes.Ingredient]
+	// "Slot"
+	Result basetypes.Slot
+}
+
+func (t *DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Group.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Group")
+	}
+	bytesRead, err = t.Category.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Category")
+	}
+	bytesRead, err = t.Ingredients.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
+	}
+	bytesRead, err = t.Result.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Result")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Group.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Category.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Ingredients.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Result.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "group",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "ingredient",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "result",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting struct {
+	// "string"
+	Group pk.String
+	// "ingredient"
+	Ingredient basetypes.Ingredient
+	// "Slot"
+	Result basetypes.Slot
+}
+
+func (t *DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Group.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Group")
+	}
+	bytesRead, err = t.Ingredient.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Ingredient")
+	}
+	bytesRead, err = t.Result.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Result")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Group.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Ingredient.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Result.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "template",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "base",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "addition",
+//	      "type": "ingredient"
+//	    },
+//	    {
+//	      "name": "result",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform struct {
+	// "ingredient"
+	Template basetypes.Ingredient
+	// "ingredient"
+	Base basetypes.Ingredient
+	// "ingredient"
+	Addition basetypes.Ingredient
+	// "Slot"
+	Result basetypes.Slot
+}
+
+func (t *DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Template.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Template")
+	}
+	bytesRead, err = t.Base.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Base")
+	}
+	bytesRead, err = t.Addition.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Addition")
+	}
+	bytesRead, err = t.Result.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Result")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Template.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Base.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Addition.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Result.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapedIngredientsArrayType = models.Array[pk.VarInt, basetypes.Ingredient]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "group",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "category",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "gridWidth",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "gridHeight",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "ingredients",
+//	      "type": [
+//	        "array",
+//	        {
+//	          "count": "gridWidth",
+//	          "type": [
+//	            "array",
+//	            {
+//	              "count": "gridHeight",
+//	              "type": "ingredient"
+//	            }
+//	          ]
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "result",
+//	      "type": "Slot"
+//	    },
+//	    {
+//	      "name": "showNotification",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped struct {
+	// "string"
+	Group pk.String
+	// "varint"
+	Category pk.VarInt
+	// "varint"
+	GridWidth pk.VarInt
+	// "varint"
+	GridHeight pk.VarInt
+	// [
+	//                                       "array",
+	//                                       {
+	//                                         "count": "gridWidth",
+	//                                         "type": [
+	//                                           "array",
+	//                                           {
+	//                                             "count": "gridHeight",
+	//                                             "type": "ingredient"
+	//                                           }
+	//                                         ]
+	//                                       }
+	//                                     ]
+	Ingredients models.ExplicitCountArray[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapedIngredientsArrayType]
+	// "Slot"
+	Result basetypes.Slot
+	// "bool"
+	ShowNotification pk.Boolean
+}
+
+func (t *DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Group.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Group")
+	}
+	bytesRead, err = t.Category.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Category")
+	}
+	bytesRead, err = t.GridWidth.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field GridWidth")
+	}
+	bytesRead, err = t.GridHeight.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field GridHeight")
+	}
+	// Initialize ExplicitCountArray with count field name
+	t.Ingredients.CountFieldName = "GridWidth"
+	// Prepare parent context for explicit count array 'Ingredients'
+	Ingredients_ctx := models.NewParentContext()
+	Ingredients_ctx.SetField("GridWidth", t.GridWidth)
+	t.Ingredients.SetParentContext(Ingredients_ctx)
+	bytesRead, err = t.Ingredients.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Ingredients")
+	}
+	bytesRead, err = t.Result.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Result")
+	}
+	bytesRead, err = t.ShowNotification.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field ShowNotification")
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Group.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Category.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.GridWidth.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.GridHeight.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Ingredients.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Result.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.ShowNotification.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "type",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "minecraft:crafting_shaped",
+//	            "1": "minecraft:crafting_shapeless",
+//	            "2": "minecraft:crafting_special_armordye",
+//	            "3": "minecraft:crafting_special_bookcloning",
+//	            "4": "minecraft:crafting_special_mapcloning",
+//	            "5": "minecraft:crafting_special_mapextending",
+//	            "6": "minecraft:crafting_special_firework_rocket",
+//	            "7": "minecraft:crafting_special_firework_star",
+//	            "8": "minecraft:crafting_special_firework_star_fade",
+//	            "9": "minecraft:crafting_special_tippedarrow",
+//	            "10": "minecraft:crafting_special_bannerduplicate",
+//	            "11": "minecraft:crafting_special_shielddecoration",
+//	            "12": "minecraft:crafting_special_shulkerboxcoloring",
+//	            "13": "minecraft:crafting_special_suspiciousstew",
+//	            "14": "minecraft:crafting_special_repairitem",
+//	            "15": "minecraft:smelting",
+//	            "16": "minecraft:blasting",
+//	            "17": "minecraft:smoking",
+//	            "18": "minecraft:campfire_cooking",
+//	            "19": "minecraft:stonecutting",
+//	            "20": "minecraft:smithing_transform",
+//	            "21": "minecraft:smithing_trim",
+//	            "22": "minecraft:crafting_decorated_pot"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "data",
+//	      "type": [
+//	        "switch",
+//	        {
+//	          "compareTo": "type",
+//	          "fields": {
+//	            "minecraft:crafting_shapeless": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "group",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "category",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "ingredients",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "countType": "varint",
+//	                      "type": "ingredient"
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "result",
+//	                  "type": "Slot"
+//	                }
+//	              ]
+//	            ],
+//	            "minecraft:crafting_shaped": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "group",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "category",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "gridWidth",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "gridHeight",
+//	                  "type": "varint"
+//	                },
+//	                {
+//	                  "name": "ingredients",
+//	                  "type": [
+//	                    "array",
+//	                    {
+//	                      "count": "gridWidth",
+//	                      "type": [
+//	                        "array",
+//	                        {
+//	                          "count": "gridHeight",
+//	                          "type": "ingredient"
+//	                        }
+//	                      ]
+//	                    }
+//	                  ]
+//	                },
+//	                {
+//	                  "name": "result",
+//	                  "type": "Slot"
+//	                },
+//	                {
+//	                  "name": "showNotification",
+//	                  "type": "bool"
+//	                }
+//	              ]
+//	            ],
+//	            "minecraft:crafting_special_armordye": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_bookcloning": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_mapcloning": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_mapextending": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_firework_rocket": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_firework_star": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_firework_star_fade": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_repairitem": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_tippedarrow": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_bannerduplicate": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_banneraddpattern": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_shielddecoration": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_shulkerboxcoloring": "minecraft_simple_recipe_format",
+//	            "minecraft:crafting_special_suspiciousstew": "minecraft_simple_recipe_format",
+//	            "minecraft:smelting": "minecraft_smelting_format",
+//	            "minecraft:blasting": "minecraft_smelting_format",
+//	            "minecraft:smoking": "minecraft_smelting_format",
+//	            "minecraft:campfire_cooking": "minecraft_smelting_format",
+//	            "minecraft:stonecutting": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "group",
+//	                  "type": "string"
+//	                },
+//	                {
+//	                  "name": "ingredient",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "result",
+//	                  "type": "Slot"
+//	                }
+//	              ]
+//	            ],
+//	            "minecraft:smithing_transform": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "template",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "base",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "addition",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "result",
+//	                  "type": "Slot"
+//	                }
+//	              ]
+//	            ],
+//	            "minecraft:smithing_trim": [
+//	              "container",
+//	              [
+//	                {
+//	                  "name": "template",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "base",
+//	                  "type": "ingredient"
+//	                },
+//	                {
+//	                  "name": "addition",
+//	                  "type": "ingredient"
+//	                }
+//	              ]
+//	            ],
+//	            "minecraft:crafting_decorated_pot": "minecraft_simple_recipe_format"
+//	          }
+//	        }
+//	      ]
+//	    }
+//	  ]
+//	]
+type DeclareRecipesRecipesArrayType struct {
+	// "string"
+	Name pk.String
+	// [
+	//                           "mapper",
+	//                           {
+	//                             "type": "varint",
+	//                             "mappings": {
+	//                               "0": "minecraft:crafting_shaped",
+	//                               "1": "minecraft:crafting_shapeless",
+	//                               "2": "minecraft:crafting_special_armordye",
+	//                               "3": "minecraft:crafting_special_bookcloning",
+	//                               "4": "minecraft:crafting_special_mapcloning",
+	//                               "5": "minecraft:crafting_special_mapextending",
+	//                               "6": "minecraft:crafting_special_firework_rocket",
+	//                               "7": "minecraft:crafting_special_firework_star",
+	//                               "8": "minecraft:crafting_special_firework_star_fade",
+	//                               "9": "minecraft:crafting_special_tippedarrow",
+	//                               "10": "minecraft:crafting_special_bannerduplicate",
+	//                               "11": "minecraft:crafting_special_shielddecoration",
+	//                               "12": "minecraft:crafting_special_shulkerboxcoloring",
+	//                               "13": "minecraft:crafting_special_suspiciousstew",
+	//                               "14": "minecraft:crafting_special_repairitem",
+	//                               "15": "minecraft:smelting",
+	//                               "16": "minecraft:blasting",
+	//                               "17": "minecraft:smoking",
+	//                               "18": "minecraft:campfire_cooking",
+	//                               "19": "minecraft:stonecutting",
+	//                               "20": "minecraft:smithing_transform",
+	//                               "21": "minecraft:smithing_trim",
+	//                               "22": "minecraft:crafting_decorated_pot"
+	//                             }
+	//                           }
+	//                         ]
+	Type DeclareRecipesRecipesArrayTypeType
+	// [
+	//                           "switch",
+	//                           {
+	//                             "compareTo": "type",
+	//                             "fields": {
+	//                               "minecraft:crafting_shapeless": [
+	//                                 "container",
+	//                                 [
+	//                                   {
+	//                                     "name": "group",
+	//                                     "type": "string"
+	//                                   },
+	//                                   {
+	//                                     "name": "category",
+	//                                     "type": "varint"
+	//                                   },
+	//                                   {
+	//                                     "name": "ingredients",
+	//                                     "type": [
+	//                                       "array",
+	//                                       {
+	//                                         "countType": "varint",
+	//                                         "type": "ingredient"
+	//                                       }
+	//                                     ]
+	//                                   },
+	//                                   {
+	//                                     "name": "result",
+	//                                     "type": "Slot"
+	//                                   }
+	//                                 ]
+	//                               ],
+	//                               "minecraft:crafting_shaped": [
+	//                                 "container",
+	//                                 [
+	//                                   {
+	//                                     "name": "group",
+	//                                     "type": "string"
+	//                                   },
+	//                                   {
+	//                                     "name": "category",
+	//                                     "type": "varint"
+	//                                   },
+	//                                   {
+	//                                     "name": "gridWidth",
+	//                                     "type": "varint"
+	//                                   },
+	//                                   {
+	//                                     "name": "gridHeight",
+	//                                     "type": "varint"
+	//                                   },
+	//                                   {
+	//                                     "name": "ingredients",
+	//                                     "type": [
+	//                                       "array",
+	//                                       {
+	//                                         "count": "gridWidth",
+	//                                         "type": [
+	//                                           "array",
+	//                                           {
+	//                                             "count": "gridHeight",
+	//                                             "type": "ingredient"
+	//                                           }
+	//                                         ]
+	//                                       }
+	//                                     ]
+	//                                   },
+	//                                   {
+	//                                     "name": "result",
+	//                                     "type": "Slot"
+	//                                   },
+	//                                   {
+	//                                     "name": "showNotification",
+	//                                     "type": "bool"
+	//                                   }
+	//                                 ]
+	//                               ],
+	//                               "minecraft:crafting_special_armordye": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_bookcloning": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_mapcloning": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_mapextending": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_firework_rocket": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_firework_star": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_firework_star_fade": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_repairitem": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_tippedarrow": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_bannerduplicate": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_banneraddpattern": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_shielddecoration": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_shulkerboxcoloring": "minecraft_simple_recipe_format",
+	//                               "minecraft:crafting_special_suspiciousstew": "minecraft_simple_recipe_format",
+	//                               "minecraft:smelting": "minecraft_smelting_format",
+	//                               "minecraft:blasting": "minecraft_smelting_format",
+	//                               "minecraft:smoking": "minecraft_smelting_format",
+	//                               "minecraft:campfire_cooking": "minecraft_smelting_format",
+	//                               "minecraft:stonecutting": [
+	//                                 "container",
+	//                                 [
+	//                                   {
+	//                                     "name": "group",
+	//                                     "type": "string"
+	//                                   },
+	//                                   {
+	//                                     "name": "ingredient",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "result",
+	//                                     "type": "Slot"
+	//                                   }
+	//                                 ]
+	//                               ],
+	//                               "minecraft:smithing_transform": [
+	//                                 "container",
+	//                                 [
+	//                                   {
+	//                                     "name": "template",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "base",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "addition",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "result",
+	//                                     "type": "Slot"
+	//                                   }
+	//                                 ]
+	//                               ],
+	//                               "minecraft:smithing_trim": [
+	//                                 "container",
+	//                                 [
+	//                                   {
+	//                                     "name": "template",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "base",
+	//                                     "type": "ingredient"
+	//                                   },
+	//                                   {
+	//                                     "name": "addition",
+	//                                     "type": "ingredient"
+	//                                   }
+	//                                 ]
+	//                               ],
+	//                               "minecraft:crafting_decorated_pot": "minecraft_simple_recipe_format"
+	//                             }
+	//                           }
+	//                         ]
+	Data pk.Field
+}
+
+func (t *DeclareRecipesRecipesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Type.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Type")
+	}
+	// Switch field Data based on type
+	// Convert compareTo value to string for matching
+	compareValueData := t.Type.Value
+
+	switch compareValueData {
+	case "minecraft:blasting":
+		var val basetypes.MinecraftSmeltingFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:blasting")
+		}
+		t.Data = &val
+	case "minecraft:campfire_cooking":
+		var val basetypes.MinecraftSmeltingFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:campfire_cooking")
+		}
+		t.Data = &val
+	case "minecraft:crafting_decorated_pot":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_decorated_pot")
+		}
+		t.Data = &val
+	case "minecraft:crafting_shaped":
+		var val DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShaped
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_shaped")
+		}
+		t.Data = &val
+	case "minecraft:crafting_shapeless":
+		var val DeclareRecipesRecipesArrayTypeDataMinecraftCraftingShapeless
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_shapeless")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_armordye":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_armordye")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_banneraddpattern":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_banneraddpattern")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_bannerduplicate":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_bannerduplicate")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_bookcloning":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_bookcloning")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_firework_rocket":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_rocket")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_firework_star":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_star")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_firework_star_fade":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_firework_star_fade")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_mapcloning":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_mapcloning")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_mapextending":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_mapextending")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_repairitem":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_repairitem")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_shielddecoration":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_shielddecoration")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_shulkerboxcoloring":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_shulkerboxcoloring")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_suspiciousstew":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_suspiciousstew")
+		}
+		t.Data = &val
+	case "minecraft:crafting_special_tippedarrow":
+		var val basetypes.MinecraftSimpleRecipeFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:crafting_special_tippedarrow")
+		}
+		t.Data = &val
+	case "minecraft:smelting":
+		var val basetypes.MinecraftSmeltingFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smelting")
+		}
+		t.Data = &val
+	case "minecraft:smithing_transform":
+		var val DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTransform
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smithing_transform")
+		}
+		t.Data = &val
+	case "minecraft:smithing_trim":
+		var val DeclareRecipesRecipesArrayTypeDataMinecraftSmithingTrim
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smithing_trim")
+		}
+		t.Data = &val
+	case "minecraft:smoking":
+		var val basetypes.MinecraftSmeltingFormat
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:smoking")
+		}
+		t.Data = &val
+	case "minecraft:stonecutting":
+		var val DeclareRecipesRecipesArrayTypeDataMinecraftStonecutting
+		bytesRead, err = val.ReadFrom(r)
+		totalBytes += bytesRead
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read switch field Data case minecraft:stonecutting")
+		}
+		t.Data = &val
+	default:
+		// Mapper-backed discriminator with no explicit data for this value: treat as void
+		var __void models.Void
+		t.Data = &__void
+	}
+
+	return totalBytes, nil
+}
+
+func (t DeclareRecipesRecipesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[DeclareRecipesRecipesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Type.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	// Switch field Data based on type
+	if t.Data != nil {
+		// Write switch field value if it implements WriteTo
+		if writer, ok := t.Data.(interface {
+			WriteTo(io.Writer) (int64, error)
+		}); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, err
+			}
+		} else {
+			// Not a void case and doesn't implement WriteTo
+			return totalBytes, fmt.Errorf("switch field Data value does not implement WriteTo: %T", t.Data)
+		}
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "dimensionName",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "location",
+//	      "type": "position"
+//	    }
+//	  ]
+//	]
+type SpawnInfoDeath struct {
+	// "string"
+	DimensionName pk.String
+	// "position"
+	Location basetypes.Position
+}
+
+func (t *SpawnInfoDeath) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.DimensionName.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field DimensionName")
+	}
+	bytesRead, err = t.Location.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+
+	return totalBytes, nil
+}
+
+func (t SpawnInfoDeath) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[SpawnInfoDeath.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.DimensionName.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type MapChunkSkyLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
+
+type MapChunkBlockLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
+
+type ResetScoreObjectiveName = models.Option[pk.String]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "categoryId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "statisticId",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "value",
+//	      "type": "varint"
+//	    }
+//	  ]
+//	]
+type StatisticsEntriesArrayType struct {
+	// "varint"
+	CategoryId pk.VarInt
+	// "varint"
+	StatisticId pk.VarInt
+	// "varint"
+	Value pk.VarInt
+}
+
+func (t *StatisticsEntriesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.CategoryId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CategoryId")
+	}
+	bytesRead, err = t.StatisticId.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field StatisticId")
+	}
+	bytesRead, err = t.Value.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Value")
+	}
+
+	return totalBytes, nil
+}
+
+func (t StatisticsEntriesArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[StatisticsEntriesArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.CategoryId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.StatisticId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Value.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "x",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "y",
+//	      "type": "i8"
+//	    },
+//	    {
+//	      "name": "z",
+//	      "type": "i8"
+//	    }
+//	  ]
+//	]
+type ExplosionAffectedBlockOffsetsArrayType struct {
+	// "i8"
+	X pk.Byte
+	// "i8"
+	Y pk.Byte
+	// "i8"
+	Z pk.Byte
+}
+
+func (t *ExplosionAffectedBlockOffsetsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.X.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field X")
+	}
+	bytesRead, err = t.Y.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Y")
+	}
+	bytesRead, err = t.Z.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Z")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ExplosionAffectedBlockOffsetsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ExplosionAffectedBlockOffsetsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.X.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Y.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Z.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err
@@ -3885,8 +3894,6 @@ func (t ChatType) WriteTo(w io.Writer) (totalBytes int64, err error) {
 }
 
 type ProfilelessChatTarget = models.Option[models.AnonymousNBT]
-
-type SelectAdvancementTabId = models.Option[pk.String]
 
 type PlayerInfoDataArrayTypeDisplayNameTrue = models.Option[models.AnonymousNBT]
 
@@ -3982,7 +3989,6 @@ type PlayerInfoDataArrayTypeDisplayNameTrue = models.Option[models.AnonymousNBT]
 //	  ]
 //	]
 type PlayerInfoDataArrayType struct {
-	Action pk.VarInt
 	// "UUID"
 	Uuid pk.UUID
 	// [
@@ -4067,11 +4073,6 @@ func (t PlayerInfoDataArrayType) WriteTo(w io.Writer) (int64, error) {
 
 func (t *PlayerInfoDataArrayType) ReadFromWithParentContext(r io.Reader, ctx models.ParentContext) (totalBytes int64, err error) {
 	var bytesRead int64
-	bytesRead, err = t.Action.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Action with parent context")
-	}
 	bytesRead, err = t.Uuid.ReadFrom(r)
 	totalBytes += bytesRead
 	if err != nil {
@@ -4247,9 +4248,3 @@ func (t PlayerInfoDataArrayType) WriteToWithParentContext(w io.Writer, ctx model
 	}
 	return totalBytes, nil
 }
-
-type DamageEventSourcePosition = models.Option[basetypes.Vec3f64]
-
-type MapChunkSkyLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]
-
-type MapChunkBlockLightArrayType = models.Array[pk.VarInt, pk.UnsignedByte]

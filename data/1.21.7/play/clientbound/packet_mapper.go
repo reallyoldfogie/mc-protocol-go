@@ -8,35 +8,24 @@ import (
 	"io"
 )
 
-type GameStateChangeReason struct {
+type ChatTypeParameterType struct {
 	Value string
 }
 
-var GameStateChangeReasonMappings = map[int64]string{
-	0:  "no_respawn_block_available",
-	1:  "start_raining",
-	10: "guardian_elder_effect",
-	11: "immediate_respawn",
-	12: "limited_crafting",
-	13: "level_chunks_load_start",
-	2:  "stop_raining",
-	3:  "change_game_mode",
-	4:  "win_game",
-	5:  "demo_event",
-	6:  "play_arrow_hit_sound",
-	7:  "rain_level_change",
-	8:  "thunder_level_change",
-	9:  "puffer_fish_sting",
+var ChatTypeParameterTypeMappings = map[int64]string{
+	0: "content",
+	1: "sender",
+	2: "target",
 }
 
-func (m *GameStateChangeReason) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.UnsignedByte
+func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read GameStateChangeReason key")
+		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
 	}
 
-	value, ok := GameStateChangeReasonMappings[int64(key)]
+	value, ok := ChatTypeParameterTypeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -46,14 +35,14 @@ func (m *GameStateChangeReason) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m GameStateChangeReason) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range GameStateChangeReasonMappings {
+func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChatTypeParameterTypeMappings {
 		if v == m.Value {
-			key := pk.UnsignedByte(k)
+			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown GameStateChangeReason value: %s", m.Value)
+	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
 }
 
 type EntityUpdateAttributesPropertiesArrayTypeKey struct {
@@ -121,6 +110,53 @@ func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int6
 	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
 }
 
+type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
+	Value string
+}
+
+var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
+	0:  "crafting_building_blocks",
+	1:  "crafting_redstone",
+	10: "stonecutter",
+	11: "smithing",
+	12: "campfire",
+	2:  "crafting_equipment",
+	3:  "crafting_misc",
+	4:  "furnace_food",
+	5:  "furnace_blocks",
+	6:  "furnace_misc",
+	7:  "blast_furnace_blocks",
+	8:  "blast_furnace_misc",
+	9:  "smoker_food",
+}
+
+func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
+	}
+
+	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
+}
+
 type TeamsMode struct {
 	Value string
 }
@@ -158,82 +194,6 @@ func (m TeamsMode) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown TeamsMode value: %s", m.Value)
-}
-
-type TeamsUnnamedType0005ChangeNameTagVisibility struct {
-	Value string
-}
-
-var TeamsUnnamedType0005ChangeNameTagVisibilityMappings = map[int64]string{
-	0: "always",
-	1: "never",
-	2: "hide_for_other_teams",
-	3: "hide_for_own_team",
-}
-
-func (m *TeamsUnnamedType0005ChangeNameTagVisibility) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read TeamsUnnamedType0005ChangeNameTagVisibility key")
-	}
-
-	value, ok := TeamsUnnamedType0005ChangeNameTagVisibilityMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m TeamsUnnamedType0005ChangeNameTagVisibility) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range TeamsUnnamedType0005ChangeNameTagVisibilityMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown TeamsUnnamedType0005ChangeNameTagVisibility value: %s", m.Value)
-}
-
-type TeamsUnnamedType0005ChangeCollisionRule struct {
-	Value string
-}
-
-var TeamsUnnamedType0005ChangeCollisionRuleMappings = map[int64]string{
-	0: "always",
-	1: "never",
-	2: "push_other_teams",
-	3: "push_own_team",
-}
-
-func (m *TeamsUnnamedType0005ChangeCollisionRule) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read TeamsUnnamedType0005ChangeCollisionRule key")
-	}
-
-	value, ok := TeamsUnnamedType0005ChangeCollisionRuleMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m TeamsUnnamedType0005ChangeCollisionRule) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range TeamsUnnamedType0005ChangeCollisionRuleMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown TeamsUnnamedType0005ChangeCollisionRule value: %s", m.Value)
 }
 
 type TeamsUnnamedType0005AddNameTagVisibility struct {
@@ -312,34 +272,25 @@ func (m TeamsUnnamedType0005AddCollisionRule) WriteTo(w io.Writer) (int64, error
 	return 0, errors.Errorf("unknown TeamsUnnamedType0005AddCollisionRule value: %s", m.Value)
 }
 
-type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
+type TeamsUnnamedType0005ChangeNameTagVisibility struct {
 	Value string
 }
 
-var RecipeBookAddEntriesArrayTypeRecipeCategoryMappings = map[int64]string{
-	0:  "crafting_building_blocks",
-	1:  "crafting_redstone",
-	10: "stonecutter",
-	11: "smithing",
-	12: "campfire",
-	2:  "crafting_equipment",
-	3:  "crafting_misc",
-	4:  "furnace_food",
-	5:  "furnace_blocks",
-	6:  "furnace_misc",
-	7:  "blast_furnace_blocks",
-	8:  "blast_furnace_misc",
-	9:  "smoker_food",
+var TeamsUnnamedType0005ChangeNameTagVisibilityMappings = map[int64]string{
+	0: "always",
+	1: "never",
+	2: "hide_for_other_teams",
+	3: "hide_for_own_team",
 }
 
-func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int64, error) {
+func (m *TeamsUnnamedType0005ChangeNameTagVisibility) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read RecipeBookAddEntriesArrayTypeRecipeCategory key")
+		return n, errors.Wrap(err, "failed to read TeamsUnnamedType0005ChangeNameTagVisibility key")
 	}
 
-	value, ok := RecipeBookAddEntriesArrayTypeRecipeCategoryMappings[int64(key)]
+	value, ok := TeamsUnnamedType0005ChangeNameTagVisibilityMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -349,14 +300,255 @@ func (m *RecipeBookAddEntriesArrayTypeRecipeCategory) ReadFrom(r io.Reader) (int
 	return n, nil
 }
 
-func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range RecipeBookAddEntriesArrayTypeRecipeCategoryMappings {
+func (m TeamsUnnamedType0005ChangeNameTagVisibility) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range TeamsUnnamedType0005ChangeNameTagVisibilityMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
+	return 0, errors.Errorf("unknown TeamsUnnamedType0005ChangeNameTagVisibility value: %s", m.Value)
+}
+
+type TeamsUnnamedType0005ChangeCollisionRule struct {
+	Value string
+}
+
+var TeamsUnnamedType0005ChangeCollisionRuleMappings = map[int64]string{
+	0: "always",
+	1: "never",
+	2: "push_other_teams",
+	3: "push_own_team",
+}
+
+func (m *TeamsUnnamedType0005ChangeCollisionRule) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read TeamsUnnamedType0005ChangeCollisionRule key")
+	}
+
+	value, ok := TeamsUnnamedType0005ChangeCollisionRuleMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m TeamsUnnamedType0005ChangeCollisionRule) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range TeamsUnnamedType0005ChangeCollisionRuleMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown TeamsUnnamedType0005ChangeCollisionRule value: %s", m.Value)
+}
+
+type TrackedWaypointOperation struct {
+	Value string
+}
+
+var TrackedWaypointOperationMappings = map[int64]string{
+	0: "track",
+	1: "untrack",
+	2: "update",
+}
+
+func (m *TrackedWaypointOperation) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read TrackedWaypointOperation key")
+	}
+
+	value, ok := TrackedWaypointOperationMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m TrackedWaypointOperation) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range TrackedWaypointOperationMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown TrackedWaypointOperation value: %s", m.Value)
+}
+
+type TrackedWaypointWaypointType struct {
+	Value string
+}
+
+var TrackedWaypointWaypointTypeMappings = map[int64]string{
+	0: "empty",
+	1: "vec3i",
+	2: "chunk",
+	3: "azimuth",
+}
+
+func (m *TrackedWaypointWaypointType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read TrackedWaypointWaypointType key")
+	}
+
+	value, ok := TrackedWaypointWaypointTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m TrackedWaypointWaypointType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range TrackedWaypointWaypointTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown TrackedWaypointWaypointType value: %s", m.Value)
+}
+
+type GameStateChangeReason struct {
+	Value string
+}
+
+var GameStateChangeReasonMappings = map[int64]string{
+	0:  "no_respawn_block_available",
+	1:  "start_raining",
+	10: "guardian_elder_effect",
+	11: "immediate_respawn",
+	12: "limited_crafting",
+	13: "level_chunks_load_start",
+	2:  "stop_raining",
+	3:  "change_game_mode",
+	4:  "win_game",
+	5:  "demo_event",
+	6:  "play_arrow_hit_sound",
+	7:  "rain_level_change",
+	8:  "thunder_level_change",
+	9:  "puffer_fish_sting",
+}
+
+func (m *GameStateChangeReason) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.UnsignedByte
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read GameStateChangeReason key")
+	}
+
+	value, ok := GameStateChangeReasonMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m GameStateChangeReason) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range GameStateChangeReasonMappings {
+		if v == m.Value {
+			key := pk.UnsignedByte(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown GameStateChangeReason value: %s", m.Value)
+}
+
+type DifficultyDifficulty struct {
+	Value string
+}
+
+var DifficultyDifficultyMappings = map[int64]string{
+	0: "peaceful",
+	1: "easy",
+	2: "normal",
+	3: "hard",
+}
+
+func (m *DifficultyDifficulty) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read DifficultyDifficulty key")
+	}
+
+	value, ok := DifficultyDifficultyMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m DifficultyDifficulty) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range DifficultyDifficultyMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown DifficultyDifficulty value: %s", m.Value)
+}
+
+type SlotDisplayType struct {
+	Value string
+}
+
+var SlotDisplayTypeMappings = map[int64]string{
+	0: "empty",
+	1: "any_fuel",
+	2: "item",
+	3: "item_stack",
+	4: "tag",
+	5: "smithing_trim",
+	6: "with_remainder",
+	7: "composite",
+}
+
+func (m *SlotDisplayType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotDisplayType key")
+	}
+
+	value, ok := SlotDisplayTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotDisplayTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
 }
 
 type PacketName struct {
@@ -527,24 +719,25 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
 }
 
-type TrackedWaypointOperation struct {
+type SpawnInfoGamemode struct {
 	Value string
 }
 
-var TrackedWaypointOperationMappings = map[int64]string{
-	0: "track",
-	1: "untrack",
-	2: "update",
+var SpawnInfoGamemodeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
 }
 
-func (m *TrackedWaypointOperation) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
+func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.Byte
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read TrackedWaypointOperation key")
+		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
 	}
 
-	value, ok := TrackedWaypointOperationMappings[int64(key)]
+	value, ok := SpawnInfoGamemodeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -554,132 +747,14 @@ func (m *TrackedWaypointOperation) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m TrackedWaypointOperation) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range TrackedWaypointOperationMappings {
+func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SpawnInfoGamemodeMappings {
 		if v == m.Value {
-			key := pk.VarInt(k)
+			key := pk.Byte(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown TrackedWaypointOperation value: %s", m.Value)
-}
-
-type TrackedWaypointWaypointType struct {
-	Value string
-}
-
-var TrackedWaypointWaypointTypeMappings = map[int64]string{
-	0: "empty",
-	1: "vec3i",
-	2: "chunk",
-	3: "azimuth",
-}
-
-func (m *TrackedWaypointWaypointType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read TrackedWaypointWaypointType key")
-	}
-
-	value, ok := TrackedWaypointWaypointTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m TrackedWaypointWaypointType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range TrackedWaypointWaypointTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown TrackedWaypointWaypointType value: %s", m.Value)
-}
-
-type SlotDisplayType struct {
-	Value string
-}
-
-var SlotDisplayTypeMappings = map[int64]string{
-	0: "empty",
-	1: "any_fuel",
-	2: "item",
-	3: "item_stack",
-	4: "tag",
-	5: "smithing_trim",
-	6: "with_remainder",
-	7: "composite",
-}
-
-func (m *SlotDisplayType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotDisplayType key")
-	}
-
-	value, ok := SlotDisplayTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotDisplayTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
-}
-
-type DifficultyDifficulty struct {
-	Value string
-}
-
-var DifficultyDifficultyMappings = map[int64]string{
-	0: "peaceful",
-	1: "easy",
-	2: "normal",
-	3: "hard",
-}
-
-func (m *DifficultyDifficulty) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read DifficultyDifficulty key")
-	}
-
-	value, ok := DifficultyDifficultyMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m DifficultyDifficulty) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range DifficultyDifficultyMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown DifficultyDifficulty value: %s", m.Value)
+	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
 }
 
 type RecipeDisplayType struct {
@@ -719,81 +794,6 @@ func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
-}
-
-type SpawnInfoGamemode struct {
-	Value string
-}
-
-var SpawnInfoGamemodeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
-}
-
-func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.Byte
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
-	}
-
-	value, ok := SpawnInfoGamemodeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SpawnInfoGamemodeMappings {
-		if v == m.Value {
-			key := pk.Byte(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
-}
-
-type ChatTypeParameterType struct {
-	Value string
-}
-
-var ChatTypeParameterTypeMappings = map[int64]string{
-	0: "content",
-	1: "sender",
-	2: "target",
-}
-
-func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
-	}
-
-	value, ok := ChatTypeParameterTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChatTypeParameterTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
 }
 
 type MapChunkHeightmapsArrayTypeType struct {

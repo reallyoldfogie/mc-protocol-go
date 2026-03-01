@@ -6,39 +6,41 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Ingredient = models.Array[pk.VarInt, Slot]
-
 type bool = pk.Boolean
-
-type F64 = pk.Double
-
-type U16 = pk.UnsignedShort
-
-type F32 = pk.Float
-
-type ContainerID = pk.VarInt
-
-type Varint = pk.VarInt
-
-type U32 = models.UInt32
 
 type I16 = pk.Short
 
 type ByteArray = pk.ByteArray
 
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+type I32 = pk.Int
 
-type U64 = models.UInt64
+type I64 = pk.Long
+
+type U32 = models.UInt32
+
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type Varint = pk.VarInt
+
+type F64 = pk.Double
+
+type ContainerID = pk.VarInt
 
 type ChatSession = models.Option[models.Void]
 
 type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type U16 = pk.UnsignedShort
 
 type SlotComponentDataProfileName = models.Option[pk.String]
 
 type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
 type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
 type SlotComponentDataEquippableModel = models.Option[pk.String]
 
@@ -48,22 +50,20 @@ type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
 type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
 
 type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-type I32 = pk.Int
-
-type I64 = pk.Long
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type I8 = pk.Byte
 
 type Optvarint = pk.VarInt
+
+type F32 = pk.Float
+
+type U64 = models.UInt64
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]

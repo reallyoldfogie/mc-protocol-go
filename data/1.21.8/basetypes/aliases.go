@@ -6,27 +6,49 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
+type I32 = pk.Int
+
+type Varint = pk.VarInt
+
+type U32 = models.UInt32
+
+type U64 = models.UInt64
+
+type Optvarint = pk.VarInt
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type bool = pk.Boolean
+
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type I8 = pk.Byte
+
+type I64 = pk.Long
+
+type U16 = pk.UnsignedShort
+
+type F32 = pk.Float
+
+type I16 = pk.Short
+
+type ByteArray = pk.ByteArray
+
 type ContainerID = pk.VarInt
 
-type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
+type SlotComponentDataEquippableModel = models.Option[pk.String]
 
-type F64 = pk.Double
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
 type SlotComponentDataProfileName = models.Option[pk.String]
 
 type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
 type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
-
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
-
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
@@ -36,44 +58,22 @@ type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
 type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
-type SlotComponentDataEquippableModel = models.Option[pk.String]
-
-type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
-
-type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-type I16 = pk.Short
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
 type ChatSession = models.Option[models.Void]
 
-type Optvarint = pk.VarInt
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type I64 = pk.Long
-
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type Varint = pk.VarInt
-
-type F32 = pk.Float
-
-type I32 = pk.Int
-
-type I8 = pk.Byte
-
-type U32 = models.UInt32
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type U16 = pk.UnsignedShort
-
-type U64 = models.UInt64
-
-type ByteArray = pk.ByteArray
-
-type bool = pk.Boolean
+type F64 = pk.Double

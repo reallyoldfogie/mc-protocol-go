@@ -8,6 +8,45 @@ import (
 	"io"
 )
 
+type RecipeDisplayType struct {
+	Value string
+}
+
+var RecipeDisplayTypeMappings = map[int64]string{
+	0: "crafting_shapeless",
+	1: "crafting_shaped",
+	2: "furnace",
+	3: "stonecutter",
+	4: "smithing",
+}
+
+func (m *RecipeDisplayType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read RecipeDisplayType key")
+	}
+
+	value, ok := RecipeDisplayTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range RecipeDisplayTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
+}
+
 type SlotDisplayType struct {
 	Value string
 }
@@ -50,26 +89,25 @@ func (m SlotDisplayType) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown SlotDisplayType value: %s", m.Value)
 }
 
-type RecipeDisplayType struct {
+type SpawnInfoGamemode struct {
 	Value string
 }
 
-var RecipeDisplayTypeMappings = map[int64]string{
-	0: "crafting_shapeless",
-	1: "crafting_shaped",
-	2: "furnace",
-	3: "stonecutter",
-	4: "smithing",
+var SpawnInfoGamemodeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
 }
 
-func (m *RecipeDisplayType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
+func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.Byte
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read RecipeDisplayType key")
+		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
 	}
 
-	value, ok := RecipeDisplayTypeMappings[int64(key)]
+	value, ok := SpawnInfoGamemodeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -79,14 +117,70 @@ func (m *RecipeDisplayType) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m RecipeDisplayType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range RecipeDisplayTypeMappings {
+func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SpawnInfoGamemodeMappings {
+		if v == m.Value {
+			key := pk.Byte(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
+}
+
+type EntityUpdateAttributesPropertiesArrayTypeKey struct {
+	Value string
+}
+
+var EntityUpdateAttributesPropertiesArrayTypeKeyMappings = map[int64]string{
+	0:  "generic.armor",
+	1:  "generic.armor_toughness",
+	10: "generic.follow_range",
+	11: "generic.gravity",
+	12: "generic.jump_strength",
+	13: "generic.knockback_resistance",
+	14: "generic.luck",
+	15: "generic.max_absorption",
+	16: "generic.max_health",
+	17: "generic.movement_speed",
+	18: "generic.safe_fall_distance",
+	19: "generic.scale",
+	2:  "generic.attack_damage",
+	20: "zombie.spawn_reinforcements",
+	21: "generic.step_height",
+	3:  "generic.attack_knockback",
+	4:  "generic.attack_speed",
+	5:  "player.block_break_speed",
+	6:  "player.block_interaction_range",
+	7:  "player.entity_interaction_range",
+	8:  "generic.fall_damage_multiplier",
+	9:  "generic.flying_speed",
+}
+
+func (m *EntityUpdateAttributesPropertiesArrayTypeKey) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read EntityUpdateAttributesPropertiesArrayTypeKey key")
+	}
+
+	value, ok := EntityUpdateAttributesPropertiesArrayTypeKeyMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range EntityUpdateAttributesPropertiesArrayTypeKeyMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown RecipeDisplayType value: %s", m.Value)
+	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
 }
 
 type ChatTypeParameterType struct {
@@ -291,62 +385,6 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
 }
 
-type EntityUpdateAttributesPropertiesArrayTypeKey struct {
-	Value string
-}
-
-var EntityUpdateAttributesPropertiesArrayTypeKeyMappings = map[int64]string{
-	0:  "generic.armor",
-	1:  "generic.armor_toughness",
-	10: "generic.follow_range",
-	11: "generic.gravity",
-	12: "generic.jump_strength",
-	13: "generic.knockback_resistance",
-	14: "generic.luck",
-	15: "generic.max_absorption",
-	16: "generic.max_health",
-	17: "generic.movement_speed",
-	18: "generic.safe_fall_distance",
-	19: "generic.scale",
-	2:  "generic.attack_damage",
-	20: "zombie.spawn_reinforcements",
-	21: "generic.step_height",
-	3:  "generic.attack_knockback",
-	4:  "generic.attack_speed",
-	5:  "player.block_break_speed",
-	6:  "player.block_interaction_range",
-	7:  "player.entity_interaction_range",
-	8:  "generic.fall_damage_multiplier",
-	9:  "generic.flying_speed",
-}
-
-func (m *EntityUpdateAttributesPropertiesArrayTypeKey) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read EntityUpdateAttributesPropertiesArrayTypeKey key")
-	}
-
-	value, ok := EntityUpdateAttributesPropertiesArrayTypeKeyMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range EntityUpdateAttributesPropertiesArrayTypeKeyMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
-}
-
 type RecipeBookAddEntriesArrayTypeRecipeCategory struct {
 	Value string
 }
@@ -392,42 +430,4 @@ func (m RecipeBookAddEntriesArrayTypeRecipeCategory) WriteTo(w io.Writer) (int64
 		}
 	}
 	return 0, errors.Errorf("unknown RecipeBookAddEntriesArrayTypeRecipeCategory value: %s", m.Value)
-}
-
-type SpawnInfoGamemode struct {
-	Value string
-}
-
-var SpawnInfoGamemodeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
-}
-
-func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.Byte
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
-	}
-
-	value, ok := SpawnInfoGamemodeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SpawnInfoGamemodeMappings {
-		if v == m.Value {
-			key := pk.Byte(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
 }

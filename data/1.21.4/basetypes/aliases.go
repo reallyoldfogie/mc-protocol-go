@@ -6,37 +6,33 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type F64 = pk.Double
 
-type I64 = pk.Long
+type bool = pk.Boolean
 
-type U64 = models.UInt64
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
-type ContainerID = pk.VarInt
-
-type Optvarint = pk.VarInt
+type U16 = pk.UnsignedShort
 
 type F32 = pk.Float
 
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
+type U32 = models.UInt32
 
-type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+type ContainerID = pk.VarInt
 
-type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+type Ingredient = models.Array[pk.VarInt, Slot]
 
-type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+type ChatSession = models.Option[models.Void]
 
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+type Optvarint = pk.VarInt
 
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+type Varint = pk.VarInt
 
-type SlotComponentDataProfileName = models.Option[pk.String]
+type U64 = models.UInt64
 
-type SlotComponentDataProfileUuid = models.Option[pk.UUID]
-
-type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+type ByteArray = pk.ByteArray
 
 type SlotComponentDataEquippableModel = models.Option[pk.String]
 
@@ -44,26 +40,30 @@ type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
 
 type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
-type F64 = pk.Double
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
-type ByteArray = pk.ByteArray
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-type U32 = models.UInt32
+type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
+
+type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
+
+type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
+
+type SlotComponentDataProfileName = models.Option[pk.String]
+
+type SlotComponentDataProfileUuid = models.Option[pk.UUID]
+
+type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type I8 = pk.Byte
 
-type Varint = pk.VarInt
-
-type U16 = pk.UnsignedShort
-
 type I16 = pk.Short
 
-type bool = pk.Boolean
-
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+type I64 = pk.Long
 
 type I32 = pk.Int
-
-type ChatSession = models.Option[models.Void]

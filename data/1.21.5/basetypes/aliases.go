@@ -6,49 +6,23 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type ContainerID = pk.VarInt
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type F64 = pk.Double
-
-type U64 = models.UInt64
-
 type Optvarint = pk.VarInt
 
-type U16 = pk.UnsignedShort
+type ContainerID = pk.VarInt
 
-type F32 = pk.Float
-
-type Varint = pk.VarInt
-
-type I16 = pk.Short
-
-type ChatSession = models.Option[models.Void]
+type Ingredient = models.Array[pk.VarInt, Slot]
 
 type U32 = models.UInt32
 
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type I16 = pk.Short
+
 type I32 = pk.Int
 
-type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
-
-type bool = pk.Boolean
-
-type ByteArray = pk.ByteArray
+type F64 = pk.Double
 
 type I64 = pk.Long
-
-type I8 = pk.Byte
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
-
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
 type SlotComponentDataEquippableModel = models.Option[pk.String]
 
@@ -62,11 +36,19 @@ type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
 type SlotComponentDataProfileName = models.Option[pk.String]
 
 type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
 type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+
+type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
@@ -76,4 +58,22 @@ type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
-type Ingredient = models.Array[pk.VarInt, Slot]
+type ChatSession = models.Option[models.Void]
+
+type U64 = models.UInt64
+
+type Varint = pk.VarInt
+
+type bool = pk.Boolean
+
+type U16 = pk.UnsignedShort
+
+type I8 = pk.Byte
+
+type ByteArray = pk.ByteArray
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type F32 = pk.Float
+
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]

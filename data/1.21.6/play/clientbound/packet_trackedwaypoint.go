@@ -549,7 +549,7 @@ type TrackedWaypointWaypoint struct {
 	//                         }
 	//                       }
 	//                     ]
-	UnnamedType0005 pk.Field
+	UnnamedType0006 pk.Field
 	// [
 	//                       "container",
 	//                       [
@@ -629,27 +629,27 @@ func (t *TrackedWaypointWaypoint) ReadFrom(r io.Reader) (totalBytes int64, err e
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field HasUUID")
 	}
-	// Switch field UnnamedType0005 based on hasUUID
+	// Switch field UnnamedType0006 based on hasUUID
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0005 := fmt.Sprintf("%v", t.HasUUID)
+	compareValueUnnamedType0006 := fmt.Sprintf("%v", t.HasUUID)
 
-	switch compareValueUnnamedType0005 {
+	switch compareValueUnnamedType0006 {
 	case "false":
-		var val TrackedWaypointWaypointUnnamedType0005False
+		var val TrackedWaypointWaypointUnnamedType0006False
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case false")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case false")
 		}
-		t.UnnamedType0005 = &val
+		t.UnnamedType0006 = &val
 	case "true":
-		var val TrackedWaypointWaypointUnnamedType0005True
+		var val TrackedWaypointWaypointUnnamedType0006True
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case true")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 case true")
 		}
-		t.UnnamedType0005 = &val
+		t.UnnamedType0006 = &val
 	default:
 		// No explicit default; treat as void (no data)
 		// Per minecraft.wiki protocol docs: "If properties for parser are not specified, then this parser has no properties"
@@ -658,9 +658,9 @@ func (t *TrackedWaypointWaypoint) ReadFrom(r io.Reader) (totalBytes int64, err e
 		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 default void case")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0006 default void case")
 		}
-		t.UnnamedType0005 = &__void
+		t.UnnamedType0006 = &__void
 	}
 
 	bytesRead, err = t.Icon.ReadFrom(r)
@@ -722,10 +722,10 @@ func (t TrackedWaypointWaypoint) WriteTo(w io.Writer) (totalBytes int64, err err
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0005 based on hasUUID
-	if t.UnnamedType0005 != nil {
+	// Switch field UnnamedType0006 based on hasUUID
+	if t.UnnamedType0006 != nil {
 		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0005.(interface {
+		if writer, ok := t.UnnamedType0006.(interface {
 			WriteTo(io.Writer) (int64, error)
 		}); ok {
 			bytesWritten, err = writer.WriteTo(w)
@@ -735,7 +735,7 @@ func (t TrackedWaypointWaypoint) WriteTo(w io.Writer) (totalBytes int64, err err
 			}
 		} else {
 			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0005 value does not implement WriteTo: %T", t.UnnamedType0005)
+			return totalBytes, fmt.Errorf("switch field UnnamedType0006 value does not implement WriteTo: %T", t.UnnamedType0006)
 		}
 	}
 	bytesWritten, err = t.Icon.WriteTo(w)

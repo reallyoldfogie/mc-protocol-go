@@ -8,28 +8,25 @@ import (
 	"io"
 )
 
-type EntityActionActionId struct {
+type ChangeGamemodeMode struct {
 	Value string
 }
 
-var EntityActionActionIdMappings = map[int64]string{
-	0: "leave_bed",
-	1: "start_sprinting",
-	2: "stop_sprinting",
-	3: "start_horse_jump",
-	4: "stop_horse_jump",
-	5: "open_vehicle_inventory",
-	6: "start_elytra_flying",
+var ChangeGamemodeModeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
 }
 
-func (m *EntityActionActionId) ReadFrom(r io.Reader) (int64, error) {
+func (m *ChangeGamemodeMode) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read EntityActionActionId key")
+		return n, errors.Wrap(err, "failed to read ChangeGamemodeMode key")
 	}
 
-	value, ok := EntityActionActionIdMappings[int64(key)]
+	value, ok := ChangeGamemodeModeMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -39,14 +36,14 @@ func (m *EntityActionActionId) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m EntityActionActionId) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range EntityActionActionIdMappings {
+func (m ChangeGamemodeMode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChangeGamemodeModeMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown EntityActionActionId value: %s", m.Value)
+	return 0, errors.Errorf("unknown ChangeGamemodeMode value: %s", m.Value)
 }
 
 type PacketName struct {
@@ -149,25 +146,28 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
 }
 
-type ChangeGamemodeMode struct {
+type EntityActionActionId struct {
 	Value string
 }
 
-var ChangeGamemodeModeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
+var EntityActionActionIdMappings = map[int64]string{
+	0: "leave_bed",
+	1: "start_sprinting",
+	2: "stop_sprinting",
+	3: "start_horse_jump",
+	4: "stop_horse_jump",
+	5: "open_vehicle_inventory",
+	6: "start_elytra_flying",
 }
 
-func (m *ChangeGamemodeMode) ReadFrom(r io.Reader) (int64, error) {
+func (m *EntityActionActionId) ReadFrom(r io.Reader) (int64, error) {
 	var key pk.VarInt
 	n, err := key.ReadFrom(r)
 	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChangeGamemodeMode key")
+		return n, errors.Wrap(err, "failed to read EntityActionActionId key")
 	}
 
-	value, ok := ChangeGamemodeModeMappings[int64(key)]
+	value, ok := EntityActionActionIdMappings[int64(key)]
 	if !ok {
 		// Use numeric key as fallback for unknown/undocumented values
 		m.Value = fmt.Sprintf("unknown_%d", key)
@@ -177,14 +177,14 @@ func (m *ChangeGamemodeMode) ReadFrom(r io.Reader) (int64, error) {
 	return n, nil
 }
 
-func (m ChangeGamemodeMode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChangeGamemodeModeMappings {
+func (m EntityActionActionId) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range EntityActionActionIdMappings {
 		if v == m.Value {
 			key := pk.VarInt(k)
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ChangeGamemodeMode value: %s", m.Value)
+	return 0, errors.Errorf("unknown EntityActionActionId value: %s", m.Value)
 }
 
 type UpdateStructureBlockFlags struct {

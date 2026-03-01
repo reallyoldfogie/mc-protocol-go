@@ -7989,13 +7989,13 @@ type UnnamedType0005Type interface {
 }
 
 // UnnamedType0005Getter provides read access to the UnnamedType0005 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.9
 type UnnamedType0005Getter[T UnnamedType0005Type] interface {
 	GetUnnamedType0005() T
 }
 
 // UnnamedType0005Setter provides write access to the UnnamedType0005 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.7, 1.21.8, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.7, 1.21.9
 type UnnamedType0005Setter[T UnnamedType0005Type] interface {
 	SetUnnamedType0005(T)
 }
@@ -8007,13 +8007,13 @@ type UnnamedType0006Type interface {
 }
 
 // UnnamedType0006Getter provides read access to the UnnamedType0006 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.8, 1.21.9
 type UnnamedType0006Getter[T UnnamedType0006Type] interface {
 	GetUnnamedType0006() T
 }
 
 // UnnamedType0006Setter provides write access to the UnnamedType0006 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.6, 1.21.9
+// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.8, 1.21.9
 type UnnamedType0006Setter[T UnnamedType0006Type] interface {
 	SetUnnamedType0006(T)
 }
@@ -8025,15 +8025,33 @@ type UnnamedType0007Type interface {
 }
 
 // UnnamedType0007Getter provides read access to the UnnamedType0007 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10
 type UnnamedType0007Getter[T UnnamedType0007Type] interface {
 	GetUnnamedType0007() T
 }
 
 // UnnamedType0007Setter provides write access to the UnnamedType0007 field.
-// Implemented by packet types in versions: 1.21.10, 1.21.11, 1.21.9
+// Implemented by packet types in versions: 1.21.10
 type UnnamedType0007Setter[T UnnamedType0007Type] interface {
 	SetUnnamedType0007(T)
+}
+
+// UnnamedType0008Type is a type constraint for the UnnamedType0008 field.
+// This field has types: any
+type UnnamedType0008Type interface {
+	any
+}
+
+// UnnamedType0008Getter provides read access to the UnnamedType0008 field.
+// Implemented by packet types in versions: 1.21.11, 1.21.9
+type UnnamedType0008Getter[T UnnamedType0008Type] interface {
+	GetUnnamedType0008() T
+}
+
+// UnnamedType0008Setter provides write access to the UnnamedType0008 field.
+// Implemented by packet types in versions: 1.21.11, 1.21.9
+type UnnamedType0008Setter[T UnnamedType0008Type] interface {
+	SetUnnamedType0008(T)
 }
 
 // UnsignedChatContentType is a type constraint for the UnsignedChatContent field.
@@ -8665,3 +8683,4 @@ type ZGetter[T ZType] interface {
 type ZSetter[T ZType] interface {
 	SetZ(T)
 }
+
