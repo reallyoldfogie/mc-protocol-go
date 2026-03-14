@@ -44,7 +44,71 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type EditBookTitle = models.Option[pk.String]
+type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "location",
+//	      "type": "i16"
+//	    },
+//	    {
+//	      "name": "item",
+//	      "type": [
+//	        "option",
+//	        "HashedSlot"
+//	      ]
+//	    }
+//	  ]
+//	]
+type WindowClickChangedSlotsArrayType struct {
+	// "i16"
+	Location pk.Short
+	// [
+	//                           "option",
+	//                           "HashedSlot"
+	//                         ]
+	Item models.Option[basetypes.HashedSlot]
+}
+
+func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Location.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+	bytesRead, err = t.Item.ReadFrom(r)
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Item")
+	}
+
+	return totalBytes, nil
+}
+
+func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Item.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+type WindowClickCursorItem = models.Option[basetypes.HashedSlot]
 
 // Protodef: [
 //
@@ -112,78 +176,14 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type TestInstanceBlockActionDataTest = models.Option[pk.String]
-
-type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
-
 type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
 type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
 
 type ChatMessageSignature = models.Option[models.FixedBuffer256]
 
-type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
+type TestInstanceBlockActionDataTest = models.Option[pk.String]
 
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "location",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "item",
-//	      "type": [
-//	        "option",
-//	        "HashedSlot"
-//	      ]
-//	    }
-//	  ]
-//	]
-type WindowClickChangedSlotsArrayType struct {
-	// "i16"
-	Location pk.Short
-	// [
-	//                           "option",
-	//                           "HashedSlot"
-	//                         ]
-	Item models.Option[basetypes.HashedSlot]
-}
+type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
 
-func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-	bytesRead, err = t.Item.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Item")
-	}
-
-	return totalBytes, nil
-}
-
-func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Item.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type WindowClickCursorItem = models.Option[basetypes.HashedSlot]
+type EditBookTitle = models.Option[pk.String]

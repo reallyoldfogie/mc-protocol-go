@@ -6,57 +6,19 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type I32 = pk.Int
+type I8 = pk.Byte
 
-type Varint = pk.VarInt
-
-type U32 = models.UInt32
-
-type U64 = models.UInt64
-
-type Optvarint = pk.VarInt
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type bool = pk.Boolean
+type I16 = pk.Short
 
 type Ingredient = models.Array[pk.VarInt, Slot]
 
 type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
 
-type I8 = pk.Byte
+type F64 = pk.Double
 
-type I64 = pk.Long
+type ChatSession = models.Option[ChatSessionData]
 
-type U16 = pk.UnsignedShort
-
-type F32 = pk.Float
-
-type I16 = pk.Short
-
-type ByteArray = pk.ByteArray
-
-type ContainerID = pk.VarInt
-
-type SlotComponentDataEquippableModel = models.Option[pk.String]
-
-type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
-
-type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
-
-type SlotComponentDataProfileName = models.Option[pk.String]
-
-type SlotComponentDataProfileUuid = models.Option[pk.UUID]
-
-type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
-
-type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
-
-type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
-
-type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
+type SlotComponentDataLore = models.Array[pk.VarInt, models.AnonymousNBT]
 
 type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
@@ -66,14 +28,54 @@ type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
+type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
+
+type SlotComponentDataBlocksAttacksBypassedBy = models.Option[pk.String]
+
+type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
+
+type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
+
+type SlotComponentDataEquippableModel = models.Option[pk.String]
+
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
+
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
+
 type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
 
 type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-type ChatSession = models.Option[models.Void]
+type SlotComponentDataProfileName = models.Option[pk.String]
+
+type SlotComponentDataProfileUuid = models.Option[pk.UUID]
+
+type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type Varint = pk.VarInt
+
+type U32 = models.UInt32
+
+type U16 = pk.UnsignedShort
+
+type bool = pk.Boolean
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type I32 = pk.Int
+
+type I64 = pk.Long
+
+type U64 = models.UInt64
+
+type ContainerID = pk.VarInt
+
+type ByteArray = pk.ByteArray
+
+type Optvarint = pk.VarInt
+
+type F32 = pk.Float
 
 type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
-
-type F64 = pk.Double

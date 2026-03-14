@@ -6,19 +6,15 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type ChatSession = models.Option[models.Void]
-
-type Optvarint = pk.VarInt
-
-type ByteArray = pk.ByteArray
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
 type ContainerID = pk.UnsignedByte
 
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+type SlotComponentDataProfileName = models.Option[pk.String]
+
+type SlotComponentDataProfileUuid = models.Option[pk.UUID]
+
+type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type SlotComponentDataLore = models.Array[pk.VarInt, models.AnonymousNBT]
 
 type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
@@ -32,8 +28,14 @@ type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-type SlotComponentDataProfileName = models.Option[pk.String]
+type Ingredient = models.Array[pk.VarInt, Slot]
 
-type SlotComponentDataProfileUuid = models.Option[pk.UUID]
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
-type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+type ByteArray = pk.ByteArray
+
+type Optvarint = pk.VarInt
+
+type ChatSession = models.Option[ChatSessionData]
+
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]

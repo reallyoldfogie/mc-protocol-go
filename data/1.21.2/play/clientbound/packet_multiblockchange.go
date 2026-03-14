@@ -208,7 +208,6 @@ func (t MultiBlockChange) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-//
 type MultiBlockChangeChunkCoordinates struct {
 	X int64
 	Z int64

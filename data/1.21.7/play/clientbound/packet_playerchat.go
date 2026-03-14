@@ -266,7 +266,7 @@ func (p *PlayerChat) Scan(packet pk.Packet) error {
 
 	switch compareValueFilterTypeMask {
 	case "2":
-		var val models.Array[pk.VarInt, pk.Long]
+		var val PlayerChatFilterTypeMask2
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -634,7 +634,7 @@ func (t *PlayerChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueFilterTypeMask {
 	case "2":
-		var val models.Array[pk.VarInt, pk.Long]
+		var val PlayerChatFilterTypeMask2
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -760,3 +760,5 @@ func (t PlayerChat) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	}
 	return totalBytes, nil
 }
+
+type PlayerChatFilterTypeMask2 = models.Array[pk.VarInt, pk.Long]

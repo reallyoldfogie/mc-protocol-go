@@ -808,6 +808,6 @@ func (t ScoreboardObjective) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	return totalBytes, nil
 }
 
-type ScoreboardObjectiveNumberFormat2 = models.Option[pk.VarInt]
-
 type ScoreboardObjectiveNumberFormat0 = models.Option[pk.VarInt]
+
+type ScoreboardObjectiveNumberFormat2 = models.Option[pk.VarInt]

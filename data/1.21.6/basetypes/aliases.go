@@ -6,29 +6,51 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
+type Optvarint = pk.VarInt
+
+type I16 = pk.Short
+
+type F32 = pk.Float
+
+type Ingredient = models.Array[pk.VarInt, Slot]
+
 type U64 = models.UInt64
+
+type I64 = pk.Long
+
+type bool = pk.Boolean
 
 type I32 = pk.Int
 
 type ByteArray = pk.ByteArray
 
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type bool = pk.Boolean
-
-type I8 = pk.Byte
-
 type Varint = pk.VarInt
 
-type F32 = pk.Float
-
-type ChatSession = models.Option[models.Void]
+type U16 = pk.UnsignedShort
 
 type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
 
-type I16 = pk.Short
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type F64 = pk.Double
+
+type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
+
+type ChatSession = models.Option[ChatSessionData]
+
+type U32 = models.UInt32
+
+type I8 = pk.Byte
 
 type ContainerID = pk.VarInt
+
+type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+
+type SlotComponentDataEquippableModel = models.Option[pk.String]
+
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
+
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
 
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
@@ -46,34 +68,14 @@ type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
+
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
+
+type SlotComponentDataLore = models.Array[pk.VarInt, models.AnonymousNBT]
 
 type SlotComponentDataProfileName = models.Option[pk.String]
 
 type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
 type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataEquippableModel = models.Option[pk.String]
-
-type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
-
-type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
-
-type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
-
-type Optvarint = pk.VarInt
-
-type F64 = pk.Double
-
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type U16 = pk.UnsignedShort
-
-type U32 = models.UInt32
-
-type I64 = pk.Long

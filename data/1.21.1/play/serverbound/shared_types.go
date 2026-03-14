@@ -76,10 +76,6 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	return totalBytes, nil
 }
 
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
-
-type EditBookTitle = models.Option[pk.String]
-
 // Protodef: [
 //
 //	  "container",
@@ -139,3 +135,7 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
 type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
+type EditBookTitle = models.Option[pk.String]
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]

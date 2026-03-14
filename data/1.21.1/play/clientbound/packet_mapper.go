@@ -64,6 +64,138 @@ func (m EntityUpdateAttributesPropertiesArrayTypeKey) WriteTo(w io.Writer) (int6
 	return 0, errors.Errorf("unknown EntityUpdateAttributesPropertiesArrayTypeKey value: %s", m.Value)
 }
 
+type DeclareRecipesRecipesArrayTypeType struct {
+	Value string
+}
+
+var DeclareRecipesRecipesArrayTypeTypeMappings = map[int64]string{
+	0:  "minecraft:crafting_shaped",
+	1:  "minecraft:crafting_shapeless",
+	10: "minecraft:crafting_special_bannerduplicate",
+	11: "minecraft:crafting_special_shielddecoration",
+	12: "minecraft:crafting_special_shulkerboxcoloring",
+	13: "minecraft:crafting_special_suspiciousstew",
+	14: "minecraft:crafting_special_repairitem",
+	15: "minecraft:smelting",
+	16: "minecraft:blasting",
+	17: "minecraft:smoking",
+	18: "minecraft:campfire_cooking",
+	19: "minecraft:stonecutting",
+	2:  "minecraft:crafting_special_armordye",
+	20: "minecraft:smithing_transform",
+	21: "minecraft:smithing_trim",
+	22: "minecraft:crafting_decorated_pot",
+	3:  "minecraft:crafting_special_bookcloning",
+	4:  "minecraft:crafting_special_mapcloning",
+	5:  "minecraft:crafting_special_mapextending",
+	6:  "minecraft:crafting_special_firework_rocket",
+	7:  "minecraft:crafting_special_firework_star",
+	8:  "minecraft:crafting_special_firework_star_fade",
+	9:  "minecraft:crafting_special_tippedarrow",
+}
+
+func (m *DeclareRecipesRecipesArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read DeclareRecipesRecipesArrayTypeType key")
+	}
+
+	value, ok := DeclareRecipesRecipesArrayTypeTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m DeclareRecipesRecipesArrayTypeType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range DeclareRecipesRecipesArrayTypeTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown DeclareRecipesRecipesArrayTypeType value: %s", m.Value)
+}
+
+type ChatTypeParameterType struct {
+	Value string
+}
+
+var ChatTypeParameterTypeMappings = map[int64]string{
+	0: "content",
+	1: "sender",
+	2: "target",
+}
+
+func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
+	}
+
+	value, ok := ChatTypeParameterTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ChatTypeParameterTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
+}
+
+type SpawnInfoGamemode struct {
+	Value string
+}
+
+var SpawnInfoGamemodeMappings = map[int64]string{
+	0: "survival",
+	1: "creative",
+	2: "adventure",
+	3: "spectator",
+}
+
+func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.Byte
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
+	}
+
+	value, ok := SpawnInfoGamemodeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SpawnInfoGamemodeMappings {
+		if v == m.Value {
+			key := pk.Byte(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
+}
+
 type PacketName struct {
 	Value string
 }
@@ -220,136 +352,4 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 		}
 	}
 	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
-}
-
-type DeclareRecipesRecipesArrayTypeType struct {
-	Value string
-}
-
-var DeclareRecipesRecipesArrayTypeTypeMappings = map[int64]string{
-	0:  "minecraft:crafting_shaped",
-	1:  "minecraft:crafting_shapeless",
-	10: "minecraft:crafting_special_bannerduplicate",
-	11: "minecraft:crafting_special_shielddecoration",
-	12: "minecraft:crafting_special_shulkerboxcoloring",
-	13: "minecraft:crafting_special_suspiciousstew",
-	14: "minecraft:crafting_special_repairitem",
-	15: "minecraft:smelting",
-	16: "minecraft:blasting",
-	17: "minecraft:smoking",
-	18: "minecraft:campfire_cooking",
-	19: "minecraft:stonecutting",
-	2:  "minecraft:crafting_special_armordye",
-	20: "minecraft:smithing_transform",
-	21: "minecraft:smithing_trim",
-	22: "minecraft:crafting_decorated_pot",
-	3:  "minecraft:crafting_special_bookcloning",
-	4:  "minecraft:crafting_special_mapcloning",
-	5:  "minecraft:crafting_special_mapextending",
-	6:  "minecraft:crafting_special_firework_rocket",
-	7:  "minecraft:crafting_special_firework_star",
-	8:  "minecraft:crafting_special_firework_star_fade",
-	9:  "minecraft:crafting_special_tippedarrow",
-}
-
-func (m *DeclareRecipesRecipesArrayTypeType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read DeclareRecipesRecipesArrayTypeType key")
-	}
-
-	value, ok := DeclareRecipesRecipesArrayTypeTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m DeclareRecipesRecipesArrayTypeType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range DeclareRecipesRecipesArrayTypeTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown DeclareRecipesRecipesArrayTypeType value: %s", m.Value)
-}
-
-type SpawnInfoGamemode struct {
-	Value string
-}
-
-var SpawnInfoGamemodeMappings = map[int64]string{
-	0: "survival",
-	1: "creative",
-	2: "adventure",
-	3: "spectator",
-}
-
-func (m *SpawnInfoGamemode) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.Byte
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SpawnInfoGamemode key")
-	}
-
-	value, ok := SpawnInfoGamemodeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SpawnInfoGamemode) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SpawnInfoGamemodeMappings {
-		if v == m.Value {
-			key := pk.Byte(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SpawnInfoGamemode value: %s", m.Value)
-}
-
-type ChatTypeParameterType struct {
-	Value string
-}
-
-var ChatTypeParameterTypeMappings = map[int64]string{
-	0: "content",
-	1: "sender",
-	2: "target",
-}
-
-func (m *ChatTypeParameterType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ChatTypeParameterType key")
-	}
-
-	value, ok := ChatTypeParameterTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ChatTypeParameterType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ChatTypeParameterTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ChatTypeParameterType value: %s", m.Value)
 }

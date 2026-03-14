@@ -228,7 +228,7 @@ func (p *UnlockRecipes) Scan(packet pk.Packet) error {
 
 	switch compareValueRecipes2 {
 	case "0":
-		var val models.Array[pk.VarInt, pk.String]
+		var val UnlockRecipesRecipes20
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -527,7 +527,7 @@ func (t *UnlockRecipes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValueRecipes2 {
 	case "0":
-		var val models.Array[pk.VarInt, pk.String]
+		var val UnlockRecipesRecipes20
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -622,3 +622,5 @@ func (t UnlockRecipes) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	}
 	return totalBytes, nil
 }
+
+type UnlockRecipesRecipes20 = models.Array[pk.VarInt, pk.String]

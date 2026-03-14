@@ -483,7 +483,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 
 	switch compareValuePlayers {
 	case "add":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersAdd
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -491,7 +491,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	case "join":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersJoin
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -499,7 +499,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	case "leave":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersLeave
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -664,7 +664,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValuePlayers {
 	case "add":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersAdd
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -672,7 +672,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	case "join":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersJoin
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -680,7 +680,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	case "leave":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayersLeave
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1215,3 +1215,9 @@ func (t TeamsUnnamedType0008Change) WriteTo(w io.Writer) (totalBytes int64, err 
 	}
 	return totalBytes, nil
 }
+
+type TeamsPlayersAdd = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayersJoin = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayersLeave = models.Array[pk.VarInt, pk.String]

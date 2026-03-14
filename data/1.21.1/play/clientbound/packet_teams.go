@@ -561,7 +561,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 
 	switch compareValuePlayers {
 	case "0":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers0
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -569,7 +569,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	case "3":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers3
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -577,7 +577,7 @@ func (p *Teams) Scan(packet pk.Packet) error {
 		}
 		p.Players = &val
 	case "4":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers4
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1042,7 +1042,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 
 	switch compareValuePlayers {
 	case "0":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers0
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1050,7 +1050,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	case "3":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers3
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1058,7 +1058,7 @@ func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 		}
 		t.Players = &val
 	case "4":
-		var val models.Array[pk.VarInt, pk.String]
+		var val TeamsPlayers4
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1225,3 +1225,9 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	}
 	return totalBytes, nil
 }
+
+type TeamsPlayers3 = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayers4 = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayers0 = models.Array[pk.VarInt, pk.String]

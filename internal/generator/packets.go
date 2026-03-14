@@ -1815,18 +1815,16 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	var bytesWritten int64
 	{{- range $container.Fields}}
 		{{- if isSwitch .}}
-			{{- $sw := getSwitchInfo .}}
-			{{- $fieldName := .Name}}
-			{{- if ne .Type.TypeName "[]byte"}}
-				bytesWritten, err = t.{{.Name}}.WriteTo(w)
-				totalBytes += bytesWritten
-				if err != nil {
-					return totalBytes, err
-				}
-			{{- end}}
+			{{- template "switchWriteWithParentCtxTmpl" dict "field" . "container" $container "prefix" "t."}}
+		{{- else if ne .Type.TypeName "[]byte"}}
+		bytesWritten, err = t.{{.Name}}.WriteTo(w)
+		totalBytes += bytesWritten
+		if err != nil {
+			return totalBytes, err
+		}
 		{{- end}}
 	{{- end}}
-	return totalBytes, nil
+return totalBytes, nil
 	{{- else}}
 	_ = w
 	return 0, nil
@@ -2297,6 +2295,135 @@ func (t {{$container.Name}}) WriteToWithParentContext(w io.Writer, ctx models.Pa
 	}
 	{{- else}}
 	_ = t.{{$fieldName}}
+	{{- end}}
+{{end}}
+{{define "switchWriteWithParentCtxTmpl"}}
+{{- $sw := getSwitchInfo .field}}
+{{- $fieldName := .field.Name}}
+{{- $container := .container}}
+{{- $prefix := .prefix}}
+	// Switch field {{$fieldName}} using parent context based on {{if $sw.CompareTo}}{{$sw.CompareTo}}{{else}}static value{{end}}
+	{{- $length := len $sw.Fields}}
+	{{- if ne $length 0}}
+	{{- if $sw.CompareTo}}
+	{{- if isParentCompareTo $sw}}
+	compareValue{{$fieldName}} := fmt.Sprintf("%v", ctx.GetField("{{ctxKeyForSwitch $sw}}"))
+	{{- else if isBitflagMemberAccess $sw}}
+	// Local bitflag member access (not parent) - use field
+	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{getBitflagCheckCode $sw $prefix}})
+	{{- else}}
+	compareValue{{$fieldName}} := {{getCompareToExpression $sw $container $prefix}}
+	{{- end}}
+	{{- else}}
+	compareValue{{$fieldName}} := fmt.Sprintf("%v", {{printf "%#v" $sw.CompareToValue}})
+	{{- end}}
+
+switch compareValue{{$fieldName}} {
+	{{- range $key, $type := $sw.Fields}}
+	{{- if $type}}
+	{{- if isNestedSwitch $type}}
+	{{- $nestedSw := getNestedSwitchInfo $type}}
+case "{{$key}}":
+		// Nested switch based on {{if $nestedSw.CompareTo}}{{$nestedSw.CompareTo}}{{else}}static value{{end}}
+		{{- if $nestedSw.CompareTo}}
+		{{- if isBitflagMemberAccess $nestedSw}}
+		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{getBitflagCheckCode $nestedSw $prefix}})
+		{{- else}}
+		compareValueNested{{$fieldName}}{{$key}} := {{getCompareToExpression $nestedSw $container $prefix}}
+		{{- end}}
+		{{- else}}
+		compareValueNested{{$fieldName}}{{$key}} := fmt.Sprintf("%v", {{printf "%#v" $nestedSw.CompareToValue}})
+		{{- end}}
+		switch compareValueNested{{$fieldName}}{{$key}} {
+		{{- range $nestedKey, $nestedType := $nestedSw.Fields}}
+		{{- if $nestedType}}
+		{{- if ne $nestedType.TypeName "[]byte"}}
+		case "{{$nestedKey}}":
+			if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+				bytesWritten, err = writer.WriteTo(w)
+				totalBytes += bytesWritten
+				if err != nil {
+					return totalBytes, errors.Wrap(err, "failed to write nested switch field {{$fieldName}} case {{$key}} -> {{$nestedKey}}")
+				}
+			}
+		{{- end}}
+		{{- end}}
+		{{- end}}
+		{{- if $nestedSw.Default}}
+		{{- if ne $nestedSw.Default.TypeName "[]byte"}}
+		default:
+			if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+				bytesWritten, err = writer.WriteTo(w)
+				totalBytes += bytesWritten
+				if err != nil {
+					return totalBytes, errors.Wrap(err, "failed to write nested switch field {{$fieldName}} default case for parent case {{$key}}")
+				}
+			}
+		{{- else}}
+		default:
+			// Void case - no data to write
+		{{- end}}
+		{{- else}}
+		default:
+			return totalBytes, fmt.Errorf("nested switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValueNested{{$fieldName}}{{$key}})
+		{{- end}}
+		}
+	{{- else if and (ne $type.TypeName "[]byte") (ne $type.TypeName "models.Void") (ne $type.TypeName "struct{}")}}
+case "{{$key}}":
+		if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, errors.Wrap(err, "failed to write switch field {{$fieldName}} case {{$key}}")
+			}
+		}
+	{{- else if or (eq $type.TypeName "[]byte") (eq $type.TypeName "models.Void") (eq $type.TypeName "struct{}")}}
+case "{{$key}}":
+		// Void case - no data to write
+		if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, errors.Wrap(err, "failed to write void switch field {{$fieldName}} case {{$key}}")
+			}
+		}
+	{{- end}}
+	{{- end}}
+	{{- end}}
+	{{- if $sw.Default}}
+	{{- if and (ne $sw.Default.TypeName "[]byte") (ne $sw.Default.TypeName "models.Void") (ne $sw.Default.TypeName "struct{}")}}
+default:
+		if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, errors.Wrap(err, "failed to write switch field {{$fieldName}} default case")
+			}
+		}
+	{{- else}}
+default:
+		// Void case - no data to write
+		if writer, ok := {{$prefix}}{{$fieldName}}.(interface{ WriteTo(io.Writer) (int64, error) }); ok {
+			bytesWritten, err = writer.WriteTo(w)
+			totalBytes += bytesWritten
+			if err != nil {
+				return totalBytes, errors.Wrap(err, "failed to write void switch field {{$fieldName}} default case")
+			}
+		}
+	{{- end}}
+    {{- else}}
+    default:
+        {{- if isCompareToFieldMapper $sw $container }}
+        // Mapper-backed discriminator with no explicit data for this value: treat as void
+        {{- else if eq .field.Type.TypeName "pk.Field" }}
+        // No explicit default; treat as void (no data)
+        {{- else }}
+        return totalBytes, fmt.Errorf("switch field {{$fieldName}}: unknown case value %s (no default defined in protocol)", compareValue{{$fieldName}})
+        {{- end }}
+    {{- end}}
+}
+	{{- else}}
+	_ = {{$prefix}}{{$fieldName}}
 	{{- end}}
 {{end}}
 {{define "bitfieldTmpl"}}{{$bitfield := toBitfield .}}type {{.Name}} struct { {{range $bitfield.Fields}}
@@ -4194,7 +4321,11 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 								caseTypeLower := strings.ToLower(caseType.TypeName)
 
 								// Check if this case contains a container or other complex type
-								if caseType.Extras != nil && (caseTypeLower == "" || caseTypeLower == "container" || caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper") {
+								if caseType.Extras != nil &&
+									(caseTypeLower == "" || caseTypeLower == "container" ||
+										caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" ||
+										caseTypeLower == "registryentryholderset" || caseTypeLower == "option" ||
+										caseTypeLower == "mapper" || caseTypeLower == "array") {
 									// Generate a child type for this complex case
 									childTypeName := toIdentifier(parentName + "_" + field.Name + "_" + caseName)
 									childType := *caseType
@@ -4435,7 +4566,7 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 									}
 									// Keep Extras for recursive switch generation in template
 									fmt.Printf("DEBUG: Keeping nested switch as 'any' for field '%s' case '%s' - Extras preserved for inline generation\n", field.Name, caseName)
-								} else if caseType.Extras != nil && (caseTypeLower == "" || caseTypeLower == "container" || caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper") {
+								} else if caseType.Extras != nil && (caseTypeLower == "" || caseTypeLower == "container" || caseTypeLower == "bitfield" || caseTypeLower == "registryentryholder" || caseTypeLower == "registryentryholderset" || caseTypeLower == "option" || caseTypeLower == "mapper" || caseTypeLower == "array") {
 									// Generate a child type for this complex case
 									childTypeName := toIdentifier(parentName + "_" + field.Name + "_" + caseName)
 									childType := *caseType
@@ -4801,6 +4932,19 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			// Replace struct{} and []byte with pk.ByteArray as they don't implement FieldEncoder
 			if optionTypeName == "struct{}" || optionTypeName == "[]byte" {
 				optionTypeName = "pk.ByteArray"
+			}
+			// If the option's inner type has complex Extras (container, array, etc.) that
+			// resolved to models.Void, create a child type so it gets properly generated
+			// as a struct with ReadFrom/WriteTo methods.
+			if option.Type.Extras != nil && optionTypeName == "models.Void" {
+				childName := "Data"
+				if extrasName := option.Type.Extras.GetName(); extrasName != "" && extrasName != "container" && extrasName != "array" && extrasName != "option" {
+					childName = toIdentifier(extrasName)
+				}
+				childType := createChildType(t.Name, childName, option.Type, baseTypes, isGeneratingBaseTypes)
+				optionTypeName = childType.Name
+				fmt.Printf("DEBUG [processType - option]: Created child type '%s' for complex option inner type in '%s'\n", childType.Name, t.Name)
+				types = append(types, processType(&childType, baseTypes, false, isGeneratingBaseTypes, nil)...)
 			}
 			// Check if option inner type needs basetypes prefix
 			if !isGeneratingBaseTypes && !strings.Contains(optionTypeName, ".") {
