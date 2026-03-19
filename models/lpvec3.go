@@ -58,13 +58,17 @@ func (v *LpVec3) ReadFrom(r io.Reader) (n int64, err error) {
 	}
 	n += nn
 
-	// Reconstruct the 48-bit long as in Java: m = (l << 16) | (j << 8) | i
-	// where i = b1, j = b2, and l = bytes 3-6 as unsigned int (big-endian or little-endian depends on architecture)
+	// Reconstruct the 48-bit long matching Java VelocityEncoding.readVelocity():
+	//   int i  = buf.readUnsignedByte();   // b1
+	//   int j  = buf.readUnsignedByte();   // b2
+	//   long l = buf.readUnsignedInt();     // b3-b6, big-endian (standard MC protocol order)
+	//   long m = (long)i | ((long)j << 8) | (l << 16);
 	ub1, ub2 := uint8(b1), uint8(b2)
 	ub3, ub4, ub5, ub6 := uint8(b3), uint8(b4), uint8(b5), uint8(b6)
 
-	// Construct the 48-bit value (little-endian byte order for mc packet format)
-	m := uint64(ub1) | (uint64(ub2) << 8) | (uint64(ub3) << 16) | (uint64(ub4) << 24) | (uint64(ub5) << 32) | (uint64(ub6) << 40)
+	// Bytes 3-6 are a big-endian unsigned int (b3=MSB, b6=LSB), shifted left 16 bits.
+	unsignedInt := (uint64(ub3) << 24) | (uint64(ub4) << 16) | (uint64(ub5) << 8) | uint64(ub6)
+	m := uint64(ub1) | (uint64(ub2) << 8) | (unsignedInt << 16)
 
 	// Extract scale factor from bits 0-1 (and potentially 2-X if continuation flag)
 	scaleFactor := int32(m & 0x03)
@@ -157,17 +161,21 @@ func (v *LpVec3) WriteTo(w io.Writer) (n int64, err error) {
 	// Combine all bits
 	q := m | n_shifted | o_shifted | p_shifted
 
-	// Write bytes in little-endian order (as MC packet format requires)
-	bytes := []pk.Byte{
-		pk.Byte((q >> 0) & 0xFF),  // Byte 0: bits 0-7
-		pk.Byte((q >> 8) & 0xFF),  // Byte 1: bits 8-15
-		pk.Byte((q >> 16) & 0xFF), // Byte 2: bits 16-23
-		pk.Byte((q >> 24) & 0xFF), // Byte 3: bits 24-31
-		pk.Byte((q >> 32) & 0xFF), // Byte 4: bits 32-39
-		pk.Byte((q >> 40) & 0xFF), // Byte 5: bits 40-47
+	// Write matching Java VelocityEncoding.writeVelocity():
+	//   buf.writeByte(i);   // byte 0: bits 0-7
+	//   buf.writeByte(j);   // byte 1: bits 8-15
+	//   buf.writeInt(l);    // bytes 2-5: bits 16-47 as big-endian unsigned int
+	unsignedIntOut := (q >> 16) & 0xFFFFFFFF
+	outBytes := []pk.Byte{
+		pk.Byte((q >> 0) & 0xFF),              // Byte 0: bits 0-7  (i)
+		pk.Byte((q >> 8) & 0xFF),              // Byte 1: bits 8-15 (j)
+		pk.Byte((unsignedIntOut >> 24) & 0xFF), // Byte 2: bits 40-47 (int MSB)
+		pk.Byte((unsignedIntOut >> 16) & 0xFF), // Byte 3: bits 32-39
+		pk.Byte((unsignedIntOut >> 8) & 0xFF),  // Byte 4: bits 24-31
+		pk.Byte(unsignedIntOut & 0xFF),         // Byte 5: bits 16-23 (int LSB)
 	}
 
-	for _, b := range bytes {
+	for _, b := range outBytes {
 		nn, err := b.WriteTo(w)
 		if err != nil {
 			return n, err
