@@ -581,26 +581,31 @@ func (p *Map) SetData(val pk.Field) {
 func (t *Map) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ItemDamage.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ItemDamage")
 	}
 	bytesRead, err = t.Scale.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Scale")
 	}
 	bytesRead, err = t.Locked.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Locked")
 	}
 	bytesRead, err = t.Icons.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Icons")
 	}
 	bytesRead, err = t.Columns.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Columns")

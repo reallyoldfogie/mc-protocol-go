@@ -125,11 +125,13 @@ func (p *Difficulty) SetDifficultyLocked(val pk.Boolean) {
 func (t *Difficulty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Difficulty.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Difficulty")
 	}
 	bytesRead, err = t.DifficultyLocked.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field DifficultyLocked")

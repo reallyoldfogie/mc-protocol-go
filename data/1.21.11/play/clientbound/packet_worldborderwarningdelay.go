@@ -99,6 +99,7 @@ func (p *WorldBorderWarningDelay) SetWarningTime(val pk.VarInt) {
 func (t *WorldBorderWarningDelay) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WarningTime.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WarningTime")

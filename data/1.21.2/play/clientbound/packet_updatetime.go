@@ -151,16 +151,19 @@ func (p *UpdateTime) SetTickDayTime(val pk.Boolean) {
 func (t *UpdateTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Age.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Age")
 	}
 	bytesRead, err = t.Time.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Time")
 	}
 	bytesRead, err = t.TickDayTime.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field TickDayTime")

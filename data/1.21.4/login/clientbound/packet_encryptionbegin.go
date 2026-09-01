@@ -197,21 +197,25 @@ func (p *EncryptionBegin) SetShouldAuthenticate(val pk.Boolean) {
 func (t *EncryptionBegin) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ServerId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ServerId")
 	}
 	bytesRead, err = t.PublicKey.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PublicKey")
 	}
 	bytesRead, err = t.VerifyToken.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VerifyToken")
 	}
 	bytesRead, err = t.ShouldAuthenticate.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ShouldAuthenticate")

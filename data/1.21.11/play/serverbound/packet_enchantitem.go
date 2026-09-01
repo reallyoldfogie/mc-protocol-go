@@ -126,11 +126,13 @@ func (p *EnchantItem) SetEnchantment(val pk.Byte) {
 func (t *EnchantItem) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WindowId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowId")
 	}
 	bytesRead, err = t.Enchantment.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Enchantment")

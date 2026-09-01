@@ -118,6 +118,7 @@ func (p *ShowDialog) SetDialog(val ShowDialogDialog) {
 func (t *ShowDialog) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Dialog.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Dialog")

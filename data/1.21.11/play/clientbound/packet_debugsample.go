@@ -138,11 +138,13 @@ func (p *DebugSample) SetType(val pk.VarInt) {
 func (t *DebugSample) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Sample.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sample")
 	}
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")

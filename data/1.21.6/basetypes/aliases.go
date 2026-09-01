@@ -6,51 +6,49 @@ import (
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 )
 
-type Optvarint = pk.VarInt
-
-type I16 = pk.Short
-
-type F32 = pk.Float
-
-type Ingredient = models.Array[pk.VarInt, Slot]
-
-type U64 = models.UInt64
-
-type I64 = pk.Long
-
-type bool = pk.Boolean
-
-type I32 = pk.Int
-
-type ByteArray = pk.ByteArray
-
 type Varint = pk.VarInt
-
-type U16 = pk.UnsignedShort
-
-type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
-
-type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
-
-type F64 = pk.Double
 
 type ExactComponentMatcher = models.Array[pk.VarInt, SlotComponent]
 
-type ChatSession = models.Option[ChatSessionData]
+type ContainerID = pk.VarInt
 
-type U32 = models.UInt32
+type U16 = pk.UnsignedShort
+
+type I64 = pk.Long
+
+type F32 = pk.Float
+
+type U64 = models.UInt64
 
 type I8 = pk.Byte
 
-type ContainerID = pk.VarInt
+type Ingredient = models.Array[pk.VarInt, Slot]
+
+type PreviousMessages = models.Array[pk.VarInt, PreviousMessagesPreviousMessagesElement]
+
+type F64 = pk.Double
+
+type ChatSession = models.Option[ChatSessionData]
+
+type bool = pk.Boolean
+
+type ByteArray = pk.ByteArray
+
+type I16 = pk.Short
+
+type I32 = pk.Int
+
+type Optvarint = pk.VarInt
 
 type SlotComponentDataWrittenBookContentFilteredTitle = models.Option[pk.String]
 
-type SlotComponentDataEquippableModel = models.Option[pk.String]
+type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
 
-type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
+type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
 
-type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
+type SlotComponentDataLore = models.Array[pk.VarInt, models.AnonymousNBT]
+
+type SlotComponentDataAttributeModifiers = models.Array[pk.VarInt, SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElement]
 
 type SlotComponentDataBlocksAttacksDamageReductionsArrayTypeType = models.Option[IDSet]
 
@@ -60,6 +58,12 @@ type SlotComponentDataBlocksAttacksBlockSound = models.Option[ItemSoundHolder]
 
 type SlotComponentDataBlocksAttacksDisableSound = models.Option[ItemSoundHolder]
 
+type SlotComponentDataEquippableModel = models.Option[pk.String]
+
+type SlotComponentDataEquippableCameraOverlay = models.Option[pk.String]
+
+type SlotComponentDataEquippableAllowedEntities = models.Option[IDSet]
+
 type SlotComponentDataUseCooldownCooldownGroup = models.Option[pk.String]
 
 type SlotComponentDataPotionContentsPotionId = models.Option[pk.VarInt]
@@ -68,14 +72,12 @@ type SlotComponentDataPotionContentsCustomColor = models.Option[pk.Int]
 
 type SlotComponentDataPotionContentsCustomName = models.Option[pk.String]
 
-type SlotComponentDataToolRulesArrayTypeSpeed = models.Option[pk.Float]
-
-type SlotComponentDataToolRulesArrayTypeCorrectDropForBlocks = models.Option[pk.Boolean]
-
-type SlotComponentDataLore = models.Array[pk.VarInt, models.AnonymousNBT]
-
 type SlotComponentDataProfileName = models.Option[pk.String]
 
 type SlotComponentDataProfileUuid = models.Option[pk.UUID]
 
 type SlotComponentDataProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type GameProfilePropertiesArrayTypeSignature = models.Option[pk.String]
+
+type U32 = models.UInt32

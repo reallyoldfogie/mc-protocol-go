@@ -255,36 +255,43 @@ func (p *EntityMoveLook) SetOnGround(val pk.Boolean) {
 func (t *EntityMoveLook) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.DX.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field DX")
 	}
 	bytesRead, err = t.DY.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field DY")
 	}
 	bytesRead, err = t.DZ.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field DZ")
 	}
 	bytesRead, err = t.Yaw.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
 	}
 	bytesRead, err = t.Pitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 	bytesRead, err = t.OnGround.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OnGround")

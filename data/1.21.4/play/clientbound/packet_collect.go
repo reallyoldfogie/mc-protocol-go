@@ -151,16 +151,19 @@ func (p *Collect) SetPickupItemCount(val pk.VarInt) {
 func (t *Collect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.CollectedEntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CollectedEntityId")
 	}
 	bytesRead, err = t.CollectorEntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CollectorEntityId")
 	}
 	bytesRead, err = t.PickupItemCount.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PickupItemCount")

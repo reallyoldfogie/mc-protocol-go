@@ -152,16 +152,19 @@ func (p *LoginPluginRequest) SetData(val models.RestBuffer) {
 func (t *LoginPluginRequest) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.MessageId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field MessageId")
 	}
 	bytesRead, err = t.Channel.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Channel")
 	}
 	bytesRead, err = t.Data.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Data")

@@ -15,6 +15,7 @@ import (
 	v1_21_7 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.7"
 	v1_21_8 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.8"
 	v1_21_9 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.9"
+	v26_1 "github.com/reallyoldfogie/mc-protocol-go/data/26.1"
 )
 
 type SoundMgr interface {
@@ -62,6 +63,8 @@ func GetSoundMgrForVersion(version string) SoundMgr {
 		return v1_21_8Sounds
 	case "1.21.9":
 		return v1_21_9Sounds
+	case "26.1":
+		return v26_1Sounds
 	}
 	return defaultSoundMgr{}
 }
@@ -261,5 +264,23 @@ func (b V1_21_9Sound) GetSubtitleByID(id models.SoundID) string {
 }
 
 func (b V1_21_9Sound) GetSubtitleKeyByID(id models.SoundID) string {
+	return b.holder.SoundSubtitleKeysByID[id]
+}
+
+type V26_1Sound struct {
+	holder v26_1.Sounds
+}
+
+var v26_1Sounds = V26_1Sound{holder: v26_1.NewSounds()}
+
+func (b V26_1Sound) GetSoundNameByID(id models.SoundID) string {
+	return b.holder.SoundNamesByID[id]
+}
+
+func (b V26_1Sound) GetSubtitleByID(id models.SoundID) string {
+	return b.holder.SoundSubtitlesByID[id]
+}
+
+func (b V26_1Sound) GetSubtitleKeyByID(id models.SoundID) string {
 	return b.holder.SoundSubtitleKeysByID[id]
 }

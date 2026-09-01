@@ -14,6 +14,81 @@ import (
 //	  "container",
 //	  [
 //	    {
+//	      "name": "assetId",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "description",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "decal",
+//	      "type": "bool"
+//	    }
+//	  ]
+//	]
+type ArmorTrimPattern struct {
+	// "string"
+	AssetId pk.String
+	// "anonymousNbt"
+	Description models.AnonymousNBT
+	// "bool"
+	Decal pk.Boolean
+}
+
+func (t *ArmorTrimPattern) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.AssetId.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
+	}
+	bytesRead, err = t.Description.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Description")
+	}
+	bytesRead, err = t.Decal.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Decal")
+	}
+
+	return totalBytes, nil
+}
+
+func (t ArmorTrimPattern) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[ArmorTrimPattern.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.AssetId.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Description.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Decal.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
 //	      "name": "key",
 //	      "type": "string"
 //	    },
@@ -33,11 +108,13 @@ type ArmorTrimMaterialOverrideArmorAssetsArrayType struct {
 func (t *ArmorTrimMaterialOverrideArmorAssetsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Key")
 	}
 	bytesRead, err = t.Value.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Value")
@@ -131,16 +208,19 @@ type ArmorTrimMaterial struct {
 func (t *ArmorTrimMaterial) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.AssetBase.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AssetBase")
 	}
 	bytesRead, err = t.OverrideArmorAssets.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OverrideArmorAssets")
 	}
 	bytesRead, err = t.Description.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Description")
@@ -166,78 +246,6 @@ func (t ArmorTrimMaterial) WriteTo(w io.Writer) (totalBytes int64, err error) {
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Description.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "assetId",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "description",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "decal",
-//	      "type": "bool"
-//	    }
-//	  ]
-//	]
-type ArmorTrimPattern struct {
-	// "string"
-	AssetId pk.String
-	// "anonymousNbt"
-	Description models.AnonymousNBT
-	// "bool"
-	Decal pk.Boolean
-}
-
-func (t *ArmorTrimPattern) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.AssetId.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
-	}
-	bytesRead, err = t.Description.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Description")
-	}
-	bytesRead, err = t.Decal.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Decal")
-	}
-
-	return totalBytes, nil
-}
-
-func (t ArmorTrimPattern) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[ArmorTrimPattern.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.AssetId.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Description.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Decal.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

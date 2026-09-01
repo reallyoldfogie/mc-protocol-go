@@ -543,11 +543,13 @@ func (p *ScoreboardObjective) SetStyling(val pk.Field) {
 func (t *ScoreboardObjective) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Name")
 	}
 	bytesRead, err = t.Action.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Action")

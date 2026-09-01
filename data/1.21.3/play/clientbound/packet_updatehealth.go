@@ -151,16 +151,19 @@ func (p *UpdateHealth) SetFoodSaturation(val pk.Float) {
 func (t *UpdateHealth) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Health.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Health")
 	}
 	bytesRead, err = t.Food.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Food")
 	}
 	bytesRead, err = t.FoodSaturation.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FoodSaturation")

@@ -69,26 +69,31 @@ type EntityMetadataPaintingVariant struct {
 func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Width.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Width")
 	}
 	bytesRead, err = t.Height.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Height")
 	}
 	bytesRead, err = t.AssetId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
 	}
 	bytesRead, err = t.Title.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Title")
 	}
 	bytesRead, err = t.Author.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Author")
@@ -138,6 +143,7 @@ type EntityMetadata struct {
 
 func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
 	var bytesRead int64
+	loopEntryCount := 0
 
 	// Read entries in a loop until we encounter the terminator (endVal)
 	for {
@@ -168,6 +174,7 @@ func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
 			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
 		}
 		t.Entries = append(t.Entries, entry)
+		loopEntryCount++
 	}
 
 	return totalRead, nil
@@ -263,12 +270,14 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown EntityMetadataEntryType value: %s", m.Value)
+	return 0, errors.Errorf("unknown EntityMetadataEntryType value: '%s'", m.Value)
 }
 
 type EntityMetadataEntryValueOptionalGlobalPos = models.Option[GlobalPos]
 
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+
+type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
 
 // Protodef: [
 //
@@ -300,16 +309,19 @@ type EntityMetadataEntryValueRotations struct {
 func (t *EntityMetadataEntryValueRotations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Pitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 	bytesRead, err = t.Yaw.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
 	}
 	bytesRead, err = t.Roll.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Roll")
@@ -342,9 +354,43 @@ func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int6
 	return totalBytes, nil
 }
 
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+type EntityMetadataEntryValueHumanoidArm struct {
+	Value string
+}
 
-type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
+var EntityMetadataEntryValueHumanoidArmMappings = map[int64]string{
+	0: "left",
+	1: "right",
+}
+
+func (m *EntityMetadataEntryValueHumanoidArm) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read EntityMetadataEntryValueHumanoidArm key")
+	}
+
+	value, ok := EntityMetadataEntryValueHumanoidArmMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m EntityMetadataEntryValueHumanoidArm) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range EntityMetadataEntryValueHumanoidArmMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown EntityMetadataEntryValueHumanoidArm value: '%s'", m.Value)
+}
+
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
 
 // Protodef: [
 //
@@ -376,16 +422,19 @@ type EntityMetadataEntryValueVillagerData struct {
 func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.VillagerType.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
 	}
 	bytesRead, err = t.VillagerProfession.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
 	}
 	bytesRead, err = t.Level.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Level")
@@ -476,42 +525,6 @@ func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, er
 	}
 
 	return totalBytes, nil
-}
-
-type EntityMetadataEntryValueHumanoidArm struct {
-	Value string
-}
-
-var EntityMetadataEntryValueHumanoidArmMappings = map[int64]string{
-	0: "left",
-	1: "right",
-}
-
-func (m *EntityMetadataEntryValueHumanoidArm) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read EntityMetadataEntryValueHumanoidArm key")
-	}
-
-	value, ok := EntityMetadataEntryValueHumanoidArmMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m EntityMetadataEntryValueHumanoidArm) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range EntityMetadataEntryValueHumanoidArmMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown EntityMetadataEntryValueHumanoidArm value: %s", m.Value)
 }
 
 type EntityMetadataEntryValueParticles = models.Array[pk.VarInt, Particle]
@@ -866,11 +879,13 @@ type EntityMetadataEntry struct {
 func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Key")
 	}
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
@@ -1025,7 +1040,7 @@ func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error
 		}
 		t.Value = &val
 	case "optional_block_state":
-		var val models.Option[pk.VarInt]
+		var val models.OptVarInt
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -1049,7 +1064,7 @@ func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error
 		}
 		t.Value = &val
 	case "optional_unsigned_int":
-		var val models.Option[pk.VarInt]
+		var val models.OptVarInt
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {

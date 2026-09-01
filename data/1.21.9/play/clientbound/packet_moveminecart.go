@@ -186,11 +186,13 @@ func (p *MoveMinecart) SetSteps(val models.Array[pk.VarInt, MoveMinecartStepsArr
 func (t *MoveMinecart) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.Steps.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Steps")

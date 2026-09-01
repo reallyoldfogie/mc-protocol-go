@@ -151,16 +151,19 @@ func (p *Experience) SetTotalExperience(val pk.VarInt) {
 func (t *Experience) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ExperienceBar.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ExperienceBar")
 	}
 	bytesRead, err = t.Level.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Level")
 	}
 	bytesRead, err = t.TotalExperience.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field TotalExperience")

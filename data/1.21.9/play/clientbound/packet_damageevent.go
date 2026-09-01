@@ -211,26 +211,31 @@ func (p *DamageEvent) SetSourcePosition(val models.Option[basetypes.Vec3f64]) {
 func (t *DamageEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.SourceTypeId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SourceTypeId")
 	}
 	bytesRead, err = t.SourceCauseId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SourceCauseId")
 	}
 	bytesRead, err = t.SourceDirectId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SourceDirectId")
 	}
 	bytesRead, err = t.SourcePosition.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SourcePosition")

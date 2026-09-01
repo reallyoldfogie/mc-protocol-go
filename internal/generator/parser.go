@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/protodef-go/protodef-go/protocol"
-	protodef "github.com/protodef-go/protodef-go/protodef"
+	"github.com/reallyoldfogie/protodef-go/protocol"
+	protodef "github.com/reallyoldfogie/protodef-go/protodef"
 )
 
 const (
@@ -245,12 +245,12 @@ func parseProtocol(version, in string) (*protocol.Protocol, error) {
 func GetProtocolData(metadataDir, version2Use, version string) (*protocol.Protocol, error) {
 	data, err := loadJSON(metadataDir, version2Use, version)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("[GetProtocolData] failed to loadJSON: %w", err)
 	}
 
 	protodef, err := parseProtocol(version, data.Protocols)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("[GetProtocolData] failed to parseProtocol: %w", err)
 	}
 
 	return protodef, nil

@@ -126,11 +126,13 @@ func (p *PlayerlistHeader) SetFooter(val models.AnonymousNBT) {
 func (t *PlayerlistHeader) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Header.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Header")
 	}
 	bytesRead, err = t.Footer.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Footer")

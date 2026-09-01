@@ -44,11 +44,11 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
-
 type TestInstanceBlockActionDataTest = models.Option[pk.String]
 
 type TestInstanceBlockActionDataErrorMessage = models.Option[models.AnonymousNBT]
+
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
 
 type WindowClickChangedSlotsArrayTypeItem = models.Option[basetypes.HashedSlot]
 
@@ -82,11 +82,13 @@ type WindowClickChangedSlotsArrayType struct {
 func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Location.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Location")
 	}
 	bytesRead, err = t.Item.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Item")
@@ -154,11 +156,13 @@ type ChatCommandSignedArgumentSignaturesArrayType struct {
 func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ArgumentName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
 	}
 	bytesRead, err = t.Signature.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Signature")

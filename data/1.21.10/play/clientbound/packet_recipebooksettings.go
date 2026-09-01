@@ -177,21 +177,25 @@ func (p *RecipeBookSettings) SetSmoker(val RecipeBookSetting) {
 func (t *RecipeBookSettings) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Crafting.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Crafting")
 	}
 	bytesRead, err = t.Furnace.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Furnace")
 	}
 	bytesRead, err = t.Blast.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Blast")
 	}
 	bytesRead, err = t.Smoker.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Smoker")
@@ -253,11 +257,13 @@ type RecipeBookSetting struct {
 func (t *RecipeBookSetting) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Open.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Open")
 	}
 	bytesRead, err = t.Filtering.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Filtering")

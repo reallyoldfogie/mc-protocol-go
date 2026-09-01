@@ -152,16 +152,19 @@ func (p *SetTestBlock) SetMessage(val pk.String) {
 func (t *SetTestBlock) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Position.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Position")
 	}
 	bytesRead, err = t.Mode.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Mode")
 	}
 	bytesRead, err = t.Message.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Message")

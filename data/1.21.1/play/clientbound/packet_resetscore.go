@@ -132,11 +132,13 @@ func (p *ResetScore) SetObjectiveName(val models.Option[pk.String]) {
 func (t *ResetScore) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityName")
 	}
 	bytesRead, err = t.ObjectiveName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ObjectiveName")

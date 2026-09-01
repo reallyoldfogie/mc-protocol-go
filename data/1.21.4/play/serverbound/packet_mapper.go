@@ -101,5 +101,5 @@ func (m PacketName) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown PacketName value: %s", m.Value)
+	return 0, errors.Errorf("unknown PacketName value: '%s'", m.Value)
 }

@@ -19,6 +19,7 @@ func main() {
 	memoryLimit := flag.String("memory-limit", "", "Memory limit (e.g., 512M, 1G) (overrides config)")
 	gcPercent := flag.Int("gc-percent", 0, "GC percent (overrides config, 0 means use config value)")
 	maxProcs := flag.Int("max-procs", 0, "Maximum number of OS threads (overrides config, 0 means use config value)")
+	refreshCache := flag.Bool("refresh-cache", false, "Force refresh cache instead of using cached files")
 
 	flag.Parse()
 
@@ -60,6 +61,10 @@ func main() {
 
 	if *maxProcs > 0 {
 		cfg.Memory.MaxProcs = *maxProcs
+	}
+
+	if *refreshCache {
+		cfg.Cache.RefreshCache = *refreshCache
 	}
 
 	// Validate configuration

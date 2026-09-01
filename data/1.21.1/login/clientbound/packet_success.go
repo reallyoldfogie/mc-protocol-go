@@ -228,21 +228,25 @@ func (p *Success) SetStrictErrorHandling(val pk.Boolean) {
 func (t *Success) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Uuid.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Uuid")
 	}
 	bytesRead, err = t.Username.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Username")
 	}
 	bytesRead, err = t.Properties.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Properties")
 	}
 	bytesRead, err = t.StrictErrorHandling.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field StrictErrorHandling")

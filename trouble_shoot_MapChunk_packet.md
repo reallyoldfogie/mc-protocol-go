@@ -74306,7 +74306,7 @@ func (m {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, fmt.Errorf("unknown {{.Name}} value: %s", m.Value)
+	return 0, fmt.Errorf("unknown {{.Name}} value: '%s'", m.Value)
 }
 {{end}}
 

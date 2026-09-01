@@ -544,26 +544,31 @@ func (p *Advancements) SetShowAdvancements(val pk.Boolean) {
 func (t *Advancements) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Reset.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Reset")
 	}
 	bytesRead, err = t.AdvancementMapping.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AdvancementMapping")
 	}
 	bytesRead, err = t.Identifiers.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Identifiers")
 	}
 	bytesRead, err = t.ProgressMapping.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ProgressMapping")
 	}
 	bytesRead, err = t.ShowAdvancements.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ShowAdvancements")

@@ -127,11 +127,13 @@ func (p *CraftRecipeResponse) SetRecipeDisplay(val RecipeDisplay) {
 func (t *CraftRecipeResponse) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WindowId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowId")
 	}
 	bytesRead, err = t.RecipeDisplay.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field RecipeDisplay")
@@ -471,6 +473,7 @@ type RecipeDisplay struct {
 func (t *RecipeDisplay) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")

@@ -130,14 +130,14 @@ func buildPlayerInfo1212() *cb1212.PlayerInfo {
 	latency := pk.VarInt(42)
 
 	entry := cb1212.PlayerInfoDataArrayType{
-		Uuid:         testUUID,
-		Player:       &models.Void{},
-		ChatSession:  &models.Void{},
-		Gamemode:     &gamemode,
-		Listed:       &listed,
-		Latency:      &latency,
-		DisplayName:  &models.Void{},
-		ListPriority: &models.Void{},
+		Uuid:        testUUID,
+		Player:      &models.Void{},
+		ChatSession: &models.Void{},
+		Gamemode:    &gamemode,
+		Listed:      &listed,
+		Latency:     &latency,
+		DisplayName: &models.Void{},
+		// ListPriority: &models.Void{},
 	}
 	pkt.Data.Set([]cb1212.PlayerInfoDataArrayType{entry})
 	pkt.Data.SetParentContext(newParentContext7(false, false, true, true, true, false, false))

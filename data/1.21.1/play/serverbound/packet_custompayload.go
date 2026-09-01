@@ -126,11 +126,13 @@ func (p *CustomPayload) SetData(val models.RestBuffer) {
 func (t *CustomPayload) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Channel.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Channel")
 	}
 	bytesRead, err = t.Data.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Data")

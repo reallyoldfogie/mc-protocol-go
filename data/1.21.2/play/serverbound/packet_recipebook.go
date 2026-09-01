@@ -151,16 +151,19 @@ func (p *RecipeBook) SetFilterActive(val pk.Boolean) {
 func (t *RecipeBook) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.BookId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BookId")
 	}
 	bytesRead, err = t.BookOpen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BookOpen")
 	}
 	bytesRead, err = t.FilterActive.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FilterActive")

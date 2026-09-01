@@ -670,7 +670,7 @@ func TestNBTField_NameHandling_Post1_20_5(t *testing.T) {
 func TestNBTField_NameHandling_UsesGlobalVersionFallback(t *testing.T) {
 	// When Version field is empty, NBTField should use the global version context
 	// Set to a pre-1.20.5 version first
-	prev := currentNBTVersion
+	prev := currentNBTVersion()
 	defer func() { SetCurrentNBTVersion(prev) }()
 
 	SetCurrentNBTVersion("1.20.4")

@@ -50,7 +50,7 @@ func (o *Option[T]) ReadFrom(r io.Reader) (n int64, err error) {
 			// Initialize empty compound and inherit current default NBT version
 			nbtField.Value = &NBTCompound{Tags: []NBTTag{}}
 			if nbtField.Version == "" {
-				nbtField.Version = currentNBTVersion
+				nbtField.Version = currentNBTVersion()
 			}
 		}
 	}

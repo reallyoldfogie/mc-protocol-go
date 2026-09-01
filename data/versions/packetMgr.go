@@ -15,6 +15,7 @@ import (
 	v1_21_7 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.7"
 	v1_21_8 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.8"
 	v1_21_9 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.9"
+	v26_1 "github.com/reallyoldfogie/mc-protocol-go/data/26.1"
 )
 
 func GetPacketMgrForVersion(version string) models.PacketMgr {
@@ -41,6 +42,8 @@ func GetPacketMgrForVersion(version string) models.PacketMgr {
 		return v1_21_8.NewPackets()
 	case "1.21.9":
 		return v1_21_9.NewPackets()
+	case "26.1":
+		return v26_1.NewPackets()
 	}
 	panic("[GetPacketMgrForVersion] unknown version: " + version)
 }

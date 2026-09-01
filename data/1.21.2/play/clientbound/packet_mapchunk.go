@@ -479,56 +479,67 @@ func (p *MapChunk) SetBlockLight(val models.Array[pk.VarInt, MapChunkBlockLightA
 func (t *MapChunk) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.X.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field X")
 	}
 	bytesRead, err = t.Z.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Z")
 	}
 	bytesRead, err = t.Heightmaps.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Heightmaps")
 	}
 	bytesRead, err = t.ChunkData.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ChunkData")
 	}
 	bytesRead, err = t.BlockEntities.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockEntities")
 	}
 	bytesRead, err = t.SkyLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SkyLightMask")
 	}
 	bytesRead, err = t.BlockLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockLightMask")
 	}
 	bytesRead, err = t.EmptySkyLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EmptySkyLightMask")
 	}
 	bytesRead, err = t.EmptyBlockLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EmptyBlockLightMask")
 	}
 	bytesRead, err = t.SkyLight.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SkyLight")
 	}
 	bytesRead, err = t.BlockLight.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockLight")

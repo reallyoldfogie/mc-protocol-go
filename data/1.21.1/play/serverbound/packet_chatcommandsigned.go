@@ -286,31 +286,37 @@ func (p *ChatCommandSigned) SetAcknowledged(val models.FixedBuffer3) {
 func (t *ChatCommandSigned) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Command.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Command")
 	}
 	bytesRead, err = t.Timestamp.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Timestamp")
 	}
 	bytesRead, err = t.Salt.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Salt")
 	}
 	bytesRead, err = t.ArgumentSignatures.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ArgumentSignatures")
 	}
 	bytesRead, err = t.MessageCount.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field MessageCount")
 	}
 	bytesRead, err = t.Acknowledged.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Acknowledged")

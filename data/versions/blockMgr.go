@@ -15,6 +15,7 @@ import (
 	v1_21_7 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.7"
 	v1_21_8 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.8"
 	v1_21_9 "github.com/reallyoldfogie/mc-protocol-go/data/1.21.9"
+	v26_1 "github.com/reallyoldfogie/mc-protocol-go/data/26.1"
 )
 
 type BlockMgr interface {
@@ -60,6 +61,8 @@ func GetBlockMgrForVersion(version string) BlockMgr {
 		return v1_21_8Blocks
 	case "1.21.9":
 		return v1_21_9Blocks
+	case "26.1":
+		return v26_1Blocks
 	}
 	return defaultBlockMgr{}
 }
@@ -261,3 +264,21 @@ func (b V1_21_9Block) BlockIDByStateID(blockState uint32) (models.BlockID, bool)
 }
 
 func (b V1_21_9Block) BitsPerBlock() int { return b.holder.BitsPerBlock }
+
+type V26_1Block struct {
+	holder v26_1.Blocks
+}
+
+var v26_1Blocks = V26_1Block{holder: v26_1.NewBlocks()}
+
+func (b V26_1Block) GetByID(id models.BlockID) (models.Block, bool) {
+	bID, ok := b.holder.BlockByID[id]
+	return bID, ok
+}
+
+func (b V26_1Block) BlockIDByStateID(blockState uint32) (models.BlockID, bool) {
+	id, ok := b.holder.BlockIDByStateID[blockState]
+	return id, ok
+}
+
+func (b V26_1Block) BitsPerBlock() int { return b.holder.BitsPerBlock }

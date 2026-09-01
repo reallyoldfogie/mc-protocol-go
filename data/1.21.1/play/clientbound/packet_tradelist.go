@@ -441,31 +441,37 @@ func (p *TradeList) SetCanRestock(val pk.Boolean) {
 func (t *TradeList) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WindowId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowId")
 	}
 	bytesRead, err = t.Trades.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Trades")
 	}
 	bytesRead, err = t.VillagerLevel.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VillagerLevel")
 	}
 	bytesRead, err = t.Experience.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Experience")
 	}
 	bytesRead, err = t.IsRegularVillager.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IsRegularVillager")
 	}
 	bytesRead, err = t.CanRestock.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CanRestock")

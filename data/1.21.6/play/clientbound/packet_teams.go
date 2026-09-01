@@ -365,7 +365,7 @@ type Teams struct {
 	//                   "default": "void"
 	//                 }
 	//               ]
-	UnnamedType0005 pk.Field
+	UnnamedType0001 pk.Field
 	// [
 	//                 "switch",
 	//                 {
@@ -421,7 +421,7 @@ func (p *Teams) Marshal() pk.Packet {
 		p.packetID,
 		&p.Team,
 		&p.Mode,
-		p.UnnamedType0005,
+		p.UnnamedType0001,
 		p.Players)
 }
 
@@ -445,36 +445,36 @@ func (p *Teams) Scan(packet pk.Packet) error {
 	if err != nil {
 		return fmt.Errorf("scanning packet field[Mode] error: %w", err)
 	}
-	// Switch field UnnamedType0005 based on mode
+	// Switch field UnnamedType0001 based on mode
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0005 := p.Mode.Value
+	compareValueUnnamedType0001 := p.Mode.Value
 
-	switch compareValueUnnamedType0005 {
+	switch compareValueUnnamedType0001 {
 	case "add":
-		var val TeamsUnnamedType0005Add
+		var val TeamsUnnamedType0001Add
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0005] case add")
+			return errors.Wrap(err, "scanning packet field[UnnamedType0001] case add")
 		}
-		p.UnnamedType0005 = &val
+		p.UnnamedType0001 = &val
 	case "change":
-		var val TeamsUnnamedType0005Change
+		var val TeamsUnnamedType0001Change
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "scanning packet field[UnnamedType0005] case change")
+			return errors.Wrap(err, "scanning packet field[UnnamedType0001] case change")
 		}
-		p.UnnamedType0005 = &val
+		p.UnnamedType0001 = &val
 	default:
 		// Void case - no data to read
 		var __void models.Void
 		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return errors.Wrap(err, "failed to read void switch field UnnamedType0005 default case")
+			return errors.Wrap(err, "failed to read void switch field UnnamedType0001 default case")
 		}
-		p.UnnamedType0005 = &__void
+		p.UnnamedType0001 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -531,7 +531,7 @@ func (p *Teams) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
 	fields["Team"] = &p.Team
 	fields["Mode"] = &p.Mode
-	fields["UnnamedType0005"] = p.UnnamedType0005
+	fields["UnnamedType0001"] = p.UnnamedType0001
 	fields["Players"] = p.Players
 	return fields
 }
@@ -549,8 +549,8 @@ func (p *Teams) SetFields(fields map[string]pk.FieldEncoder) {
 	if val, ok := fields["Mode"]; ok {
 		p.Mode = *val.(*TeamsMode)
 	}
-	if val, ok := fields["UnnamedType0005"]; ok {
-		p.UnnamedType0005 = val.(pk.Field)
+	if val, ok := fields["UnnamedType0001"]; ok {
+		p.UnnamedType0001 = val.(pk.Field)
 	}
 	if val, ok := fields["Players"]; ok {
 		p.Players = val.(pk.Field)
@@ -586,18 +586,18 @@ func (p *Teams) SetMode(val TeamsMode) {
 	p.Mode = val
 }
 
-// GetUnnamedType0005 returns the UnnamedType0005 field value.
+// GetUnnamedType0001 returns the UnnamedType0001 field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *Teams) GetUnnamedType0005() pk.Field {
-	return p.UnnamedType0005
+func (p *Teams) GetUnnamedType0001() pk.Field {
+	return p.UnnamedType0001
 }
 
-// SetUnnamedType0005 sets the UnnamedType0005 field value.
+// SetUnnamedType0001 sets the UnnamedType0001 field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *Teams) SetUnnamedType0005(val pk.Field) {
-	p.UnnamedType0005 = val
+func (p *Teams) SetUnnamedType0001(val pk.Field) {
+	p.UnnamedType0001 = val
 }
 
 // GetPlayers returns the Players field value.
@@ -617,45 +617,47 @@ func (p *Teams) SetPlayers(val pk.Field) {
 func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Team.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Team")
 	}
 	bytesRead, err = t.Mode.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Mode")
 	}
-	// Switch field UnnamedType0005 based on mode
+	// Switch field UnnamedType0001 based on mode
 	// Convert compareTo value to string for matching
-	compareValueUnnamedType0005 := t.Mode.Value
+	compareValueUnnamedType0001 := t.Mode.Value
 
-	switch compareValueUnnamedType0005 {
+	switch compareValueUnnamedType0001 {
 	case "add":
-		var val TeamsUnnamedType0005Add
+		var val TeamsUnnamedType0001Add
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case add")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case add")
 		}
-		t.UnnamedType0005 = &val
+		t.UnnamedType0001 = &val
 	case "change":
-		var val TeamsUnnamedType0005Change
+		var val TeamsUnnamedType0001Change
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0005 case change")
+			return totalBytes, errors.Wrap(err, "failed to read switch field UnnamedType0001 case change")
 		}
-		t.UnnamedType0005 = &val
+		t.UnnamedType0001 = &val
 	default:
 		// Void case - no data to read
 		var __void models.Void
 		bytesRead, err = __void.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0005 default case")
+			return totalBytes, errors.Wrap(err, "failed to read void switch field UnnamedType0001 default case")
 		}
-		t.UnnamedType0005 = &__void
+		t.UnnamedType0001 = &__void
 	}
 
 	// Switch field Players based on mode
@@ -717,10 +719,10 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	// Switch field UnnamedType0005 based on mode
-	if t.UnnamedType0005 != nil {
+	// Switch field UnnamedType0001 based on mode
+	if t.UnnamedType0001 != nil {
 		// Write switch field value if it implements WriteTo
-		if writer, ok := t.UnnamedType0005.(interface {
+		if writer, ok := t.UnnamedType0001.(interface {
 			WriteTo(io.Writer) (int64, error)
 		}); ok {
 			bytesWritten, err = writer.WriteTo(w)
@@ -730,7 +732,7 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 			}
 		} else {
 			// Not a void case and doesn't implement WriteTo
-			return totalBytes, fmt.Errorf("switch field UnnamedType0005 value does not implement WriteTo: %T", t.UnnamedType0005)
+			return totalBytes, fmt.Errorf("switch field UnnamedType0001 value does not implement WriteTo: %T", t.UnnamedType0001)
 		}
 	}
 	// Switch field Players based on mode
@@ -752,17 +754,21 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-// TeamsUnnamedType0005ChangeFlagsBitflags provides named accessors over a bitflag field.
-type TeamsUnnamedType0005ChangeFlagsBitflags struct {
+type TeamsPlayersJoin = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayersLeave = models.Array[pk.VarInt, pk.String]
+
+// TeamsUnnamedType0001AddFlagsBitflags provides named accessors over a bitflag field.
+type TeamsUnnamedType0001AddFlagsBitflags struct {
 	pk.UnsignedByte
 }
 
-func (bf TeamsUnnamedType0005ChangeFlagsBitflags) FriendlyFire() bool {
+func (bf TeamsUnnamedType0001AddFlagsBitflags) FriendlyFire() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 0)) != 0
 }
 
-func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetFriendlyFire(value bool) {
+func (bf *TeamsUnnamedType0001AddFlagsBitflags) SetFriendlyFire(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 0)
@@ -771,12 +777,12 @@ func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetFriendlyFire(value bool) {
 	}
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
-func (bf TeamsUnnamedType0005ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
+func (bf TeamsUnnamedType0001AddFlagsBitflags) SeeFriendlyInvisible() bool {
 	v := uint64(uint8(bf.UnsignedByte))
 	return (v & (1 << 1)) != 0
 }
 
-func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
+func (bf *TeamsUnnamedType0001AddFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
 	v := uint8(bf.UnsignedByte)
 	if value {
 		v |= (1 << 1)
@@ -851,7 +857,7 @@ func (bf *TeamsUnnamedType0005ChangeFlagsBitflags) SetSeeFriendlyInvisible(value
 //	    }
 //	  ]
 //	]
-type TeamsUnnamedType0005Change struct {
+type TeamsUnnamedType0001Add struct {
 	// "anonymousNbt"
 	Name models.AnonymousNBT
 	// [
@@ -864,7 +870,7 @@ type TeamsUnnamedType0005Change struct {
 	//                               ]
 	//                             }
 	//                           ]
-	Flags TeamsUnnamedType0005ChangeFlagsBitflags
+	Flags TeamsUnnamedType0001AddFlagsBitflags
 	// [
 	//                             "mapper",
 	//                             {
@@ -877,7 +883,7 @@ type TeamsUnnamedType0005Change struct {
 	//                               }
 	//                             }
 	//                           ]
-	NameTagVisibility TeamsUnnamedType0005ChangeNameTagVisibility
+	NameTagVisibility TeamsUnnamedType0001AddNameTagVisibility
 	// [
 	//                             "mapper",
 	//                             {
@@ -890,7 +896,7 @@ type TeamsUnnamedType0005Change struct {
 	//                               }
 	//                             }
 	//                           ]
-	CollisionRule TeamsUnnamedType0005ChangeCollisionRule
+	CollisionRule TeamsUnnamedType0001AddCollisionRule
 	// "varint"
 	Formatting pk.VarInt
 	// "anonymousNbt"
@@ -899,39 +905,46 @@ type TeamsUnnamedType0005Change struct {
 	Suffix models.AnonymousNBT
 }
 
-func (t *TeamsUnnamedType0005Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+func (t *TeamsUnnamedType0001Add) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Name.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Name")
 	}
 	bytesRead, err = t.Flags.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Flags")
 	}
 	bytesRead, err = t.NameTagVisibility.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field NameTagVisibility")
 	}
 	bytesRead, err = t.CollisionRule.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CollisionRule")
 	}
 	bytesRead, err = t.Formatting.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Formatting")
 	}
 	bytesRead, err = t.Prefix.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Prefix")
 	}
 	bytesRead, err = t.Suffix.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Suffix")
@@ -940,11 +953,250 @@ func (t *TeamsUnnamedType0005Change) ReadFrom(r io.Reader) (totalBytes int64, er
 	return totalBytes, nil
 }
 
-func (t TeamsUnnamedType0005Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
+func (t TeamsUnnamedType0001Add) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	var bytesWritten int64
 
 	defer func() {
-		log.Printf("[TeamsUnnamedType0005Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+		log.Printf("[TeamsUnnamedType0001Add.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Name.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Flags.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.NameTagVisibility.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.CollisionRule.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Formatting.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Prefix.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Suffix.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
+// TeamsUnnamedType0001ChangeFlagsBitflags provides named accessors over a bitflag field.
+type TeamsUnnamedType0001ChangeFlagsBitflags struct {
+	pk.UnsignedByte
+}
+
+func (bf TeamsUnnamedType0001ChangeFlagsBitflags) FriendlyFire() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 0)) != 0
+}
+
+func (bf *TeamsUnnamedType0001ChangeFlagsBitflags) SetFriendlyFire(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 0)
+	} else {
+		v &^= (1 << 0)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+func (bf TeamsUnnamedType0001ChangeFlagsBitflags) SeeFriendlyInvisible() bool {
+	v := uint64(uint8(bf.UnsignedByte))
+	return (v & (1 << 1)) != 0
+}
+
+func (bf *TeamsUnnamedType0001ChangeFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
+	v := uint8(bf.UnsignedByte)
+	if value {
+		v |= (1 << 1)
+	} else {
+		v &^= (1 << 1)
+	}
+	bf.UnsignedByte = pk.UnsignedByte(v)
+}
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "name",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "flags",
+//	      "type": [
+//	        "bitflags",
+//	        {
+//	          "type": "u8",
+//	          "flags": [
+//	            "friendly_fire",
+//	            "see_friendly_invisible"
+//	          ]
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "nameTagVisibility",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "always",
+//	            "1": "never",
+//	            "2": "hide_for_other_teams",
+//	            "3": "hide_for_own_team"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "collisionRule",
+//	      "type": [
+//	        "mapper",
+//	        {
+//	          "type": "varint",
+//	          "mappings": {
+//	            "0": "always",
+//	            "1": "never",
+//	            "2": "push_other_teams",
+//	            "3": "push_own_team"
+//	          }
+//	        }
+//	      ]
+//	    },
+//	    {
+//	      "name": "formatting",
+//	      "type": "varint"
+//	    },
+//	    {
+//	      "name": "prefix",
+//	      "type": "anonymousNbt"
+//	    },
+//	    {
+//	      "name": "suffix",
+//	      "type": "anonymousNbt"
+//	    }
+//	  ]
+//	]
+type TeamsUnnamedType0001Change struct {
+	// "anonymousNbt"
+	Name models.AnonymousNBT
+	// [
+	//                             "bitflags",
+	//                             {
+	//                               "type": "u8",
+	//                               "flags": [
+	//                                 "friendly_fire",
+	//                                 "see_friendly_invisible"
+	//                               ]
+	//                             }
+	//                           ]
+	Flags TeamsUnnamedType0001ChangeFlagsBitflags
+	// [
+	//                             "mapper",
+	//                             {
+	//                               "type": "varint",
+	//                               "mappings": {
+	//                                 "0": "always",
+	//                                 "1": "never",
+	//                                 "2": "hide_for_other_teams",
+	//                                 "3": "hide_for_own_team"
+	//                               }
+	//                             }
+	//                           ]
+	NameTagVisibility TeamsUnnamedType0001ChangeNameTagVisibility
+	// [
+	//                             "mapper",
+	//                             {
+	//                               "type": "varint",
+	//                               "mappings": {
+	//                                 "0": "always",
+	//                                 "1": "never",
+	//                                 "2": "push_other_teams",
+	//                                 "3": "push_own_team"
+	//                               }
+	//                             }
+	//                           ]
+	CollisionRule TeamsUnnamedType0001ChangeCollisionRule
+	// "varint"
+	Formatting pk.VarInt
+	// "anonymousNbt"
+	Prefix models.AnonymousNBT
+	// "anonymousNbt"
+	Suffix models.AnonymousNBT
+}
+
+func (t *TeamsUnnamedType0001Change) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Name.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Name")
+	}
+	bytesRead, err = t.Flags.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Flags")
+	}
+	bytesRead, err = t.NameTagVisibility.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field NameTagVisibility")
+	}
+	bytesRead, err = t.CollisionRule.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field CollisionRule")
+	}
+	bytesRead, err = t.Formatting.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Formatting")
+	}
+	bytesRead, err = t.Prefix.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Prefix")
+	}
+	bytesRead, err = t.Suffix.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Suffix")
+	}
+
+	return totalBytes, nil
+}
+
+func (t TeamsUnnamedType0001Change) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[TeamsUnnamedType0001Change.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
 	}()
 	bytesWritten, err = t.Name.WriteTo(w)
 	totalBytes += bytesWritten
@@ -985,239 +1237,3 @@ func (t TeamsUnnamedType0005Change) WriteTo(w io.Writer) (totalBytes int64, err 
 }
 
 type TeamsPlayersAdd = models.Array[pk.VarInt, pk.String]
-
-type TeamsPlayersJoin = models.Array[pk.VarInt, pk.String]
-
-type TeamsPlayersLeave = models.Array[pk.VarInt, pk.String]
-
-// TeamsUnnamedType0005AddFlagsBitflags provides named accessors over a bitflag field.
-type TeamsUnnamedType0005AddFlagsBitflags struct {
-	pk.UnsignedByte
-}
-
-func (bf TeamsUnnamedType0005AddFlagsBitflags) FriendlyFire() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 0)) != 0
-}
-
-func (bf *TeamsUnnamedType0005AddFlagsBitflags) SetFriendlyFire(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 0)
-	} else {
-		v &^= (1 << 0)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
-}
-func (bf TeamsUnnamedType0005AddFlagsBitflags) SeeFriendlyInvisible() bool {
-	v := uint64(uint8(bf.UnsignedByte))
-	return (v & (1 << 1)) != 0
-}
-
-func (bf *TeamsUnnamedType0005AddFlagsBitflags) SetSeeFriendlyInvisible(value bool) {
-	v := uint8(bf.UnsignedByte)
-	if value {
-		v |= (1 << 1)
-	} else {
-		v &^= (1 << 1)
-	}
-	bf.UnsignedByte = pk.UnsignedByte(v)
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "name",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "flags",
-//	      "type": [
-//	        "bitflags",
-//	        {
-//	          "type": "u8",
-//	          "flags": [
-//	            "friendly_fire",
-//	            "see_friendly_invisible"
-//	          ]
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "nameTagVisibility",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "always",
-//	            "1": "never",
-//	            "2": "hide_for_other_teams",
-//	            "3": "hide_for_own_team"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "collisionRule",
-//	      "type": [
-//	        "mapper",
-//	        {
-//	          "type": "varint",
-//	          "mappings": {
-//	            "0": "always",
-//	            "1": "never",
-//	            "2": "push_other_teams",
-//	            "3": "push_own_team"
-//	          }
-//	        }
-//	      ]
-//	    },
-//	    {
-//	      "name": "formatting",
-//	      "type": "varint"
-//	    },
-//	    {
-//	      "name": "prefix",
-//	      "type": "anonymousNbt"
-//	    },
-//	    {
-//	      "name": "suffix",
-//	      "type": "anonymousNbt"
-//	    }
-//	  ]
-//	]
-type TeamsUnnamedType0005Add struct {
-	// "anonymousNbt"
-	Name models.AnonymousNBT
-	// [
-	//                             "bitflags",
-	//                             {
-	//                               "type": "u8",
-	//                               "flags": [
-	//                                 "friendly_fire",
-	//                                 "see_friendly_invisible"
-	//                               ]
-	//                             }
-	//                           ]
-	Flags TeamsUnnamedType0005AddFlagsBitflags
-	// [
-	//                             "mapper",
-	//                             {
-	//                               "type": "varint",
-	//                               "mappings": {
-	//                                 "0": "always",
-	//                                 "1": "never",
-	//                                 "2": "hide_for_other_teams",
-	//                                 "3": "hide_for_own_team"
-	//                               }
-	//                             }
-	//                           ]
-	NameTagVisibility TeamsUnnamedType0005AddNameTagVisibility
-	// [
-	//                             "mapper",
-	//                             {
-	//                               "type": "varint",
-	//                               "mappings": {
-	//                                 "0": "always",
-	//                                 "1": "never",
-	//                                 "2": "push_other_teams",
-	//                                 "3": "push_own_team"
-	//                               }
-	//                             }
-	//                           ]
-	CollisionRule TeamsUnnamedType0005AddCollisionRule
-	// "varint"
-	Formatting pk.VarInt
-	// "anonymousNbt"
-	Prefix models.AnonymousNBT
-	// "anonymousNbt"
-	Suffix models.AnonymousNBT
-}
-
-func (t *TeamsUnnamedType0005Add) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Name.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Name")
-	}
-	bytesRead, err = t.Flags.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Flags")
-	}
-	bytesRead, err = t.NameTagVisibility.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field NameTagVisibility")
-	}
-	bytesRead, err = t.CollisionRule.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field CollisionRule")
-	}
-	bytesRead, err = t.Formatting.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Formatting")
-	}
-	bytesRead, err = t.Prefix.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Prefix")
-	}
-	bytesRead, err = t.Suffix.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Suffix")
-	}
-
-	return totalBytes, nil
-}
-
-func (t TeamsUnnamedType0005Add) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[TeamsUnnamedType0005Add.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Name.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Flags.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.NameTagVisibility.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.CollisionRule.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Formatting.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Prefix.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Suffix.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}

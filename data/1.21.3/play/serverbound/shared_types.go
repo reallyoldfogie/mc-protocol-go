@@ -44,6 +44,8 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
+type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
 // Protodef: [
 //
 //	  "container",
@@ -78,11 +80,13 @@ type ChatCommandSignedArgumentSignaturesArrayType struct {
 func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ArgumentName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
 	}
 	bytesRead, err = t.Signature.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Signature")
@@ -114,8 +118,6 @@ type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
 
 type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
 
-type EditBookTitle = models.Option[pk.String]
-
 // Protodef: [
 //
 //	  "container",
@@ -140,11 +142,13 @@ type WindowClickChangedSlotsArrayType struct {
 func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Location.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Location")
 	}
 	bytesRead, err = t.Item.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Item")
@@ -172,4 +176,4 @@ func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64
 	return totalBytes, nil
 }
 
-type ChatMessageSignature = models.Option[models.FixedBuffer256]
+type EditBookTitle = models.Option[pk.String]

@@ -220,21 +220,25 @@ func (p *TabComplete) SetMatches(val models.Array[pk.VarInt, TabCompleteMatchesA
 func (t *TabComplete) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.TransactionId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field TransactionId")
 	}
 	bytesRead, err = t.Start.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Start")
 	}
 	bytesRead, err = t.Length.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Length")
 	}
 	bytesRead, err = t.Matches.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Matches")

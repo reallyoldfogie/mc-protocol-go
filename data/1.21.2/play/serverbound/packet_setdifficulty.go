@@ -99,6 +99,7 @@ func (p *SetDifficulty) SetNewDifficulty(val pk.UnsignedByte) {
 func (t *SetDifficulty) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.NewDifficulty.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field NewDifficulty")

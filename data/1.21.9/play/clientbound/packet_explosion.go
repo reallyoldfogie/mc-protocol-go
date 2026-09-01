@@ -275,36 +275,43 @@ func (p *Explosion) SetBlockParticles(val models.Array[pk.VarInt, ExplosionParti
 func (t *Explosion) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Center.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Center")
 	}
 	bytesRead, err = t.Radius.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Radius")
 	}
 	bytesRead, err = t.BlockCount.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockCount")
 	}
 	bytesRead, err = t.PlayerKnockback.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PlayerKnockback")
 	}
 	bytesRead, err = t.ExplosionParticle.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ExplosionParticle")
 	}
 	bytesRead, err = t.Sound.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sound")
 	}
 	bytesRead, err = t.BlockParticles.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockParticles")

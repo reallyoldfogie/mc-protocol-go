@@ -8,6 +8,250 @@ import (
 	"io"
 )
 
+type SlotComponentDataRarity struct {
+	Value string
+}
+
+var SlotComponentDataRarityMappings = map[int64]string{
+	0: "common",
+	1: "uncommon",
+	2: "rare",
+	3: "epic",
+}
+
+func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
+	}
+
+	value, ok := SlotComponentDataRarityMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataRarityMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataRarity value: '%s'", m.Value)
+}
+
+type SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperation struct {
+	Value string
+}
+
+var SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperationMappings = map[int64]string{
+	0: "add",
+	1: "multiply_base",
+	2: "multiply_total",
+}
+
+func (m *SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperation) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperation key")
+	}
+
+	value, ok := SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperationMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperation) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperationMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementOperation value: '%s'", m.Value)
+}
+
+type SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlot struct {
+	Value string
+}
+
+var SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlotMappings = map[int64]string{
+	0:  "any",
+	1:  "main_hand",
+	10: "saddle",
+	2:  "off_hand",
+	3:  "hand",
+	4:  "feet",
+	5:  "legs",
+	6:  "chest",
+	7:  "head",
+	8:  "armor",
+	9:  "body",
+}
+
+func (m *SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlot) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlot key")
+	}
+
+	value, ok := SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlotMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlot) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlotMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementSlot value: '%s'", m.Value)
+}
+
+type SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayType struct {
+	Value string
+}
+
+var SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayTypeMappings = map[int64]string{
+	0: "default",
+	1: "hidden",
+	2: "override",
+}
+
+func (m *SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayType key")
+	}
+
+	value, ok := SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersSlotComponentDataAttributeModifiersElementDisplayType value: '%s'", m.Value)
+}
+
+type SlotComponentDataConsumableAnimation struct {
+	Value string
+}
+
+var SlotComponentDataConsumableAnimationMappings = map[int64]string{
+	0:  "none",
+	1:  "eat",
+	10: "bundle",
+	2:  "drink",
+	3:  "block",
+	4:  "bow",
+	5:  "spear",
+	6:  "crossbow",
+	7:  "spyglass",
+	8:  "toot_horn",
+	9:  "brush",
+}
+
+func (m *SlotComponentDataConsumableAnimation) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataConsumableAnimation key")
+	}
+
+	value, ok := SlotComponentDataConsumableAnimationMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataConsumableAnimation) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataConsumableAnimationMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataConsumableAnimation value: '%s'", m.Value)
+}
+
+type SlotComponentDataEquippableSlot struct {
+	Value string
+}
+
+var SlotComponentDataEquippableSlotMappings = map[int64]string{
+	0: "main_hand",
+	1: "off_hand",
+	2: "feet",
+	3: "legs",
+	4: "chest",
+	5: "head",
+	6: "body",
+	7: "saddle",
+}
+
+func (m *SlotComponentDataEquippableSlot) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataEquippableSlot key")
+	}
+
+	value, ok := SlotComponentDataEquippableSlotMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataEquippableSlot) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataEquippableSlotMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataEquippableSlot value: '%s'", m.Value)
+}
+
 type ParticleType struct {
 	Value string
 }
@@ -153,7 +397,7 @@ func (m ParticleType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ParticleType value: %s", m.Value)
+	return 0, errors.Errorf("unknown ParticleType value: '%s'", m.Value)
 }
 
 type ParticleDataVibrationPositionType struct {
@@ -189,295 +433,7 @@ func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
-}
-
-type ServerLinkType struct {
-	Value string
-}
-
-var ServerLinkTypeMappings = map[int64]string{
-	0: "bug_report",
-	1: "community_guidelines",
-	2: "support",
-	3: "status",
-	4: "feedback",
-	5: "community",
-	6: "website",
-	7: "forums",
-	8: "news",
-	9: "announcements",
-}
-
-func (m *ServerLinkType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read ServerLinkType key")
-	}
-
-	value, ok := ServerLinkTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m ServerLinkType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range ServerLinkTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown ServerLinkType value: %s", m.Value)
-}
-
-type SlotComponentDataAttributeModifiersAttributesArrayTypeOperation struct {
-	Value string
-}
-
-var SlotComponentDataAttributeModifiersAttributesArrayTypeOperationMappings = map[int64]string{
-	0: "add",
-	1: "multiply_base",
-	2: "multiply_total",
-}
-
-func (m *SlotComponentDataAttributeModifiersAttributesArrayTypeOperation) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersAttributesArrayTypeOperation key")
-	}
-
-	value, ok := SlotComponentDataAttributeModifiersAttributesArrayTypeOperationMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataAttributeModifiersAttributesArrayTypeOperation) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataAttributeModifiersAttributesArrayTypeOperationMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeOperation value: %s", m.Value)
-}
-
-type SlotComponentDataAttributeModifiersAttributesArrayTypeSlot struct {
-	Value string
-}
-
-var SlotComponentDataAttributeModifiersAttributesArrayTypeSlotMappings = map[int64]string{
-	0:  "any",
-	1:  "main_hand",
-	10: "saddle",
-	2:  "off_hand",
-	3:  "hand",
-	4:  "feet",
-	5:  "legs",
-	6:  "chest",
-	7:  "head",
-	8:  "armor",
-	9:  "body",
-}
-
-func (m *SlotComponentDataAttributeModifiersAttributesArrayTypeSlot) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersAttributesArrayTypeSlot key")
-	}
-
-	value, ok := SlotComponentDataAttributeModifiersAttributesArrayTypeSlotMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataAttributeModifiersAttributesArrayTypeSlot) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataAttributeModifiersAttributesArrayTypeSlotMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeSlot value: %s", m.Value)
-}
-
-type SlotComponentDataAttributeModifiersDisplayType struct {
-	Value string
-}
-
-var SlotComponentDataAttributeModifiersDisplayTypeMappings = map[int64]string{
-	0: "default",
-	1: "hidden",
-	2: "override",
-}
-
-func (m *SlotComponentDataAttributeModifiersDisplayType) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataAttributeModifiersDisplayType key")
-	}
-
-	value, ok := SlotComponentDataAttributeModifiersDisplayTypeMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataAttributeModifiersDisplayType) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataAttributeModifiersDisplayTypeMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersDisplayType value: %s", m.Value)
-}
-
-type SlotComponentDataConsumableAnimation struct {
-	Value string
-}
-
-var SlotComponentDataConsumableAnimationMappings = map[int64]string{
-	0:  "none",
-	1:  "eat",
-	10: "bundle",
-	2:  "drink",
-	3:  "block",
-	4:  "bow",
-	5:  "spear",
-	6:  "crossbow",
-	7:  "spyglass",
-	8:  "toot_horn",
-	9:  "brush",
-}
-
-func (m *SlotComponentDataConsumableAnimation) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataConsumableAnimation key")
-	}
-
-	value, ok := SlotComponentDataConsumableAnimationMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataConsumableAnimation) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataConsumableAnimationMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataConsumableAnimation value: %s", m.Value)
-}
-
-type SlotComponentDataEquippableSlot struct {
-	Value string
-}
-
-var SlotComponentDataEquippableSlotMappings = map[int64]string{
-	0: "main_hand",
-	1: "off_hand",
-	2: "feet",
-	3: "legs",
-	4: "chest",
-	5: "head",
-	6: "body",
-	7: "saddle",
-}
-
-func (m *SlotComponentDataEquippableSlot) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataEquippableSlot key")
-	}
-
-	value, ok := SlotComponentDataEquippableSlotMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataEquippableSlot) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataEquippableSlotMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataEquippableSlot value: %s", m.Value)
-}
-
-type SlotComponentDataRarity struct {
-	Value string
-}
-
-var SlotComponentDataRarityMappings = map[int64]string{
-	0: "common",
-	1: "uncommon",
-	2: "rare",
-	3: "epic",
-}
-
-func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
-	}
-
-	value, ok := SlotComponentDataRarityMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataRarityMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
+	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: '%s'", m.Value)
 }
 
 type SoundSource struct {
@@ -522,7 +478,7 @@ func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
+	return 0, errors.Errorf("unknown SoundSource value: '%s'", m.Value)
 }
 
 type SlotComponentType struct {
@@ -565,10 +521,10 @@ var SlotComponentTypeMappings = map[int64]string{
 	38: "map_decorations",
 	39: "map_post_processing",
 	4:  "unbreakable",
-	40: "potion_duration_scale",
-	41: "charged_projectiles",
-	42: "bundle_contents",
-	43: "potion_contents",
+	40: "charged_projectiles",
+	41: "bundle_contents",
+	42: "potion_contents",
+	43: "potion_duration_scale",
 	44: "suspicious_stew_effects",
 	45: "writable_book_content",
 	46: "written_book_content",
@@ -652,5 +608,49 @@ func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
+	return 0, errors.Errorf("unknown SlotComponentType value: '%s'", m.Value)
+}
+
+type ServerLinkType struct {
+	Value string
+}
+
+var ServerLinkTypeMappings = map[int64]string{
+	0: "bug_report",
+	1: "community_guidelines",
+	2: "support",
+	3: "status",
+	4: "feedback",
+	5: "community",
+	6: "website",
+	7: "forums",
+	8: "news",
+	9: "announcements",
+}
+
+func (m *ServerLinkType) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read ServerLinkType key")
+	}
+
+	value, ok := ServerLinkTypeMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m ServerLinkType) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range ServerLinkTypeMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown ServerLinkType value: '%s'", m.Value)
 }

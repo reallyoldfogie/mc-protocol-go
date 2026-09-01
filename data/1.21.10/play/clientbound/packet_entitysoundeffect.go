@@ -230,31 +230,37 @@ func (p *EntitySoundEffect) SetSeed(val pk.Long) {
 func (t *EntitySoundEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Sound.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sound")
 	}
 	bytesRead, err = t.SoundCategory.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SoundCategory")
 	}
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.Volume.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Volume")
 	}
 	bytesRead, err = t.Pitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 	bytesRead, err = t.Seed.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Seed")

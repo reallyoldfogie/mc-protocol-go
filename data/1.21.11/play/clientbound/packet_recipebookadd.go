@@ -286,11 +286,13 @@ func (p *RecipeBookAdd) SetReplace(val pk.Boolean) {
 func (t *RecipeBookAdd) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Entries.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Entries")
 	}
 	bytesRead, err = t.Replace.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Replace")

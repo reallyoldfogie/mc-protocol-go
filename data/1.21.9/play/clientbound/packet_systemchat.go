@@ -126,11 +126,13 @@ func (p *SystemChat) SetIsActionBar(val pk.Boolean) {
 func (t *SystemChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Content.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Content")
 	}
 	bytesRead, err = t.IsActionBar.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IsActionBar")

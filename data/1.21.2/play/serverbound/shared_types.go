@@ -44,7 +44,71 @@ func (bf *MovementFlags) SetHasHorizontalCollision(value bool) {
 	bf.UnsignedByte = pk.UnsignedByte(v)
 }
 
+type EditBookTitle = models.Option[pk.String]
+
+type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
+
+type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
+
 type ChatMessageSignature = models.Option[models.FixedBuffer256]
+
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "location",
+//	      "type": "i16"
+//	    },
+//	    {
+//	      "name": "item",
+//	      "type": "Slot"
+//	    }
+//	  ]
+//	]
+type WindowClickChangedSlotsArrayType struct {
+	// "i16"
+	Location pk.Short
+	// "Slot"
+	Item basetypes.Slot
+}
+
+func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.Location.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Location")
+	}
+	bytesRead, err = t.Item.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Item")
+	}
+
+	return totalBytes, nil
+}
+
+func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.Location.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Item.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
 
 // Protodef: [
 //
@@ -80,11 +144,13 @@ type ChatCommandSignedArgumentSignaturesArrayType struct {
 func (t *ChatCommandSignedArgumentSignaturesArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ArgumentName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ArgumentName")
 	}
 	bytesRead, err = t.Signature.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Signature")
@@ -111,65 +177,3 @@ func (t ChatCommandSignedArgumentSignaturesArrayType) WriteTo(w io.Writer) (tota
 	}
 	return totalBytes, nil
 }
-
-type SetBeaconEffectPrimaryEffect = models.Option[pk.VarInt]
-
-type SetBeaconEffectSecondaryEffect = models.Option[pk.VarInt]
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "location",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "item",
-//	      "type": "Slot"
-//	    }
-//	  ]
-//	]
-type WindowClickChangedSlotsArrayType struct {
-	// "i16"
-	Location pk.Short
-	// "Slot"
-	Item basetypes.Slot
-}
-
-func (t *WindowClickChangedSlotsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.Location.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Location")
-	}
-	bytesRead, err = t.Item.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Item")
-	}
-
-	return totalBytes, nil
-}
-
-func (t WindowClickChangedSlotsArrayType) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[WindowClickChangedSlotsArrayType.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.Location.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Item.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-type EditBookTitle = models.Option[pk.String]

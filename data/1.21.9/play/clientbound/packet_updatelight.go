@@ -378,41 +378,49 @@ func (p *UpdateLight) SetBlockLight(val models.Array[pk.VarInt, UpdateLightBlock
 func (t *UpdateLight) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ChunkX.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ChunkX")
 	}
 	bytesRead, err = t.ChunkZ.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ChunkZ")
 	}
 	bytesRead, err = t.SkyLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SkyLightMask")
 	}
 	bytesRead, err = t.BlockLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockLightMask")
 	}
 	bytesRead, err = t.EmptySkyLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EmptySkyLightMask")
 	}
 	bytesRead, err = t.EmptyBlockLightMask.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EmptyBlockLightMask")
 	}
 	bytesRead, err = t.SkyLight.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SkyLight")
 	}
 	bytesRead, err = t.BlockLight.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockLight")

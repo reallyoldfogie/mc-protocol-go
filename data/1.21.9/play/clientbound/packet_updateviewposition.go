@@ -125,11 +125,13 @@ func (p *UpdateViewPosition) SetChunkZ(val pk.VarInt) {
 func (t *UpdateViewPosition) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.ChunkX.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ChunkX")
 	}
 	bytesRead, err = t.ChunkZ.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ChunkZ")

@@ -152,16 +152,19 @@ func (p *OpenWindow) SetWindowTitle(val models.AnonymousNBT) {
 func (t *OpenWindow) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WindowId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowId")
 	}
 	bytesRead, err = t.InventoryType.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field InventoryType")
 	}
 	bytesRead, err = t.WindowTitle.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowTitle")

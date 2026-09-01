@@ -4,12 +4,16 @@
 /logs
 /libraries
 
+*.log
+
+
 coverage.out
 gen.out
 gen.log
 packet-validation.json
 /bin
 .cache
+.cache-old
 testing/1.21.*
 tmp
 internal/generator/generated

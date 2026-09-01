@@ -22,9 +22,10 @@ type OutputConfig struct {
 
 // CacheConfig defines cache directory settings
 type CacheConfig struct {
-	CacheDir    string `yaml:"cache_dir"`    // Index/lookup files
-	MetadataDir string `yaml:"metadata_dir"` // Downloaded/extracted MC data
-	TTLDays     int    `yaml:"ttl_days"`
+	CacheDir     string `yaml:"cache_dir"`    // Index/lookup files
+	MetadataDir  string `yaml:"metadata_dir"` // Downloaded/extracted MC data
+	TTLDays      int    `yaml:"ttl_days"`
+	RefreshCache bool   `yaml:"refresh_cache"` // Force refresh cache instead of using cached files
 }
 
 // MemoryConfig defines memory optimization settings
@@ -42,9 +43,10 @@ func DefaultConfig() *Config {
 			DataDir: "data",
 		},
 		Cache: CacheConfig{
-			CacheDir:    ".cache",
-			MetadataDir: ".cache/metadata",
-			TTLDays:     7,
+			CacheDir:     ".cache",
+			MetadataDir:  ".cache/metadata",
+			TTLDays:      7,
+			RefreshCache: false,
 		},
 		Memory: MemoryConfig{
 			GCPercent:   50,
@@ -89,6 +91,10 @@ func (c *Config) Validate() error {
 
 	if c.Cache.TTLDays < 0 {
 		return fmt.Errorf("cache ttl_days must be non-negative")
+	}
+
+	if c.Memory.MaxProcs < 1 {
+		return fmt.Errorf("memory max_procs must be at least 1")
 	}
 
 	if c.Memory.GCPercent < 0 {

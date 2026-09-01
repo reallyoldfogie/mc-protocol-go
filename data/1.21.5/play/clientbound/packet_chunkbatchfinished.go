@@ -99,6 +99,7 @@ func (p *ChunkBatchFinished) SetBatchSize(val pk.VarInt) {
 func (t *ChunkBatchFinished) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.BatchSize.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BatchSize")

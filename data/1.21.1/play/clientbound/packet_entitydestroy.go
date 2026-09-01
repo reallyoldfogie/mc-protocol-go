@@ -112,6 +112,7 @@ func (p *EntityDestroy) SetEntityIds(val models.Array[pk.VarInt, pk.VarInt]) {
 func (t *EntityDestroy) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityIds.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityIds")

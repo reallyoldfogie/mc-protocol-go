@@ -178,21 +178,25 @@ func (p *BlockAction) SetBlockId(val pk.VarInt) {
 func (t *BlockAction) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Location.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Location")
 	}
 	bytesRead, err = t.Byte1.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Byte1")
 	}
 	bytesRead, err = t.Byte2.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Byte2")
 	}
 	bytesRead, err = t.BlockId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockId")

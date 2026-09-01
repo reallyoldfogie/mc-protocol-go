@@ -189,6 +189,7 @@ func (p *AdvancementTab) SetTabId(val pk.Field) {
 func (t *AdvancementTab) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Action.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Action")

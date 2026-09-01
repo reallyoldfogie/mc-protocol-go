@@ -167,11 +167,13 @@ func (p *GameStateChange) SetGameMode(val pk.Float) {
 func (t *GameStateChange) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Reason.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Reason")
 	}
 	bytesRead, err = t.GameMode.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field GameMode")

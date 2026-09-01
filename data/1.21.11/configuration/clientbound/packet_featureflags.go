@@ -112,6 +112,7 @@ func (p *FeatureFlags) SetFeatures(val models.Array[pk.VarInt, pk.String]) {
 func (t *FeatureFlags) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Features.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Features")

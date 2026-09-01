@@ -45,7 +45,7 @@ func (anbt AnonymousNBT) WriteTo(writer io.Writer) (int64, error) {
 	// Name presence changed in 1.20.5: versions before 1.20.5 include name; 1.20.5+ omit it.
 	effVersion := anbt.Version
 	if effVersion == "" {
-		effVersion = currentNBTVersion
+		effVersion = currentNBTVersion()
 	}
 	if effVersion != "" {
 		var version, _ = go_version.Parse("1.20.5")
@@ -93,7 +93,7 @@ func (anbt *AnonymousNBT) ReadFrom(reader io.Reader) (int64, error) {
 	// In version 1.20.5 the name element was removed
 	effVersion := anbt.Version
 	if effVersion == "" {
-		effVersion = currentNBTVersion
+		effVersion = currentNBTVersion()
 	}
 	if effVersion != "" {
 		var version, _ = go_version.Parse("1.20.5")

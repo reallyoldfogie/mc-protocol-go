@@ -372,56 +372,67 @@ func (p *Login) SetEnforcesSecureChat(val pk.Boolean) {
 func (t *Login) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.IsHardcore.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IsHardcore")
 	}
 	bytesRead, err = t.WorldNames.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WorldNames")
 	}
 	bytesRead, err = t.MaxPlayers.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field MaxPlayers")
 	}
 	bytesRead, err = t.ViewDistance.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ViewDistance")
 	}
 	bytesRead, err = t.SimulationDistance.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SimulationDistance")
 	}
 	bytesRead, err = t.ReducedDebugInfo.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ReducedDebugInfo")
 	}
 	bytesRead, err = t.EnableRespawnScreen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EnableRespawnScreen")
 	}
 	bytesRead, err = t.DoLimitedCrafting.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field DoLimitedCrafting")
 	}
 	bytesRead, err = t.WorldState.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WorldState")
 	}
 	bytesRead, err = t.EnforcesSecureChat.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EnforcesSecureChat")

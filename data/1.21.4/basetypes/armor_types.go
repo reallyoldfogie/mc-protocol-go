@@ -45,21 +45,25 @@ type ArmorTrimPattern struct {
 func (t *ArmorTrimPattern) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.AssetId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
 	}
 	bytesRead, err = t.TemplateItemId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field TemplateItemId")
 	}
 	bytesRead, err = t.Description.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Description")
 	}
 	bytesRead, err = t.Decal.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Decal")
@@ -121,11 +125,13 @@ type ArmorTrimMaterialOverrideArmorAssetsArrayType struct {
 func (t *ArmorTrimMaterialOverrideArmorAssetsArrayType) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Key")
 	}
 	bytesRead, err = t.Value.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Value")
@@ -225,21 +231,25 @@ type ArmorTrimMaterial struct {
 func (t *ArmorTrimMaterial) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.AssetName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AssetName")
 	}
 	bytesRead, err = t.IngredientId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IngredientId")
 	}
 	bytesRead, err = t.OverrideArmorAssets.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OverrideArmorAssets")
 	}
 	bytesRead, err = t.Description.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Description")

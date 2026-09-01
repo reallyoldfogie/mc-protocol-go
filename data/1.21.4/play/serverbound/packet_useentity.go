@@ -449,11 +449,13 @@ func (p *UseEntity) SetSneaking(val pk.Boolean) {
 func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Target.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Target")
 	}
 	bytesRead, err = t.Mouse.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Mouse")
@@ -563,6 +565,7 @@ func (t *UseEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	}
 
 	bytesRead, err = t.Sneaking.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sneaking")

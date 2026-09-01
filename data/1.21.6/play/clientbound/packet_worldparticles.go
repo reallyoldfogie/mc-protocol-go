@@ -360,56 +360,67 @@ func (p *WorldParticles) SetParticle(val basetypes.Particle) {
 func (t *WorldParticles) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.LongDistance.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field LongDistance")
 	}
 	bytesRead, err = t.AlwaysShow.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AlwaysShow")
 	}
 	bytesRead, err = t.X.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field X")
 	}
 	bytesRead, err = t.Y.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Y")
 	}
 	bytesRead, err = t.Z.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Z")
 	}
 	bytesRead, err = t.OffsetX.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OffsetX")
 	}
 	bytesRead, err = t.OffsetY.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OffsetY")
 	}
 	bytesRead, err = t.OffsetZ.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OffsetZ")
 	}
 	bytesRead, err = t.VelocityOffset.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VelocityOffset")
 	}
 	bytesRead, err = t.Amount.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Amount")
 	}
 	bytesRead, err = t.Particle.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Particle")

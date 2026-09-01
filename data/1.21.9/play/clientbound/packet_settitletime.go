@@ -151,16 +151,19 @@ func (p *SetTitleTime) SetFadeOut(val pk.Int) {
 func (t *SetTitleTime) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.FadeIn.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FadeIn")
 	}
 	bytesRead, err = t.Stay.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Stay")
 	}
 	bytesRead, err = t.FadeOut.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FadeOut")

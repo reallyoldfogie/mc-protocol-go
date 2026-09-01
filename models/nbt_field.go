@@ -25,6 +25,7 @@ package models
 import (
 	"encoding/binary"
 	"io"
+	"sync/atomic"
 
 	"github.com/pkg/errors"
 
@@ -39,19 +40,33 @@ type NBTField struct {
 	Value *NBTCompound
 }
 
-// currentNBTVersion holds the process-wide default version used for NBT name handling when
-// an NBTField instance does not have Version explicitly set. This lets callers (or generated
-// code) set the active protocol version just before (de)serialization.
+// currentNBTVersionValue holds the process-wide default version used for NBT name handling
+// when an NBTField instance does not have Version explicitly set. This lets callers (or
+// generated code) set the active protocol version just before (de)serialization.
 //
-// WARNING: This is a global, process-wide setting and is NOT thread-safe across versions.
-// If multiple protocol versions are being parsed/serialized concurrently, callers must
-// avoid interleaving different version contexts or must set NBTField.Version explicitly
-// on each instance to override this global.
-var currentNBTVersion string
+// Access is atomic because reads and writes genuinely overlap: reads happen on
+// connection-reader goroutines, while writes happen during client setup, so a second client
+// initializing races an already-running client parsing chunk NBT. That was caught by -race
+// in the mc-agent vehicle suite, where each test spawns a bot plus a camera bot.
+//
+// WARNING: atomicity makes concurrent access safe, but this is still one process-wide value.
+// Two connections on *different* protocol versions running concurrently will clobber each
+// other, last writer winning. Callers in that situation must set NBTField.Version explicitly
+// on each instance rather than relying on this default.
+var currentNBTVersionValue atomic.Pointer[string]
 
 // SetCurrentNBTVersion sets the default protocol version used by NBTField ReadFrom/WriteTo
 // when the instance's Version field is empty.
-func SetCurrentNBTVersion(v string) { currentNBTVersion = v }
+func SetCurrentNBTVersion(v string) { currentNBTVersionValue.Store(&v) }
+
+// currentNBTVersion returns the process-wide default NBT version, or the empty string when
+// none has been set.
+func currentNBTVersion() string {
+	if v := currentNBTVersionValue.Load(); v != nil {
+		return *v
+	}
+	return ""
+}
 
 // WriteTo writes the NBT field to a writer.
 // If Value is nil, it writes a TAG_End byte (0x00).
@@ -73,7 +88,7 @@ func (nf NBTField) WriteTo(writer io.Writer) (int64, error) {
 	// Name presence changed in 1.20.5: versions before 1.20.5 include name; 1.20.5+ omit it.
 	effVersion := nf.Version
 	if effVersion == "" {
-		effVersion = currentNBTVersion
+		effVersion = currentNBTVersion()
 	}
 	if effVersion != "" {
 		var version, _ = go_version.Parse("1.20.5")
@@ -118,7 +133,7 @@ func (nf *NBTField) ReadFrom(reader io.Reader) (int64, error) {
 	// In version 1.20.5 the name element was removed
 	effVersion := nf.Version
 	if effVersion == "" {
-		effVersion = currentNBTVersion
+		effVersion = currentNBTVersion()
 	}
 	if effVersion != "" {
 		var version, _ = go_version.Parse("1.20.5")

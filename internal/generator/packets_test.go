@@ -6,7 +6,7 @@ import (
 	"testing"
 	"text/template"
 
-	"github.com/protodef-go/protodef-go/datatypes"
+	"github.com/reallyoldfogie/protodef-go/datatypes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

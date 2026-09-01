@@ -161,11 +161,13 @@ func (p *EntityEquipment) SetEquipments(val models.TopBitSetTerminatedArray[Enti
 func (t *EntityEquipment) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.Equipments.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Equipments")
@@ -217,11 +219,13 @@ type EntityEquipmentEquipmentsEntry struct {
 func (t *EntityEquipmentEquipmentsEntry) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Slot.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Slot")
 	}
 	bytesRead, err = t.Item.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Item")

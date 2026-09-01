@@ -499,6 +499,7 @@ func (p *PlayerInfo) SetData(val models.Array[pk.VarInt, PlayerInfoDataArrayType
 func (t *PlayerInfo) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Action.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Action")
@@ -514,6 +515,7 @@ func (t *PlayerInfo) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	Data_ctx.SetField("action/update_list_order", t.Action.UpdateListOrder())
 	t.Data.SetParentContext(Data_ctx)
 	bytesRead, err = t.Data.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Data")

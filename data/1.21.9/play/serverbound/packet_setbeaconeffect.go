@@ -138,11 +138,13 @@ func (p *SetBeaconEffect) SetSecondaryEffect(val models.Option[pk.VarInt]) {
 func (t *SetBeaconEffect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.PrimaryEffect.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PrimaryEffect")
 	}
 	bytesRead, err = t.SecondaryEffect.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SecondaryEffect")

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/pkg/errors"
+	"github.com/reallyoldfogie/mc-protocol-go/data/1.21.6/basetypes"
 	"io"
 	"log"
 )
@@ -18,16 +19,8 @@ import (
 //	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "velocityX",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "velocityY",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "velocityZ",
-//	      "type": "i16"
+//	      "name": "velocity",
+//	      "type": "vec3i16"
 //	    }
 //	  ]
 //	]
@@ -35,12 +28,8 @@ type EntityVelocity struct {
 	packetID int32
 	// "varint"
 	EntityId pk.VarInt
-	// "i16"
-	VelocityX pk.Short
-	// "i16"
-	VelocityY pk.Short
-	// "i16"
-	VelocityZ pk.Short
+	// "vec3i16"
+	Velocity basetypes.Vec3i16
 }
 
 // NewEntityVelocity creates a new EntityVelocity packet with the correct packet ID.
@@ -64,9 +53,7 @@ func (p *EntityVelocity) Marshal() pk.Packet {
 	return pk.Marshal(
 		p.packetID,
 		&p.EntityId,
-		&p.VelocityX,
-		&p.VelocityY,
-		&p.VelocityZ)
+		&p.Velocity)
 }
 
 // Scan deserializes a wire-format packet into this struct.
@@ -76,9 +63,7 @@ func (p *EntityVelocity) Scan(packet pk.Packet) error {
 	}
 	return packet.Scan(
 		&p.EntityId,
-		&p.VelocityX,
-		&p.VelocityY,
-		&p.VelocityZ)
+		&p.Velocity)
 }
 
 // GetFields returns a map of all packet fields for version-agnostic access.
@@ -90,9 +75,7 @@ func (p *EntityVelocity) Scan(packet pk.Packet) error {
 func (p *EntityVelocity) GetFields() map[string]pk.FieldEncoder {
 	fields := map[string]pk.FieldEncoder{}
 	fields["EntityId"] = &p.EntityId
-	fields["VelocityX"] = &p.VelocityX
-	fields["VelocityY"] = &p.VelocityY
-	fields["VelocityZ"] = &p.VelocityZ
+	fields["Velocity"] = &p.Velocity
 	return fields
 }
 
@@ -106,14 +89,8 @@ func (p *EntityVelocity) SetFields(fields map[string]pk.FieldEncoder) {
 	if val, ok := fields["EntityId"]; ok {
 		p.EntityId = *val.(*pk.VarInt)
 	}
-	if val, ok := fields["VelocityX"]; ok {
-		p.VelocityX = *val.(*pk.Short)
-	}
-	if val, ok := fields["VelocityY"]; ok {
-		p.VelocityY = *val.(*pk.Short)
-	}
-	if val, ok := fields["VelocityZ"]; ok {
-		p.VelocityZ = *val.(*pk.Short)
+	if val, ok := fields["Velocity"]; ok {
+		p.Velocity = *val.(*basetypes.Vec3i16)
 	}
 }
 
@@ -132,69 +109,33 @@ func (p *EntityVelocity) SetEntityId(val pk.VarInt) {
 	p.EntityId = val
 }
 
-// GetVelocityX returns the VelocityX field value.
+// GetVelocity returns the Velocity field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EntityVelocity) GetVelocityX() pk.Short {
-	return p.VelocityX
+func (p *EntityVelocity) GetVelocity() basetypes.Vec3i16 {
+	return p.Velocity
 }
 
-// SetVelocityX sets the VelocityX field value.
+// SetVelocity sets the Velocity field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EntityVelocity) SetVelocityX(val pk.Short) {
-	p.VelocityX = val
-}
-
-// GetVelocityY returns the VelocityY field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EntityVelocity) GetVelocityY() pk.Short {
-	return p.VelocityY
-}
-
-// SetVelocityY sets the VelocityY field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EntityVelocity) SetVelocityY(val pk.Short) {
-	p.VelocityY = val
-}
-
-// GetVelocityZ returns the VelocityZ field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EntityVelocity) GetVelocityZ() pk.Short {
-	return p.VelocityZ
-}
-
-// SetVelocityZ sets the VelocityZ field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EntityVelocity) SetVelocityZ(val pk.Short) {
-	p.VelocityZ = val
+func (p *EntityVelocity) SetVelocity(val basetypes.Vec3i16) {
+	p.Velocity = val
 }
 
 func (t *EntityVelocity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
-	bytesRead, err = t.VelocityX.ReadFrom(r)
+	bytesRead, err = t.Velocity.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityX")
-	}
-	bytesRead, err = t.VelocityY.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityY")
-	}
-	bytesRead, err = t.VelocityZ.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityZ")
+		return totalBytes, errors.Wrap(err, "failed to read field Velocity")
 	}
 
 	return totalBytes, nil
@@ -211,17 +152,7 @@ func (t EntityVelocity) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.VelocityX.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VelocityY.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VelocityZ.WriteTo(w)
+	bytesWritten, err = t.Velocity.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

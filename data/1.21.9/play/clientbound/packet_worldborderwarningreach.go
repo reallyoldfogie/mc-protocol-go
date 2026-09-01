@@ -99,6 +99,7 @@ func (p *WorldBorderWarningReach) SetWarningBlocks(val pk.VarInt) {
 func (t *WorldBorderWarningReach) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WarningBlocks.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WarningBlocks")

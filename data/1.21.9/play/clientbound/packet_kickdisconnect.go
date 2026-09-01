@@ -100,6 +100,7 @@ func (p *KickDisconnect) SetReason(val models.AnonymousNBT) {
 func (t *KickDisconnect) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Reason.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Reason")

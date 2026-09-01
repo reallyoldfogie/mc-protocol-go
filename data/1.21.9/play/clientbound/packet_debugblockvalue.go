@@ -126,11 +126,13 @@ func (p *DebugBlockValue) SetUpdate(val basetypes.DebugSubscriptionUpdate) {
 func (t *DebugBlockValue) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.BlockPos.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlockPos")
 	}
 	bytesRead, err = t.Update.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Update")

@@ -136,6 +136,7 @@ func (p *ChunkBiomes) SetBiomes(val models.Array[pk.VarInt, ChunkBiomesBiomesArr
 func (t *ChunkBiomes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Biomes.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Biomes")

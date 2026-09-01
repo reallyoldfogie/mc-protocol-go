@@ -15,9 +15,9 @@ import (
 	// "github.com/davecgh/go-spew/spew"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 
-	"github.com/protodef-go/protodef-go/datatypes"
-	"github.com/protodef-go/protodef-go/namespace"
-	"github.com/protodef-go/protodef-go/protocol"
+	"github.com/reallyoldfogie/protodef-go/datatypes"
+	"github.com/reallyoldfogie/protodef-go/namespace"
+	"github.com/reallyoldfogie/protodef-go/protocol"
 )
 
 // Tracks which generated container types require parent context and which parent
@@ -509,7 +509,8 @@ func generateProtocolStructs(version string, protocolDefinitions *protocol.Proto
 	Direction string
 }, error) {
 	// Reset global state for clean generation
-	unnamedTypeCounter = 0
+	unnamedTypeCounters = map[string]int{}
+	currentStructContext = ""
 	packetMetadata = make(map[string]struct {
 		IsPacket  bool
 		PacketID  int32
@@ -1710,6 +1711,7 @@ func (t *{{$container.Name}}) ReadFrom(r io.Reader) (totalBytes int64, err error
 	t.{{$field.Name}}.SetParentContext({{$field.Name}}_ctx)
 	{{- end}}
 	bytesRead, err = t.{{$field.Name}}.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field {{$field.Name}}")
@@ -2549,7 +2551,7 @@ func (m {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown {{.Name}} value: %s", m.Value)
+	return 0, errors.Errorf("unknown {{.Name}} value: '%s'", m.Value)
 }
 {{end}}
 
@@ -2708,6 +2710,7 @@ func (r {{.Name}}) WriteTo(w io.Writer) (int64, error) {
 
 func (t *{{.Name}}) ReadFrom(r io.Reader) (totalRead int64, err error) {
 	var bytesRead int64
+	loopEntryCount := 0
 	
 	// Read entries in a loop until we encounter the terminator (endVal)
 	for {
@@ -2740,6 +2743,7 @@ func (t *{{.Name}}) ReadFrom(r io.Reader) (totalRead int64, err error) {
 			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry" )
 		}
 		t.Entries = append(t.Entries, entry)
+		loopEntryCount++
 	}
 	
 	return totalRead, nil
@@ -3926,6 +3930,10 @@ func processType(t *datatypes.Type, baseTypes map[string]string, isAnon bool, is
 			fmt.Printf("  \n")
 		}
 		t.Extras.SetName(convertedName)
+		// Scope unnamed type counter to this struct so names are stable across runs.
+		prevStructContext := currentStructContext
+		currentStructContext = convertedName
+		defer func() { currentStructContext = prevStructContext }()
 
 		// DEBUG: Log container fields before filtering
 		fmt.Printf("DEBUG [gen_packet.go]: Container '%s' has %d fields before filtering:\n", t.Name, len(container.Fields))
@@ -5444,7 +5452,10 @@ func camelOrSnakeToSpace(s string) string {
 }
 
 var (
-	unnamedTypeCounter = 0
+	// per-struct counters for anonymous/unknown type names; keyed by the struct being built
+	unnamedTypeCounters = map[string]int{}
+	// tracks which struct is currently being processed so toIdentifier can scope counters
+	currentStructContext = ""
 	// Global type registry to track generated type names and prevent duplicates
 	// typeRegistry = make(map[string]*datatypes.Type)
 
@@ -5488,9 +5499,13 @@ func structNameToProtoType(structName string) string {
 func toIdentifier(in string) string {
 	// Handle empty or invalid input
 	if in == "" {
-		unnamedTypeCounter++
+		scope := currentStructContext
+		if scope == "" {
+			scope = "_global"
+		}
+		unnamedTypeCounters[scope]++
 		fmt.Println("")
-		return fmt.Sprintf("UnnamedType%04d", unnamedTypeCounter)
+		return fmt.Sprintf("UnnamedType%04d", unnamedTypeCounters[scope])
 	}
 
 	// Preserve Go built-in types and keywords as-is
@@ -5541,8 +5556,12 @@ func toIdentifier(in string) string {
 
 	// If still empty after processing, provide a unique default
 	if out == "" {
-		unnamedTypeCounter++
-		out = fmt.Sprintf("UnnamedType%04d", unnamedTypeCounter)
+		scope := currentStructContext
+		if scope == "" {
+			scope = "_global"
+		}
+		unnamedTypeCounters[scope]++
+		out = fmt.Sprintf("UnnamedType%04d", unnamedTypeCounters[scope])
 	}
 
 	// fmt.Println("[toIdentifier]", in, "=>", out)
@@ -5589,7 +5608,7 @@ func toNative(name string, in *datatypes.Type, baseTypes map[string]string, isGe
 	case "varint":
 		return "pk.VarInt"
 	case "optvarint":
-		return "models.Option[pk.VarInt]"
+		return "models.OptVarInt"
 	case "varint64", "varlong":
 		return "pk.VarLong"
 	case "bool":

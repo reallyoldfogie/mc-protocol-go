@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pk "github.com/Tnze/go-mc/net/packet"
 	"github.com/pkg/errors"
+	"github.com/reallyoldfogie/mc-protocol-go/data/1.21.4/basetypes"
 	"io"
 	"log"
 )
@@ -54,16 +55,8 @@ import (
 //	      "type": "varint"
 //	    },
 //	    {
-//	      "name": "velocityX",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "velocityY",
-//	      "type": "i16"
-//	    },
-//	    {
-//	      "name": "velocityZ",
-//	      "type": "i16"
+//	      "name": "velocity",
+//	      "type": "vec3i16"
 //	    }
 //	  ]
 //	]
@@ -89,12 +82,8 @@ type SpawnEntity struct {
 	HeadPitch pk.Byte
 	// "varint"
 	ObjectData pk.VarInt
-	// "i16"
-	VelocityX pk.Short
-	// "i16"
-	VelocityY pk.Short
-	// "i16"
-	VelocityZ pk.Short
+	// "vec3i16"
+	Velocity basetypes.Vec3i16
 }
 
 // NewSpawnEntity creates a new SpawnEntity packet with the correct packet ID.
@@ -127,9 +116,7 @@ func (p *SpawnEntity) Marshal() pk.Packet {
 		&p.Yaw,
 		&p.HeadPitch,
 		&p.ObjectData,
-		&p.VelocityX,
-		&p.VelocityY,
-		&p.VelocityZ)
+		&p.Velocity)
 }
 
 // Scan deserializes a wire-format packet into this struct.
@@ -148,9 +135,7 @@ func (p *SpawnEntity) Scan(packet pk.Packet) error {
 		&p.Yaw,
 		&p.HeadPitch,
 		&p.ObjectData,
-		&p.VelocityX,
-		&p.VelocityY,
-		&p.VelocityZ)
+		&p.Velocity)
 }
 
 // GetFields returns a map of all packet fields for version-agnostic access.
@@ -171,9 +156,7 @@ func (p *SpawnEntity) GetFields() map[string]pk.FieldEncoder {
 	fields["Yaw"] = &p.Yaw
 	fields["HeadPitch"] = &p.HeadPitch
 	fields["ObjectData"] = &p.ObjectData
-	fields["VelocityX"] = &p.VelocityX
-	fields["VelocityY"] = &p.VelocityY
-	fields["VelocityZ"] = &p.VelocityZ
+	fields["Velocity"] = &p.Velocity
 	return fields
 }
 
@@ -214,14 +197,8 @@ func (p *SpawnEntity) SetFields(fields map[string]pk.FieldEncoder) {
 	if val, ok := fields["ObjectData"]; ok {
 		p.ObjectData = *val.(*pk.VarInt)
 	}
-	if val, ok := fields["VelocityX"]; ok {
-		p.VelocityX = *val.(*pk.Short)
-	}
-	if val, ok := fields["VelocityY"]; ok {
-		p.VelocityY = *val.(*pk.Short)
-	}
-	if val, ok := fields["VelocityZ"]; ok {
-		p.VelocityZ = *val.(*pk.Short)
+	if val, ok := fields["Velocity"]; ok {
+		p.Velocity = *val.(*basetypes.Vec3i16)
 	}
 }
 
@@ -366,114 +343,87 @@ func (p *SpawnEntity) SetObjectData(val pk.VarInt) {
 	p.ObjectData = val
 }
 
-// GetVelocityX returns the VelocityX field value.
+// GetVelocity returns the Velocity field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *SpawnEntity) GetVelocityX() pk.Short {
-	return p.VelocityX
+func (p *SpawnEntity) GetVelocity() basetypes.Vec3i16 {
+	return p.Velocity
 }
 
-// SetVelocityX sets the VelocityX field value.
+// SetVelocity sets the Velocity field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *SpawnEntity) SetVelocityX(val pk.Short) {
-	p.VelocityX = val
-}
-
-// GetVelocityY returns the VelocityY field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *SpawnEntity) GetVelocityY() pk.Short {
-	return p.VelocityY
-}
-
-// SetVelocityY sets the VelocityY field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *SpawnEntity) SetVelocityY(val pk.Short) {
-	p.VelocityY = val
-}
-
-// GetVelocityZ returns the VelocityZ field value.
-// Note: This method returns the actual field type, which may be version-specific.
-// For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *SpawnEntity) GetVelocityZ() pk.Short {
-	return p.VelocityZ
-}
-
-// SetVelocityZ sets the VelocityZ field value.
-// Note: This method accepts the actual field type, which may be version-specific.
-// For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *SpawnEntity) SetVelocityZ(val pk.Short) {
-	p.VelocityZ = val
+func (p *SpawnEntity) SetVelocity(val basetypes.Vec3i16) {
+	p.Velocity = val
 }
 
 func (t *SpawnEntity) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.EntityId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field EntityId")
 	}
 	bytesRead, err = t.ObjectUUID.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ObjectUUID")
 	}
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
 	bytesRead, err = t.X.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field X")
 	}
 	bytesRead, err = t.Y.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Y")
 	}
 	bytesRead, err = t.Z.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Z")
 	}
 	bytesRead, err = t.Pitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 	bytesRead, err = t.Yaw.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
 	}
 	bytesRead, err = t.HeadPitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field HeadPitch")
 	}
 	bytesRead, err = t.ObjectData.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ObjectData")
 	}
-	bytesRead, err = t.VelocityX.ReadFrom(r)
+	bytesRead, err = t.Velocity.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityX")
-	}
-	bytesRead, err = t.VelocityY.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityY")
-	}
-	bytesRead, err = t.VelocityZ.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field VelocityZ")
+		return totalBytes, errors.Wrap(err, "failed to read field Velocity")
 	}
 
 	return totalBytes, nil
@@ -535,17 +485,7 @@ func (t SpawnEntity) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	if err != nil {
 		return totalBytes, err
 	}
-	bytesWritten, err = t.VelocityX.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VelocityY.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.VelocityZ.WriteTo(w)
+	bytesWritten, err = t.Velocity.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

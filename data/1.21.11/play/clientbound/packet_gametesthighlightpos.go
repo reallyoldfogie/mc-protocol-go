@@ -126,11 +126,13 @@ func (p *GameTestHighlightPos) SetRelativePos(val basetypes.Position) {
 func (t *GameTestHighlightPos) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.AbsolutePos.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AbsolutePos")
 	}
 	bytesRead, err = t.RelativePos.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field RelativePos")

@@ -281,41 +281,49 @@ func (p *RecipeBookSettings) SetSmokerFilteringCraftable(val pk.Boolean) {
 func (t *RecipeBookSettings) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.CraftingGuiOpen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CraftingGuiOpen")
 	}
 	bytesRead, err = t.CraftingFilteringCraftable.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CraftingFilteringCraftable")
 	}
 	bytesRead, err = t.SmeltingGuiOpen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SmeltingGuiOpen")
 	}
 	bytesRead, err = t.SmeltingFilteringCraftable.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SmeltingFilteringCraftable")
 	}
 	bytesRead, err = t.BlastGuiOpen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlastGuiOpen")
 	}
 	bytesRead, err = t.BlastFilteringCraftable.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field BlastFilteringCraftable")
 	}
 	bytesRead, err = t.SmokerGuiOpen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SmokerGuiOpen")
 	}
 	bytesRead, err = t.SmokerFilteringCraftable.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SmokerFilteringCraftable")

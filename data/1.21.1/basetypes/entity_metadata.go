@@ -73,10 +73,72 @@ func (m EntityMetadataEntryType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown EntityMetadataEntryType value: %s", m.Value)
+	return 0, errors.Errorf("unknown EntityMetadataEntryType value: '%s'", m.Value)
 }
 
-type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
+type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
+
+type EntityMetadataEntryValueOptionalGlobalPos = models.Option[pk.String]
+
+type EntityMetadataEntryValuePaintingVariant struct {
+	IsRegistryID bool
+	RegistryID   pk.VarInt
+	Data         EntityMetadataPaintingVariant
+}
+
+func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
+	var totalBytes int64
+
+	// Read the varint - it's either a registry ID or 0 (indicating data follows)
+	var id pk.VarInt
+	n, err := id.ReadFrom(reader)
+	totalBytes += n
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
+	}
+
+	if id != 0 {
+		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
+		r.IsRegistryID = true
+		r.RegistryID = id - 1
+	} else {
+		// Zero means data structure follows
+		r.IsRegistryID = false
+		n, err = r.Data.ReadFrom(reader)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
+
+func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
+	var totalBytes int64
+
+	if r.IsRegistryID {
+		// Write registry ID + 1
+		id := r.RegistryID + 1
+		n, err := id.WriteTo(w)
+		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
+	} else {
+		// Write 0 followed by data
+		var zero pk.VarInt = 0
+		n, err := zero.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
+		}
+		n, err = r.Data.WriteTo(w)
+		totalBytes += n
+		if err != nil {
+			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
+		}
+	}
+
+	return totalBytes, nil
+}
 
 // Protodef: [
 //
@@ -108,16 +170,19 @@ type EntityMetadataEntryValueRotations struct {
 func (t *EntityMetadataEntryValueRotations) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Pitch.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pitch")
 	}
 	bytesRead, err = t.Yaw.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Yaw")
 	}
 	bytesRead, err = t.Roll.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Roll")
@@ -149,10 +214,6 @@ func (t EntityMetadataEntryValueRotations) WriteTo(w io.Writer) (totalBytes int6
 	}
 	return totalBytes, nil
 }
-
-type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
-
-type EntityMetadataEntryValueOptionalUuid = models.Option[pk.UUID]
 
 type EntityMetadataEntryValueParticles = models.Array[pk.VarInt, Particle]
 
@@ -216,7 +277,9 @@ func (r EntityMetadataEntryValueWolfVariant) WriteTo(w io.Writer) (int64, error)
 	return totalBytes, nil
 }
 
-type EntityMetadataEntryValueOptionalGlobalPos = models.Option[pk.String]
+type EntityMetadataEntryValueOptionalBlockPos = models.Option[Position]
+
+type EntityMetadataEntryValueOptionalComponent = models.Option[models.AnonymousNBT]
 
 // Protodef: [
 //
@@ -248,16 +311,19 @@ type EntityMetadataEntryValueVillagerData struct {
 func (t *EntityMetadataEntryValueVillagerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.VillagerType.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VillagerType")
 	}
 	bytesRead, err = t.VillagerProfession.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field VillagerProfession")
 	}
 	bytesRead, err = t.Level.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Level")
@@ -287,66 +353,6 @@ func (t EntityMetadataEntryValueVillagerData) WriteTo(w io.Writer) (totalBytes i
 	if err != nil {
 		return totalBytes, err
 	}
-	return totalBytes, nil
-}
-
-type EntityMetadataEntryValuePaintingVariant struct {
-	IsRegistryID bool
-	RegistryID   pk.VarInt
-	Data         EntityMetadataPaintingVariant
-}
-
-func (r *EntityMetadataEntryValuePaintingVariant) ReadFrom(reader io.Reader) (int64, error) {
-	var totalBytes int64
-
-	// Read the varint - it's either a registry ID or 0 (indicating data follows)
-	var id pk.VarInt
-	n, err := id.ReadFrom(reader)
-	totalBytes += n
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read registry entry holder ID")
-	}
-
-	if id != 0 {
-		// Non-zero means this is a registry ID (subtract 1 to get actual ID)
-		r.IsRegistryID = true
-		r.RegistryID = id - 1
-	} else {
-		// Zero means data structure follows
-		r.IsRegistryID = false
-		n, err = r.Data.ReadFrom(reader)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to read registry entry holder data")
-		}
-	}
-
-	return totalBytes, nil
-}
-
-func (r EntityMetadataEntryValuePaintingVariant) WriteTo(w io.Writer) (int64, error) {
-	var totalBytes int64
-
-	if r.IsRegistryID {
-		// Write registry ID + 1
-		id := r.RegistryID + 1
-		n, err := id.WriteTo(w)
-		return totalBytes + n, errors.Wrap(err, "failed to write registry entry holder ID")
-	} else {
-		// Write 0 followed by data
-		var zero pk.VarInt = 0
-		n, err := zero.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder zero ID")
-		}
-		n, err = r.Data.WriteTo(w)
-		totalBytes += n
-		if err != nil {
-			return totalBytes, errors.Wrap(err, "failed to write registry entry holder data")
-		}
-	}
-
 	return totalBytes, nil
 }
 
@@ -668,11 +674,13 @@ type EntityMetadataEntry struct {
 func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Key.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Key")
 	}
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
@@ -803,7 +811,7 @@ func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error
 		}
 		t.Value = &val
 	case "optional_block_state":
-		var val models.Option[pk.VarInt]
+		var val models.OptVarInt
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -827,7 +835,7 @@ func (t *EntityMetadataEntry) ReadFrom(r io.Reader) (totalBytes int64, err error
 		}
 		t.Value = &val
 	case "optional_unsigned_int":
-		var val models.Option[pk.VarInt]
+		var val models.OptVarInt
 		bytesRead, err = val.ReadFrom(r)
 		totalBytes += bytesRead
 		if err != nil {
@@ -974,6 +982,98 @@ func (t EntityMetadataEntry) WriteTo(w io.Writer) (totalBytes int64, err error) 
 	return totalBytes, nil
 }
 
+// Protodef: [
+//
+//	  "container",
+//	  [
+//	    {
+//	      "name": "wildTexture",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "tameTexture",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "angryTexture",
+//	      "type": "string"
+//	    },
+//	    {
+//	      "name": "biome",
+//	      "type": "IDSet"
+//	    }
+//	  ]
+//	]
+type EntityMetadataWolfVariant struct {
+	// "string"
+	WildTexture pk.String
+	// "string"
+	TameTexture pk.String
+	// "string"
+	AngryTexture pk.String
+	// "IDSet"
+	Biome IDSet
+}
+
+func (t *EntityMetadataWolfVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
+	var bytesRead int64
+	bytesRead, err = t.WildTexture.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field WildTexture")
+	}
+	bytesRead, err = t.TameTexture.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field TameTexture")
+	}
+	bytesRead, err = t.AngryTexture.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field AngryTexture")
+	}
+	bytesRead, err = t.Biome.ReadFrom(r)
+
+	totalBytes += bytesRead
+	if err != nil {
+		return totalBytes, errors.Wrap(err, "failed to read field Biome")
+	}
+
+	return totalBytes, nil
+}
+
+func (t EntityMetadataWolfVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
+	var bytesWritten int64
+
+	defer func() {
+		log.Printf("[EntityMetadataWolfVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
+	}()
+	bytesWritten, err = t.WildTexture.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.TameTexture.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.AngryTexture.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	bytesWritten, err = t.Biome.WriteTo(w)
+	totalBytes += bytesWritten
+	if err != nil {
+		return totalBytes, err
+	}
+	return totalBytes, nil
+}
+
 type EntityMetadata struct {
 	EndVal  pk.UnsignedByte
 	Entries []EntityMetadataEntry
@@ -981,6 +1081,7 @@ type EntityMetadata struct {
 
 func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
 	var bytesRead int64
+	loopEntryCount := 0
 
 	// Read entries in a loop until we encounter the terminator (endVal)
 	for {
@@ -1011,6 +1112,7 @@ func (t *EntityMetadata) ReadFrom(r io.Reader) (totalRead int64, err error) {
 			return totalRead, errors.Wrap(err, "failed to read entity metadata loop entry")
 		}
 		t.Entries = append(t.Entries, entry)
+		loopEntryCount++
 	}
 
 	return totalRead, nil
@@ -1094,26 +1196,31 @@ type EntityMetadataPaintingVariant struct {
 func (t *EntityMetadataPaintingVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Width.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Width")
 	}
 	bytesRead, err = t.Height.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Height")
 	}
 	bytesRead, err = t.AssetId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AssetId")
 	}
 	bytesRead, err = t.Title.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Title")
 	}
 	bytesRead, err = t.Author.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Author")
@@ -1149,94 +1256,6 @@ func (t EntityMetadataPaintingVariant) WriteTo(w io.Writer) (totalBytes int64, e
 		return totalBytes, err
 	}
 	bytesWritten, err = t.Author.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	return totalBytes, nil
-}
-
-// Protodef: [
-//
-//	  "container",
-//	  [
-//	    {
-//	      "name": "wildTexture",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "tameTexture",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "angryTexture",
-//	      "type": "string"
-//	    },
-//	    {
-//	      "name": "biome",
-//	      "type": "IDSet"
-//	    }
-//	  ]
-//	]
-type EntityMetadataWolfVariant struct {
-	// "string"
-	WildTexture pk.String
-	// "string"
-	TameTexture pk.String
-	// "string"
-	AngryTexture pk.String
-	// "IDSet"
-	Biome IDSet
-}
-
-func (t *EntityMetadataWolfVariant) ReadFrom(r io.Reader) (totalBytes int64, err error) {
-	var bytesRead int64
-	bytesRead, err = t.WildTexture.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field WildTexture")
-	}
-	bytesRead, err = t.TameTexture.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field TameTexture")
-	}
-	bytesRead, err = t.AngryTexture.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field AngryTexture")
-	}
-	bytesRead, err = t.Biome.ReadFrom(r)
-	totalBytes += bytesRead
-	if err != nil {
-		return totalBytes, errors.Wrap(err, "failed to read field Biome")
-	}
-
-	return totalBytes, nil
-}
-
-func (t EntityMetadataWolfVariant) WriteTo(w io.Writer) (totalBytes int64, err error) {
-	var bytesWritten int64
-
-	defer func() {
-		log.Printf("[EntityMetadataWolfVariant.WriteTo] totalBytes: %d err: %#v", totalBytes, err)
-	}()
-	bytesWritten, err = t.WildTexture.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.TameTexture.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.AngryTexture.WriteTo(w)
-	totalBytes += bytesWritten
-	if err != nil {
-		return totalBytes, err
-	}
-	bytesWritten, err = t.Biome.WriteTo(w)
 	totalBytes += bytesWritten
 	if err != nil {
 		return totalBytes, err

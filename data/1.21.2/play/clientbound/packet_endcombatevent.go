@@ -99,6 +99,7 @@ func (p *EndCombatEvent) SetDuration(val pk.VarInt) {
 func (t *EndCombatEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Duration.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Duration")

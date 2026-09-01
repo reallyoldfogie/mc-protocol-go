@@ -125,11 +125,13 @@ func (p *SetTickingState) SetIsFrozen(val pk.Boolean) {
 func (t *SetTickingState) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.TickRate.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field TickRate")
 	}
 	bytesRead, err = t.IsFrozen.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IsFrozen")

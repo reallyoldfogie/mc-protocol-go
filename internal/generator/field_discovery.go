@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/protodef-go/protodef-go/datatypes"
-	"github.com/protodef-go/protodef-go/protocol"
+	"github.com/reallyoldfogie/protodef-go/datatypes"
+	"github.com/reallyoldfogie/protodef-go/protocol"
 )
 
 // FieldInfo contains metadata about a field found across protocol versions

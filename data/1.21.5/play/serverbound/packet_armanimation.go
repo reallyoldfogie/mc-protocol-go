@@ -99,6 +99,7 @@ func (p *ArmAnimation) SetHand(val pk.VarInt) {
 func (t *ArmAnimation) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Hand.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Hand")

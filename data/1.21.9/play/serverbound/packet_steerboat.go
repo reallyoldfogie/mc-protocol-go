@@ -125,11 +125,13 @@ func (p *SteerBoat) SetRightPaddle(val pk.Boolean) {
 func (t *SteerBoat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.LeftPaddle.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field LeftPaddle")
 	}
 	bytesRead, err = t.RightPaddle.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field RightPaddle")

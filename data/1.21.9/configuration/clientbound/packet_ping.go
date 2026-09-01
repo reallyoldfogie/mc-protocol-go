@@ -99,6 +99,7 @@ func (p *Ping) SetId(val pk.Int) {
 func (t *Ping) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Id.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Id")

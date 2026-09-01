@@ -125,11 +125,13 @@ func (p *SelectBundleItem) SetSelectedItemIndex(val pk.VarInt) {
 func (t *SelectBundleItem) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.SlotId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SlotId")
 	}
 	bytesRead, err = t.SelectedItemIndex.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SelectedItemIndex")

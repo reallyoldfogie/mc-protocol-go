@@ -151,16 +151,19 @@ func (p *SteerVehicle) SetJump(val pk.UnsignedByte) {
 func (t *SteerVehicle) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Sideways.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sideways")
 	}
 	bytesRead, err = t.Forward.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Forward")
 	}
 	bytesRead, err = t.Jump.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Jump")

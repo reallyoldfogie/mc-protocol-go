@@ -20,7 +20,7 @@ import (
 //	    },
 //	    {
 //	      "name": "enchantment",
-//	      "type": "i8"
+//	      "type": "varint"
 //	    }
 //	  ]
 //	]
@@ -28,8 +28,8 @@ type EnchantItem struct {
 	packetID int32
 	// "ContainerID"
 	WindowId basetypes.ContainerID
-	// "i8"
-	Enchantment pk.Byte
+	// "varint"
+	Enchantment pk.VarInt
 }
 
 // NewEnchantItem creates a new EnchantItem packet with the correct packet ID.
@@ -90,7 +90,7 @@ func (p *EnchantItem) SetFields(fields map[string]pk.FieldEncoder) {
 		p.WindowId = *val.(*basetypes.ContainerID)
 	}
 	if val, ok := fields["Enchantment"]; ok {
-		p.Enchantment = *val.(*pk.Byte)
+		p.Enchantment = *val.(*pk.VarInt)
 	}
 }
 
@@ -112,25 +112,27 @@ func (p *EnchantItem) SetWindowId(val basetypes.ContainerID) {
 // GetEnchantment returns the Enchantment field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *EnchantItem) GetEnchantment() pk.Byte {
+func (p *EnchantItem) GetEnchantment() pk.VarInt {
 	return p.Enchantment
 }
 
 // SetEnchantment sets the Enchantment field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *EnchantItem) SetEnchantment(val pk.Byte) {
+func (p *EnchantItem) SetEnchantment(val pk.VarInt) {
 	p.Enchantment = val
 }
 
 func (t *EnchantItem) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WindowId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WindowId")
 	}
 	bytesRead, err = t.Enchantment.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Enchantment")

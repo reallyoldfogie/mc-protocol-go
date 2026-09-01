@@ -132,11 +132,13 @@ func (p *ServerData) SetIconBytes(val models.Option[pk.ByteArray]) {
 func (t *ServerData) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Motd.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Motd")
 	}
 	bytesRead, err = t.IconBytes.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IconBytes")

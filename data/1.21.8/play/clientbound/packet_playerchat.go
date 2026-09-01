@@ -579,51 +579,61 @@ func (p *PlayerChat) SetNetworkTargetName(val models.Option[models.AnonymousNBT]
 func (t *PlayerChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.GlobalIndex.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field GlobalIndex")
 	}
 	bytesRead, err = t.SenderUuid.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SenderUuid")
 	}
 	bytesRead, err = t.Index.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Index")
 	}
 	bytesRead, err = t.Signature.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Signature")
 	}
 	bytesRead, err = t.PlainMessage.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PlainMessage")
 	}
 	bytesRead, err = t.Timestamp.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Timestamp")
 	}
 	bytesRead, err = t.Salt.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Salt")
 	}
 	bytesRead, err = t.PreviousMessages.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PreviousMessages")
 	}
 	bytesRead, err = t.UnsignedChatContent.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field UnsignedChatContent")
 	}
 	bytesRead, err = t.FilterType.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FilterType")
@@ -653,16 +663,19 @@ func (t *PlayerChat) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	}
 
 	bytesRead, err = t.Type.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Type")
 	}
 	bytesRead, err = t.NetworkName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field NetworkName")
 	}
 	bytesRead, err = t.NetworkTargetName.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field NetworkTargetName")

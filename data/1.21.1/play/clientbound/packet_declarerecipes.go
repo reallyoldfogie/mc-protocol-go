@@ -510,6 +510,7 @@ func (p *DeclareRecipes) SetRecipes(val models.Array[pk.VarInt, DeclareRecipesRe
 func (t *DeclareRecipes) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Recipes.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Recipes")

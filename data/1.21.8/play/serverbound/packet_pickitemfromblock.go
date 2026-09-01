@@ -126,11 +126,13 @@ func (p *PickItemFromBlock) SetIncludeData(val pk.Boolean) {
 func (t *PickItemFromBlock) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Position.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Position")
 	}
 	bytesRead, err = t.IncludeData.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field IncludeData")

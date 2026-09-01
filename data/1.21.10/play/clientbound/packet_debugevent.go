@@ -100,6 +100,7 @@ func (p *DebugEvent) SetEvent(val basetypes.DebugSubscriptionEvent) {
 func (t *DebugEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Event.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Event")

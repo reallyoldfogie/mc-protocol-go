@@ -125,11 +125,13 @@ func (p *SetProjectilePower) SetAccelerationPower(val pk.Double) {
 func (t *SetProjectilePower) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Id.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Id")
 	}
 	bytesRead, err = t.AccelerationPower.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field AccelerationPower")

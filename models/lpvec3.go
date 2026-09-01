@@ -167,8 +167,8 @@ func (v *LpVec3) WriteTo(w io.Writer) (n int64, err error) {
 	//   buf.writeInt(l);    // bytes 2-5: bits 16-47 as big-endian unsigned int
 	unsignedIntOut := (q >> 16) & 0xFFFFFFFF
 	outBytes := []pk.Byte{
-		pk.Byte((q >> 0) & 0xFF),              // Byte 0: bits 0-7  (i)
-		pk.Byte((q >> 8) & 0xFF),              // Byte 1: bits 8-15 (j)
+		pk.Byte((q >> 0) & 0xFF),               // Byte 0: bits 0-7  (i)
+		pk.Byte((q >> 8) & 0xFF),               // Byte 1: bits 8-15 (j)
 		pk.Byte((unsignedIntOut >> 24) & 0xFF), // Byte 2: bits 40-47 (int MSB)
 		pk.Byte((unsignedIntOut >> 16) & 0xFF), // Byte 3: bits 32-39
 		pk.Byte((unsignedIntOut >> 8) & 0xFF),  // Byte 4: bits 24-31

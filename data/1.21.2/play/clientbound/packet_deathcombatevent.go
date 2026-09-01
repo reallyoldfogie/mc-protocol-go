@@ -126,11 +126,13 @@ func (p *DeathCombatEvent) SetMessage(val models.AnonymousNBT) {
 func (t *DeathCombatEvent) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.PlayerId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field PlayerId")
 	}
 	bytesRead, err = t.Message.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Message")

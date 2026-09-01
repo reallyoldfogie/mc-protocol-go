@@ -125,11 +125,13 @@ func (p *Respawn) SetCopyMetadata(val pk.UnsignedByte) {
 func (t *Respawn) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.WorldState.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WorldState")
 	}
 	bytesRead, err = t.CopyMetadata.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field CopyMetadata")

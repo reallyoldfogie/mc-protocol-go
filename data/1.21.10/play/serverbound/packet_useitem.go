@@ -152,16 +152,19 @@ func (p *UseItem) SetRotation(val basetypes.Vec2f) {
 func (t *UseItem) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Hand.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Hand")
 	}
 	bytesRead, err = t.Sequence.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Sequence")
 	}
 	bytesRead, err = t.Rotation.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Rotation")

@@ -133,11 +133,13 @@ func (p *SetPlayerInventory) SetContents(val models.Option[basetypes.Slot]) {
 func (t *SetPlayerInventory) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.SlotId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field SlotId")
 	}
 	bytesRead, err = t.Contents.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Contents")

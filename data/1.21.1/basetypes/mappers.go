@@ -148,7 +148,7 @@ func (m ParticleType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ParticleType value: %s", m.Value)
+	return 0, errors.Errorf("unknown ParticleType value: '%s'", m.Value)
 }
 
 type ParticleDataVibrationPositionType struct {
@@ -184,7 +184,45 @@ func (m ParticleDataVibrationPositionType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: %s", m.Value)
+	return 0, errors.Errorf("unknown ParticleDataVibrationPositionType value: '%s'", m.Value)
+}
+
+type SlotComponentDataRarity struct {
+	Value string
+}
+
+var SlotComponentDataRarityMappings = map[int64]string{
+	0: "common",
+	1: "uncommon",
+	2: "rare",
+	3: "epic",
+}
+
+func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
+	var key pk.VarInt
+	n, err := key.ReadFrom(r)
+	if err != nil {
+		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
+	}
+
+	value, ok := SlotComponentDataRarityMappings[int64(key)]
+	if !ok {
+		// Use numeric key as fallback for unknown/undocumented values
+		m.Value = fmt.Sprintf("unknown_%d", key)
+		return n, nil
+	}
+	m.Value = value
+	return n, nil
+}
+
+func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
+	for k, v := range SlotComponentDataRarityMappings {
+		if v == m.Value {
+			key := pk.VarInt(k)
+			return key.WriteTo(w)
+		}
+	}
+	return 0, errors.Errorf("unknown SlotComponentDataRarity value: '%s'", m.Value)
 }
 
 type SlotComponentDataAttributeModifiersAttributesArrayTypeOperation struct {
@@ -221,7 +259,7 @@ func (m SlotComponentDataAttributeModifiersAttributesArrayTypeOperation) WriteTo
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeOperation value: %s", m.Value)
+	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeOperation value: '%s'", m.Value)
 }
 
 type SlotComponentDataAttributeModifiersAttributesArrayTypeSlot struct {
@@ -265,45 +303,7 @@ func (m SlotComponentDataAttributeModifiersAttributesArrayTypeSlot) WriteTo(w io
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeSlot value: %s", m.Value)
-}
-
-type SlotComponentDataRarity struct {
-	Value string
-}
-
-var SlotComponentDataRarityMappings = map[int64]string{
-	0: "common",
-	1: "uncommon",
-	2: "rare",
-	3: "epic",
-}
-
-func (m *SlotComponentDataRarity) ReadFrom(r io.Reader) (int64, error) {
-	var key pk.VarInt
-	n, err := key.ReadFrom(r)
-	if err != nil {
-		return n, errors.Wrap(err, "failed to read SlotComponentDataRarity key")
-	}
-
-	value, ok := SlotComponentDataRarityMappings[int64(key)]
-	if !ok {
-		// Use numeric key as fallback for unknown/undocumented values
-		m.Value = fmt.Sprintf("unknown_%d", key)
-		return n, nil
-	}
-	m.Value = value
-	return n, nil
-}
-
-func (m SlotComponentDataRarity) WriteTo(w io.Writer) (int64, error) {
-	for k, v := range SlotComponentDataRarityMappings {
-		if v == m.Value {
-			key := pk.VarInt(k)
-			return key.WriteTo(w)
-		}
-	}
-	return 0, errors.Errorf("unknown SlotComponentDataRarity value: %s", m.Value)
+	return 0, errors.Errorf("unknown SlotComponentDataAttributeModifiersAttributesArrayTypeSlot value: '%s'", m.Value)
 }
 
 type ServerLinkType struct {
@@ -347,7 +347,7 @@ func (m ServerLinkType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown ServerLinkType value: %s", m.Value)
+	return 0, errors.Errorf("unknown ServerLinkType value: '%s'", m.Value)
 }
 
 type SlotComponentType struct {
@@ -438,7 +438,7 @@ func (m SlotComponentType) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SlotComponentType value: %s", m.Value)
+	return 0, errors.Errorf("unknown SlotComponentType value: '%s'", m.Value)
 }
 
 type SoundSource struct {
@@ -482,5 +482,5 @@ func (m SoundSource) WriteTo(w io.Writer) (int64, error) {
 			return key.WriteTo(w)
 		}
 	}
-	return 0, errors.Errorf("unknown SoundSource value: %s", m.Value)
+	return 0, errors.Errorf("unknown SoundSource value: '%s'", m.Value)
 }

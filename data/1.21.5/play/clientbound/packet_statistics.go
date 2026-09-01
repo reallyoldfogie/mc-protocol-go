@@ -144,6 +144,7 @@ func (p *Statistics) SetEntries(val models.Array[pk.VarInt, StatisticsEntriesArr
 func (t *Statistics) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Entries.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Entries")

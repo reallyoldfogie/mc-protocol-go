@@ -112,6 +112,7 @@ func (p *PlayerRemove) SetPlayers(val models.Array[pk.VarInt, pk.UUID]) {
 func (t *PlayerRemove) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Players.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Players")

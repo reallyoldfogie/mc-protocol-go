@@ -99,6 +99,7 @@ func (p *CodeOfConduct) SetContents(val pk.String) {
 func (t *CodeOfConduct) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Contents.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Contents")

@@ -803,11 +803,13 @@ func (p *Teams) SetPlayers(val pk.Field) {
 func (t *Teams) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Team.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Team")
 	}
 	bytesRead, err = t.Mode.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Mode")
@@ -1226,8 +1228,8 @@ func (t Teams) WriteTo(w io.Writer) (totalBytes int64, err error) {
 	return totalBytes, nil
 }
 
-type TeamsPlayers0 = models.Array[pk.VarInt, pk.String]
-
 type TeamsPlayers3 = models.Array[pk.VarInt, pk.String]
 
 type TeamsPlayers4 = models.Array[pk.VarInt, pk.String]
+
+type TeamsPlayers0 = models.Array[pk.VarInt, pk.String]

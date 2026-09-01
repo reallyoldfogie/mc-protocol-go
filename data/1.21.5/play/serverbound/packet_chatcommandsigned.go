@@ -68,7 +68,7 @@ import (
 //	    },
 //	    {
 //	      "name": "checksum",
-//	      "type": "i8"
+//	      "type": "u8"
 //	    }
 //	  ]
 //	]
@@ -114,8 +114,8 @@ type ChatCommandSigned struct {
 	//                 }
 	//               ]
 	Acknowledged models.FixedBuffer3
-	// "i8"
-	Checksum pk.Byte
+	// "u8"
+	Checksum pk.UnsignedByte
 }
 
 // NewChatCommandSigned creates a new ChatCommandSigned packet with the correct packet ID.
@@ -206,7 +206,7 @@ func (p *ChatCommandSigned) SetFields(fields map[string]pk.FieldEncoder) {
 		p.Acknowledged = *val.(*models.FixedBuffer3)
 	}
 	if val, ok := fields["Checksum"]; ok {
-		p.Checksum = *val.(*pk.Byte)
+		p.Checksum = *val.(*pk.UnsignedByte)
 	}
 }
 
@@ -298,50 +298,57 @@ func (p *ChatCommandSigned) SetAcknowledged(val models.FixedBuffer3) {
 // GetChecksum returns the Checksum field value.
 // Note: This method returns the actual field type, which may be version-specific.
 // For version-agnostic access, use GetFields() or check for typed interfaces.
-func (p *ChatCommandSigned) GetChecksum() pk.Byte {
+func (p *ChatCommandSigned) GetChecksum() pk.UnsignedByte {
 	return p.Checksum
 }
 
 // SetChecksum sets the Checksum field value.
 // Note: This method accepts the actual field type, which may be version-specific.
 // For version-agnostic access, use SetFields() or check for typed interfaces.
-func (p *ChatCommandSigned) SetChecksum(val pk.Byte) {
+func (p *ChatCommandSigned) SetChecksum(val pk.UnsignedByte) {
 	p.Checksum = val
 }
 
 func (t *ChatCommandSigned) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Command.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Command")
 	}
 	bytesRead, err = t.Timestamp.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Timestamp")
 	}
 	bytesRead, err = t.Salt.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Salt")
 	}
 	bytesRead, err = t.ArgumentSignatures.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field ArgumentSignatures")
 	}
 	bytesRead, err = t.MessageCount.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field MessageCount")
 	}
 	bytesRead, err = t.Acknowledged.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Acknowledged")
 	}
 	bytesRead, err = t.Checksum.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Checksum")

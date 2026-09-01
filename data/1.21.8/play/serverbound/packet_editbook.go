@@ -170,16 +170,19 @@ func (p *EditBook) SetTitle(val models.Option[pk.String]) {
 func (t *EditBook) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Hand.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Hand")
 	}
 	bytesRead, err = t.Pages.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Pages")
 	}
 	bytesRead, err = t.Title.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Title")

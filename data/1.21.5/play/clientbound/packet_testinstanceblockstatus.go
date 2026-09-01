@@ -133,11 +133,13 @@ func (p *TestInstanceBlockStatus) SetSize(val models.Option[basetypes.Vec3i]) {
 func (t *TestInstanceBlockStatus) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Status.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Status")
 	}
 	bytesRead, err = t.Size.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Size")

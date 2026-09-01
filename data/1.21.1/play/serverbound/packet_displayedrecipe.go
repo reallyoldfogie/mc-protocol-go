@@ -99,6 +99,7 @@ func (p *DisplayedRecipe) SetRecipeId(val pk.String) {
 func (t *DisplayedRecipe) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.RecipeId.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field RecipeId")

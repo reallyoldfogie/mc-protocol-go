@@ -138,11 +138,13 @@ func (p *ChatSuggestions) SetEntries(val models.Array[pk.VarInt, pk.String]) {
 func (t *ChatSuggestions) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Action.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Action")
 	}
 	bytesRead, err = t.Entries.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Entries")

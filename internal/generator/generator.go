@@ -22,9 +22,9 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"github.com/protodef-go/protodef-go/protocol"
 	"github.com/reallyoldfogie/mc-protocol-go/models"
 	"github.com/reallyoldfogie/mc-protocol-go/utils"
+	"github.com/reallyoldfogie/protodef-go/protocol"
 )
 
 type packVersion struct {
@@ -861,8 +861,22 @@ func getSoundInfo(files map[string]string) ([]*models.Sound, error) {
 	return out, nil
 }
 
-func unzipFile(fileName, outputDir string) error {
+func unzipFile(fileName, outputDir string) (err error) {
 	fmt.Println("unzipping", fileName, "=>", outputDir)
+	defer func() {
+		if err == nil {
+			fmt.Println("unzipped", fileName, "=>", outputDir)
+		} else {
+			fmt.Println("failed to unzip", fileName, "=>", outputDir, ":", err.Error())
+		}
+	}()
+
+	err = os.MkdirAll(outputDir, 0750)
+	if err != nil {
+		fmt.Printf("Failed to create output directory (%s): %s\n", outputDir, err.Error())
+		return err
+	}
+
 	// Open a zip archive for reading.
 	r, err := zip.OpenReader(fileName)
 	if err != nil {
@@ -926,6 +940,12 @@ func unzipFile(fileName, outputDir string) error {
 }
 
 func loadCachedFiles(cfg *Config, version string) map[string]string {
+	// Skip cache if refresh is requested
+	if cfg.Cache.RefreshCache {
+		fmt.Printf("Cache refresh requested, skipping cache for version %s\n", version)
+		return nil
+	}
+
 	fileName := getCacheFileName(cfg, version)
 	files := map[string]string{}
 
@@ -1017,15 +1037,10 @@ func getCacheFileName(cfg *Config, version string) string {
 }
 
 func validateCachedFiles(cfg *Config, files map[string]string) error {
-	ttlDuration := time.Duration(-cfg.Cache.TTLDays*24) * time.Hour
-
+	// Verify that all cached files still exist
 	for _, fileName := range files {
-		if fileInfo, err := os.Stat(fileName); err != nil {
+		if _, err := os.Stat(fileName); err != nil {
 			return fmt.Errorf("failed to validate cache: %s", err.Error())
-		} else {
-			if fileInfo.ModTime().Before(time.Now().Add(ttlDuration)) {
-				return fmt.Errorf("%s file is too old, ignoring cache", fileName)
-			}
 		}
 	}
 	fmt.Println("cache validated.")

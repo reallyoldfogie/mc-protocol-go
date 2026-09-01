@@ -151,16 +151,19 @@ func (p *Abilities) SetWalkingSpeed(val pk.Float) {
 func (t *Abilities) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.Flags.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Flags")
 	}
 	bytesRead, err = t.FlyingSpeed.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field FlyingSpeed")
 	}
 	bytesRead, err = t.WalkingSpeed.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field WalkingSpeed")

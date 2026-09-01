@@ -151,16 +151,19 @@ func (p *WorldBorderLerpSize) SetSpeed(val pk.VarInt) {
 func (t *WorldBorderLerpSize) ReadFrom(r io.Reader) (totalBytes int64, err error) {
 	var bytesRead int64
 	bytesRead, err = t.OldDiameter.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field OldDiameter")
 	}
 	bytesRead, err = t.NewDiameter.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field NewDiameter")
 	}
 	bytesRead, err = t.Speed.ReadFrom(r)
+
 	totalBytes += bytesRead
 	if err != nil {
 		return totalBytes, errors.Wrap(err, "failed to read field Speed")
