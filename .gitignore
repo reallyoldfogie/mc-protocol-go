@@ -20,3 +20,13 @@ internal/generator/generated
 internal/generator/testing
 
 generator
+docs/archive
+docs/bugs
+.claude
+AGENTS.md
+CLAUDE.md
+*.jar
+/*.jsonl
+/testing
+/versions
+
